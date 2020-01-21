@@ -1,0 +1,21 @@
+==================================================
+astepper lib
+==================================================
+= Copyright (c) Davide Gironi, 2014              =
+= http://davidegironi.blogspot.it/               =
+==================================================
+
+
+This library drive up to stepper motor using the Allegro driver like the
+A3967 (EasyDriver) on ATmega8.
+It uses the CTC mode of TIMER2, changing OCR2 register results in the
+change of the interrupt frequency.
+
+Devel Notes
+-----------
+This library was developed on Eclipse, built with avr-gcc on Atmega8 @ 8MHz.
+
+
+License
+-------
+Please refer to LICENSE file for licensing information.

@@ -1,0 +1,78 @@
+main
+	PinMode
+		Unlock_IOLOCK
+		PPS_Mapping_NoLock
+			_PPS_MAPPING
+				Unlock_IOLOCK
+				Lock_IOLOCK
+		Lock_IOLOCK
+		UartConfig
+			UART2_Init_Advanced
+				UART_Calc_BRG
+			UART_Set_Active
+		set_performance_mode
+		InitTimer6
+		InitTimer7
+		InitTimer8
+		LcdI2CConfig
+			I2C4_Init_Advanced
+				SetI2C4Ptrs
+				Get_Fosc_kHz
+				I2C4_Wait_For_Idle
+					I2C4_Is_Idle
+			I2C_Set_Active
+			I2C_LCD_init
+				I2C_LCD_putcmd
+					I2C_PCF8574_Write
+						I2C4_Start
+							I2C4_Wait_For_Idle
+						I2C4_Write
+							I2C4_Wait_For_Idle
+						I2C4_Stop
+							I2C4_Wait_For_Idle
+			I2C_Lcd_Cmd
+				I2C_LCD_goto
+					I2C_LCD_putcmd
+				I2C_LCD_putcmd
+		initDMA_global
+		initDMA0
+		initDMA1
+		OutPutPulseXYZ
+	SetPinMode
+	StepperConstants
+	EnStepper
+	calcSteps
+	speed_cntr_Move
+		abs
+		sqrt_
+	Step
+		abs
+		toggleOCx
+		Pulse
+			abs
+	DisableStepper
+	sprintf
+		_doprntf
+			isdigit
+			scale
+			fround
+	I2C_LCD_Out
+		I2C_LCD_goto
+		I2C_LCD_putch
+			I2C_PCF8574_Write
+	__CC2DW
+	__FillZeros
+StepX
+StepY
+Timer8Interrupt
+	CycleStart
+	CycleStop
+Timer7Interrupt
+DMA_CH1_ISR
+DMA_CH0_ISR
+	strlen
+	memcpy
+Timer6Interrupt
+uart2_Rx_interrupt
+	UART2_Read
+	UART2_Write
