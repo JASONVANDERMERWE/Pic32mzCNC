@@ -377,7 +377,7 @@ unsigned char j;
  oneShotA = 0;
 
  while(1){
-#line 168 "C:/Users/Git/Pic32mzCNC/Main.c"
+
  if((!RC3_bit)&&(!oneShotA)){
 
  oneShotA = 1;
@@ -426,20 +426,16 @@ unsigned char j;
  }
  if((!RB0_bit)&&(Toggle))oneShotA = 0;
  if(!oneShotA){
-
-
  DisableStepper();
  }
 
  if(!RB0_bit){
  oneShotB = 0;
  oneShotA = 0;
-
  STPS[X].mmToTravel = calcSteps(151.25,8.06);
  speed_cntr_Move(STPS[X].mmToTravel, 2500,X);
  STPS[Y].mmToTravel = calcSteps(-151.25,8.06);
  speed_cntr_Move(STPS[Y].mmToTravel, 2500,Y);
-
 
 
 
