@@ -1,5 +1,5 @@
-#line 1 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Steptodistance.c"
-#line 1 "c:/users/cfan/dropbox/dave's/mikroc32/pic32mzclicker2_projects/steppercontrol/steptodistance.h"
+#line 1 "C:/Users/Git/Pic32mzCNC/Steptodistance.c"
+#line 1 "c:/users/git/pic32mzcnc/steptodistance.h"
 
 
 
@@ -8,9 +8,9 @@
 
 
 const float Dia;
-#line 20 "c:/users/cfan/dropbox/dave's/mikroc32/pic32mzclicker2_projects/steppercontrol/steptodistance.h"
+#line 20 "c:/users/git/pic32mzcnc/steptodistance.h"
 signed long calcSteps( double mmsToMove, double Dia);
-#line 1 "c:/users/cfan/dropbox/dave's/mikroc32/pic32mzclicker2_projects/steppercontrol/stepper.h"
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
 
 
 
@@ -48,7 +48,7 @@ extern sfr FLT_Step_PinDirY;
 
 
 typedef unsigned short UInt8_t;
-#line 74 "c:/users/cfan/dropbox/dave's/mikroc32/pic32mzclicker2_projects/steppercontrol/stepper.h"
+#line 74 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
@@ -153,7 +153,7 @@ void StepperConstants(long accel,long decel);
 void toggleOCx(int axis_No);
 void AccDec(int axix_No);
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 8 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Steptodistance.c"
+#line 8 "C:/Users/Git/Pic32mzCNC/Steptodistance.c"
 signed long calcSteps(double mmsToMove, double Dia){
 double circ,cirDivision,stepsToMove;
 
