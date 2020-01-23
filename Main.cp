@@ -161,30 +161,30 @@ typedef struct Steps{
 
  unsigned char run_state ;
 
- int step_delay;
+ long step_delay;
 
  int decel_start;
 
- int decel_val;
+ long decel_val;
 
- int min_delay;
+ long min_delay;
 
- int accel_count;
- int deccl_count;
+ long accel_count;
+ long deccl_count;
 
- int step_count;
+ long step_count;
 
- int new_step_delay;
+ long new_step_delay;
 
- int last_accel_delay;
+ long last_accel_delay;
 
- int accel_lim;
+ long accel_lim;
 
- int max_step_lim;
+ long max_step_lim;
 
- int rest;
+ long rest;
 
- int StartUp_delay;
+ long StartUp_delay;
 
  signed long mmToTravel;
 }STP;
@@ -214,6 +214,7 @@ int Pulse(int axis_No);
 void CalcDly(int axis_No);
 void StepperConstants(long accel,long decel);
 void toggleOCx(int axis_No);
+void AccDec(int axix_No);
 #line 1 "c:/users/cfan/dropbox/dave's/mikroc32/pic32mzclicker2_projects/steppercontrol/steptodistance.h"
 
 
@@ -371,12 +372,12 @@ unsigned char j;
 
  PinMode();
  SetPinMode();
- StepperConstants(1500,1500);
+ StepperConstants(4500,4500);
  EnableInterrupts();
  oneShotA = 0;
 
  while(1){
-#line 167 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Main.c"
+#line 168 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Main.c"
  if((!RC3_bit)&&(!oneShotA)){
 
  oneShotA = 1;
@@ -435,9 +436,9 @@ unsigned char j;
  oneShotA = 0;
 
  STPS[X].mmToTravel = calcSteps(151.25,8.06);
- speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
+ speed_cntr_Move(STPS[X].mmToTravel, 2500,X);
  STPS[Y].mmToTravel = calcSteps(-151.25,8.06);
- speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+ speed_cntr_Move(STPS[Y].mmToTravel, 2500,Y);
 
 
 
@@ -458,7 +459,7 @@ unsigned char j;
 
 
 
- sprintf(txt,"%d",STPS[0].mmToTravel);
+ sprintf(txt,"%d",STPS[0].max_step_lim);
  I2C_LCD_Out(LCD_01_ADDRESS,3,1,txt);
 
  sprintf(txt,"%d",STPS[0].decel_val);

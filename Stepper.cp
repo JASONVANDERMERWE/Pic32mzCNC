@@ -87,30 +87,30 @@ typedef struct Steps{
 
  unsigned char run_state ;
 
- int step_delay;
+ long step_delay;
 
  int decel_start;
 
- int decel_val;
+ long decel_val;
 
- int min_delay;
+ long min_delay;
 
- int accel_count;
- int deccl_count;
+ long accel_count;
+ long deccl_count;
 
- int step_count;
+ long step_count;
 
- int new_step_delay;
+ long new_step_delay;
 
- int last_accel_delay;
+ long last_accel_delay;
 
- int accel_lim;
+ long accel_lim;
 
- int max_step_lim;
+ long max_step_lim;
 
- int rest;
+ long rest;
 
- int StartUp_delay;
+ long StartUp_delay;
 
  signed long mmToTravel;
 }STP;
@@ -140,6 +140,7 @@ int Pulse(int axis_No);
 void CalcDly(int axis_No);
 void StepperConstants(long accel,long decel);
 void toggleOCx(int axis_No);
+void AccDec(int axix_No);
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
 #line 7 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
 unsigned char txt1[] = "       ";
@@ -281,7 +282,7 @@ int ii;
  else STPS[axis_No].decel_start = STPS[axis_No].accel_lim;
  }
  else {
- if(mmSteps > STPS[axis_No].decel_val) STPS[axis_No].decel_start = abs(mmSteps) - STPS[axis_No].decel_val;
+ if(mmSteps > STPS[axis_No].decel_val) STPS[axis_No].decel_start = abs(mmSteps) * STPS[axis_No].decel_val;
  else STPS[axis_No].decel_start = STPS[axis_No].accel_lim;
  }
 
@@ -337,7 +338,9 @@ void Step(long newx,long newy){
  static long d2;
  SV.over=0;
  d2 = 0;
-#line 221 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
+ SV.px = 0;
+ SV.py = 0;
+#line 223 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
  SV.dx = newx - SV.px;
  SV.dy = newy - SV.py;
 
@@ -357,17 +360,16 @@ void Step(long newx,long newy){
 
 
  if(SV.Tog == 0){
- LATE7_bit = 0;
+ LATE7_bit = 1;
  if(SV.dx > SV.dy){
- for(i=0; i < SV.dx; ++i){
-#line 245 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
+ for(STPS[X].step_count = 0;STPS[X].step_count < SV.dx; ++STPS[X].step_count) {
+
  STmr.compOCxRunning = 0;
  toggleOCx(X);
  Pulse(X);
  if(d2 < 0)d2 += 2*SV.dy;
  else{
  d2 += 2 * (SV.dy - SV.dx);
-
  toggleOCx(Y);
  Pulse(Y);
  }
@@ -377,8 +379,8 @@ void Step(long newx,long newy){
  }
  }else{
 
- for(i=0;i < SV.dy;++i){
-#line 264 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
+ for(STPS[Y].step_count = 0;STPS[Y].step_count < SV.dy; ++STPS[Y].step_count) {
+
  STmr.compOCxRunning = 0;
  toggleOCx(Y);
  Pulse(Y);
@@ -392,10 +394,14 @@ void Step(long newx,long newy){
  while(STmr.compOCxRunning != 2);
  }
  }
+
  }
 #line 284 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
 }
-#line 298 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
+
+
+
+
 void toggleOCx(int axis_No){
  switch(axis_No){
  case 0: OC3R = 0x5;
@@ -418,50 +424,41 @@ void toggleOCx(int axis_No){
 int Pulse(int axis_No){
 
  if(!STPS[axis_No].PLS_Step_ ){
-
-
-
- STPS[axis_No].step_count++;
-
- T6IE_bit = 1;
- T6IF_bit = 0;
-
- STPS[axis_No].microSec = 0;
+#line 315 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
  STPS[axis_No].PLS_Step_ = 1;
-#line 332 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
+
  }
-#line 352 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
+#line 321 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
  switch(STPS[axis_No].run_state) {
  case  0 :
- LATE7_bit = 1;
+ LATE7_bit = 0;
  T8IE_bit = 0;
  SV.Tog = 1;
  break;
 
  case  1 :
- STPS[axis_No].new_step_delay = STPS[axis_No].step_delay - ((( (STPS[axis_No].step_delay << 1)) + STPS[axis_No].rest)/((STPS[0].accel_count << 2) + 1));
- STPS[axis_No].rest = ((STPS[axis_No].step_delay << 1)+STPS[axis_No].rest)%((STPS[axis_No].accel_count << 2) + 1);
- STPS[axis_No].step_delay = STPS[axis_No].new_step_delay;
- if(STPS[axis_No].step_delay <= STPS[axis_No].min_delay)STPS[axis_No].step_delay = STPS[axis_No].min_delay;
+ AccDec(axis_No);
 
- if(STPS[axis_No].step_count >= abs(STPS[axis_No].decel_start)) {
- STPS[axis_No].accel_count = STPS[axis_No].decel_val;
- STPS[axis_No].run_state =  2 ;
- }
 
- if(STPS[axis_No].step_delay <= STPS[axis_No].min_delay) {
+ if(STPS[axis_No].step_delay <= STPS[axis_No].min_delay){
 
  STPS[axis_No].step_delay = STPS[axis_No].min_delay;
- STPS[axis_No].rest = 0;
  STPS[axis_No].run_state =  3 ;
  }
- STPS[axis_No].accel_count++;
+ if(STPS[axis_No].step_delay > STPS[axis_No].accel_lim){
+ STPS[axis_No].run_state =  3 ;
+ }
+ if(STPS[axis_No].step_count >= STPS[axis_No].decel_start) {
+ STPS[axis_No].accel_count = STPS[axis_No].decel_val;
+ STPS[axis_No].rest = 0;
+ STPS[axis_No].run_state =  2 ;
+ }
  break;
 
  case  3 :
  STPS[axis_No].step_delay = STPS[axis_No].min_delay;
 
- if(STPS[axis_No].step_count >= abs(STPS[axis_No].decel_start)) {
+ if(STPS[axis_No].step_count >= STPS[axis_No].decel_start) {
  STPS[axis_No].accel_count = STPS[axis_No].decel_val;
  STPS[axis_No].rest = 0;
 
@@ -470,23 +467,27 @@ int Pulse(int axis_No){
  break;
 
  case  2 :
- if(STPS[axis_No].new_step_delay <= STPS[axis_No].StartUp_delay){
- STPS[axis_No].new_step_delay = STPS[axis_No].step_delay - (((STPS[axis_No].step_delay << 1) + STPS[axis_No].rest)/((STPS[axis_No].accel_count << 2) + 1));
- STPS[axis_No].rest = ((STPS[axis_No].step_delay << 1)+STPS[axis_No].rest)%((STPS[axis_No].accel_count << 2) + 1);
- }
 
 
- STPS[axis_No].step_delay = STPS[axis_No].new_step_delay;
 
- if(STPS[axis_No].accel_count > 0 ){
+ AccDec(axis_No);
+ if(STPS[axis_No].accel_count >= -2 ){
  STPS[axis_No].run_state =  0 ;
  }
- STPS[axis_No].accel_count++;
  break;
+ default:break;
  }
  return axis_No;
 }
-#line 417 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
+
+void AccDec(int axis_No){
+ STPS[axis_No].accel_count++;
+ STPS[axis_No].new_step_delay = STPS[axis_No].step_delay - (( STPS[axis_No].step_delay << 1) + STPS[axis_No].rest)/((STPS[axis_No].accel_count << 2) + 1);
+ STPS[axis_No].rest = ((STPS[axis_No].step_delay << 1)+STPS[axis_No].rest)%((STPS[axis_No].accel_count << 2 ) + 1);
+ STPS[axis_No].step_delay = STPS[axis_No].new_step_delay;
+
+}
+#line 389 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
 static unsigned long sqrt_(unsigned long x){
 
  register unsigned long xr;
@@ -517,7 +518,7 @@ static unsigned long sqrt_(unsigned long x){
  return xr;
  }
 }
-#line 453 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
+#line 425 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
 unsigned int min_(unsigned int x, unsigned int y)
 {
  if(x < y){

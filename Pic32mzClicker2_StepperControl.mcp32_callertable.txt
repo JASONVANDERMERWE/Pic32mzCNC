@@ -49,7 +49,7 @@ main
 		abs
 		toggleOCx
 		Pulse
-			abs
+			AccDec
 	DisableStepper
 	sprintf
 		_doprntf

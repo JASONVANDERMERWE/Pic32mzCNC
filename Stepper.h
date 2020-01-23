@@ -120,30 +120,30 @@ typedef struct Steps{
   //! What part of the speed ramp we are in.
   unsigned char run_state ;
   //! Peroid of next timer delay. At start this value set the accelration rate.
-   int step_delay;
+   long step_delay;
   //! What step_pos to start decelaration
    int decel_start;
   //! Sets deceleration rate.
-   int decel_val;
+   long decel_val;
   //! Minimum time delay (max speed)
-   int min_delay;
+   long min_delay;
   //! Counter used when accelerateing/decelerateing to calculate step_delay.
-   int accel_count;
-   int deccl_count;
+   long accel_count;
+   long deccl_count;
   //! Counter used when accelerateing/decelerateing to calculate step_delay.
-   int step_count;
+   long step_count;
   //! Counter used when accelerateing/decelerateing to calculate step_delay.
-   int new_step_delay;
+   long new_step_delay;
   //! Counter used when accelerateing/decelerateing to calculate step_delay.
-   int last_accel_delay;
+   long last_accel_delay;
  //! Limit accelleration
-   int accel_lim;
+   long accel_lim;
  // Limit the number of steps
-   int max_step_lim;
+   long max_step_lim;
  // calculation modulo value
-   int rest;
+   long rest;
  // Generate a startup delay to accellerate from
-  int StartUp_delay;
+  long StartUp_delay;
  //!  the mm to travel
  signed long mmToTravel;
 }STP;
@@ -173,4 +173,5 @@ int Pulse(int axis_No);
 void CalcDly(int axis_No);
 void StepperConstants(long accel,long decel);
 void toggleOCx(int axis_No);
+void AccDec(int axix_No);
 #endif

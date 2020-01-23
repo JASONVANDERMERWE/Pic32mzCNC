@@ -98,30 +98,30 @@ typedef struct Steps{
 
  unsigned char run_state ;
 
- int step_delay;
+ long step_delay;
 
  int decel_start;
 
- int decel_val;
+ long decel_val;
 
- int min_delay;
+ long min_delay;
 
- int accel_count;
- int deccl_count;
+ long accel_count;
+ long deccl_count;
 
- int step_count;
+ long step_count;
 
- int new_step_delay;
+ long new_step_delay;
 
- int last_accel_delay;
+ long last_accel_delay;
 
- int accel_lim;
+ long accel_lim;
 
- int max_step_lim;
+ long max_step_lim;
 
- int rest;
+ long rest;
 
- int StartUp_delay;
+ long StartUp_delay;
 
  signed long mmToTravel;
 }STP;
@@ -151,6 +151,7 @@ int Pulse(int axis_No);
 void CalcDly(int axis_No);
 void StepperConstants(long accel,long decel);
 void toggleOCx(int axis_No);
+void AccDec(int axix_No);
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
 #line 8 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Steptodistance.c"
 signed long calcSteps(double mmsToMove, double Dia){

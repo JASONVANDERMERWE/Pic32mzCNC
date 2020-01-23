@@ -159,7 +159,7 @@ int ii;
         else  STPS[axis_No].decel_start =  STPS[axis_No].accel_lim;
     }
     else {
-        if(mmSteps > STPS[axis_No].decel_val) STPS[axis_No].decel_start = abs(mmSteps)  STPS[axis_No].decel_val;
+        if(mmSteps > STPS[axis_No].decel_val) STPS[axis_No].decel_start = abs(mmSteps) * STPS[axis_No].decel_val;
         else  STPS[axis_No].decel_start =  STPS[axis_No].accel_lim;
     }
     // We must decelrate at least 1 step to stop.
@@ -215,6 +215,8 @@ void Step(long newx,long newy){
  static long d2;
    SV.over=0;
    d2 = 0;
+   SV.px = 0;
+   SV.py = 0;
 /*!
  *use Bressenhams algorithm here
  */
@@ -237,18 +239,16 @@ void Step(long newx,long newy){
   
 
    if(SV.Tog == 0){  //? round this start up bit
-     LATE7_bit = 0;
+     LATE7_bit = 1;
      if(SV.dx > SV.dy){
-        for(i=0; i < SV.dx; ++i){
-         /*T6IE_bit    = 1;
-           T6IF_bit    = 0;*/
+        for(STPS[X].step_count = 0;STPS[X].step_count < SV.dx; ++STPS[X].step_count)/*(i=0; i < SV.dx; ++i)*/{
+
           STmr.compOCxRunning = 0;
           toggleOCx(X);
           Pulse(X);
            if(d2 < 0)d2 += 2*SV.dy;
            else{
               d2 += 2 * (SV.dy - SV.dx);
-             // PLS_StepY = 1;
               toggleOCx(Y);
               Pulse(Y);
            }
@@ -258,9 +258,8 @@ void Step(long newx,long newy){
         }
      }else{
      
-        for(i=0;i < SV.dy;++i){
-            /*T6IE_bit   = 1;
-              T6IF_bit   = 0;  */
+        for(STPS[Y].step_count = 0;STPS[Y].step_count < SV.dy; ++STPS[Y].step_count)/*(i=0;i < SV.dy;++i)*/{
+
            STmr.compOCxRunning = 0;
            toggleOCx(Y);
            Pulse(Y);
@@ -274,6 +273,7 @@ void Step(long newx,long newy){
             while(STmr.compOCxRunning != 2);//STPS[Y].microSec < STPS[y].step_delay);
         }
       }
+      
    }
 /*!
  * update the logical position. We don't just = newx because
@@ -283,16 +283,7 @@ void Step(long newx,long newy){
     SV.py += SV.dy * (long)SV.diry;*/
 }
 
-/*SV.over += SV.dy;
-           if(SV.over >= SV.dx){
-            SV.over -= SV.dx;
-            STmr.axisTosample = Pulse(Y);
-           }*/
-/*SV.over += SV.dx;
-           if(SV.over >= SV.dy){
-              SV.over -= SV.dy;
-              Pulse(X);
-           }*/
+
 //////////////////////////////////////////////////
 //toggle the OCxCON regs
 void toggleOCx(int axis_No){
@@ -317,92 +308,73 @@ void toggleOCx(int axis_No){
 int Pulse(int axis_No){
 
     if(!STPS[axis_No].PLS_Step_ ){
-
-     // if(ACCEL || DECEL)STPS[axis_No].accel_count++; // acceleration counter
-      /*if(ACCEL || DECEL || RUN)*/
-      STPS[axis_No].step_count++;
-
-      T6IE_bit                  = 1;
+     //STPS[axis_No].step_count++;
+     /*T6IE_bit                  = 1;
       T6IF_bit                  = 0;
-
-      STPS[axis_No].microSec    = 0;
+      STPS[axis_No].microSec    = 0;*/
       STPS[axis_No].PLS_Step_   = 1;
-    /*if(axis_No == X)PLS_StepX = 1;
-      if(axis_No == Y)PLS_StepY = 1;*/
+
     }
 /*if((SV.dx > SV.dy)&&(axis_No == Y))return axis_No;
     if((SV.dx < SV.dy)&&(axis_No == X))return axis_No;*/
-/*! brief Timer/Counter1 Output Compare A Match.
- *  Timer/Counter1 Output Compare A Match Interrupt.
- *  Increments/decrements the position of the stepper motor
- *  exept after last position, when it stops.
- *  The \ref step_delay defines the period of this interrupt
- *  and controls the speed of the stepper motor.
- *  A new step delay is calculated to follow wanted speed profile
- *  on basis of accel/decel parameters.
- */
-
-  // Remember the last step delay used when accelrating.
-  // static long last_accel_delay;
-  // Counting steps when moving.
-  // Static unsigned long step_count = 0;
-  // Keep track of remainder from new_step-delay calculation to incrase accurancy
-  //reset the pulse output to zero
 
     switch(STPS[axis_No].run_state) {
       case STOP:
-           LATE7_bit = 1;
+           LATE7_bit = 0;
            T8IE_bit         = 0;
            SV.Tog = 1;
         break;
 
       case ACCEL:
-        STPS[axis_No].new_step_delay = STPS[axis_No].step_delay - ((( (STPS[axis_No].step_delay << 1)) + STPS[axis_No].rest)/((STPS[0].accel_count << 2) + 1));
-        STPS[axis_No].rest = ((STPS[axis_No].step_delay << 1)+STPS[axis_No].rest)%((STPS[axis_No].accel_count << 2) + 1);
-        STPS[axis_No].step_delay = STPS[axis_No].new_step_delay;
-        if(STPS[axis_No].step_delay <= STPS[axis_No].min_delay)STPS[axis_No].step_delay = STPS[axis_No].min_delay;
+        AccDec(axis_No);
         // Chech if we should start decelration.
-        if(STPS[axis_No].step_count >= abs(STPS[axis_No].decel_start)) {
+        // Check if we hitted max speed.
+        if(STPS[axis_No].step_delay <= STPS[axis_No].min_delay){
+        //  STPS.last_accel_delay = STPS.new_step_delay;
+             STPS[axis_No].step_delay = STPS[axis_No].min_delay;
+             STPS[axis_No].run_state  = RUN;
+        }
+        if(STPS[axis_No].step_delay > STPS[axis_No].accel_lim){
+             STPS[axis_No].run_state  = RUN;
+        }
+        if(STPS[axis_No].step_count >= STPS[axis_No].decel_start) {
           STPS[axis_No].accel_count = STPS[axis_No].decel_val;
+          STPS[axis_No].rest        = 0;
           STPS[axis_No].run_state   = DECEL;
         }
-        // Check if we hitted max speed.
-        if(STPS[axis_No].step_delay <= STPS[axis_No].min_delay) {
-        //  STPS.last_accel_delay = STPS.new_step_delay;
-          STPS[axis_No].step_delay = STPS[axis_No].min_delay;
-          STPS[axis_No].rest       = 0;
-          STPS[axis_No].run_state  = RUN;
-        }
-        STPS[axis_No].accel_count++;
         break;
 
       case RUN:
         STPS[axis_No].step_delay = STPS[axis_No].min_delay;
         // Chech if we should start decelration.
-        if(STPS[axis_No].step_count >= abs(STPS[axis_No].decel_start)) {
-          STPS[axis_No].accel_count = STPS[axis_No].decel_val;
-          STPS[axis_No].rest        = 0;
+        if(STPS[axis_No].step_count >= STPS[axis_No].decel_start) {
+             STPS[axis_No].accel_count = STPS[axis_No].decel_val;
+             STPS[axis_No].rest        = 0;
       // Start decelration with same delay as accel ended with.
-          STPS[axis_No].run_state   = DECEL;
+             STPS[axis_No].run_state   =  DECEL;
         }
         break;
 
       case DECEL:
-        if(STPS[axis_No].new_step_delay <= STPS[axis_No].StartUp_delay){
-          STPS[axis_No].new_step_delay = STPS[axis_No].step_delay - (((STPS[axis_No].step_delay << 1) + STPS[axis_No].rest)/((STPS[axis_No].accel_count << 2) + 1));
-          STPS[axis_No].rest = ((STPS[axis_No].step_delay << 1)+STPS[axis_No].rest)%((STPS[axis_No].accel_count << 2) + 1);
-        }
-       // else STPS[axis_No].new_step_delay = STPS[axis_No].StartUp_delay;
-        
-        STPS[axis_No].step_delay = STPS[axis_No].new_step_delay;
+
+        // else STPS[axis_No].new_step_delay = STPS[axis_No].StartUp_delay;
         // Check if we at last step
-        if(STPS[axis_No].accel_count > 0 ){
-          STPS[axis_No].run_state = STOP;
+        AccDec(axis_No);
+        if(STPS[axis_No].accel_count >= -2 ){
+         STPS[axis_No].run_state = STOP;
         }
-        STPS[axis_No].accel_count++;
         break;
+      default:break;
     }
   return axis_No;
+}
+
+void AccDec(int axis_No){
+          STPS[axis_No].accel_count++;
+          STPS[axis_No].new_step_delay = STPS[axis_No].step_delay - (( STPS[axis_No].step_delay << 1) + STPS[axis_No].rest)/((STPS[axis_No].accel_count << 2) + 1);
+          STPS[axis_No].rest = ((STPS[axis_No].step_delay << 1)+STPS[axis_No].rest)%((STPS[axis_No].accel_count << 2 ) + 1);
+          STPS[axis_No].step_delay = STPS[axis_No].new_step_delay;
+
 }
 
 /*!  
@@ -459,3 +431,15 @@ unsigned int min_(unsigned int x, unsigned int y)
     return y;
   }
 }
+
+
+/*SV.over += SV.dy;
+           if(SV.over >= SV.dx){
+            SV.over -= SV.dx;
+            STmr.axisTosample = Pulse(Y);
+           }*/
+/*SV.over += SV.dx;
+           if(SV.over >= SV.dy){
+              SV.over -= SV.dy;
+              Pulse(X);
+           }*/

@@ -149,7 +149,7 @@ unsigned char j;
 
   PinMode();
   SetPinMode();
-  StepperConstants(1500,1500);
+  StepperConstants(4500,4500);
   EnableInterrupts();
   oneShotA = 0;
  // I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
@@ -164,6 +164,7 @@ unsigned char j;
                TMR2 =  0xFFFF;
                OC6CON =  0x8004; //restart the output compare module
          }*/
+
          if((!RC3_bit)&&(!oneShotA)){
 
                oneShotA     = 1;
@@ -222,9 +223,9 @@ unsigned char j;
            oneShotA       = 0;
          //  for( j = 0; j< NoOfAxis;j++){
                  STPS[X].mmToTravel = calcSteps(151.25,8.06);
-                 speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
+                 speed_cntr_Move(STPS[X].mmToTravel, 2500,X);
                  STPS[Y].mmToTravel = calcSteps(-151.25,8.06);
-                 speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+                 speed_cntr_Move(STPS[Y].mmToTravel, 2500,Y);
            //    if(j>NoOfAxis)break;
           // }
                //line 1
@@ -245,7 +246,7 @@ unsigned char j;
 
                //Line 3
                // Find out after how many steps does the speed hit the max speed limit.
-               sprintf(txt,"%d",STPS[0].mmToTravel);
+               sprintf(txt,"%d",STPS[0].max_step_lim);
                I2C_LCD_Out(LCD_01_ADDRESS,3,1,txt);
                // decelrate  value start
                sprintf(txt,"%d",STPS[0].decel_val);
