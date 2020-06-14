@@ -163,7 +163,7 @@ typedef struct Steps{
 
  long step_delay;
 
- int decel_start;
+ long decel_start;
 
  long decel_val;
 
@@ -352,17 +352,16 @@ char ptrAdd[6];
 
 void StepX() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
 
- STmr.compOCxRunning = 1;
+ STmr.compOCxRunning = 2;
  TMR4 = 0xFFFF;
  OC3IF_bit = 0;
 
 }
+void StepY() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
 
-void StepY() iv IVT_OUTPUT_COMPARE_6 ilevel 3 ics ICS_AUTO {
-
- STmr.compOCxRunning = 2;
+ STmr.compOCxRunning = 1;
  TMR2 = 0xFFFF;
- OC6IF_bit = 0;
+ OC5IF_bit = 0;
 
 }
 

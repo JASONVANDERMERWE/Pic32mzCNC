@@ -89,7 +89,7 @@ typedef struct Steps{
 
  long step_delay;
 
- int decel_start;
+ long decel_start;
 
  long decel_val;
 
@@ -157,16 +157,16 @@ unsigned int Toggle;
 
 
 
-sbit EN_StepX at LATD9_bit;
-sbit EN_Step_PinDirX at TRISD9_bit;
+sbit EN_StepX at LATG0_bit;
+sbit EN_Step_PinDirX at TRISG0_bit;
 
 
 
 
-sbit PLS_StepX at LATB14_bit;
-sbit PLS_Step_PinDirX at TRISB14_bit;
-sbit DIR_StepX at LATB13_bit;
-sbit DIR_Step_PinDirX at TRISB13_bit;
+sbit PLS_StepX at LATF1_bit;
+sbit PLS_Step_PinDirX at TRISF1_bit;
+sbit DIR_StepX at LATG1_bit;
+sbit DIR_Step_PinDirX at TRISG1_bit;
 
 sbit EN_StepY at LATF0_bit;
 sbit EN_Step_PinDirY at TRISF0_bit;
@@ -404,15 +404,15 @@ void Step(long newx,long newy){
 
 void toggleOCx(int axis_No){
  switch(axis_No){
- case 0: OC3R = 0x5;
- OC3RS = STPS[X].step_delay & 0xFFFF;
+ case 0: OC5R = 0x5;
+ OC5RS = STPS[X].step_delay & 0xFFFF;
+ TMR2 = 0xFFFF;
+ OC5CON = 0x8004;
+ break;
+ case 1: OC3R = 0x5;
+ OC3RS = STPS[Y].step_delay & 0xFFFF;
  TMR4 = 0xFFFF;
  OC3CON = 0x8004;
- break;
- case 1: OC6R = 0x5;
- OC6RS = STPS[Y].step_delay & 0xFFFF;
- TMR2 = 0xFFFF;
- OC6CON = 0x8004;
  break;
  default:
  break;

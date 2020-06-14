@@ -89,8 +89,8 @@ void DMA_CH0_ISR() iv IVT_DMA0 ilevel 5 ics ICS_AUTO {
       CHEN_DCH1CON_bit = 1;     // Enable the DMA1 channel to transmit back what was received
     }
     DCH1SSIZ            = i ;
-  //  DCH1CSIZ            = i*2 ;
-/* Channel Address Error Interrupt Flag bit */
+   //  DCH1CSIZ            = i*2 ;
+/* Channel Address Error Interrupt Flag bit  */
     if( CHERIF_bit == 1){                     // clear channel error int flag
        CHERIF_bit = 0;
        memcpy(txBuf,"CHERIF Error",13);
@@ -129,18 +129,17 @@ char ptrAdd[6];
 //output compare 3 pin RF1 interrupt
 void StepX() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
 
-     STmr.compOCxRunning = 1;
+     STmr.compOCxRunning = 2;
      TMR4 =  0xFFFF;
      OC3IF_bit = 0;
    //  OC3CON    =  0x8004; //restart the output compare module
 }
+void StepY() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
 
-void StepY() iv IVT_OUTPUT_COMPARE_6 ilevel 3 ics ICS_AUTO {
-
-     STmr.compOCxRunning = 2;
+     STmr.compOCxRunning = 1;
      TMR2 =  0xFFFF;
-     OC6IF_bit = 0;
-    // OC6CON    =  0x8004; //restart the output compare module
+     OC5IF_bit = 0;
+    // OC5CON    =  0x8004; //restart the output compare module
 }
 /////////////////////////////////////////
 //main function

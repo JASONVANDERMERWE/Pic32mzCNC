@@ -100,7 +100,7 @@ typedef struct Steps{
 
  long step_delay;
 
- int decel_start;
+ long decel_start;
 
  long decel_val;
 

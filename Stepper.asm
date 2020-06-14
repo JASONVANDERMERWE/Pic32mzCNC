@@ -1,19 +1,19 @@
 _SetPinMode:
 ;Stepper.c,47 :: 		void SetPinMode(){
 ;Stepper.c,50 :: 		EN_Step_PinDirX  = 0; //output
-LUI	R2, BitMask(TRISD9_bit+0)
-ORI	R2, R2, BitMask(TRISD9_bit+0)
+LUI	R2, BitMask(TRISG0_bit+0)
+ORI	R2, R2, BitMask(TRISG0_bit+0)
 _SX	
 _LX	
-EXT	R2, R2, BitPos(TRISD9_bit+0), 1
+EXT	R2, R2, BitPos(TRISG0_bit+0), 1
 SB	R2, Offset(_AxisNo+0)(GP)
 ;Stepper.c,53 :: 		PLS_Step_PinDirX = 0;
-LUI	R2, BitMask(TRISB14_bit+0)
-ORI	R2, R2, BitMask(TRISB14_bit+0)
+LUI	R2, BitMask(TRISF1_bit+0)
+ORI	R2, R2, BitMask(TRISF1_bit+0)
 _SX	
 ;Stepper.c,54 :: 		DIR_Step_PinDirX = 0;
-LUI	R2, BitMask(TRISB13_bit+0)
-ORI	R2, R2, BitMask(TRISB13_bit+0)
+LUI	R2, BitMask(TRISG1_bit+0)
+ORI	R2, R2, BitMask(TRISG1_bit+0)
 _SX	
 ;Stepper.c,56 :: 		EN_Step_PinDirY  = 0; //output
 LUI	R2, BitMask(TRISF0_bit+0)
@@ -46,8 +46,8 @@ NOP
 _EnStepper:
 ;Stepper.c,72 :: 		void EnStepper(){
 ;Stepper.c,76 :: 		EN_StepX       = 0;
-LUI	R2, BitMask(LATD9_bit+0)
-ORI	R2, R2, BitMask(LATD9_bit+0)
+LUI	R2, BitMask(LATG0_bit+0)
+ORI	R2, R2, BitMask(LATG0_bit+0)
 _SX	
 ;Stepper.c,80 :: 		EN_StepY       = 0;
 LUI	R2, BitMask(LATF0_bit+0)
@@ -61,8 +61,8 @@ NOP
 _DisableStepper:
 ;Stepper.c,83 :: 		void DisableStepper(){
 ;Stepper.c,84 :: 		EN_Stepx      = 1;
-LUI	R2, BitMask(LATD9_bit+0)
-ORI	R2, R2, BitMask(LATD9_bit+0)
+LUI	R2, BitMask(LATG0_bit+0)
+ORI	R2, R2, BitMask(LATG0_bit+0)
 _SX	
 ;Stepper.c,85 :: 		EN_StepY      = 1;
 LUI	R2, BitMask(LATF0_bit+0)
@@ -381,7 +381,7 @@ ADDIU	R3, R2, 12
 ADDIU	R2, R2, 16
 LW	R2, 0(R2)
 ADDU	R2, R25, R2
-SH	R2, 0(R3)
+SW	R2, 0(R3)
 J	L_speed_cntr_Move13
 NOP	
 L_speed_cntr_Move12:
@@ -394,7 +394,7 @@ ADDU	R2, R2, R3
 ADDIU	R3, R2, 12
 ADDIU	R2, R2, 44
 LW	R2, 0(R2)
-SH	R2, 0(R3)
+SW	R2, 0(R3)
 L_speed_cntr_Move13:
 ;Stepper.c,160 :: 		}
 J	L_speed_cntr_Move14
@@ -430,10 +430,10 @@ ORI	R3, R3, lo_addr(_STPS+0)
 ADDU	R3, R3, R4
 ADDIU	R3, R3, 16
 LW	R3, 0(R3)
-MULTU	R3, R2
-MFLO	R3
+SEH	R2, R2
+MUL	R3, R2, R3
 LW	R2, 12(SP)
-SH	R3, 0(R2)
+SW	R3, 0(R2)
 J	L_speed_cntr_Move16
 NOP	
 L_speed_cntr_Move15:
@@ -446,7 +446,7 @@ ADDU	R2, R2, R3
 ADDIU	R3, R2, 12
 ADDIU	R2, R2, 44
 LW	R2, 0(R2)
-SH	R2, 0(R3)
+SW	R2, 0(R3)
 L_speed_cntr_Move16:
 ;Stepper.c,164 :: 		}
 L_speed_cntr_Move14:
@@ -773,15 +773,15 @@ NOP
 J	L_Step33
 NOP	
 L__Step118:
-LUI	R2, BitMask(LATB13_bit+0)
-ORI	R2, R2, BitMask(LATB13_bit+0)
+LUI	R2, BitMask(LATG1_bit+0)
+ORI	R2, R2, BitMask(LATG1_bit+0)
 _SX	
 J	L_Step34
 NOP	
 L_Step33:
 ;Stepper.c,230 :: 		else DIR_StepX = CW;
-LUI	R2, BitMask(LATB13_bit+0)
-ORI	R2, R2, BitMask(LATB13_bit+0)
+LUI	R2, BitMask(LATG1_bit+0)
+ORI	R2, R2, BitMask(LATG1_bit+0)
 _SX	
 L_Step34:
 ;Stepper.c,231 :: 		if(SV.dirY < 0) DIR_StepY = CCW;
@@ -1038,37 +1038,37 @@ _toggleOCx:
 ;Stepper.c,290 :: 		switch(axis_No){
 J	L_toggleOCx56
 NOP	
-;Stepper.c,291 :: 		case 0: OC3R   = 0x5;
+;Stepper.c,291 :: 		case 0: OC5R   = 0x5;
 L_toggleOCx58:
 ORI	R2, R0, 5
-SW	R2, Offset(OC3R+0)(GP)
-;Stepper.c,292 :: 		OC3RS  = STPS[X].step_delay & 0xFFFF;//0x234;
+SW	R2, Offset(OC5R+0)(GP)
+;Stepper.c,292 :: 		OC5RS  = STPS[X].step_delay & 0xFFFF;//0x234;
 LW	R2, Offset(_STPS+8)(GP)
 ANDI	R2, R2, 65535
-SW	R2, Offset(OC3RS+0)(GP)
-;Stepper.c,293 :: 		TMR4   =  0xFFFF;
+SW	R2, Offset(OC5RS+0)(GP)
+;Stepper.c,293 :: 		TMR2   =  0xFFFF;
 ORI	R2, R0, 65535
-SW	R2, Offset(TMR4+0)(GP)
-;Stepper.c,294 :: 		OC3CON =  0x8004; //restart the output compare module
+SW	R2, Offset(TMR2+0)(GP)
+;Stepper.c,294 :: 		OC5CON =  0x8004; //restart the output compare module
 ORI	R2, R0, 32772
-SW	R2, Offset(OC3CON+0)(GP)
+SW	R2, Offset(OC5CON+0)(GP)
 ;Stepper.c,295 :: 		break;
 J	L_toggleOCx57
 NOP	
-;Stepper.c,296 :: 		case 1: OC6R   = 0x5;
+;Stepper.c,296 :: 		case 1: OC3R   = 0x5;
 L_toggleOCx59:
 ORI	R2, R0, 5
-SW	R2, Offset(OC6R+0)(GP)
-;Stepper.c,297 :: 		OC6RS  = STPS[Y].step_delay & 0xFFFF;
+SW	R2, Offset(OC3R+0)(GP)
+;Stepper.c,297 :: 		OC3RS  = STPS[Y].step_delay & 0xFFFF;
 LW	R2, Offset(_STPS+72)(GP)
 ANDI	R2, R2, 65535
-SW	R2, Offset(OC6RS+0)(GP)
-;Stepper.c,298 :: 		TMR2   =  0xFFFF;
+SW	R2, Offset(OC3RS+0)(GP)
+;Stepper.c,298 :: 		TMR4   =  0xFFFF;
 ORI	R2, R0, 65535
-SW	R2, Offset(TMR2+0)(GP)
-;Stepper.c,299 :: 		OC6CON =  0x8004; //restart the output compare module
+SW	R2, Offset(TMR4+0)(GP)
+;Stepper.c,299 :: 		OC3CON =  0x8004; //restart the output compare module
 ORI	R2, R0, 32772
-SW	R2, Offset(OC6CON+0)(GP)
+SW	R2, Offset(OC3CON+0)(GP)
 ;Stepper.c,300 :: 		break;
 J	L_toggleOCx57
 NOP	
@@ -1234,8 +1234,7 @@ ADDU	R4, R2, R3
 ADDIU	R2, R4, 32
 LW	R3, 0(R2)
 ADDIU	R2, R4, 12
-LH	R2, 0(R2)
-SEH	R2, R2
+LW	R2, 0(R2)
 SLT	R2, R3, R2
 BEQ	R2, R0, L__Pulse140
 NOP	
@@ -1295,8 +1294,7 @@ ADDU	R4, R2, R3
 ADDIU	R2, R4, 32
 LW	R3, 0(R2)
 ADDIU	R2, R4, 12
-LH	R2, 0(R2)
-SEH	R2, R2
+LW	R2, 0(R2)
 SLT	R2, R3, R2
 BEQ	R2, R0, L__Pulse141
 NOP	
