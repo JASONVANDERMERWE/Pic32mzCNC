@@ -122,7 +122,7 @@ typedef struct Steps{
   //! Peroid of next timer delay. At start this value set the accelration rate.
    long step_delay;
   //! What step_pos to start decelaration
-   int decel_start;
+   long decel_start;
   //! Sets deceleration rate.
    long decel_val;
   //! Minimum time delay (max speed)

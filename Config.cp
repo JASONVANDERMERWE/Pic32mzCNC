@@ -1,5 +1,5 @@
-#line 1 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Config.c"
-#line 1 "c:/users/cfan/dropbox/dave's/mikroc32/pic32mzclicker2_projects/steppercontrol/config.h"
+#line 1 "C:/Users/Git/Pic32mzCNC/Config.c"
+#line 1 "c:/users/git/pic32mzcnc/config.h"
 
 
 
@@ -73,7 +73,7 @@ extern Cmd_Type Cmd;
  void I2C_Lcd_Chr( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  out_char);
  void I2C_LCD_init( unsigned char  addr);
  void I2C_LCD_init4l( unsigned char  addr);
-#line 5 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Config.c"
+#line 4 "C:/Users/Git/Pic32mzCNC/Config.c"
 void PinMode(){
 
  SYSKEY = 0xAA996655;
@@ -96,7 +96,9 @@ void PinMode(){
 
 
  TRISA9_bit = 0;
+ TRISD4_bit = 0;
  TRISE7_bit = 0;
+ TRISF0_bit = 0;
  TRISF1_bit = 0;
  TRISG0_bit = 0;
  TRISG1_bit = 0;
@@ -106,7 +108,7 @@ void PinMode(){
  TRISC3_bit = 1;
  TRISG7_bit = 1;
  TRISG8_bit = 1;
- TRISF0_bit = 0;
+
 
 
  Unlock_IOLOCK();
@@ -115,8 +117,8 @@ void PinMode(){
  PPS_Mapping_NoLock(_RPB9, _OUTPUT, _NULL);
  PPS_Mapping_NoLock(_RPB10, _OUTPUT, _NULL);
  PPS_Mapping_NoLock(_RPF1, _OUTPUT, _OC3);
- PPS_Mapping_NoLock(_RPG0, _OUTPUT, _OC4);
- PPS_Mapping_NoLock(_RPG1, _OUTPUT, _OC6);
+ PPS_Mapping_NoLock(_RPD4, _OUTPUT, _OC5);
+ PPS_Mapping_NoLock(_RPE3, _OUTPUT, _OC8);
  Lock_IOLOCK();
 
 
@@ -223,15 +225,15 @@ void set_performance_mode(){
  PRECONbits.PFMSECEN = 0;
  PRECONbits.PREFEN = 0b11;
  PRECONbits.PFMWS = 0b100;
-#line 162 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Config.c"
+#line 163 "C:/Users/Git/Pic32mzCNC/Config.c"
  SYSKEY = 0x33333333;
 }
 
 
 void OutPutPulseXYZ(){
-#line 172 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Config.c"
+#line 173 "C:/Users/Git/Pic32mzCNC/Config.c"
  OC3CON = 0x0000;
- OC6CON = 0x0000;
+ OC5CON = 0x0000;
 
 
  T2CON = 0x0000;
@@ -247,12 +249,12 @@ void OutPutPulseXYZ(){
 
 
  OC3CON = 0x0004;
- OC6CON = 0x0004;
-#line 198 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Config.c"
+ OC5CON = 0x0004;
+#line 199 "C:/Users/Git/Pic32mzCNC/Config.c"
  OC3R = 0x5;
  OC3RS = 0x234;
- OC6R = 0x5;
- OC6RS = 0x234;
+ OC5R = 0x5;
+ OC5RS = 0x234;
 
 
  OC3IP0_bit = 1;
@@ -263,13 +265,13 @@ void OutPutPulseXYZ(){
  OC3IF_bit = 0;
  OC3IE_bit = 1;
 
- OC6IP0_bit = 1;
- OC6IP1_bit = 1;
- OC6IP2_bit = 0;
- OC6IS0_bit = 1;
- OC6IS1_bit = 0;
- OC6IF_bit = 0;
- OC6IE_bit = 1;
+ OC5IP0_bit = 1;
+ OC5IP1_bit = 1;
+ OC5IP2_bit = 0;
+ OC5IS0_bit = 1;
+ OC5IS1_bit = 0;
+ OC5IF_bit = 0;
+ OC5IE_bit = 1;
 
 
  T2CONSET = 0x8000;

@@ -89,8 +89,8 @@ void DMA_CH0_ISR() iv IVT_DMA0 ilevel 5 ics ICS_AUTO {
       CHEN_DCH1CON_bit = 1;     // Enable the DMA1 channel to transmit back what was received
     }
     DCH1SSIZ            = i ;
-  //  DCH1CSIZ            = i*2 ;
-/* Channel Address Error Interrupt Flag bit */
+   //  DCH1CSIZ            = i*2 ;
+/* Channel Address Error Interrupt Flag bit  */
     if( CHERIF_bit == 1){                     // clear channel error int flag
        CHERIF_bit = 0;
        memcpy(txBuf,"CHERIF Error",13);
@@ -129,18 +129,17 @@ char ptrAdd[6];
 //output compare 3 pin RF1 interrupt
 void StepX() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
 
-     STmr.compOCxRunning = 1;
+     STmr.compOCxRunning = 2;
      TMR4 =  0xFFFF;
      OC3IF_bit = 0;
    //  OC3CON    =  0x8004; //restart the output compare module
 }
+void StepY() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
 
-void StepY() iv IVT_OUTPUT_COMPARE_6 ilevel 3 ics ICS_AUTO {
-
-     STmr.compOCxRunning = 2;
+     STmr.compOCxRunning = 1;
      TMR2 =  0xFFFF;
-     OC6IF_bit = 0;
-    // OC6CON    =  0x8004; //restart the output compare module
+     OC5IF_bit = 0;
+    // OC5CON    =  0x8004; //restart the output compare module
 }
 /////////////////////////////////////////
 //main function
@@ -154,17 +153,7 @@ unsigned char j;
   oneShotA = 0;
  // I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
   while(1){
- /*LATE7_bit   = !LATE7_bit;*/
-
-/*if(!RC3_bit){
-
-               TMR4 =  0xFFFF;
-               OC3CON =  0x8004; //restart the output compare module
-
-               TMR2 =  0xFFFF;
-               OC6CON =  0x8004; //restart the output compare module
-         }*/
-
+  
          if((!RC3_bit)&&(!oneShotA)){
 
                oneShotA     = 1;
@@ -213,21 +202,17 @@ unsigned char j;
          }
          if((!RB0_bit)&&(Toggle))oneShotA = 0;
          if(!oneShotA){
-         // oneShot = 0;
-         //  I2C_LCD_Out(LCD_01_ADDRESS,1,1,"Stop");
             DisableStepper();
          }
          
          if(!RB0_bit){
            oneShotB       = 0;
            oneShotA       = 0;
-         //  for( j = 0; j< NoOfAxis;j++){
                  STPS[X].mmToTravel = calcSteps(151.25,8.06);
                  speed_cntr_Move(STPS[X].mmToTravel, 2500,X);
                  STPS[Y].mmToTravel = calcSteps(-151.25,8.06);
                  speed_cntr_Move(STPS[Y].mmToTravel, 2500,Y);
-           //    if(j>NoOfAxis)break;
-          // }
+
                //line 1
                // Find out after how many Steps before we must start dmeceleration.
                sprintf(txt,"%d",STPS[0].accel_lim);

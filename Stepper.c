@@ -18,16 +18,16 @@ unsigned int Toggle;
 //bit PLS_Step_;sfr;
 //////////////////////////////////
 //pin modes
-sbit EN_StepX at LATD9_bit;               //LATB13_bit;
-sbit EN_Step_PinDirX at TRISD9_bit;       //TRISB13_bit;
+sbit EN_StepX at LATG0_bit;               //LATB13_bit;   LATD9_bit
+sbit EN_Step_PinDirX at TRISG0_bit;       //TRISB13_bit;  TRISD9
 //sbit RST_StepX at LATA10_bit;
 //sbit RST_Step_PinDirX at TRISA10_bit;
 //sbit SLP_FLT_StepX at LATB15_bit;         //LATD9_bit;
 //sbit SLP_FLT_Step_PinDirX at TRISB15_bit; //TRISD9_bit;
-sbit PLS_StepX at LATB14_bit;
-sbit PLS_Step_PinDirX at TRISB14_bit;
-sbit DIR_StepX at LATB13_bit;
-sbit DIR_Step_PinDirX at TRISB13_bit;
+sbit PLS_StepX at LATF1_bit;                //LATB14_bit;
+sbit PLS_Step_PinDirX at TRISF1_bit;
+sbit DIR_StepX at LATG1_bit;               //LATB13_bit;
+sbit DIR_Step_PinDirX at TRISG1_bit;
 
 sbit EN_StepY at LATF0_bit;
 sbit EN_Step_PinDirY at TRISF0_bit;
@@ -279,8 +279,8 @@ void Step(long newx,long newy){
  * update the logical position. We don't just = newx because
  * px + dx * dirx == newx could be false by a tiny margin and we don't want rounding errors.
  */
-/*SV.px += SV.dx * (long)SV.dirx;
-    SV.py += SV.dy * (long)SV.diry;*/
+  /*SV.px += SV.dx * SV.dirx;
+    SV.py += SV.dy * SV.diry;*/
 }
 
 
@@ -288,15 +288,15 @@ void Step(long newx,long newy){
 //toggle the OCxCON regs
 void toggleOCx(int axis_No){
       switch(axis_No){
-        case 0: OC3R   = 0x5;
-                OC3RS  = STPS[X].step_delay & 0xFFFF;//0x234;
+        case 0: OC5R   = 0x5;
+                OC5RS  = STPS[X].step_delay & 0xFFFF;//0x234;
+                TMR2   =  0xFFFF;
+                OC5CON =  0x8004; //restart the output compare module
+             break;
+        case 1: OC3R   = 0x5;
+                OC3RS  = STPS[Y].step_delay & 0xFFFF;
                 TMR4   =  0xFFFF;
                 OC3CON =  0x8004; //restart the output compare module
-             break;
-        case 1: OC6R   = 0x5;
-                OC6RS  = STPS[Y].step_delay & 0xFFFF;
-                TMR2   =  0xFFFF;
-                OC6CON =  0x8004; //restart the output compare module
              break;
         default:
              break;

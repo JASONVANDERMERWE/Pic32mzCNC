@@ -1,5 +1,5 @@
-#line 1 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Main.c"
-#line 1 "c:/users/cfan/dropbox/dave's/mikroc32/pic32mzclicker2_projects/steppercontrol/config.h"
+#line 1 "C:/Users/Git/Pic32mzCNC/Main.c"
+#line 1 "c:/users/git/pic32mzcnc/config.h"
 
 
 
@@ -73,7 +73,7 @@ extern Cmd_Type Cmd;
  void I2C_Lcd_Chr( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  out_char);
  void I2C_LCD_init( unsigned char  addr);
  void I2C_LCD_init4l( unsigned char  addr);
-#line 1 "c:/users/cfan/dropbox/dave's/mikroc32/pic32mzclicker2_projects/steppercontrol/stepper.h"
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
 
 
 
@@ -111,7 +111,7 @@ extern sfr FLT_Step_PinDirY;
 
 
 typedef unsigned short UInt8_t;
-#line 74 "c:/users/cfan/dropbox/dave's/mikroc32/pic32mzclicker2_projects/steppercontrol/stepper.h"
+#line 74 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
@@ -163,7 +163,7 @@ typedef struct Steps{
 
  long step_delay;
 
- int decel_start;
+ long decel_start;
 
  long decel_val;
 
@@ -215,7 +215,7 @@ void CalcDly(int axis_No);
 void StepperConstants(long accel,long decel);
 void toggleOCx(int axis_No);
 void AccDec(int axix_No);
-#line 1 "c:/users/cfan/dropbox/dave's/mikroc32/pic32mzclicker2_projects/steppercontrol/steptodistance.h"
+#line 1 "c:/users/git/pic32mzcnc/steptodistance.h"
 
 
 
@@ -224,9 +224,9 @@ void AccDec(int axix_No);
 
 
 const float Dia;
-#line 20 "c:/users/cfan/dropbox/dave's/mikroc32/pic32mzclicker2_projects/steppercontrol/steptodistance.h"
+#line 20 "c:/users/git/pic32mzcnc/steptodistance.h"
 signed long calcSteps( double mmsToMove, double Dia);
-#line 7 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Main.c"
+#line 7 "C:/Users/Git/Pic32mzCNC/Main.c"
 char txt[] = "Start......";
 char rxBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0} absolute 0xA0002000 ;
 char txBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0} absolute 0xA0002200 ;
@@ -352,17 +352,16 @@ char ptrAdd[6];
 
 void StepX() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
 
- STmr.compOCxRunning = 1;
+ STmr.compOCxRunning = 2;
  TMR4 = 0xFFFF;
  OC3IF_bit = 0;
 
 }
+void StepY() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
 
-void StepY() iv IVT_OUTPUT_COMPARE_6 ilevel 3 ics ICS_AUTO {
-
- STmr.compOCxRunning = 2;
+ STmr.compOCxRunning = 1;
  TMR2 = 0xFFFF;
- OC6IF_bit = 0;
+ OC5IF_bit = 0;
 
 }
 
@@ -377,7 +376,7 @@ unsigned char j;
  oneShotA = 0;
 
  while(1){
-#line 168 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Main.c"
+
  if((!RC3_bit)&&(!oneShotA)){
 
  oneShotA = 1;
@@ -426,20 +425,16 @@ unsigned char j;
  }
  if((!RB0_bit)&&(Toggle))oneShotA = 0;
  if(!oneShotA){
-
-
  DisableStepper();
  }
 
  if(!RB0_bit){
  oneShotB = 0;
  oneShotA = 0;
-
  STPS[X].mmToTravel = calcSteps(151.25,8.06);
  speed_cntr_Move(STPS[X].mmToTravel, 2500,X);
  STPS[Y].mmToTravel = calcSteps(-151.25,8.06);
  speed_cntr_Move(STPS[Y].mmToTravel, 2500,Y);
-
 
 
 

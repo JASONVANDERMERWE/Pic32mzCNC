@@ -1,5 +1,5 @@
-#line 1 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
-#line 1 "c:/users/cfan/dropbox/dave's/mikroc32/pic32mzclicker2_projects/steppercontrol/stepper.h"
+#line 1 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
 
 
 
@@ -37,7 +37,7 @@ extern sfr FLT_Step_PinDirY;
 
 
 typedef unsigned short UInt8_t;
-#line 74 "c:/users/cfan/dropbox/dave's/mikroc32/pic32mzclicker2_projects/steppercontrol/stepper.h"
+#line 74 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
@@ -89,7 +89,7 @@ typedef struct Steps{
 
  long step_delay;
 
- int decel_start;
+ long decel_start;
 
  long decel_val;
 
@@ -142,7 +142,7 @@ void StepperConstants(long accel,long decel);
 void toggleOCx(int axis_No);
 void AccDec(int axix_No);
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 7 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
+#line 7 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 unsigned char txt1[] = "       ";
 unsigned char AxisNo;
 unsigned int Toggle;
@@ -157,16 +157,16 @@ unsigned int Toggle;
 
 
 
-sbit EN_StepX at LATD9_bit;
-sbit EN_Step_PinDirX at TRISD9_bit;
+sbit EN_StepX at LATG0_bit;
+sbit EN_Step_PinDirX at TRISG0_bit;
 
 
 
 
-sbit PLS_StepX at LATB14_bit;
-sbit PLS_Step_PinDirX at TRISB14_bit;
-sbit DIR_StepX at LATB13_bit;
-sbit DIR_Step_PinDirX at TRISB13_bit;
+sbit PLS_StepX at LATF1_bit;
+sbit PLS_Step_PinDirX at TRISF1_bit;
+sbit DIR_StepX at LATG1_bit;
+sbit DIR_Step_PinDirX at TRISG1_bit;
 
 sbit EN_StepY at LATF0_bit;
 sbit EN_Step_PinDirY at TRISF0_bit;
@@ -223,7 +223,7 @@ void DisableStepper(){
  EN_Stepx = 1;
  EN_StepY = 1;
 }
-#line 104 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
+#line 104 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void speed_cntr_Move(signed long mmSteps, signed long speed, int axis_No){
 int ii;
 
@@ -340,7 +340,7 @@ void Step(long newx,long newy){
  d2 = 0;
  SV.px = 0;
  SV.py = 0;
-#line 223 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
+#line 223 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  SV.dx = newx - SV.px;
  SV.dy = newy - SV.py;
 
@@ -396,7 +396,7 @@ void Step(long newx,long newy){
  }
 
  }
-#line 284 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
+#line 284 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 }
 
 
@@ -404,15 +404,15 @@ void Step(long newx,long newy){
 
 void toggleOCx(int axis_No){
  switch(axis_No){
- case 0: OC3R = 0x5;
- OC3RS = STPS[X].step_delay & 0xFFFF;
+ case 0: OC5R = 0x5;
+ OC5RS = STPS[X].step_delay & 0xFFFF;
+ TMR2 = 0xFFFF;
+ OC5CON = 0x8004;
+ break;
+ case 1: OC3R = 0x5;
+ OC3RS = STPS[Y].step_delay & 0xFFFF;
  TMR4 = 0xFFFF;
  OC3CON = 0x8004;
- break;
- case 1: OC6R = 0x5;
- OC6RS = STPS[Y].step_delay & 0xFFFF;
- TMR2 = 0xFFFF;
- OC6CON = 0x8004;
  break;
  default:
  break;
@@ -424,11 +424,11 @@ void toggleOCx(int axis_No){
 int Pulse(int axis_No){
 
  if(!STPS[axis_No].PLS_Step_ ){
-#line 315 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
+#line 315 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  STPS[axis_No].PLS_Step_ = 1;
 
  }
-#line 321 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
+#line 321 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  switch(STPS[axis_No].run_state) {
  case  0 :
  LATE7_bit = 0;
@@ -487,7 +487,7 @@ void AccDec(int axis_No){
  STPS[axis_No].step_delay = STPS[axis_No].new_step_delay;
 
 }
-#line 389 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
+#line 389 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 static unsigned long sqrt_(unsigned long x){
 
  register unsigned long xr;
@@ -518,7 +518,7 @@ static unsigned long sqrt_(unsigned long x){
  return xr;
  }
 }
-#line 425 "C:/Users/cfan/Dropbox/Dave's/Mikroc32/Pic32MZClicker2_Projects/StepperControl/Stepper.c"
+#line 425 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 unsigned int min_(unsigned int x, unsigned int y)
 {
  if(x < y){

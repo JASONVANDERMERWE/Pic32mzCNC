@@ -1,7 +1,6 @@
 #include "Config.h"
 #include "built_in.h"
 #include "I2C_LCD.h"
-
 void PinMode(){
 
      SYSKEY = 0xAA996655;
@@ -24,7 +23,9 @@ void PinMode(){
 ////////////////////////////////////////////////////
 //outputs
      TRISA9_bit = 0;
+     TRISD4_bit = 0;
      TRISE7_bit = 0;
+     TRISF0_bit = 0;
      TRISF1_bit = 0;
      TRISG0_bit = 0;
      TRISG1_bit = 0;
@@ -34,7 +35,7 @@ void PinMode(){
     TRISC3_bit = 1;
     TRISG7_bit = 1;
     TRISG8_bit = 1;
-    TRISF0_bit = 0;
+
 ////////////////////////////////////////////////////
 //Remapping of Uart 2 pins
     Unlock_IOLOCK();
@@ -42,9 +43,9 @@ void PinMode(){
      PPS_Mapping_NoLock(_RPE9, _INPUT,  _U2RX);    // Sets pin PORTE.B9 to be Input and maps UART1 Receive to it
      PPS_Mapping_NoLock(_RPB9, _OUTPUT, _NULL);
      PPS_Mapping_NoLock(_RPB10, _OUTPUT, _NULL);
-     PPS_Mapping_NoLock(_RPF1, _OUTPUT, _OC3);    // dual pulse mode OutPut
-     PPS_Mapping_NoLock(_RPG0, _OUTPUT, _OC4);
-     PPS_Mapping_NoLock(_RPG1, _OUTPUT, _OC6);
+     PPS_Mapping_NoLock(_RPF1, _OUTPUT, _OC3);     // dual pulse mode OutPut
+     PPS_Mapping_NoLock(_RPD4, _OUTPUT, _OC5);
+     PPS_Mapping_NoLock(_RPE3, _OUTPUT, _OC8);
     Lock_IOLOCK();
 
 //////////////////////////////////////////////////
@@ -170,7 +171,7 @@ void OutPutPulseXYZ(){
 * as the clock source for the compare time-base.
 */
   OC3CON = 0x0000; // disable OC3 module |_using TMR2_3 in 32bit mode
-  OC6CON = 0x0000; // disable OC6 module |
+  OC5CON = 0x0000; // disable OC5 module |
 
 //clear  Tmr2 & 4
   T2CON  = 0x0000;  // disable Timer2
@@ -186,7 +187,7 @@ void OutPutPulseXYZ(){
   
 //setup OC3_OC6 32bit
   OC3CON = 0x0004; // Conf OC3 module for dual single Pulse output 16bit tmrx
-  OC6CON = 0x0004; // Conf OC6 module for dual single Pulse output 16bit tmrx
+  OC5CON = 0x0004; // Conf OC6 module for dual single Pulse output 16bit tmrx
   
 /*
  * Initialize PR2 to a value  >  OCxRS  >  OC3R, to start output compare.
@@ -197,8 +198,8 @@ void OutPutPulseXYZ(){
  */
   OC3R   = 0x5;        // Initialize Compare Register 1
   OC3RS  = 0x234;      // Initialize Secondary Compare Register 1
-  OC6R   = 0x5;        // Initialize Compare Register 1
-  OC6RS  = 0x234;      // Initialize Secondary Compare Register 1
+  OC5R   = 0x5;        // Initialize Compare Register 1
+  OC5RS  = 0x234;      // Initialize Secondary Compare Register 1
   
 //interrupt priority and enable set
   OC3IP0_bit = 1;  // Set OC3 interrupt priority to 3
@@ -209,21 +210,21 @@ void OutPutPulseXYZ(){
   OC3IF_bit  = 0;   // reset interrupt flag
   OC3IE_bit  = 1;   // enable interrupt
   
-  OC6IP0_bit = 1;  // Set OC6 interrupt priority to 3
-  OC6IP1_bit = 1;
-  OC6IP2_bit = 0;
-  OC6IS0_bit = 1;  // Set OC6 sub priority 2
-  OC6IS1_bit = 0;
-  OC6IF_bit  = 0;  // reset interrupt flag
-  OC6IE_bit  = 1;  // enable interrupt
+  OC5IP0_bit = 1;  // Set OC5 interrupt priority to 3
+  OC5IP1_bit = 1;
+  OC5IP2_bit = 0;
+  OC5IS0_bit = 1;  // Set OC5 sub priority 2
+  OC5IS1_bit = 0;
+  OC5IF_bit  = 0;  // reset interrupt flag
+  OC5IE_bit  = 1;  // enable interrupt
   
 //set Timers on
-  T2CONSET  = 0x8000; // Enable Timer2 0C6
+  T2CONSET  = 0x8000; // Enable Timer2 0C5
   T4CONSET  = 0x8000; // Enable Timer4 OC3
   
-//wait for usgage of these modules before enavling them
+//wait for usgage of these modules before enaBling them
  // OC3CONSET = 0x8000; // Enable OC3
- // OC6CONSET = 0x8000; // Enable OC6
+ // OC5CONSET = 0x8000; // Enable OC6
  
 }
 //////////////////////////////////////////////////////////////////
