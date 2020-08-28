@@ -1,4 +1,4 @@
-#line 1 "C:/Users/Git/Pic32mzCNC/Steptodistance.c"
+#line 1 "C:/Users/GIT/Pic32mzCNC/Steptodistance.c"
 #line 1 "c:/users/git/pic32mzcnc/steptodistance.h"
 
 
@@ -153,7 +153,7 @@ void StepperConstants(long accel,long decel);
 void toggleOCx(int axis_No);
 void AccDec(int axix_No);
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 8 "C:/Users/Git/Pic32mzCNC/Steptodistance.c"
+#line 8 "C:/Users/GIT/Pic32mzCNC/Steptodistance.c"
 signed long calcSteps(double mmsToMove, double Dia){
 double circ,cirDivision,stepsToMove;
 

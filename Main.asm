@@ -540,6 +540,14 @@ EI	R30
 LBU	R2, Offset(_oneShotA+0)(GP)
 INS	R2, R0, BitPos(_oneShotA+0), 1
 SB	R2, Offset(_oneShotA+0)(GP)
+;Main.c,154 :: 		I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
+LUI	R28, hi_addr(_txt+0)
+ORI	R28, R28, lo_addr(_txt+0)
+ORI	R27, R0, 4
+ORI	R26, R0, 1
+LBU	R25, Offset(_LCD_01_ADDRESS+0)(GP)
+JAL	_I2C_LCD_Out+0
+NOP	
 ;Main.c,155 :: 		while(1){
 L_main15:
 ;Main.c,157 :: 		if((!RC3_bit)&&(!oneShotA)){

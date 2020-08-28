@@ -1,4 +1,4 @@
-#line 1 "C:/Users/Git/Pic32mzCNC/Config.c"
+#line 1 "C:/Users/GIT/Pic32mzCNC/Config.c"
 #line 1 "c:/users/git/pic32mzcnc/config.h"
 
 
@@ -73,7 +73,7 @@ extern Cmd_Type Cmd;
  void I2C_Lcd_Chr( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  out_char);
  void I2C_LCD_init( unsigned char  addr);
  void I2C_LCD_init4l( unsigned char  addr);
-#line 4 "C:/Users/Git/Pic32mzCNC/Config.c"
+#line 4 "C:/Users/GIT/Pic32mzCNC/Config.c"
 void PinMode(){
 
  SYSKEY = 0xAA996655;
@@ -225,13 +225,13 @@ void set_performance_mode(){
  PRECONbits.PFMSECEN = 0;
  PRECONbits.PREFEN = 0b11;
  PRECONbits.PFMWS = 0b100;
-#line 163 "C:/Users/Git/Pic32mzCNC/Config.c"
+#line 163 "C:/Users/GIT/Pic32mzCNC/Config.c"
  SYSKEY = 0x33333333;
 }
 
 
 void OutPutPulseXYZ(){
-#line 173 "C:/Users/Git/Pic32mzCNC/Config.c"
+#line 173 "C:/Users/GIT/Pic32mzCNC/Config.c"
  OC3CON = 0x0000;
  OC5CON = 0x0000;
 
@@ -250,7 +250,7 @@ void OutPutPulseXYZ(){
 
  OC3CON = 0x0004;
  OC5CON = 0x0004;
-#line 199 "C:/Users/Git/Pic32mzCNC/Config.c"
+#line 199 "C:/Users/GIT/Pic32mzCNC/Config.c"
  OC3R = 0x5;
  OC3RS = 0x234;
  OC5R = 0x5;

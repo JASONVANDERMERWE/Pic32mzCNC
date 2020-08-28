@@ -24,12 +24,13 @@ main
 			I2C_LCD_init
 				I2C_LCD_putcmd
 					I2C_PCF8574_Write
-						I2C4_Start
-							I2C4_Wait_For_Idle
-						I2C4_Write
-							I2C4_Wait_For_Idle
-						I2C4_Stop
-							I2C4_Wait_For_Idle
+						I2C2_Start
+							I2C2_Wait_For_Idle
+								I2C2_Is_Idle
+						I2C2_Write
+							I2C2_Wait_For_Idle
+						I2C2_Stop
+							I2C2_Wait_For_Idle
 			I2C_Lcd_Cmd
 				I2C_LCD_goto
 					I2C_LCD_putcmd
@@ -40,6 +41,10 @@ main
 		OutPutPulseXYZ
 	SetPinMode
 	StepperConstants
+	I2C_LCD_Out
+		I2C_LCD_goto
+		I2C_LCD_putch
+			I2C_PCF8574_Write
 	EnStepper
 	calcSteps
 	speed_cntr_Move
@@ -56,10 +61,6 @@ main
 			isdigit
 			scale
 			fround
-	I2C_LCD_Out
-		I2C_LCD_goto
-		I2C_LCD_putch
-			I2C_PCF8574_Write
 	__CC2DW
 	__FillZeros
 StepX

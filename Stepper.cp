@@ -1,4 +1,4 @@
-#line 1 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 1 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
 
 
@@ -142,7 +142,7 @@ void StepperConstants(long accel,long decel);
 void toggleOCx(int axis_No);
 void AccDec(int axix_No);
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 7 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 7 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
 unsigned char txt1[] = "       ";
 unsigned char AxisNo;
 unsigned int Toggle;
@@ -223,7 +223,7 @@ void DisableStepper(){
  EN_Stepx = 1;
  EN_StepY = 1;
 }
-#line 104 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 104 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
 void speed_cntr_Move(signed long mmSteps, signed long speed, int axis_No){
 int ii;
 
@@ -340,7 +340,7 @@ void Step(long newx,long newy){
  d2 = 0;
  SV.px = 0;
  SV.py = 0;
-#line 223 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 223 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
  SV.dx = newx - SV.px;
  SV.dy = newy - SV.py;
 
@@ -396,7 +396,7 @@ void Step(long newx,long newy){
  }
 
  }
-#line 284 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 284 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
 }
 
 
@@ -424,11 +424,11 @@ void toggleOCx(int axis_No){
 int Pulse(int axis_No){
 
  if(!STPS[axis_No].PLS_Step_ ){
-#line 315 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 315 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
  STPS[axis_No].PLS_Step_ = 1;
 
  }
-#line 321 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 321 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
  switch(STPS[axis_No].run_state) {
  case  0 :
  LATE7_bit = 0;
@@ -487,7 +487,7 @@ void AccDec(int axis_No){
  STPS[axis_No].step_delay = STPS[axis_No].new_step_delay;
 
 }
-#line 389 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 389 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
 static unsigned long sqrt_(unsigned long x){
 
  register unsigned long xr;
@@ -518,7 +518,7 @@ static unsigned long sqrt_(unsigned long x){
  return xr;
  }
 }
-#line 425 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 425 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
 unsigned int min_(unsigned int x, unsigned int y)
 {
  if(x < y){

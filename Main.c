@@ -151,7 +151,7 @@ unsigned char j;
   StepperConstants(4500,4500);
   EnableInterrupts();
   oneShotA = 0;
- // I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
+  I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
   while(1){
   
          if((!RC3_bit)&&(!oneShotA)){

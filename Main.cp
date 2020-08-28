@@ -1,4 +1,4 @@
-#line 1 "C:/Users/Git/Pic32mzCNC/Main.c"
+#line 1 "C:/Users/GIT/Pic32mzCNC/Main.c"
 #line 1 "c:/users/git/pic32mzcnc/config.h"
 
 
@@ -226,7 +226,7 @@ void AccDec(int axix_No);
 const float Dia;
 #line 20 "c:/users/git/pic32mzcnc/steptodistance.h"
 signed long calcSteps( double mmsToMove, double Dia);
-#line 7 "C:/Users/Git/Pic32mzCNC/Main.c"
+#line 7 "C:/Users/GIT/Pic32mzCNC/Main.c"
 char txt[] = "Start......";
 char rxBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0} absolute 0xA0002000 ;
 char txBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0} absolute 0xA0002200 ;
@@ -374,7 +374,7 @@ unsigned char j;
  StepperConstants(4500,4500);
  EnableInterrupts();
  oneShotA = 0;
-
+ I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
  while(1){
 
  if((!RC3_bit)&&(!oneShotA)){
