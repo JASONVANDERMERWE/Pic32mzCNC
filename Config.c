@@ -273,6 +273,7 @@ void InitTimer8(){
 
 void LcdI2CConfig(){
     // I2C4_Init(100000);//INIT I2C AT 100KHZ
+     I2CNo_Init(I2C4);
      I2C4_Init_Advanced(50000, 100000);
      I2C_Set_Active(&I2C4_Start, &I2C4_Restart, &I2C4_Read, &I2C4_Write,
                     &I2C4_Stop,&I2C4_Is_Idle); // Sets the I2C4 module active

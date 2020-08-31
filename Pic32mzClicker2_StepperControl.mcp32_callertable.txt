@@ -15,6 +15,7 @@ main
 		InitTimer7
 		InitTimer8
 		LcdI2CConfig
+			I2CNo_Init
 			I2C4_Init_Advanced
 				SetI2C4Ptrs
 				Get_Fosc_kHz
@@ -24,6 +25,13 @@ main
 			I2C_LCD_init
 				I2C_LCD_putcmd
 					I2C_PCF8574_Write
+						I2C1_Start
+							I2C1_Wait_For_Idle
+								I2C1_Is_Idle
+						I2C1_Write
+							I2C1_Wait_For_Idle
+						I2C1_Stop
+							I2C1_Wait_For_Idle
 						I2C2_Start
 							I2C2_Wait_For_Idle
 								I2C2_Is_Idle
@@ -31,6 +39,26 @@ main
 							I2C2_Wait_For_Idle
 						I2C2_Stop
 							I2C2_Wait_For_Idle
+						I2C3_Start
+							I2C3_Wait_For_Idle
+								I2C3_Is_Idle
+						I2C3_Write
+							I2C3_Wait_For_Idle
+						I2C3_Stop
+							I2C3_Wait_For_Idle
+						I2C4_Start
+							I2C4_Wait_For_Idle
+						I2C4_Write
+							I2C4_Wait_For_Idle
+						I2C4_Stop
+							I2C4_Wait_For_Idle
+						I2C5_Start
+							I2C5_Wait_For_Idle
+								I2C5_Is_Idle
+						I2C5_Write
+							I2C5_Wait_For_Idle
+						I2C5_Stop
+							I2C5_Wait_For_Idle
 			I2C_Lcd_Cmd
 				I2C_LCD_goto
 					I2C_LCD_putcmd
