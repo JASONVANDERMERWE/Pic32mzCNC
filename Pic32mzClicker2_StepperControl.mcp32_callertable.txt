@@ -11,7 +11,6 @@ main
 				UART_Calc_BRG
 			UART_Set_Active
 		set_performance_mode
-		InitTimer6
 		InitTimer7
 		InitTimer8
 		LcdI2CConfig
@@ -73,7 +72,9 @@ main
 		I2C_LCD_goto
 		I2C_LCD_putch
 			I2C_PCF8574_Write
-	EnStepper
+	EnStepperX
+	EnStepperY
+	EnStepperZ
 	calcSteps
 	speed_cntr_Move
 		abs
@@ -91,17 +92,17 @@ main
 			fround
 	__CC2DW
 	__FillZeros
-StepX
+StepZ
 StepY
+StepX
+Timer7Interrupt
 Timer8Interrupt
 	CycleStart
 	CycleStop
-Timer7Interrupt
-DMA_CH1_ISR
 DMA_CH0_ISR
 	strlen
 	memcpy
-Timer6Interrupt
+DMA_CH1_ISR
 uart2_Rx_interrupt
 	UART2_Read
 	UART2_Write

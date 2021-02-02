@@ -46,129 +46,140 @@ SW	R0, Offset(ANSELE+0)(GP)
 SW	R0, Offset(ANSELG+0)(GP)
 ;Config.c,22 :: 		CNPUB = 0x0000;
 SW	R0, Offset(CNPUB+0)(GP)
-;Config.c,25 :: 		TRISA9_bit = 0;
+;Config.c,25 :: 		TRISA9_bit  = 0;
 LUI	R2, BitMask(TRISA9_bit+0)
 ORI	R2, R2, BitMask(TRISA9_bit+0)
 _SX	
-;Config.c,26 :: 		TRISD4_bit = 0;
+;Config.c,26 :: 		TRISD4_bit  = 0;
 LUI	R2, BitMask(TRISD4_bit+0)
 ORI	R2, R2, BitMask(TRISD4_bit+0)
 _SX	
-;Config.c,27 :: 		TRISE7_bit = 0;
+;Config.c,27 :: 		TRISE7_bit  = 0;
 LUI	R2, BitMask(TRISE7_bit+0)
 ORI	R2, R2, BitMask(TRISE7_bit+0)
 _SX	
-;Config.c,28 :: 		TRISF0_bit = 0;
+;Config.c,28 :: 		TRISF0_bit  = 0;
 LUI	R2, BitMask(TRISF0_bit+0)
 ORI	R2, R2, BitMask(TRISF0_bit+0)
 _SX	
-;Config.c,29 :: 		TRISF1_bit = 0;
+;Config.c,29 :: 		TRISF1_bit  = 0;
 LUI	R2, BitMask(TRISF1_bit+0)
 ORI	R2, R2, BitMask(TRISF1_bit+0)
 _SX	
-;Config.c,30 :: 		TRISG0_bit = 0;
+;Config.c,30 :: 		TRISG0_bit  = 0;
 LUI	R2, BitMask(TRISG0_bit+0)
 ORI	R2, R2, BitMask(TRISG0_bit+0)
 _SX	
-;Config.c,31 :: 		TRISG1_bit = 0;
+;Config.c,31 :: 		TRISG1_bit  = 0;
 LUI	R2, BitMask(TRISG1_bit+0)
 ORI	R2, R2, BitMask(TRISG1_bit+0)
 _SX	
-;Config.c,34 :: 		TRISB0_bit = 1;
+;Config.c,32 :: 		TRISG14_bit = 0;
+LUI	R2, BitMask(TRISG14_bit+0)
+ORI	R2, R2, BitMask(TRISG14_bit+0)
+_SX	
+;Config.c,33 :: 		TRISG15_bit = 0;
+LUI	R2, BitMask(TRISG15_bit+0)
+ORI	R2, R2, BitMask(TRISG15_bit+0)
+_SX	
+;Config.c,36 :: 		TRISB0_bit = 1;
 LUI	R2, BitMask(TRISB0_bit+0)
 ORI	R2, R2, BitMask(TRISB0_bit+0)
 _SX	
-;Config.c,35 :: 		TRISC3_bit = 1;
+;Config.c,37 :: 		TRISC3_bit = 1;
 LUI	R2, BitMask(TRISC3_bit+0)
 ORI	R2, R2, BitMask(TRISC3_bit+0)
 _SX	
-;Config.c,36 :: 		TRISG7_bit = 1;
+;Config.c,38 :: 		TRISG7_bit = 1;
 LUI	R2, BitMask(TRISG7_bit+0)
 ORI	R2, R2, BitMask(TRISG7_bit+0)
 _SX	
-;Config.c,37 :: 		TRISG8_bit = 1;
+;Config.c,39 :: 		TRISG8_bit = 1;
 LUI	R2, BitMask(TRISG8_bit+0)
 ORI	R2, R2, BitMask(TRISG8_bit+0)
 _SX	
-;Config.c,41 :: 		Unlock_IOLOCK();
+;Config.c,43 :: 		Unlock_IOLOCK();
 JAL	_Unlock_IOLOCK+0
 NOP	
-;Config.c,42 :: 		PPS_Mapping_NoLock(_RPE8, _OUTPUT, _U2TX);    // Sets pin PORTE.B8 to be Output and maps UART1 Transmit to it
+;Config.c,44 :: 		PPS_Mapping_NoLock(_RPE8, _OUTPUT, _U2TX);    // Sets pin PORTE.B8 to be Output and maps UART1 Transmit to it
 ORI	R27, R0, 2
 MOVZ	R26, R0, R0
 ORI	R25, R0, 61
 JAL	_PPS_Mapping_NoLock+0
 NOP	
-;Config.c,43 :: 		PPS_Mapping_NoLock(_RPE9, _INPUT,  _U2RX);    // Sets pin PORTE.B9 to be Input and maps UART1 Receive to it
+;Config.c,45 :: 		PPS_Mapping_NoLock(_RPE9, _INPUT,  _U2RX);    // Sets pin PORTE.B9 to be Input and maps UART1 Receive to it
 ORI	R27, R0, 32
 ORI	R26, R0, 1
 ORI	R25, R0, 45
 JAL	_PPS_Mapping_NoLock+0
 NOP	
-;Config.c,44 :: 		PPS_Mapping_NoLock(_RPB9, _OUTPUT, _NULL);
+;Config.c,46 :: 		PPS_Mapping_NoLock(_RPB9, _OUTPUT, _NULL);
 MOVZ	R27, R0, R0
 MOVZ	R26, R0, R0
 ORI	R25, R0, 5
 JAL	_PPS_Mapping_NoLock+0
 NOP	
-;Config.c,45 :: 		PPS_Mapping_NoLock(_RPB10, _OUTPUT, _NULL);
+;Config.c,47 :: 		PPS_Mapping_NoLock(_RPB10, _OUTPUT, _NULL);
 MOVZ	R27, R0, R0
 MOVZ	R26, R0, R0
 ORI	R25, R0, 6
 JAL	_PPS_Mapping_NoLock+0
 NOP	
-;Config.c,46 :: 		PPS_Mapping_NoLock(_RPF1, _OUTPUT, _OC3);     // dual pulse mode OutPut
+;Config.c,48 :: 		PPS_Mapping_NoLock(_RPF1, _OUTPUT, _OC3);     // dual pulse mode OutPut
 ORI	R27, R0, 11
 MOVZ	R26, R0, R0
 ORI	R25, R0, 4
 JAL	_PPS_Mapping_NoLock+0
 NOP	
-;Config.c,47 :: 		PPS_Mapping_NoLock(_RPD4, _OUTPUT, _OC5);
+;Config.c,49 :: 		PPS_Mapping_NoLock(_RPD4, _OUTPUT, _OC5);
 ORI	R27, R0, 11
 MOVZ	R26, R0, R0
 ORI	R25, R0, 36
 JAL	_PPS_Mapping_NoLock+0
 NOP	
-;Config.c,48 :: 		PPS_Mapping_NoLock(_RPE3, _OUTPUT, _OC8);
+;Config.c,50 :: 		PPS_Mapping_NoLock(_RPE3, _OUTPUT, _OC8);     //tmr6
 ORI	R27, R0, 12
 MOVZ	R26, R0, R0
 ORI	R25, R0, 38
 JAL	_PPS_Mapping_NoLock+0
 NOP	
-;Config.c,49 :: 		Lock_IOLOCK();
+;Config.c,51 :: 		PPS_Mapping_NoLock(_RPG9, _OUTPUT, _OC9);     //tmr7
+ORI	R27, R0, 13
+MOVZ	R26, R0, R0
+ORI	R25, R0, 49
+JAL	_PPS_Mapping_NoLock+0
+NOP	
+;Config.c,52 :: 		Lock_IOLOCK();
 JAL	_Lock_IOLOCK+0
 NOP	
-;Config.c,53 :: 		UartConfig();
+;Config.c,56 :: 		UartConfig();
 JAL	_UartConfig+0
 NOP	
-;Config.c,57 :: 		set_performance_mode();
+;Config.c,60 :: 		set_performance_mode();
 JAL	_set_performance_mode+0
 NOP	
-;Config.c,65 :: 		InitTimer6();
-JAL	_InitTimer6+0
-NOP	
-;Config.c,66 :: 		InitTimer7();
+;Config.c,69 :: 		InitTimer7();
 JAL	_InitTimer7+0
 NOP	
-;Config.c,67 :: 		InitTimer8();
+;Config.c,70 :: 		InitTimer8();
 JAL	_InitTimer8+0
 NOP	
-;Config.c,70 :: 		LcdI2CConfig();
+;Config.c,73 :: 		LcdI2CConfig();
 JAL	_LcdI2CConfig+0
 NOP	
-;Config.c,74 :: 		initDMA_global();
+;Config.c,77 :: 		initDMA_global();
 JAL	_initDMA_global+0
 NOP	
-;Config.c,75 :: 		initDMA0();
+;Config.c,78 :: 		initDMA0();
 JAL	_initDMA0+0
 NOP	
-;Config.c,76 :: 		initDMA1();
+;Config.c,79 :: 		initDMA1();
 JAL	_initDMA1+0
 NOP	
-;Config.c,80 :: 		OutPutPulseXYZ();
+;Config.c,83 :: 		OutPutPulseXYZ();
 JAL	_OutPutPulseXYZ+0
 NOP	
-;Config.c,82 :: 		}
+;Config.c,85 :: 		}
 L_end_PinMode:
 LW	R27, 12(SP)
 LW	R26, 8(SP)
@@ -179,10 +190,10 @@ JR	RA
 NOP	
 ; end of _PinMode
 _UartConfig:
-;Config.c,84 :: 		void UartConfig(){
+;Config.c,87 :: 		void UartConfig(){
 ADDIU	SP, SP, -20
 SW	RA, 0(SP)
-;Config.c,87 :: 		UART2_Init_Advanced(256000, 50000/*PBClk x 2*/, _UART_LOW_SPEED, _UART_8BIT_NOPARITY, _UART_ONE_STOPBIT);
+;Config.c,90 :: 		UART2_Init_Advanced(256000, 50000/*PBClk x 2*/, _UART_LOW_SPEED, _UART_8BIT_NOPARITY, _UART_ONE_STOPBIT);
 SW	R25, 4(SP)
 SW	R26, 8(SP)
 SW	R27, 12(SP)
@@ -197,7 +208,7 @@ SB	R0, 0(SP)
 JAL	_UART2_Init_Advanced+0
 NOP	
 ADDIU	SP, SP, 4
-;Config.c,88 :: 		UART_Set_Active(&UART2_Read, &UART2_Write, &UART2_Data_Ready, &UART2_Tx_Idle); // set UART2 active
+;Config.c,91 :: 		UART_Set_Active(&UART2_Read, &UART2_Write, &UART2_Data_Ready, &UART2_Tx_Idle); // set UART2 active
 LUI	R28, hi_addr(_UART2_Tx_Idle+0)
 ORI	R28, R28, lo_addr(_UART2_Tx_Idle+0)
 LUI	R27, hi_addr(_UART2_Data_Ready+0)
@@ -208,14 +219,14 @@ LUI	R25, hi_addr(_UART2_Read+0)
 ORI	R25, R25, lo_addr(_UART2_Read+0)
 JAL	_UART_Set_Active+0
 NOP	
-;Config.c,89 :: 		Delay_ms(100);                  // Wait for UART module to stabilize
+;Config.c,92 :: 		Delay_ms(100);                  // Wait for UART module to stabilize
 LUI	R24, 101
 ORI	R24, R24, 47530
 L_UartConfig2:
 ADDIU	R24, R24, -1
 BNE	R24, R0, L_UartConfig2
 NOP	
-;Config.c,90 :: 		}
+;Config.c,93 :: 		}
 L_end_UartConfig:
 LW	R28, 16(SP)
 LW	R27, 12(SP)
@@ -227,73 +238,73 @@ JR	RA
 NOP	
 ; end of _UartConfig
 _Uart2InterruptSetup:
-;Config.c,94 :: 		void Uart2InterruptSetup(){
-;Config.c,95 :: 		URXISEL0_bit = 0;
+;Config.c,97 :: 		void Uart2InterruptSetup(){
+;Config.c,98 :: 		URXISEL0_bit = 0;
 LUI	R2, BitMask(URXISEL0_bit+0)
 ORI	R2, R2, BitMask(URXISEL0_bit+0)
 _SX	
-;Config.c,96 :: 		URXISEL1_bit = 1;
+;Config.c,99 :: 		URXISEL1_bit = 1;
 LUI	R2, BitMask(URXISEL1_bit+0)
 ORI	R2, R2, BitMask(URXISEL1_bit+0)
 _SX	
-;Config.c,97 :: 		IEC4.B18 = 1;              // Enable UART2 RX interrupt
+;Config.c,100 :: 		IEC4.B18 = 1;              // Enable UART2 RX interrupt
 LUI	R2, 4
 SW	R2, Offset(IEC4+8)(GP)
-;Config.c,99 :: 		U2RXIP0_bit = 1;           //
+;Config.c,102 :: 		U2RXIP0_bit = 1;           //
 LUI	R2, BitMask(U2RXIP0_bit+0)
 ORI	R2, R2, BitMask(U2RXIP0_bit+0)
 _SX	
-;Config.c,100 :: 		U2RXIP1_bit = 1;           //
+;Config.c,103 :: 		U2RXIP1_bit = 1;           //
 LUI	R2, BitMask(U2RXIP1_bit+0)
 ORI	R2, R2, BitMask(U2RXIP1_bit+0)
 _SX	
-;Config.c,101 :: 		U2RXIP2_bit = 1;           // Set priority
+;Config.c,104 :: 		U2RXIP2_bit = 1;           // Set priority
 LUI	R2, BitMask(U2RXIP2_bit+0)
 ORI	R2, R2, BitMask(U2RXIP2_bit+0)
 _SX	
-;Config.c,103 :: 		URXISEL1_U2STA_bit = 0;
+;Config.c,106 :: 		URXISEL1_U2STA_bit = 0;
 LUI	R2, BitMask(URXISEL1_U2STA_bit+0)
 ORI	R2, R2, BitMask(URXISEL1_U2STA_bit+0)
 _SX	
-;Config.c,104 :: 		U2RXIF_bit = 0;            // Ensure interrupt is not pending
+;Config.c,107 :: 		U2RXIF_bit = 0;            // Ensure interrupt is not pending
 LUI	R2, BitMask(U2RXIF_bit+0)
 ORI	R2, R2, BitMask(U2RXIF_bit+0)
 _SX	
-;Config.c,105 :: 		}
+;Config.c,108 :: 		}
 L_end_Uart2InterruptSetup:
 JR	RA
 NOP	
 ; end of _Uart2InterruptSetup
 _set_performance_mode:
-;Config.c,107 :: 		void set_performance_mode(){
-;Config.c,110 :: 		DI(); // Disable all interrupts
+;Config.c,110 :: 		void set_performance_mode(){
+;Config.c,113 :: 		DI(); // Disable all interrupts
 DI	R30
-;Config.c,113 :: 		SYSKEY = 0xAA996655;
+;Config.c,116 :: 		SYSKEY = 0xAA996655;
 LUI	R2, 43673
 ORI	R2, R2, 26197
 SW	R2, Offset(SYSKEY+0)(GP)
-;Config.c,114 :: 		SYSKEY = 0x556699AA;
+;Config.c,117 :: 		SYSKEY = 0x556699AA;
 LUI	R2, 21862
 ORI	R2, R2, 39338
 SW	R2, Offset(SYSKEY+0)(GP)
-;Config.c,117 :: 		PB1DIVbits.PBDIV = 1; // Peripheral Bus 1 Clock Divisor Control (PBCLK1 is SYSCLK divided by 2)
+;Config.c,120 :: 		PB1DIVbits.PBDIV = 1; // Peripheral Bus 1 Clock Divisor Control (PBCLK1 is SYSCLK divided by 2)
 ORI	R3, R0, 1
 LBU	R2, Offset(PB1DIVbits+0)(GP)
 INS	R2, R3, 0, 7
 SB	R2, Offset(PB1DIVbits+0)(GP)
-;Config.c,120 :: 		UEN0_bit = 1;
+;Config.c,123 :: 		UEN0_bit = 1;
 LUI	R2, BitMask(UEN0_bit+0)
 ORI	R2, R2, BitMask(UEN0_bit+0)
 _SX	
-;Config.c,121 :: 		UEN1_bit = 1;
+;Config.c,124 :: 		UEN1_bit = 1;
 LUI	R2, BitMask(UEN1_bit+0)
 ORI	R2, R2, BitMask(UEN1_bit+0)
 _SX	
-;Config.c,122 :: 		PB2DIVbits.ON = 1; // Peripheral Bus 2 Output Clock Enable (Output clock is enabled)
+;Config.c,125 :: 		PB2DIVbits.ON = 1; // Peripheral Bus 2 Output Clock Enable (Output clock is enabled)
 ORI	R2, R0, 32768
 SWR	R2, Offset(PB2DIVbits+8)(GP)
 SWL	R2, Offset(PB2DIVbits+11)(GP)
-;Config.c,123 :: 		while(!PB2DIVbits.PBDIVRDY);
+;Config.c,126 :: 		while(!PB2DIVbits.PBDIVRDY);
 L_set_performance_mode4:
 LBU	R2, Offset(PB2DIVbits+1)(GP)
 EXT	R2, R2, 3, 1
@@ -305,16 +316,16 @@ L__set_performance_mode24:
 J	L_set_performance_mode4
 NOP	
 L_set_performance_mode5:
-;Config.c,124 :: 		PB2DIVbits.PBDIV = 0x07; // Peripheral Bus 2 Clock Divisor Control (PBCLK2 is SYSCLK "200MHZ" / 8)
+;Config.c,127 :: 		PB2DIVbits.PBDIV = 0x07; // Peripheral Bus 2 Clock Divisor Control (PBCLK2 is SYSCLK "200MHZ" / 8)
 ORI	R3, R0, 7
 LBU	R2, Offset(PB2DIVbits+0)(GP)
 INS	R2, R3, 0, 7
 SB	R2, Offset(PB2DIVbits+0)(GP)
-;Config.c,127 :: 		PB3DIVbits.ON = 1; // Peripheral Bus 2 Output Clock Enable (Output clock is enabled)
+;Config.c,130 :: 		PB3DIVbits.ON = 1; // Peripheral Bus 2 Output Clock Enable (Output clock is enabled)
 ORI	R2, R0, 32768
 SWR	R2, Offset(PB3DIVbits+8)(GP)
 SWL	R2, Offset(PB3DIVbits+11)(GP)
-;Config.c,128 :: 		while(!PB3DIVbits.PBDIVRDY);
+;Config.c,131 :: 		while(!PB3DIVbits.PBDIVRDY);
 L_set_performance_mode6:
 LBU	R2, Offset(PB3DIVbits+1)(GP)
 EXT	R2, R2, 3, 1
@@ -326,16 +337,16 @@ L__set_performance_mode25:
 J	L_set_performance_mode6
 NOP	
 L_set_performance_mode7:
-;Config.c,129 :: 		PB3DIVbits.PBDIV = 3; // Peripheral Bus 3 Clock Divisor Control (PBCLK3 is SYSCLK divided by 4)
+;Config.c,132 :: 		PB3DIVbits.PBDIV = 3; // Peripheral Bus 3 Clock Divisor Control (PBCLK3 is SYSCLK divided by 4)
 ORI	R3, R0, 3
 LBU	R2, Offset(PB3DIVbits+0)(GP)
 INS	R2, R3, 0, 7
 SB	R2, Offset(PB3DIVbits+0)(GP)
-;Config.c,132 :: 		PB4DIVbits.ON = 1; // Peripheral Bus 4 Output Clock Enable (Output clock is enabled)
+;Config.c,135 :: 		PB4DIVbits.ON = 1; // Peripheral Bus 4 Output Clock Enable (Output clock is enabled)
 ORI	R2, R0, 32768
 SWR	R2, Offset(PB4DIVbits+8)(GP)
 SWL	R2, Offset(PB4DIVbits+11)(GP)
-;Config.c,133 :: 		while (!PB4DIVbits.PBDIVRDY); // Wait until it is ready to write to
+;Config.c,136 :: 		while (!PB4DIVbits.PBDIVRDY); // Wait until it is ready to write to
 L_set_performance_mode8:
 LBU	R2, Offset(PB4DIVbits+1)(GP)
 EXT	R2, R2, 3, 1
@@ -347,14 +358,14 @@ L__set_performance_mode26:
 J	L_set_performance_mode8
 NOP	
 L_set_performance_mode9:
-;Config.c,134 :: 		PB4DIVbits.PBDIV = 0; // Peripheral Bus 4 Clock Divisor Control (PBCLK4 is SYSCLK divided by 1)
+;Config.c,137 :: 		PB4DIVbits.PBDIV = 0; // Peripheral Bus 4 Clock Divisor Control (PBCLK4 is SYSCLK divided by 1)
 ORI	R2, R0, 127
 SB	R2, Offset(PB4DIVbits+4)(GP)
-;Config.c,137 :: 		PB5DIVbits.ON = 1; // Peripheral Bus 5 Output Clock Enable (Output clock is enabled)
+;Config.c,140 :: 		PB5DIVbits.ON = 1; // Peripheral Bus 5 Output Clock Enable (Output clock is enabled)
 ORI	R2, R0, 32768
 SWR	R2, Offset(PB5DIVbits+8)(GP)
 SWL	R2, Offset(PB5DIVbits+11)(GP)
-;Config.c,138 :: 		while(!PB5DIVbits.PBDIVRDY);
+;Config.c,141 :: 		while(!PB5DIVbits.PBDIVRDY);
 L_set_performance_mode10:
 LBU	R2, Offset(PB5DIVbits+1)(GP)
 EXT	R2, R2, 3, 1
@@ -366,16 +377,16 @@ L__set_performance_mode27:
 J	L_set_performance_mode10
 NOP	
 L_set_performance_mode11:
-;Config.c,139 :: 		PB5DIVbits.PBDIV = 1; // Peripheral Bus 5 Clock Divisor Control (PBCLK5 is SYSCLK divided by 2)
+;Config.c,142 :: 		PB5DIVbits.PBDIV = 1; // Peripheral Bus 5 Clock Divisor Control (PBCLK5 is SYSCLK divided by 2)
 ORI	R3, R0, 1
 LBU	R2, Offset(PB5DIVbits+0)(GP)
 INS	R2, R3, 0, 7
 SB	R2, Offset(PB5DIVbits+0)(GP)
-;Config.c,142 :: 		PB7DIVbits.ON = 1; // Peripheral Bus 7 Output Clock Enable (Output clock is enabled)
+;Config.c,145 :: 		PB7DIVbits.ON = 1; // Peripheral Bus 7 Output Clock Enable (Output clock is enabled)
 ORI	R2, R0, 32768
 SWR	R2, Offset(PB7DIVbits+8)(GP)
 SWL	R2, Offset(PB7DIVbits+11)(GP)
-;Config.c,143 :: 		while(!PB7DIVbits.PBDIVRDY);
+;Config.c,146 :: 		while(!PB7DIVbits.PBDIVRDY);
 L_set_performance_mode12:
 LBU	R2, Offset(PB7DIVbits+1)(GP)
 EXT	R2, R2, 3, 1
@@ -387,14 +398,14 @@ L__set_performance_mode28:
 J	L_set_performance_mode12
 NOP	
 L_set_performance_mode13:
-;Config.c,144 :: 		PB7DIVbits.PBDIV = 0; // Peripheral Bus 7 Clock Divisor Control (PBCLK7 is SYSCLK divided by 1)
+;Config.c,147 :: 		PB7DIVbits.PBDIV = 0; // Peripheral Bus 7 Clock Divisor Control (PBCLK7 is SYSCLK divided by 1)
 ORI	R2, R0, 127
 SB	R2, Offset(PB7DIVbits+4)(GP)
-;Config.c,147 :: 		PB8DIVbits.ON = 1; // Peripheral Bus 8 Output Clock Enable (Output clock is enabled)
+;Config.c,150 :: 		PB8DIVbits.ON = 1; // Peripheral Bus 8 Output Clock Enable (Output clock is enabled)
 ORI	R2, R0, 32768
 SWR	R2, Offset(PB8DIVbits+8)(GP)
 SWL	R2, Offset(PB8DIVbits+11)(GP)
-;Config.c,148 :: 		while(!PB8DIVbits.PBDIVRDY);
+;Config.c,151 :: 		while(!PB8DIVbits.PBDIVRDY);
 L_set_performance_mode14:
 LBU	R2, Offset(PB8DIVbits+1)(GP)
 EXT	R2, R2, 3, 1
@@ -406,272 +417,322 @@ L__set_performance_mode29:
 J	L_set_performance_mode14
 NOP	
 L_set_performance_mode15:
-;Config.c,149 :: 		PB8DIVbits.PBDIV = 1; // Peripheral Bus 8 Clock Divisor Control (PBCLK8 is SYSCLK divided by 2)
+;Config.c,152 :: 		PB8DIVbits.PBDIV = 1; // Peripheral Bus 8 Clock Divisor Control (PBCLK8 is SYSCLK divided by 2)
 ORI	R3, R0, 1
 LBU	R2, Offset(PB8DIVbits+0)(GP)
 INS	R2, R3, 0, 7
 SB	R2, Offset(PB8DIVbits+0)(GP)
-;Config.c,152 :: 		PRECONbits.PFMSECEN = 0; // Flash SEC Interrupt Enable (Do not generate an interrupt when the PFMSEC bit is set)
+;Config.c,155 :: 		PRECONbits.PFMSECEN = 0; // Flash SEC Interrupt Enable (Do not generate an interrupt when the PFMSEC bit is set)
 LUI	R2, 1024
 SW	R2, Offset(PRECONbits+4)(GP)
-;Config.c,153 :: 		PRECONbits.PREFEN = 0b11; // Predictive Prefetch Enable (Enable predictive prefetch for any address)
+;Config.c,156 :: 		PRECONbits.PREFEN = 0b11; // Predictive Prefetch Enable (Enable predictive prefetch for any address)
 ORI	R2, R0, 48
 SB	R2, Offset(PRECONbits+8)(GP)
-;Config.c,154 :: 		PRECONbits.PFMWS = 0b100; // PFM Access Time Defined in Terms of SYSCLK Wait States (Two wait states)
+;Config.c,157 :: 		PRECONbits.PFMWS = 0b100; // PFM Access Time Defined in Terms of SYSCLK Wait States (Two wait states)
 ORI	R3, R0, 4
 LBU	R2, Offset(PRECONbits+0)(GP)
 INS	R2, R3, 0, 3
 SB	R2, Offset(PRECONbits+0)(GP)
-;Config.c,163 :: 		SYSKEY = 0x33333333;
+;Config.c,166 :: 		SYSKEY = 0x33333333;
 LUI	R2, 13107
 ORI	R2, R2, 13107
 SW	R2, Offset(SYSKEY+0)(GP)
-;Config.c,164 :: 		}
+;Config.c,167 :: 		}
 L_end_set_performance_mode:
 JR	RA
 NOP	
 ; end of _set_performance_mode
 _OutPutPulseXYZ:
-;Config.c,167 :: 		void OutPutPulseXYZ(){
-;Config.c,173 :: 		OC3CON = 0x0000; // disable OC3 module |_using TMR2_3 in 32bit mode
+;Config.c,170 :: 		void OutPutPulseXYZ(){
+;Config.c,176 :: 		OC3CON = 0x0000; // disable OC3 module |_using TMR2_3 in 32bit mode
 SW	R0, Offset(OC3CON+0)(GP)
-;Config.c,174 :: 		OC5CON = 0x0000; // disable OC5 module |
+;Config.c,177 :: 		OC5CON = 0x0000; // disable OC5 module |
 SW	R0, Offset(OC5CON+0)(GP)
-;Config.c,177 :: 		T2CON  = 0x0000;  // disable Timer2
+;Config.c,178 :: 		OC8CON = 0X0000; // disable OC8 module |_using tmr6
+SW	R0, Offset(OC8CON+0)(GP)
+;Config.c,180 :: 		T2CON  = 0x0000;  // disable Timer2
 SW	R0, Offset(T2CON+0)(GP)
-;Config.c,178 :: 		T4CON  = 0x0000;  // disable Timer4
+;Config.c,181 :: 		T4CON  = 0x0000;  // disable Timer4
 SW	R0, Offset(T4CON+0)(GP)
-;Config.c,181 :: 		T2CON  = 0x0060;  //  with a prescaler of 1:64 to get 1.28usec tick resolution
+;Config.c,182 :: 		T6CON  = 0x0000;  // disable Timer6
+SW	R0, Offset(T6CON+0)(GP)
+;Config.c,184 :: 		T2CON  = 0x0060;  //   a prescaler of 1:64 to get 1.28usec tick resolution
 ORI	R2, R0, 96
 SW	R2, Offset(T2CON+0)(GP)
-;Config.c,182 :: 		T4CON  = 0x0060;  //  with a prescaler of 1:64 to get 1.28usec tick resolution
+;Config.c,185 :: 		T4CON  = 0x0060;  //   a prescaler of 1:64 to get 1.28usec tick resolution
 ORI	R2, R0, 96
 SW	R2, Offset(T4CON+0)(GP)
-;Config.c,185 :: 		PR2    = 0xFFFF;
+;Config.c,186 :: 		T6CON  = 0x0060;  //   a prescaler of 1:64 to get 1.28usec tick resolution
+ORI	R2, R0, 96
+SW	R2, Offset(T6CON+0)(GP)
+;Config.c,189 :: 		PR2    = 0xFFFF;
 ORI	R2, R0, 65535
 SW	R2, Offset(PR2+0)(GP)
-;Config.c,186 :: 		PR4    = 0xFFFF;
+;Config.c,190 :: 		PR4    = 0xFFFF;
 ORI	R2, R0, 65535
 SW	R2, Offset(PR4+0)(GP)
-;Config.c,189 :: 		OC3CON = 0x0004; // Conf OC3 module for dual single Pulse output 16bit tmrx
+;Config.c,191 :: 		PR6    = 0xFFFF;
+ORI	R2, R0, 65535
+SW	R2, Offset(PR6+0)(GP)
+;Config.c,194 :: 		OC3CON = 0x0004; // Conf OC3 module for dual single Pulse output 16bit tmr2
 ORI	R2, R0, 4
 SW	R2, Offset(OC3CON+0)(GP)
-;Config.c,190 :: 		OC5CON = 0x0004; // Conf OC6 module for dual single Pulse output 16bit tmrx
+;Config.c,195 :: 		OC5CON = 0x0004; // Conf OC6 module for dual single Pulse output 16bit tmr4
 ORI	R2, R0, 4
 SW	R2, Offset(OC5CON+0)(GP)
-;Config.c,199 :: 		OC3R   = 0x5;        // Initialize Compare Register 1
+;Config.c,196 :: 		OC8CON = 0x0004; // Conf OC8 module for dual single Pulse output 16bit tmr6
+ORI	R2, R0, 4
+SW	R2, Offset(OC8CON+0)(GP)
+;Config.c,205 :: 		OC3R   = 0x5;        // Initialize Compare Register 1
 ORI	R2, R0, 5
 SW	R2, Offset(OC3R+0)(GP)
-;Config.c,200 :: 		OC3RS  = 0x234;      // Initialize Secondary Compare Register 1
+;Config.c,206 :: 		OC3RS  = 0x234;      // Initialize Secondary Compare Register 1
 ORI	R2, R0, 564
 SW	R2, Offset(OC3RS+0)(GP)
-;Config.c,201 :: 		OC5R   = 0x5;        // Initialize Compare Register 1
+;Config.c,207 :: 		OC5R   = 0x5;        // Initialize Compare Register 1
 ORI	R2, R0, 5
 SW	R2, Offset(OC5R+0)(GP)
-;Config.c,202 :: 		OC5RS  = 0x234;      // Initialize Secondary Compare Register 1
+;Config.c,208 :: 		OC5RS  = 0x234;      // Initialize Secondary Compare Register 1
 ORI	R2, R0, 564
 SW	R2, Offset(OC5RS+0)(GP)
-;Config.c,205 :: 		OC3IP0_bit = 1;  // Set OC3 interrupt priority to 3
+;Config.c,209 :: 		OC8R   = 0x5;        // Initialize Compare Register 1
+ORI	R2, R0, 5
+SW	R2, Offset(OC8R+0)(GP)
+;Config.c,210 :: 		OC8RS  = 0x234;      // Initialize Secondary Compare Register 1
+ORI	R2, R0, 564
+SW	R2, Offset(OC8RS+0)(GP)
+;Config.c,213 :: 		OC3IP0_bit = 1;  // Set OC3 interrupt priority to 3
 LUI	R2, BitMask(OC3IP0_bit+0)
 ORI	R2, R2, BitMask(OC3IP0_bit+0)
 _SX	
-;Config.c,206 :: 		OC3IP1_bit = 1;
+;Config.c,214 :: 		OC3IP1_bit = 1;
 LUI	R2, BitMask(OC3IP1_bit+0)
 ORI	R2, R2, BitMask(OC3IP1_bit+0)
 _SX	
-;Config.c,207 :: 		OC3IP2_bit = 0;
+;Config.c,215 :: 		OC3IP2_bit = 0;
 LUI	R2, BitMask(OC3IP2_bit+0)
 ORI	R2, R2, BitMask(OC3IP2_bit+0)
 _SX	
-;Config.c,208 :: 		OC3IS0_bit = 0;  // Set OC3 sub priority 1
+;Config.c,216 :: 		OC3IS0_bit = 0;  // Set OC3 sub priority 1
 LUI	R2, BitMask(OC3IS0_bit+0)
 ORI	R2, R2, BitMask(OC3IS0_bit+0)
 _SX	
-;Config.c,209 :: 		OC3IS1_bit = 0;
+;Config.c,217 :: 		OC3IS1_bit = 0;
 LUI	R2, BitMask(OC3IS1_bit+0)
 ORI	R2, R2, BitMask(OC3IS1_bit+0)
 _SX	
-;Config.c,210 :: 		OC3IF_bit  = 0;   // reset interrupt flag
+;Config.c,218 :: 		OC3IF_bit  = 0;   // reset interrupt flag
 LUI	R2, BitMask(OC3IF_bit+0)
 ORI	R2, R2, BitMask(OC3IF_bit+0)
 _SX	
-;Config.c,211 :: 		OC3IE_bit  = 1;   // enable interrupt
+;Config.c,219 :: 		OC3IE_bit  = 1;   // enable interrupt
 LUI	R2, BitMask(OC3IE_bit+0)
 ORI	R2, R2, BitMask(OC3IE_bit+0)
 _SX	
-;Config.c,213 :: 		OC5IP0_bit = 1;  // Set OC5 interrupt priority to 3
+;Config.c,221 :: 		OC5IP0_bit = 1;  // Set OC5 interrupt priority to 3
 LUI	R2, BitMask(OC5IP0_bit+0)
 ORI	R2, R2, BitMask(OC5IP0_bit+0)
 _SX	
-;Config.c,214 :: 		OC5IP1_bit = 1;
+;Config.c,222 :: 		OC5IP1_bit = 1;
 LUI	R2, BitMask(OC5IP1_bit+0)
 ORI	R2, R2, BitMask(OC5IP1_bit+0)
 _SX	
-;Config.c,215 :: 		OC5IP2_bit = 0;
+;Config.c,223 :: 		OC5IP2_bit = 0;
 LUI	R2, BitMask(OC5IP2_bit+0)
 ORI	R2, R2, BitMask(OC5IP2_bit+0)
 _SX	
-;Config.c,216 :: 		OC5IS0_bit = 1;  // Set OC5 sub priority 2
+;Config.c,224 :: 		OC5IS0_bit = 1;  // Set OC5 sub priority 2
 LUI	R2, BitMask(OC5IS0_bit+0)
 ORI	R2, R2, BitMask(OC5IS0_bit+0)
 _SX	
-;Config.c,217 :: 		OC5IS1_bit = 0;
+;Config.c,225 :: 		OC5IS1_bit = 0;
 LUI	R2, BitMask(OC5IS1_bit+0)
 ORI	R2, R2, BitMask(OC5IS1_bit+0)
 _SX	
-;Config.c,218 :: 		OC5IF_bit  = 0;  // reset interrupt flag
+;Config.c,226 :: 		OC5IF_bit  = 0;  // reset interrupt flag
 LUI	R2, BitMask(OC5IF_bit+0)
 ORI	R2, R2, BitMask(OC5IF_bit+0)
 _SX	
-;Config.c,219 :: 		OC5IE_bit  = 1;  // enable interrupt
+;Config.c,227 :: 		OC5IE_bit  = 1;  // enable interrupt
 LUI	R2, BitMask(OC5IE_bit+0)
 ORI	R2, R2, BitMask(OC5IE_bit+0)
 _SX	
-;Config.c,222 :: 		T2CONSET  = 0x8000; // Enable Timer2 0C5
+;Config.c,229 :: 		OC8IP0_bit = 1;  // Set OC8 interrupt priority to 3
+LUI	R2, BitMask(OC8IP0_bit+0)
+ORI	R2, R2, BitMask(OC8IP0_bit+0)
+_SX	
+;Config.c,230 :: 		OC8IP1_bit = 1;
+LUI	R2, BitMask(OC8IP1_bit+0)
+ORI	R2, R2, BitMask(OC8IP1_bit+0)
+_SX	
+;Config.c,231 :: 		OC8IP2_bit = 0;
+LUI	R2, BitMask(OC8IP2_bit+0)
+ORI	R2, R2, BitMask(OC8IP2_bit+0)
+_SX	
+;Config.c,232 :: 		OC8IS0_bit = 1;  // Set OC8 sub priority 2
+LUI	R2, BitMask(OC8IS0_bit+0)
+ORI	R2, R2, BitMask(OC8IS0_bit+0)
+_SX	
+;Config.c,233 :: 		OC8IS1_bit = 0;
+LUI	R2, BitMask(OC8IS1_bit+0)
+ORI	R2, R2, BitMask(OC8IS1_bit+0)
+_SX	
+;Config.c,234 :: 		OC8IF_bit  = 0;  // reset interrupt flag
+LUI	R2, BitMask(OC8IF_bit+0)
+ORI	R2, R2, BitMask(OC8IF_bit+0)
+_SX	
+;Config.c,235 :: 		OC8IE_bit  = 1;  // enable interrupt
+LUI	R2, BitMask(OC8IE_bit+0)
+ORI	R2, R2, BitMask(OC8IE_bit+0)
+_SX	
+;Config.c,238 :: 		T2CONSET  = 0x8000; // Enable Timer2 0C5
 ORI	R2, R0, 32768
 SW	R2, Offset(T2CONSET+0)(GP)
-;Config.c,223 :: 		T4CONSET  = 0x8000; // Enable Timer4 OC3
+;Config.c,239 :: 		T4CONSET  = 0x8000; // Enable Timer4 OC3
 ORI	R2, R0, 32768
 SW	R2, Offset(T4CONSET+0)(GP)
-;Config.c,229 :: 		}
+;Config.c,240 :: 		T6CONSET  = 0x8000; // Enable Timer6 OC8
+ORI	R2, R0, 32768
+SW	R2, Offset(T6CONSET+0)(GP)
+;Config.c,246 :: 		}
 L_end_OutPutPulseXYZ:
 JR	RA
 NOP	
 ; end of _OutPutPulseXYZ
 _InitTimer6:
-;Config.c,232 :: 		void InitTimer6(){
-;Config.c,233 :: 		T6CON             = 0x8000;
+;Config.c,250 :: 		void InitTimer6(){
+;Config.c,251 :: 		T6CON             = 0x8000;
 ORI	R2, R0, 32768
 SW	R2, Offset(T6CON+0)(GP)
-;Config.c,234 :: 		T6IP0_bit         = 0;
+;Config.c,252 :: 		T6IP0_bit         = 0;
 LUI	R2, BitMask(T6IP0_bit+0)
 ORI	R2, R2, BitMask(T6IP0_bit+0)
 _SX	
-;Config.c,235 :: 		T6IP1_bit         = 0;
+;Config.c,253 :: 		T6IP1_bit         = 0;
 LUI	R2, BitMask(T6IP1_bit+0)
 ORI	R2, R2, BitMask(T6IP1_bit+0)
 _SX	
-;Config.c,236 :: 		T6IP2_bit         = 1;
+;Config.c,254 :: 		T6IP2_bit         = 1;
 LUI	R2, BitMask(T6IP2_bit+0)
 ORI	R2, R2, BitMask(T6IP2_bit+0)
 _SX	
-;Config.c,237 :: 		T6IS0_bit         = 1;
+;Config.c,255 :: 		T6IS0_bit         = 1;
 LUI	R2, BitMask(T6IS0_bit+0)
 ORI	R2, R2, BitMask(T6IS0_bit+0)
 _SX	
-;Config.c,238 :: 		T6IS1_bit         = 0;
+;Config.c,256 :: 		T6IS1_bit         = 0;
 LUI	R2, BitMask(T6IS1_bit+0)
 ORI	R2, R2, BitMask(T6IS1_bit+0)
 _SX	
-;Config.c,239 :: 		T6IF_bit          = 0;
+;Config.c,257 :: 		T6IF_bit          = 0;
 LUI	R2, BitMask(T6IF_bit+0)
 ORI	R2, R2, BitMask(T6IF_bit+0)
 _SX	
-;Config.c,240 :: 		T6IE_bit          = 0;
+;Config.c,258 :: 		T6IE_bit          = 0;
 LUI	R2, BitMask(T6IE_bit+0)
 ORI	R2, R2, BitMask(T6IE_bit+0)
 _SX	
-;Config.c,241 :: 		PR6               = 500;
+;Config.c,259 :: 		PR6               = 500;
 ORI	R2, R0, 500
 SW	R2, Offset(PR6+0)(GP)
-;Config.c,242 :: 		TMR6              = 0;
+;Config.c,260 :: 		TMR6              = 0;
 SW	R0, Offset(TMR6+0)(GP)
-;Config.c,243 :: 		}
+;Config.c,261 :: 		}
 L_end_InitTimer6:
 JR	RA
 NOP	
 ; end of _InitTimer6
 _InitTimer7:
-;Config.c,247 :: 		void InitTimer7(){
-;Config.c,248 :: 		T7CON             = 0x8000;
+;Config.c,265 :: 		void InitTimer7(){
+;Config.c,266 :: 		T7CON             = 0x8000;
 ORI	R2, R0, 32768
 SW	R2, Offset(T7CON+0)(GP)
-;Config.c,249 :: 		T7IP0_bit         = 0;
+;Config.c,267 :: 		T7IP0_bit         = 0;
 LUI	R2, BitMask(T7IP0_bit+0)
 ORI	R2, R2, BitMask(T7IP0_bit+0)
 _SX	
-;Config.c,250 :: 		T7IP1_bit         = 0;
+;Config.c,268 :: 		T7IP1_bit         = 0;
 LUI	R2, BitMask(T7IP1_bit+0)
 ORI	R2, R2, BitMask(T7IP1_bit+0)
 _SX	
-;Config.c,251 :: 		T7IP2_bit         = 1;
+;Config.c,269 :: 		T7IP2_bit         = 1;
 LUI	R2, BitMask(T7IP2_bit+0)
 ORI	R2, R2, BitMask(T7IP2_bit+0)
 _SX	
-;Config.c,252 :: 		T7IS0_bit         = 1;
+;Config.c,270 :: 		T7IS0_bit         = 1;
 LUI	R2, BitMask(T7IS0_bit+0)
 ORI	R2, R2, BitMask(T7IS0_bit+0)
 _SX	
-;Config.c,253 :: 		T7IS1_bit         = 1;
+;Config.c,271 :: 		T7IS1_bit         = 1;
 LUI	R2, BitMask(T7IS1_bit+0)
 ORI	R2, R2, BitMask(T7IS1_bit+0)
 _SX	
-;Config.c,254 :: 		T7IF_bit          = 0;
+;Config.c,272 :: 		T7IF_bit          = 0;
 LUI	R2, BitMask(T7IF_bit+0)
 ORI	R2, R2, BitMask(T7IF_bit+0)
 _SX	
-;Config.c,255 :: 		T7IE_bit          = 0;
+;Config.c,273 :: 		T7IE_bit          = 0;
 LUI	R2, BitMask(T7IE_bit+0)
 ORI	R2, R2, BitMask(T7IE_bit+0)
 _SX	
-;Config.c,256 :: 		PR7               = 50000;
+;Config.c,274 :: 		PR7               = 50000;
 ORI	R2, R0, 50000
 SW	R2, Offset(PR7+0)(GP)
-;Config.c,257 :: 		TMR7              = 0;
+;Config.c,275 :: 		TMR7              = 0;
 SW	R0, Offset(TMR7+0)(GP)
-;Config.c,258 :: 		}
+;Config.c,276 :: 		}
 L_end_InitTimer7:
 JR	RA
 NOP	
 ; end of _InitTimer7
 _InitTimer8:
-;Config.c,261 :: 		void InitTimer8(){
-;Config.c,262 :: 		T8CON            = 0x8000;
+;Config.c,279 :: 		void InitTimer8(){
+;Config.c,280 :: 		T8CON            = 0x8000;
 ORI	R2, R0, 32768
 SW	R2, Offset(T8CON+0)(GP)
-;Config.c,263 :: 		T8IP0_bit        = 0;
+;Config.c,281 :: 		T8IP0_bit        = 0;
 LUI	R2, BitMask(T8IP0_bit+0)
 ORI	R2, R2, BitMask(T8IP0_bit+0)
 _SX	
-;Config.c,264 :: 		T8IP1_bit        = 0;
+;Config.c,282 :: 		T8IP1_bit        = 0;
 LUI	R2, BitMask(T8IP1_bit+0)
 ORI	R2, R2, BitMask(T8IP1_bit+0)
 _SX	
-;Config.c,265 :: 		T8IP2_bit        = 1;
+;Config.c,283 :: 		T8IP2_bit        = 1;
 LUI	R2, BitMask(T8IP2_bit+0)
 ORI	R2, R2, BitMask(T8IP2_bit+0)
 _SX	
-;Config.c,266 :: 		T8IS0_bit        = 0;
+;Config.c,284 :: 		T8IS0_bit        = 0;
 LUI	R2, BitMask(T8IS0_bit+0)
 ORI	R2, R2, BitMask(T8IS0_bit+0)
 _SX	
-;Config.c,267 :: 		T8IS1_bit        = 1;
+;Config.c,285 :: 		T8IS1_bit        = 1;
 LUI	R2, BitMask(T8IS1_bit+0)
 ORI	R2, R2, BitMask(T8IS1_bit+0)
 _SX	
-;Config.c,268 :: 		T8IF_bit         = 0;
+;Config.c,286 :: 		T8IF_bit         = 0;
 LUI	R2, BitMask(T8IF_bit+0)
 ORI	R2, R2, BitMask(T8IF_bit+0)
 _SX	
-;Config.c,269 :: 		T8IE_bit         = 0;
+;Config.c,287 :: 		T8IE_bit         = 0;
 LUI	R2, BitMask(T8IE_bit+0)
 ORI	R2, R2, BitMask(T8IE_bit+0)
 _SX	
-;Config.c,270 :: 		PR8              = 50;
+;Config.c,288 :: 		PR8              = 50;
 ORI	R2, R0, 50
 SW	R2, Offset(PR8+0)(GP)
-;Config.c,271 :: 		TMR8             = 0;
+;Config.c,289 :: 		TMR8             = 0;
 SW	R0, Offset(TMR8+0)(GP)
-;Config.c,272 :: 		}
+;Config.c,290 :: 		}
 L_end_InitTimer8:
 JR	RA
 NOP	
 ; end of _InitTimer8
 _LcdI2CConfig:
-;Config.c,274 :: 		void LcdI2CConfig(){
+;Config.c,292 :: 		void LcdI2CConfig(){
 ADDIU	SP, SP, -20
 SW	RA, 0(SP)
-;Config.c,276 :: 		I2CNo_Init(I2C4);
+;Config.c,294 :: 		I2CNo_Init(I2C4);
 SW	R25, 4(SP)
 SW	R26, 8(SP)
 SW	R27, 12(SP)
@@ -679,13 +740,13 @@ SW	R28, 16(SP)
 ORI	R25, R0, 4
 JAL	_I2CNo_Init+0
 NOP	
-;Config.c,277 :: 		I2C4_Init_Advanced(50000, 100000);
+;Config.c,295 :: 		I2C4_Init_Advanced(50000, 100000);
 LUI	R26, 1
 ORI	R26, R26, 34464
 ORI	R25, R0, 50000
 JAL	_I2C4_Init_Advanced+0
 NOP	
-;Config.c,278 :: 		I2C_Set_Active(&I2C4_Start, &I2C4_Restart, &I2C4_Read, &I2C4_Write,
+;Config.c,296 :: 		I2C_Set_Active(&I2C4_Start, &I2C4_Restart, &I2C4_Read, &I2C4_Write,
 LUI	R28, hi_addr(_I2C4_Write+0)
 ORI	R28, R28, lo_addr(_I2C4_Write+0)
 LUI	R27, hi_addr(_I2C4_Read+0)
@@ -694,7 +755,7 @@ LUI	R26, hi_addr(_I2C4_Restart+0)
 ORI	R26, R26, lo_addr(_I2C4_Restart+0)
 LUI	R25, hi_addr(_I2C4_Start+0)
 ORI	R25, R25, lo_addr(_I2C4_Start+0)
-;Config.c,279 :: 		&I2C4_Stop,&I2C4_Is_Idle); // Sets the I2C4 module active
+;Config.c,297 :: 		&I2C4_Stop,&I2C4_Is_Idle); // Sets the I2C4 module active
 LUI	R2, hi_addr(_I2C4_Is_Idle+0)
 ORI	R2, R2, lo_addr(_I2C4_Is_Idle+0)
 ADDIU	SP, SP, -8
@@ -705,43 +766,43 @@ SW	R2, 0(SP)
 JAL	_I2C_Set_Active+0
 NOP	
 ADDIU	SP, SP, 8
-;Config.c,280 :: 		Delay_ms(100);
+;Config.c,298 :: 		Delay_ms(100);
 LUI	R24, 101
 ORI	R24, R24, 47530
 L_LcdI2CConfig16:
 ADDIU	R24, R24, -1
 BNE	R24, R0, L_LcdI2CConfig16
 NOP	
-;Config.c,281 :: 		I2C_LCD_init(LCD_01_ADDRESS);
+;Config.c,299 :: 		I2C_LCD_init(LCD_01_ADDRESS);
 LBU	R25, Offset(_LCD_01_ADDRESS+0)(GP)
 JAL	_I2C_LCD_init+0
 NOP	
-;Config.c,282 :: 		Delay_ms(100);
+;Config.c,300 :: 		Delay_ms(100);
 LUI	R24, 101
 ORI	R24, R24, 47530
 L_LcdI2CConfig18:
 ADDIU	R24, R24, -1
 BNE	R24, R0, L_LcdI2CConfig18
 NOP	
-;Config.c,283 :: 		I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_FIRST_ROW,1);
+;Config.c,301 :: 		I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_FIRST_ROW,1);
 ORI	R27, R0, 1
 ORI	R26, R0, 1
 LBU	R25, Offset(_LCD_01_ADDRESS+0)(GP)
 JAL	_I2C_Lcd_Cmd+0
 NOP	
-;Config.c,284 :: 		I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_CURSOR_OFF,1); // Cursor off
+;Config.c,302 :: 		I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_CURSOR_OFF,1); // Cursor off
 ORI	R27, R0, 1
 ORI	R26, R0, 7
 LBU	R25, Offset(_LCD_01_ADDRESS+0)(GP)
 JAL	_I2C_Lcd_Cmd+0
 NOP	
-;Config.c,285 :: 		I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_CLEAR,1); // Clear display
+;Config.c,303 :: 		I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_CLEAR,1); // Clear display
 ORI	R27, R0, 1
 ORI	R26, R0, 5
 LBU	R25, Offset(_LCD_01_ADDRESS+0)(GP)
 JAL	_I2C_Lcd_Cmd+0
 NOP	
-;Config.c,286 :: 		}
+;Config.c,304 :: 		}
 L_end_LcdI2CConfig:
 LW	R28, 16(SP)
 LW	R27, 12(SP)
@@ -753,180 +814,180 @@ JR	RA
 NOP	
 ; end of _LcdI2CConfig
 _initDMA_global:
-;Config.c,290 :: 		void initDMA_global(){
-;Config.c,291 :: 		DMACON = 1<<16;       //enable the DMA controller
+;Config.c,308 :: 		void initDMA_global(){
+;Config.c,309 :: 		DMACON = 1<<16;       //enable the DMA controller
 LUI	R2, 1
 SW	R2, Offset(DMACON+0)(GP)
-;Config.c,292 :: 		DCH0CON = 0x03;   //channel off on block trf complete ,no event detect, priority 3, no chaining
+;Config.c,310 :: 		DCH0CON = 0x03;   //channel off on block trf complete ,no event detect, priority 3, no chaining
 ORI	R2, R0, 3
 SW	R2, Offset(DCH0CON+0)(GP)
-;Config.c,293 :: 		}
+;Config.c,311 :: 		}
 L_end_initDMA_global:
 JR	RA
 NOP	
 ; end of _initDMA_global
 _initDMA0:
-;Config.c,296 :: 		void  initDMA0(){
-;Config.c,297 :: 		DMACONbits.ON = 1;
+;Config.c,314 :: 		void  initDMA0(){
+;Config.c,315 :: 		DMACONbits.ON = 1;
 ORI	R2, R0, 32768
 SWR	R2, Offset(DMACONbits+8)(GP)
 SWL	R2, Offset(DMACONbits+11)(GP)
-;Config.c,298 :: 		DCH0CONbits.CHAEN = 1;
+;Config.c,316 :: 		DCH0CONbits.CHAEN = 1;
 ORI	R2, R0, 16
 SW	R2, Offset(DCH0CONbits+8)(GP)
-;Config.c,299 :: 		DCH0CONbits.CHPATLEN = 0;
+;Config.c,317 :: 		DCH0CONbits.CHPATLEN = 0;
 ORI	R2, R0, 2048
 SW	R2, Offset(DCH0CONbits+4)(GP)
-;Config.c,300 :: 		DMA0IE_bit = 0;
+;Config.c,318 :: 		DMA0IE_bit = 0;
 LUI	R2, BitMask(DMA0IE_bit+0)
 ORI	R2, R2, BitMask(DMA0IE_bit+0)
 _SX	
-;Config.c,301 :: 		DMA0IF_bit = 0;
+;Config.c,319 :: 		DMA0IF_bit = 0;
 LUI	R2, BitMask(DMA0IF_bit+0)
 ORI	R2, R2, BitMask(DMA0IF_bit+0)
 _SX	
-;Config.c,303 :: 		DCH0ECON      =(146 << 8 ) | 0x30;         // DCH0ECON Specific INTERRUPT IRQ NUMBER (146) for UART 2 RX
+;Config.c,321 :: 		DCH0ECON      =(146 << 8 ) | 0x30;         // DCH0ECON Specific INTERRUPT IRQ NUMBER (146) for UART 2 RX
 ORI	R2, R0, 37424
 SW	R2, Offset(DCH0ECON+0)(GP)
-;Config.c,304 :: 		DCH0DAT       =  0x0D;
+;Config.c,322 :: 		DCH0DAT       =  0x0D;
 ORI	R2, R0, 13
 SW	R2, Offset(DCH0DAT+0)(GP)
-;Config.c,306 :: 		DCH0SSA       = KVA_TO_PA(0xBF822230);    // RxBuf virtual address     [0xBF822230 = U1RXREG]
+;Config.c,324 :: 		DCH0SSA       = KVA_TO_PA(0xBF822230);    // RxBuf virtual address     [0xBF822230 = U1RXREG]
 LUI	R2, 8066
 ORI	R2, R2, 8752
 SW	R2, Offset(DCH0SSA+0)(GP)
-;Config.c,307 :: 		DCH0DSA       = KVA_TO_PA(0xA0002000);    //   virtual address:= IN RAM FOR RECIEVED DATA
+;Config.c,325 :: 		DCH0DSA       = KVA_TO_PA(0xA0002000);    //   virtual address:= IN RAM FOR RECIEVED DATA
 ORI	R2, R0, 8192
 SW	R2, Offset(DCH0DSA+0)(GP)
-;Config.c,309 :: 		DCH0SSIZ      = 200  ;  // source size = size of buffer set up rcBuf, x bytes at a time
+;Config.c,327 :: 		DCH0SSIZ      = 200  ;  // source size = size of buffer set up rcBuf, x bytes at a time
 ORI	R2, R0, 200
 SW	R2, Offset(DCH0SSIZ+0)(GP)
-;Config.c,310 :: 		DCH0DSIZ      = 200  ;  // destination size = Size for the 'rxBuf' to fill up with received characters. It is = 5 in this example...
+;Config.c,328 :: 		DCH0DSIZ      = 200  ;  // destination size = Size for the 'rxBuf' to fill up with received characters. It is = 5 in this example...
 ORI	R2, R0, 200
 SW	R2, Offset(DCH0DSIZ+0)(GP)
-;Config.c,311 :: 		DCH0CSIZ      = 200  ;  // bytes transferred per event = Size of how many bytes to transfer per each interrupt on #27 IRQ event
+;Config.c,329 :: 		DCH0CSIZ      = 200  ;  // bytes transferred per event = Size of how many bytes to transfer per each interrupt on #27 IRQ event
 ORI	R2, R0, 200
 SW	R2, Offset(DCH0CSIZ+0)(GP)
-;Config.c,313 :: 		DCH0INTCLR    = 0x00FF00FF ; // Clear existing events, disable all interrupts ''Clear flags in DMA controller channel 0
+;Config.c,331 :: 		DCH0INTCLR    = 0x00FF00FF ; // Clear existing events, disable all interrupts ''Clear flags in DMA controller channel 0
 LUI	R2, 255
 ORI	R2, R2, 255
 SW	R2, Offset(DCH0INTCLR+0)(GP)
-;Config.c,314 :: 		CHBCIE_bit    = 1  ;         // Enable Interrupt on block transfer complete
+;Config.c,332 :: 		CHBCIE_bit    = 1  ;         // Enable Interrupt on block transfer complete
 LUI	R2, BitMask(CHBCIE_bit+0)
 ORI	R2, R2, BitMask(CHBCIE_bit+0)
 _SX	
-;Config.c,315 :: 		CHERIE_bit    = 1  ;         // Enable Interrupt on errors
+;Config.c,333 :: 		CHERIE_bit    = 1  ;         // Enable Interrupt on errors
 LUI	R2, BitMask(CHERIE_bit+0)
 ORI	R2, R2, BitMask(CHERIE_bit+0)
 _SX	
-;Config.c,319 :: 		IPC33CLR       = 0x0000001F ;//' clear DMA channel priority and sub-priority
+;Config.c,337 :: 		IPC33CLR       = 0x0000001F ;//' clear DMA channel priority and sub-priority
 ORI	R2, R0, 31
 SW	R2, Offset(IPC33CLR+0)(GP)
-;Config.c,320 :: 		DMA0IP2_bit   = 1 ;          //' IPC9 DMA0IP  priority = 5
+;Config.c,338 :: 		DMA0IP2_bit   = 1 ;          //' IPC9 DMA0IP  priority = 5
 LUI	R2, BitMask(DMA0IP2_bit+0)
 ORI	R2, R2, BitMask(DMA0IP2_bit+0)
 _SX	
-;Config.c,321 :: 		DMA0IP1_bit   = 0 ;
+;Config.c,339 :: 		DMA0IP1_bit   = 0 ;
 LUI	R2, BitMask(DMA0IP1_bit+0)
 ORI	R2, R2, BitMask(DMA0IP1_bit+0)
 _SX	
-;Config.c,322 :: 		DMA0IP0_bit   = 1 ;
+;Config.c,340 :: 		DMA0IP0_bit   = 1 ;
 LUI	R2, BitMask(DMA0IP0_bit+0)
 ORI	R2, R2, BitMask(DMA0IP0_bit+0)
 _SX	
-;Config.c,323 :: 		DMA0IS1_bit   = 1 ;         //' sub-priority 3
+;Config.c,341 :: 		DMA0IS1_bit   = 1 ;         //' sub-priority 3
 LUI	R2, BitMask(DMA0IS1_bit+0)
 ORI	R2, R2, BitMask(DMA0IS1_bit+0)
 _SX	
-;Config.c,324 :: 		DMA0IS0_bit   = 1 ;
+;Config.c,342 :: 		DMA0IS0_bit   = 1 ;
 LUI	R2, BitMask(DMA0IS0_bit+0)
 ORI	R2, R2, BitMask(DMA0IS0_bit+0)
 _SX	
-;Config.c,326 :: 		DMA0IE_bit    = 1 ;         //' enable DMA0 interrupt
+;Config.c,344 :: 		DMA0IE_bit    = 1 ;         //' enable DMA0 interrupt
 LUI	R2, BitMask(DMA0IE_bit+0)
 ORI	R2, R2, BitMask(DMA0IE_bit+0)
 _SX	
-;Config.c,327 :: 		CHEN_bit      = 1 ;         //' Enable channel - may want to do this when you are ready to receive...
+;Config.c,345 :: 		CHEN_bit      = 1 ;         //' Enable channel - may want to do this when you are ready to receive...
 LUI	R2, BitMask(CHEN_bit+0)
 ORI	R2, R2, BitMask(CHEN_bit+0)
 _SX	
-;Config.c,329 :: 		}
+;Config.c,347 :: 		}
 L_end_initDMA0:
 JR	RA
 NOP	
 ; end of _initDMA0
 _initDMA1:
-;Config.c,332 :: 		void initDMA1(){
-;Config.c,334 :: 		DMA1IE_bit = 0 ;                   //' disable DMA1 interrupt
+;Config.c,350 :: 		void initDMA1(){
+;Config.c,352 :: 		DMA1IE_bit = 0 ;                   //' disable DMA1 interrupt
 LUI	R2, BitMask(DMA1IE_bit+0)
 ORI	R2, R2, BitMask(DMA1IE_bit+0)
 _SX	
-;Config.c,335 :: 		DMA1IF_bit = 0 ;                   //' clear DMA1 interrupt flag
+;Config.c,353 :: 		DMA1IF_bit = 0 ;                   //' clear DMA1 interrupt flag
 LUI	R2, BitMask(DMA1IF_bit+0)
 ORI	R2, R2, BitMask(DMA1IF_bit+0)
 _SX	
-;Config.c,336 :: 		DCH1CONbits.CHPATLEN = 0;
+;Config.c,354 :: 		DCH1CONbits.CHPATLEN = 0;
 ORI	R2, R0, 2048
 SW	R2, Offset(DCH1CONbits+4)(GP)
-;Config.c,337 :: 		DCH1ECON=(147 << 8)| 0x30;         //' Specific INTERRUPT IRQ NUMBER for UART 2 TX (147)
+;Config.c,355 :: 		DCH1ECON=(147 << 8)| 0x30;         //' Specific INTERRUPT IRQ NUMBER for UART 2 TX (147)
 ORI	R2, R0, 37680
 SW	R2, Offset(DCH1ECON+0)(GP)
-;Config.c,338 :: 		DCH1SSA = KVA_TO_PA(0xA0002200) ;  //0xA0002200 virtual address of txBuf
+;Config.c,356 :: 		DCH1SSA = KVA_TO_PA(0xA0002200) ;  //0xA0002200 virtual address of txBuf
 ORI	R2, R0, 8704
 SW	R2, Offset(DCH1SSA+0)(GP)
-;Config.c,339 :: 		DCH1DSA = KVA_TO_PA(0xBF822220) ;  //U1TX2REG for reply  [0xBF822220 = U1TXREG]
+;Config.c,357 :: 		DCH1DSA = KVA_TO_PA(0xBF822220) ;  //U1TX2REG for reply  [0xBF822220 = U1TXREG]
 LUI	R2, 8066
 ORI	R2, R2, 8736
 SW	R2, Offset(DCH1DSA+0)(GP)
-;Config.c,340 :: 		DCH1DAT       = 0x0D;
+;Config.c,358 :: 		DCH1DAT       = 0x0D;
 ORI	R2, R0, 13
 SW	R2, Offset(DCH1DAT+0)(GP)
-;Config.c,342 :: 		DCH1SSIZ = 200  ;  //' This is how many bytes you want to send out in a block transfer for UART transmitter
+;Config.c,360 :: 		DCH1SSIZ = 200  ;  //' This is how many bytes you want to send out in a block transfer for UART transmitter
 ORI	R2, R0, 200
 SW	R2, Offset(DCH1SSIZ+0)(GP)
-;Config.c,344 :: 		DCH1DSIZ = 1  ;    //' This is how many bytes come from the destination - i.e. rxBuf recieved can change dynamicall as its send buffer
+;Config.c,362 :: 		DCH1DSIZ = 1  ;    //' This is how many bytes come from the destination - i.e. rxBuf recieved can change dynamicall as its send buffer
 ORI	R2, R0, 1
 SW	R2, Offset(DCH1DSIZ+0)(GP)
-;Config.c,346 :: 		DCH1CSIZ = 200  ;  //' x bytes from txBuf in a cell waiting to send out 1 byte at a time to U1TXREG / DCH1DSIZ
+;Config.c,364 :: 		DCH1CSIZ = 200  ;  //' x bytes from txBuf in a cell waiting to send out 1 byte at a time to U1TXREG / DCH1DSIZ
 ORI	R2, R0, 200
 SW	R2, Offset(DCH1CSIZ+0)(GP)
-;Config.c,348 :: 		DCH1INTCLR  =  0x00FF00FF ; //'clear all interrupts and clear all interrupt flags
+;Config.c,366 :: 		DCH1INTCLR  =  0x00FF00FF ; //'clear all interrupts and clear all interrupt flags
 LUI	R2, 255
 ORI	R2, R2, 255
 SW	R2, Offset(DCH1INTCLR+0)(GP)
-;Config.c,349 :: 		CHBCIE_DCH1INT_bit = 1    ; //'Enable Channel Block transfer interrupt
+;Config.c,367 :: 		CHBCIE_DCH1INT_bit = 1    ; //'Enable Channel Block transfer interrupt
 LUI	R2, BitMask(CHBCIE_DCH1INT_bit+0)
 ORI	R2, R2, BitMask(CHBCIE_DCH1INT_bit+0)
 _SX	
-;Config.c,350 :: 		CHERIE_DCH1INT_bit = 1    ; //'Enable Channel Address Error interrupt
+;Config.c,368 :: 		CHERIE_DCH1INT_bit = 1    ; //'Enable Channel Address Error interrupt
 LUI	R2, BitMask(CHERIE_DCH1INT_bit+0)
 ORI	R2, R2, BitMask(CHERIE_DCH1INT_bit+0)
 _SX	
-;Config.c,352 :: 		DMA1IP2_bit = 1 ;           //' DMA1 interrupt priority 5
+;Config.c,370 :: 		DMA1IP2_bit = 1 ;           //' DMA1 interrupt priority 5
 LUI	R2, BitMask(DMA1IP2_bit+0)
 ORI	R2, R2, BitMask(DMA1IP2_bit+0)
 _SX	
-;Config.c,353 :: 		DMA1IP1_bit = 0 ;
+;Config.c,371 :: 		DMA1IP1_bit = 0 ;
 LUI	R2, BitMask(DMA1IP1_bit+0)
 ORI	R2, R2, BitMask(DMA1IP1_bit+0)
 _SX	
-;Config.c,354 :: 		DMA1IP0_bit = 1 ;
+;Config.c,372 :: 		DMA1IP0_bit = 1 ;
 LUI	R2, BitMask(DMA1IP0_bit+0)
 ORI	R2, R2, BitMask(DMA1IP0_bit+0)
 _SX	
-;Config.c,355 :: 		DMA1IS1_bit = 0 ;           //' sub-priority 1
+;Config.c,373 :: 		DMA1IS1_bit = 0 ;           //' sub-priority 1
 LUI	R2, BitMask(DMA1IS1_bit+0)
 ORI	R2, R2, BitMask(DMA1IS1_bit+0)
 _SX	
-;Config.c,356 :: 		DMA1IS0_bit = 1 ;
+;Config.c,374 :: 		DMA1IS0_bit = 1 ;
 LUI	R2, BitMask(DMA1IS0_bit+0)
 ORI	R2, R2, BitMask(DMA1IS0_bit+0)
 _SX	
-;Config.c,357 :: 		DMA1IE_bit  = 1 ;           //' enable DMA1 interrupt
+;Config.c,375 :: 		DMA1IE_bit  = 1 ;           //' enable DMA1 interrupt
 LUI	R2, BitMask(DMA1IE_bit+0)
 ORI	R2, R2, BitMask(DMA1IE_bit+0)
 _SX	
-;Config.c,358 :: 		}
+;Config.c,376 :: 		}
 L_end_initDMA1:
 JR	RA
 NOP	

@@ -13,11 +13,12 @@ unsigned int Toggle;
  STP STPS[NoOfAxis];
  sVars SV;
  StepTmr STmr;
+ 
 //////////////////////////////////
+//define pin modes as symbolic text
 //sfr bits
 //bit PLS_Step_;sfr;
-//////////////////////////////////
-//pin modes
+
 sbit EN_StepX at LATG0_bit;               //LATB13_bit;   LATD9_bit
 sbit EN_Step_PinDirX at TRISG0_bit;       //TRISB13_bit;  TRISD9
 //sbit RST_StepX at LATA10_bit;
@@ -40,7 +41,16 @@ sbit PLS_Step_PinDirY at TRISD4_bit;
 sbit DIR_StepY at LATD5_bit;
 sbit DIR_Step_PinDirY at TRISD5_bit;
 
-
+sbit EN_StepZ at LATG14_bit;
+sbit EN_Step_PinDirZ at TRISG14_bit;
+//sbit RST_StepX at LATA10_bit;
+//sbit RST_Step_PinDirX at TRISA10_bit;
+//sbit SLP_FLT_StepY at LATB10_bit;
+//sbit SLP_FLT_Step_PinDirY at TRISB10_bit;
+sbit PLS_StepZ at LATE3_bit;
+sbit PLS_Step_PinDirZ at TRISE3_bit;
+sbit DIR_StepZ at LATG12_bit;
+sbit DIR_Step_PinDirZ at TRISG12_bit;
 
 //////////////////////////////////
 //Set up pin outs
@@ -58,6 +68,13 @@ void SetPinMode(){
 //  SLP_FLT_Step_PinDirY = 0;
   PLS_Step_PinDirY = 0;
   DIR_Step_PinDirY = 0;
+//zaxis
+  EN_Step_PinDirZ  = 0; //output
+//  RST_Step_PinDirZ = 0;
+//  SLP_FLT_Step_PinDirZ = 0;
+  PLS_Step_PinDirZ = 0;
+  DIR_Step_PinDirZ = 0;
+  
 }
 
 /////////////////////////////////
@@ -69,20 +86,27 @@ void StepperConstants(long accel,long decel){
 
 /////////////////////////////////
 //Enable Steppers
-void EnStepper(){
-//  Xaxis
+void EnStepperX(){
 //  SLP_FLT_StepX = 1;
 //  RST_StepX     = 1;
    EN_StepX       = 0;
-//  Yaxis
+}
+
+void EnStepperY(){
 //  SLP_FLT_StepY = 1;
 //  RST_StepY     = 1;
    EN_StepY       = 0;
+}
+void EnStepperZ(){
+//  SLP_FLT_StepZ = 1;
+//  RST_StepZ     = 1;
+   EN_StepZ       = 0;
 }
 
 void DisableStepper(){
    EN_Stepx      = 1;
    EN_StepY      = 1;
+   EN_StepZ      = 1;
 }
 
 
@@ -185,6 +209,7 @@ int ii;
       SV.Tog   = 0;
       SV.px    = 0;
       SV.py    = 0;
+      SV.pz    = 0;
       SV.running = 1;
 }
 
@@ -210,71 +235,176 @@ int ii;
   }
 }
 
-void Step(long newx,long newy){
+void Step(long newx,long newy,int axis_combo){
  long i;
  static long d2;
    SV.over=0;
    d2 = 0;
+   //will need to change these 3 lines when implimenting position referenc??
    SV.px = 0;
    SV.py = 0;
+   SV.pz = 0;
 /*!
  *use Bressenhams algorithm here
  */
-  SV.dx   = newx - SV.px;           // distance to move (delta)
-  SV.dy   = newy - SV.py;
-  // direction to move
-  SV.dirx = SV.dx > 0?1:-1;
-  SV.diry = SV.dy > 0?1:-1;
-  // Set direction from sign on step value.
-  if(SV.dirx < 0)DIR_StepX = CCW;
-  else DIR_StepX = CW;
-  if(SV.dirY < 0) DIR_StepY = CCW;
-  else DIR_StepY = CW;
 
-  SV.dx = abs(SV.dx);
-  SV.dy = abs(SV.dy);
-  
-  if(SV.dx > SV.dy) d2 = 2*(SV.dy - SV.dx);
-  else d2 = 2* (SV.dx - SV.dy);
-  
-
-   if(SV.Tog == 0){  //? round this start up bit
-     LATE7_bit = 1;
-     if(SV.dx > SV.dy){
-        for(STPS[X].step_count = 0;STPS[X].step_count < SV.dx; ++STPS[X].step_count)/*(i=0; i < SV.dx; ++i)*/{
-
-          STmr.compOCxRunning = 0;
-          toggleOCx(X);
-          Pulse(X);
-           if(d2 < 0)d2 += 2*SV.dy;
-           else{
-              d2 += 2 * (SV.dy - SV.dx);
-              toggleOCx(Y);
-              Pulse(Y);
-           }
-
-           //wait for next time delay
-           while(STmr.compOCxRunning != 1);//STPS[X].microSec < STPS[X].step_delay);
+  switch(axis_combo){
+    case xy:
+          SV.dx   = newx - SV.px;           // distance to move (delta)
+          SV.dy   = newy - SV.py;
+          // direction to move
+          SV.dirx = SV.dx > 0?1:-1;
+          SV.diry = SV.dy > 0?1:-1;
+            // Set direction from sign on step value.
+          if(SV.dirx < 0)DIR_StepX = CCW;
+          else DIR_StepX = CW;
+          if(SV.diry < 0) DIR_StepY = CCW;
+          else DIR_StepY = CW;
+          SV.dx = abs(SV.dx);
+          SV.dy = abs(SV.dy);
+          
+         if(SV.dx > SV.dy) d2 = 2*(SV.dy - SV.dx);
+         else d2 = 2* (SV.dx - SV.dy);
+         if(SV.Tog == 0){  //? round this start up bit
+             LATE7_bit = 1;
+             if(SV.dx > SV.dy){
+                for(STPS[X].step_count = 0;STPS[X].step_count < SV.dx; ++STPS[X].step_count)/*(i=0; i < SV.dx; ++i)*/{
+                    STmr.compOCxRunning = 0;
+                    toggleOCx(X);
+                    Pulse(X);
+                    if(d2 < 0)d2 += 2*SV.dy;
+                    else{
+                      d2 += 2 * (SV.dy - SV.dx);
+                      toggleOCx(Y);
+                      Pulse(Y);
+                    }
+                   //wait for next time delay
+                    while(STmr.compOCxRunning != 1);//STPS[X].microSec < STPS[X].step_delay);
+                }
+            }else{
+                for(STPS[Y].step_count = 0;STPS[Y].step_count < SV.dy; ++STPS[Y].step_count)/*(i=0;i < SV.dy;++i)*/{
+                   STmr.compOCxRunning = 0;
+                   toggleOCx(Y);
+                   Pulse(Y);
+                   if(d2 < 0)d2 += 2 * SV.dx;
+                   else{
+                       d2 += 2 * (SV.dx - SV.dy);
+                       toggleOCx(X);
+                       Pulse(X);
+                   }
+                   //wait for next time delay
+                    while(STmr.compOCxRunning != 2);//STPS[Y].microSec < STPS[y].step_delay);
+                }
+            }
+         }
+         break;
+    case xz:
+          SV.dx   = newx - SV.px;           // distance to move (delta)
+          SV.dz   = newy - SV.pz;
+          // direction to move
+          SV.dirx = SV.dx > 0?1:-1;
+          SV.dirz = SV.dz > 0?1:-1;
+          // Set direction from sign on step value.
+          if(SV.dirx < 0)DIR_StepX = CCW;
+          else DIR_StepX = CW;
+          if(SV.dirz < 0) DIR_StepZ = CCW;
+          else DIR_StepZ = CW;
+          SV.dx = abs(SV.dx);
+          SV.dz = abs(SV.dz);
+          
+        if(SV.dx > SV.dz) d2 = 2*(SV.dz - SV.dx);
+        else d2 = 2* (SV.dx - SV.dz);
+        if(SV.Tog == 0){  //? round this start up bit
+            LATE7_bit = 1;
+            if(SV.dx > SV.dy){
+                for(STPS[X].step_count = 0;STPS[X].step_count < SV.dx; ++STPS[X].step_count)/*(i=0; i < SV.dx; ++i)*/{
+                    STmr.compOCxRunning = 0;
+                    toggleOCx(X);
+                    Pulse(X);
+                    if(d2 < 0)d2 += 2*SV.dz;
+                    else{
+                      d2 += 2 * (SV.dz - SV.dx);
+                      toggleOCx(Z);
+                      Pulse(Z);
+                    }
+                   //wait for next time delay
+                    while(STmr.compOCxRunning != 1);//STPS[X].microSec < STPS[X].step_delay);
+                }
+            }else{
+                for(STPS[Z].step_count = 0;STPS[Z].step_count < SV.dy; ++STPS[Z].step_count)/*(i=0;i < SV.dy;++i)*/{
+                   STmr.compOCxRunning = 0;
+                   toggleOCx(Z);
+                   Pulse(Z);
+                   if(d2 < 0)d2 += 2 * SV.dx;
+                   else{
+                       d2 += 2 * (SV.dx - SV.dz);
+                       toggleOCx(X);
+                       Pulse(X);
+                   }
+                   //wait for next time delay
+                    while(STmr.compOCxRunning != 2);//STPS[Y].microSec < STPS[Z].step_delay);
+                }
+             }
         }
-     }else{
-     
-        for(STPS[Y].step_count = 0;STPS[Y].step_count < SV.dy; ++STPS[Y].step_count)/*(i=0;i < SV.dy;++i)*/{
+         break;
+    case yz:
+          SV.dy   = newx - SV.pz;           // distance to move (delta)
+          SV.dz   = newy - SV.py;
+          // direction to move
+          SV.diry = SV.dy > 0?1:-1;
+          SV.dirz = SV.dz > 0?1:-1;
+          // Set direction from sign on step value.
+          if(SV.diry < 0)DIR_StepY = CCW;
+          else DIR_StepY = CW;
+          if(SV.dirz < 0) DIR_StepZ = CCW;
+          else DIR_StepZ = CW;
+          SV.dy = abs(SV.dy);
+          SV.dz = abs(SV.dz);
+          
+         if(SV.dy > SV.dz) d2 = 2*(SV.dz - SV.dy);
+         else d2 = 2* (SV.dy - SV.dz);
+         if(SV.Tog == 0){  //? round this start up bit
+              LATE7_bit = 1;
+              if(SV.dy > SV.dz){
+                  for(STPS[Y].step_count = 0;STPS[Y].step_count < SV.dy; ++STPS[Y].step_count)/*(i=0; i < SV.dx; ++i)*/{
+                      STmr.compOCxRunning = 0;
+                      toggleOCx(Y);
+                      Pulse(Y);
+                      if(d2 < 0)d2 += 2*SV.dz;
+                      else{
+                        d2 += 2 * (SV.dz - SV.dy);
+                        toggleOCx(Z);
+                        Pulse(Z);
+                      }
+                     //wait for next time delay
+                      while(STmr.compOCxRunning != 1);//STPS[X].microSec < STPS[X].step_delay);
+                  }
+              }else{
+                  for(STPS[Z].step_count = 0;STPS[Z].step_count < SV.dy; ++STPS[Z].step_count)/*(i=0;i < SV.dy;++i)*/{
+                     STmr.compOCxRunning = 0;
+                     toggleOCx(Z);
+                     Pulse(Z);
+                     if(d2 < 0)d2 += 2 * SV.dy;
+                     else{
+                         d2 += 2 * (SV.dy - SV.dz);
+                         toggleOCx(Y);
+                         Pulse(Y);
+                     }
+                     //wait for next time delay
+                      while(STmr.compOCxRunning != 2);//STPS[Y].microSec < STPS[Z].step_delay);
+                  }
+               }
+         }
+         
+         break;
+    default: break;
 
-           STmr.compOCxRunning = 0;
-           toggleOCx(Y);
-           Pulse(Y);
-           if(d2 < 0)d2 += 2 * SV.dx;
-           else{
-               d2 += 2 * (SV.dx - SV.dy);
-               toggleOCx(X);
-               Pulse(X);
-           }
-           //wait for next time delay
-            while(STmr.compOCxRunning != 2);//STPS[Y].microSec < STPS[y].step_delay);
-        }
-      }
-      
-   }
+  }
+  
+
+  
+
+
 /*!
  * update the logical position. We don't just = newx because
  * px + dx * dirx == newx could be false by a tiny margin and we don't want rounding errors.
@@ -297,6 +427,11 @@ void toggleOCx(int axis_No){
                 OC3RS  = STPS[Y].step_delay & 0xFFFF;
                 TMR4   =  0xFFFF;
                 OC3CON =  0x8004; //restart the output compare module
+             break;
+        case 2: OC8R   = 0x5;
+                OC8RS  = STPS[Z].step_delay & 0xFFFF;
+                TMR6   =  0xFFFF;
+                OC8CON =  0x8004; //restart the output compare module
              break;
         default:
              break;
@@ -432,7 +567,9 @@ unsigned int min_(unsigned int x, unsigned int y)
   }
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
+//below coce is now driven by Output compare module in dual single Pulse mode
+//this section used tmr6 at 1.25us clock to drive this,
 /*SV.over += SV.dy;
            if(SV.over >= SV.dx){
             SV.over -= SV.dx;

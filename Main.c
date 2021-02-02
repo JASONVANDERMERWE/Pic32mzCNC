@@ -22,7 +22,8 @@ unsigned char LCD_01_ADDRESS = 0x4E; //PCF8574T
 unsigned int ii;
 unsigned long testOcr;
 static unsigned int a;
-void Timer6Interrupt() iv IVT_TIMER_6 ilevel 7 ics ICS_SRS {
+
+/*void Timer6Interrupt() iv IVT_TIMER_6 ilevel 7 ics ICS_SRS {
 volatile int ii;
 
    //Enter your code here
@@ -35,7 +36,7 @@ volatile int ii;
      }
   }
    T6IE_bit      = 0;
-}
+}*/
 //////////////////////////////////////////
 // TMR 7 interrupts at 1ms
 void Timer7Interrupt() iv IVT_TIMER_7 ilevel 4 ics ICS_SRS{
@@ -141,6 +142,13 @@ void StepY() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
      OC5IF_bit = 0;
     // OC5CON    =  0x8004; //restart the output compare module
 }
+void StepZ() iv IVT_OUTPUT_COMPARE_8 ilevel 3 ics ICS_AUTO {
+
+     STmr.compOCxRunning = 1;
+     TMR6 =  0xFFFF;
+     OC8IF_bit = 0;
+    // OC8CON    =  0x8004; //restart the output compare module
+}
 /////////////////////////////////////////
 //main function
 void main() {
@@ -160,7 +168,10 @@ unsigned char j;
               // T8IE_bit     = 1;
                SV.px = 0;
                SV.py = 0;
-               EnStepper();
+               SV.pz = 0;
+               EnStepperX();
+               EnStepperY();
+               EnStepperZ();
                a = 2;
 
          }
@@ -169,31 +180,33 @@ unsigned char j;
                      case 0:
                              STPS[X].mmToTravel = calcSteps(-25.25,8.06);
                              speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
-                             STPS[Y].mmToTravel = calcSteps(125.25,8.06);
-                             speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+                             STPS[Z].mmToTravel = calcSteps(125.25,8.06);
+                             speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
                              T8IE_bit         = 1;
-                             Step(STPS[X].mmToTravel, STPS[Y].mmToTravel);
+                             Step(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
                              a = 1;
                              SV.Tog = 1;
                           break;
                     case 1:
                              SV.px = 0;
                              SV.py = 0;
+                             SV.pz = 0;
                              if(SV.Tog == 1)a=2;
                           break;
                     case 2:
                              STPS[X].mmToTravel = calcSteps(151.25,8.06);
                              speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
-                             STPS[Y].mmToTravel = calcSteps(-25.25,8.06);
-                             speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+                             STPS[Z].mmToTravel = calcSteps(-25.25,8.06);
+                             speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
                              T8IE_bit         = 1;
-                             Step(STPS[X].mmToTravel, STPS[Y].mmToTravel);
+                             Step(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
                              a = 3;
                              SV.Tog = 1;
                           break;
                     case 3: 
                              SV.px = 0;
                              SV.py = 0;
+                             SV.pz = 0;
                              if(SV.Tog == 1) a = 0;
                           break;
                     default: a = 2;
@@ -214,7 +227,7 @@ unsigned char j;
                  speed_cntr_Move(STPS[Y].mmToTravel, 2500,Y);
 
                //line 1
-               // Find out after how many Steps before we must start dmeceleration.
+               // Find out after how many Steps before we must start deceleration.
                sprintf(txt,"%d",STPS[0].accel_lim);
                I2C_LCD_Out(LCD_01_ADDRESS,1,1,txt);
                // Find step to start decleration.

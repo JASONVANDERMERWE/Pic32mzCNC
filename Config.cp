@@ -114,6 +114,8 @@ void PinMode(){
  TRISF1_bit = 0;
  TRISG0_bit = 0;
  TRISG1_bit = 0;
+ TRISG14_bit = 0;
+ TRISG15_bit = 0;
 
 
  TRISB0_bit = 1;
@@ -131,6 +133,7 @@ void PinMode(){
  PPS_Mapping_NoLock(_RPF1, _OUTPUT, _OC3);
  PPS_Mapping_NoLock(_RPD4, _OUTPUT, _OC5);
  PPS_Mapping_NoLock(_RPE3, _OUTPUT, _OC8);
+ PPS_Mapping_NoLock(_RPG9, _OUTPUT, _OC9);
  Lock_IOLOCK();
 
 
@@ -147,7 +150,7 @@ void PinMode(){
 
 
 
- InitTimer6();
+
  InitTimer7();
  InitTimer8();
 
@@ -237,36 +240,41 @@ void set_performance_mode(){
  PRECONbits.PFMSECEN = 0;
  PRECONbits.PREFEN = 0b11;
  PRECONbits.PFMWS = 0b100;
-#line 163 "C:/Users/GIT/Pic32mzCNC/Config.c"
+#line 166 "C:/Users/GIT/Pic32mzCNC/Config.c"
  SYSKEY = 0x33333333;
 }
 
 
 void OutPutPulseXYZ(){
-#line 173 "C:/Users/GIT/Pic32mzCNC/Config.c"
+#line 176 "C:/Users/GIT/Pic32mzCNC/Config.c"
  OC3CON = 0x0000;
  OC5CON = 0x0000;
-
+ OC8CON = 0X0000;
 
  T2CON = 0x0000;
  T4CON = 0x0000;
-
+ T6CON = 0x0000;
 
  T2CON = 0x0060;
  T4CON = 0x0060;
+ T6CON = 0x0060;
 
 
  PR2 = 0xFFFF;
  PR4 = 0xFFFF;
+ PR6 = 0xFFFF;
 
 
  OC3CON = 0x0004;
  OC5CON = 0x0004;
-#line 199 "C:/Users/GIT/Pic32mzCNC/Config.c"
+ OC8CON = 0x0004;
+#line 205 "C:/Users/GIT/Pic32mzCNC/Config.c"
  OC3R = 0x5;
  OC3RS = 0x234;
  OC5R = 0x5;
  OC5RS = 0x234;
+ OC8R = 0x5;
+ OC8RS = 0x234;
 
 
  OC3IP0_bit = 1;
@@ -285,15 +293,25 @@ void OutPutPulseXYZ(){
  OC5IF_bit = 0;
  OC5IE_bit = 1;
 
+ OC8IP0_bit = 1;
+ OC8IP1_bit = 1;
+ OC8IP2_bit = 0;
+ OC8IS0_bit = 1;
+ OC8IS1_bit = 0;
+ OC8IF_bit = 0;
+ OC8IE_bit = 1;
+
 
  T2CONSET = 0x8000;
  T4CONSET = 0x8000;
+ T6CONSET = 0x8000;
 
 
 
 
 
 }
+
 
 
 void InitTimer6(){

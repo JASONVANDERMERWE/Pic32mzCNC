@@ -83,14 +83,16 @@ typedef struct genVars{
   long  i;
   long  dx;
   long  dy;
+  long  dz;
   long  px;
   long  py;
+  long  pz;
   long  over;
   long  acc;
   long  dec;
   int   dirx;
   int   diry;
-  
+  int   dirz;
 }sVars;
 extern sVars SV;
 
@@ -150,6 +152,7 @@ typedef struct Steps{
 extern STP STPS[NoOfAxis];
 
 enum xyz{X,Y,Z};
+enum axis_combination {xy,xz,yz};
 enum swt{FALSE,TRUE};
 
 //enum StepState{STOP,ACCEL,RUN,DECEL};
@@ -162,13 +165,15 @@ enum swt{FALSE,TRUE};
 void SetPinMode();
 void CycleStart();
 void CycleStop();
-void EnStepper();
+void EnStepperX();
+void EnStepperY();
+void EnStepperZ();
 void DisableStepper();
-void speed_cntr_Move(long mmSteps, long speed, int axix_No);
+void speed_cntr_Move(long mmSteps, long speed, int axis_combo);
 void speed_cntr_Init_Timer1(void);
 static unsigned long sqrt_(unsigned long v);
 unsigned int min_(unsigned long x, unsigned long y);
-void Step(long newx,long newy);
+void Step(long newx,long newy,int axis_combo);
 int Pulse(int axis_No);
 void CalcDly(int axis_No);
 void StepperConstants(long accel,long decel);

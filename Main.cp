@@ -136,14 +136,16 @@ typedef struct genVars{
  long i;
  long dx;
  long dy;
+ long dz;
  long px;
  long py;
+ long pz;
  long over;
  long acc;
  long dec;
  int dirx;
  int diry;
-
+ int dirz;
 }sVars;
 extern sVars SV;
 
@@ -203,6 +205,7 @@ typedef struct Steps{
 extern STP STPS[ 2 ];
 
 enum xyz{X,Y,Z};
+enum axis_combination {xy,xz,yz};
 enum swt{FALSE,TRUE};
 
 
@@ -215,13 +218,15 @@ enum swt{FALSE,TRUE};
 void SetPinMode();
 void CycleStart();
 void CycleStop();
-void EnStepper();
+void EnStepperX();
+void EnStepperY();
+void EnStepperZ();
 void DisableStepper();
-void speed_cntr_Move(long mmSteps, long speed, int axix_No);
+void speed_cntr_Move(long mmSteps, long speed, int axis_combo);
 void speed_cntr_Init_Timer1(void);
 static unsigned long sqrt_(unsigned long v);
 unsigned int min_(unsigned long x, unsigned long y);
-void Step(long newx,long newy);
+void Step(long newx,long newy,int axis_combo);
 int Pulse(int axis_No);
 void CalcDly(int axis_No);
 void StepperConstants(long accel,long decel);
@@ -257,22 +262,7 @@ unsigned char LCD_01_ADDRESS = 0x4E;
 unsigned int ii;
 unsigned long testOcr;
 static unsigned int a;
-void Timer6Interrupt() iv IVT_TIMER_6 ilevel 7 ics ICS_SRS {
-volatile int ii;
-
-
- if(SV.Tog == 0){
- for(ii = 0; ii <  2 ;ii++){
- STPS[ii].PLS_Step_ = 0;
- if(ii >  2 )break;
- if(ii == X)PLS_StepX = 0;
- if(ii == Y)PLS_StepY = 0;
- }
- }
- T6IE_bit = 0;
-}
-
-
+#line 42 "C:/Users/GIT/Pic32mzCNC/Main.c"
 void Timer7Interrupt() iv IVT_TIMER_7 ilevel 4 ics ICS_SRS{
  T7IF_bit = 0;
 
@@ -376,6 +366,13 @@ void StepY() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
  OC5IF_bit = 0;
 
 }
+void StepZ() iv IVT_OUTPUT_COMPARE_8 ilevel 3 ics ICS_AUTO {
+
+ STmr.compOCxRunning = 1;
+ TMR6 = 0xFFFF;
+ OC8IF_bit = 0;
+
+}
 
 
 void main() {
@@ -395,7 +392,10 @@ unsigned char j;
 
  SV.px = 0;
  SV.py = 0;
- EnStepper();
+ SV.pz = 0;
+ EnStepperX();
+ EnStepperY();
+ EnStepperZ();
  a = 2;
 
  }
@@ -404,31 +404,33 @@ unsigned char j;
  case 0:
  STPS[X].mmToTravel = calcSteps(-25.25,8.06);
  speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
- STPS[Y].mmToTravel = calcSteps(125.25,8.06);
- speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+ STPS[Z].mmToTravel = calcSteps(125.25,8.06);
+ speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
  T8IE_bit = 1;
- Step(STPS[X].mmToTravel, STPS[Y].mmToTravel);
+ Step(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
  a = 1;
  SV.Tog = 1;
  break;
  case 1:
  SV.px = 0;
  SV.py = 0;
+ SV.pz = 0;
  if(SV.Tog == 1)a=2;
  break;
  case 2:
  STPS[X].mmToTravel = calcSteps(151.25,8.06);
  speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
- STPS[Y].mmToTravel = calcSteps(-25.25,8.06);
- speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+ STPS[Z].mmToTravel = calcSteps(-25.25,8.06);
+ speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
  T8IE_bit = 1;
- Step(STPS[X].mmToTravel, STPS[Y].mmToTravel);
+ Step(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
  a = 3;
  SV.Tog = 1;
  break;
  case 3:
  SV.px = 0;
  SV.py = 0;
+ SV.pz = 0;
  if(SV.Tog == 1) a = 0;
  break;
  default: a = 2;
