@@ -25299,6 +25299,7 @@ dtwren_usbe4csr0_bit
 dtwren_usbe5csr0_bit
 dtwren_usbe6csr0_bit
 dtwren_usbe7csr0_bit
+dualaxisstep
 dualbuf
 dualbuf
 dualbuf
@@ -58132,6 +58133,7 @@ simreset
 simreset_bit
 simreset_emacxcfg1_bit
 sin
+singleaxisstep
 sinh
 sirq
 sirq
@@ -60933,7 +60935,6 @@ stattype1_bit
 status
 status
 status_bit
-step
 step1
 step10
 step10_bit

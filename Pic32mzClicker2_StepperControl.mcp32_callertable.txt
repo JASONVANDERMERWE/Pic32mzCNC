@@ -79,7 +79,7 @@ main
 	speed_cntr_Move
 		abs
 		sqrt_
-	Step
+	DualAxisStep
 		abs
 		toggleOCx
 		Pulse

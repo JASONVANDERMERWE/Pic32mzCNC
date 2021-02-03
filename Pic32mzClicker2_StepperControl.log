@@ -11,11 +11,11 @@ diagnostics: 256	123	Compiled Successfully	Main.c
 diagnostics: 0	122	Compilation Started	config.h
 diagnostics: 376	123	Compiled Successfully	Config.c
 diagnostics: 0	122	Compilation Started	stepper.h
-diagnostics: 568	123	Compiled Successfully	Stepper.c
+diagnostics: 602	123	Compiled Successfully	Stepper.c
 diagnostics: 0	122	Compilation Started	steptodistance.h
 diagnostics: 22	123	Compiled Successfully	Steptodistance.c
-diagnostics: 0	127	All files Compiled in 234 ms	 
+diagnostics: 0	127	All files Compiled in 235 ms	 
 diagnostics: 0	125	Project Linked Successfully	Pic32mzClicker2_StepperControl.mcp32
-diagnostics: 0	128	Linked in 531 ms	 
-diagnostics: 0	129	Project 'Pic32mzClicker2_StepperControl.mcp32' completed: 2125 ms	 
-diagnostics: 0	103	Finished successfully: 02 Feb 2021, 21:30:49	Pic32mzClicker2_StepperControl.mcp32
+diagnostics: 0	128	Linked in 515 ms	 
+diagnostics: 0	129	Project 'Pic32mzClicker2_StepperControl.mcp32' completed: 2140 ms	 
+diagnostics: 0	103	Finished successfully: 03 Feb 2021, 08:06:01	Pic32mzClicker2_StepperControl.mcp32

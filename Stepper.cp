@@ -140,7 +140,8 @@ void speed_cntr_Move(long mmSteps, long speed, int axis_combo);
 void speed_cntr_Init_Timer1(void);
 static unsigned long sqrt_(unsigned long v);
 unsigned int min_(unsigned long x, unsigned long y);
-void Step(long newx,long newy,int axis_combo);
+void DualAxisStep(long newx,long newy,int axis_combo);
+void SingleAxixStep(long newxyz);
 int Pulse(int axis_No);
 void CalcDly(int axis_No);
 void StepperConstants(long accel,long decel);
@@ -363,7 +364,41 @@ int ii;
  }
 }
 
-void Step(long newx,long newy,int axis_combo){
+void SingleAxisStep(long newxyz,int axis){
+int dir;
+ if(newxyz < 0)
+ dir =  1 ;
+ else
+ dir =  0 ;
+
+ switch(axis){
+ case X:
+ DIR_StepX = dir;
+ toggleOCx(X);
+ Pulse(X);
+
+ while(STmr.compOCxRunning != 2);
+ break;
+ case Y:
+ DIR_StepY = dir;
+ toggleOCx(Y);
+ Pulse(Y);
+
+ while(STmr.compOCxRunning != 2);
+ break;
+ case Z:
+ DIR_StepZ = dir;
+ toggleOCx(Z);
+ Pulse(Z);
+
+ while(STmr.compOCxRunning != 2);
+ break;
+ default: break;
+ }
+
+}
+
+void DualAxisStep(long newx,long newy,int axis_combo){
  long i;
  static long d2;
  SV.over=0;
@@ -372,7 +407,7 @@ void Step(long newx,long newy,int axis_combo){
  SV.px = 0;
  SV.py = 0;
  SV.pz = 0;
-#line 251 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+#line 285 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
  switch(axis_combo){
  case xy:
  SV.dx = newx - SV.px;
@@ -525,7 +560,7 @@ void Step(long newx,long newy,int axis_combo){
  default: break;
 
  }
-#line 414 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+#line 448 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
 }
 
 
@@ -558,11 +593,11 @@ void toggleOCx(int axis_No){
 int Pulse(int axis_No){
 
  if(!STPS[axis_No].PLS_Step_ ){
-#line 450 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+#line 484 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
  STPS[axis_No].PLS_Step_ = 1;
 
  }
-#line 456 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+#line 490 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
  switch(STPS[axis_No].run_state) {
  case  0 :
  LATE7_bit = 0;
@@ -621,7 +656,7 @@ void AccDec(int axis_No){
  STPS[axis_No].step_delay = STPS[axis_No].new_step_delay;
 
 }
-#line 524 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+#line 558 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
 static unsigned long sqrt_(unsigned long x){
 
  register unsigned long xr;
@@ -652,7 +687,7 @@ static unsigned long sqrt_(unsigned long x){
  return xr;
  }
 }
-#line 560 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+#line 594 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
 unsigned int min_(unsigned int x, unsigned int y)
 {
  if(x < y){

@@ -576,11 +576,11 @@ NOP
 LUI	R2, BitMask(T8IE_bit+0)
 ORI	R2, R2, BitMask(T8IE_bit+0)
 _SX	
-;Main.c,186 :: 		Step(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
+;Main.c,186 :: 		DualAxisStep(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
 ORI	R27, R0, 1
 LW	R26, Offset(_STPS+188)(GP)
 LW	R25, Offset(_STPS+60)(GP)
-JAL	_Step+0
+JAL	_DualAxisStep+0
 NOP	
 ;Main.c,187 :: 		a = 1;
 ORI	R2, R0, 1
@@ -651,11 +651,11 @@ NOP
 LUI	R2, BitMask(T8IE_bit+0)
 ORI	R2, R2, BitMask(T8IE_bit+0)
 _SX	
-;Main.c,202 :: 		Step(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
+;Main.c,202 :: 		DualAxisStep(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
 ORI	R27, R0, 1
 LW	R26, Offset(_STPS+188)(GP)
 LW	R25, Offset(_STPS+60)(GP)
-JAL	_Step+0
+JAL	_DualAxisStep+0
 NOP	
 ;Main.c,203 :: 		a = 3;
 ORI	R2, R0, 3
