@@ -234,38 +234,40 @@ int ii;
    }
   }
 }
-
-void SingleAxisStep(long newxyz,int axis){
+/*****************************************************
+*single axix step rate need to be doubled to compensate
+*speed increase due to no 2nd axis interpolation
+*use a dummy axis or increase the speed
+*****************************************************/
+void SingleAxisStep(long newxyz,int axis_No){
 int dir;
+
      if(newxyz < 0)
            dir = CCW;
      else
            dir = CW;
-           
-         switch(axis){
+     SV.dx = abs(newxyz);
+         switch(axis_No){
            case X:
                 DIR_StepX = dir;
-                toggleOCx(X);
-                Pulse(X);
-                //wait for next time delay try modified to prevent blocking
-                while(STmr.compOCxRunning != 2);//STPS[Y].microSec < STPS[y].step_delay);
                 break;
            case Y:
                 DIR_StepY = dir;
-                toggleOCx(Y);
-                Pulse(Y);
-                //wait for next time delay try modified to prevent blocking
-                while(STmr.compOCxRunning != 2);//STPS[Y].microSec < STPS[y].step_delay);
                 break;
            case Z:
                 DIR_StepZ = dir;
-                toggleOCx(Z);
-                Pulse(Z);
-                //wait for next time delay try modified to prevent blocking
-                while(STmr.compOCxRunning != 2);//STPS[Y].microSec < STPS[y].step_delay);
                 break;
            default: break;
          }
+                if(SV.Tog == 0){
+                  for(STPS[axis_No].step_count = 0;STPS[axis_No].step_count < SV.dx; ++STPS[axis_No].step_count){
+                    STmr.compOCxRunning = 0;
+                    toggleOCx(axis_No);
+                    Pulse(axis_No);
+                    //wait for next time delay try modified to prevent blocking
+                    while(STmr.compOCxRunning == 0);//STPS[X].microSec < STPS[X].step_delay);
+                  }
+                }
 
 }
 
@@ -302,7 +304,7 @@ void DualAxisStep(long newx,long newy,int axis_combo){
          if(SV.Tog == 0){  //? round this start up bit
              LATE7_bit = 1;
              if(SV.dx > SV.dy){
-                for(STPS[X].step_count = 0;STPS[X].step_count < SV.dx; ++STPS[X].step_count)/*(i=0; i < SV.dx; ++i)*/{
+                for(STPS[X].step_count = 0;STPS[X].step_count < SV.dx; ++STPS[X].step_count){
                     STmr.compOCxRunning = 0;
                     toggleOCx(X);
                     Pulse(X);
@@ -313,10 +315,10 @@ void DualAxisStep(long newx,long newy,int axis_combo){
                       Pulse(Y);
                     }
                    //wait for next time delay try modified to prevent blocking
-                    while(STmr.compOCxRunning != 1);//STPS[X].microSec < STPS[X].step_delay);
+                    while(STmr.compOCxRunning != 1);
                 }
             }else{
-                for(STPS[Y].step_count = 0;STPS[Y].step_count < SV.dy; ++STPS[Y].step_count)/*(i=0;i < SV.dy;++i)*/{
+                for(STPS[Y].step_count = 0;STPS[Y].step_count < SV.dy; ++STPS[Y].step_count){
                    STmr.compOCxRunning = 0;
                    toggleOCx(Y);
                    Pulse(Y);
@@ -327,7 +329,7 @@ void DualAxisStep(long newx,long newy,int axis_combo){
                        Pulse(X);
                    }
                    //wait for next time delay try modified to prevent blocking
-                    while(STmr.compOCxRunning != 2);//STPS[Y].microSec < STPS[y].step_delay);
+                    while(STmr.compOCxRunning != 2);
                 }
             }
          }
@@ -362,10 +364,10 @@ void DualAxisStep(long newx,long newy,int axis_combo){
                       Pulse(Z);
                     }
                    //wait for next time delay
-                    while(STmr.compOCxRunning != 1);//STPS[X].microSec < STPS[X].step_delay);
+                    while(STmr.compOCxRunning != 3);
                 }
             }else{
-                for(STPS[Z].step_count = 0;STPS[Z].step_count < SV.dy; ++STPS[Z].step_count)/*(i=0;i < SV.dy;++i)*/{
+                for(STPS[Z].step_count = 0;STPS[Z].step_count < SV.dy; ++STPS[Z].step_count){
                    STmr.compOCxRunning = 0;
                    toggleOCx(Z);
                    Pulse(Z);
@@ -376,7 +378,7 @@ void DualAxisStep(long newx,long newy,int axis_combo){
                        Pulse(X);
                    }
                    //wait for next time delay
-                    while(STmr.compOCxRunning != 2);//STPS[Y].microSec < STPS[Z].step_delay);
+                    while(STmr.compOCxRunning != 2);
                 }
              }
         }
@@ -400,7 +402,7 @@ void DualAxisStep(long newx,long newy,int axis_combo){
          if(SV.Tog == 0){  //? round this start up bit
               LATE7_bit = 1;
               if(SV.dy > SV.dz){
-                  for(STPS[Y].step_count = 0;STPS[Y].step_count < SV.dy; ++STPS[Y].step_count)/*(i=0; i < SV.dx; ++i)*/{
+                  for(STPS[Y].step_count = 0;STPS[Y].step_count < SV.dy; ++STPS[Y].step_count){
                       STmr.compOCxRunning = 0;
                       toggleOCx(Y);
                       Pulse(Y);
@@ -411,10 +413,10 @@ void DualAxisStep(long newx,long newy,int axis_combo){
                         Pulse(Z);
                       }
                      //wait for next time delay
-                      while(STmr.compOCxRunning != 1);//STPS[X].microSec < STPS[X].step_delay);
+                      while(STmr.compOCxRunning != 3);
                   }
               }else{
-                  for(STPS[Z].step_count = 0;STPS[Z].step_count < SV.dy; ++STPS[Z].step_count)/*(i=0;i < SV.dy;++i)*/{
+                  for(STPS[Z].step_count = 0;STPS[Z].step_count < SV.dy; ++STPS[Z].step_count){
                      STmr.compOCxRunning = 0;
                      toggleOCx(Z);
                      Pulse(Z);
@@ -425,7 +427,7 @@ void DualAxisStep(long newx,long newy,int axis_combo){
                          Pulse(Y);
                      }
                      //wait for next time delay
-                      while(STmr.compOCxRunning != 2);//STPS[Y].microSec < STPS[Z].step_delay);
+                      while(STmr.compOCxRunning != 2);
                   }
                }
          }

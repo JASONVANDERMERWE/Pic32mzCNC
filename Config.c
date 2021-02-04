@@ -244,6 +244,20 @@ void OutPutPulseXYZ(){
  // OC5CONSET = 0x8000; // Enable OC6
  // OC8CONSET = 0x8000; // Enable OC8
 }
+
+/////////////////////////////////////////////////////////////////
+//TMR 1 setup for 1us pusles as a dummy axis for single puls to
+//keep the seep equivilant to Bres algo dual axis.
+void InitTimer1(){
+  T1CON	 = 0x8000;
+  T1IP0_bit	 = 1;
+  T1IP1_bit	 = 1;
+  T1IP2_bit	 = 1;
+  T1IF_bit	 = 0;
+  T1IE_bit	 = 1;
+  PR1		 = 100;
+  TMR1		 = 0;
+}
 //////////////////////////////////////////////////////////////////
 //TMR 6 initialized to 1us interrupt
 // {--NOT USED--} //

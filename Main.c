@@ -23,20 +23,12 @@ unsigned int ii;
 unsigned long testOcr;
 static unsigned int a;
 
-/*void Timer6Interrupt() iv IVT_TIMER_6 ilevel 7 ics ICS_SRS {
-volatile int ii;
-
-   //Enter your code here
-  if(SV.Tog == 0){
-   for(ii = 0; ii < NoOfAxis;ii++){
-     STPS[ii].PLS_Step_     = 0;
-     if(ii > NoOfAxis)break;
-         if(ii == X)PLS_StepX   = 0;
-         if(ii == Y)PLS_StepY   = 0;
-     }
-  }
-   T6IE_bit      = 0;
-}*/
+///////////////////////////////////////////
+//TMR 1 as a dummy axis ???
+void Timer1Interrupt() iv IVT_TIMER_1 ilevel 7 ics ICS_SRS {
+  T1IF_bit	 = 0;
+  //Enter your code here
+}
 //////////////////////////////////////////
 // TMR 7 interrupts at 1ms
 void Timer7Interrupt() iv IVT_TIMER_7 ilevel 4 ics ICS_SRS{
@@ -144,7 +136,7 @@ void StepY() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
 }
 void StepZ() iv IVT_OUTPUT_COMPARE_8 ilevel 3 ics ICS_AUTO {
 
-     STmr.compOCxRunning = 1;
+     STmr.compOCxRunning = 3;
      TMR6 =  0xFFFF;
      OC8IF_bit = 0;
     // OC8CON    =  0x8004; //restart the output compare module
@@ -178,12 +170,15 @@ unsigned char j;
          if(oneShotA){
                 switch(a){
                      case 0:
+
                              STPS[X].mmToTravel = calcSteps(-25.25,8.06);
                              speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
-                             STPS[Z].mmToTravel = calcSteps(125.25,8.06);
-                             speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
-                             T8IE_bit         = 1;
-                             DualAxisStep(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
+                             STPS[Y].mmToTravel = calcSteps(125.25,8.06);
+                             speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+                          //   DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
+                             STPS[Y].mmToTravel = calcSteps(-25.25,8.06);
+                             speed_cntr_Move(STPS[Y].mmToTravel, 2000,Y);
+                             SingleAxisStep(STPS[Y].mmToTravel,Y);
                              a = 1;
                              SV.Tog = 1;
                           break;
@@ -194,12 +189,14 @@ unsigned char j;
                              if(SV.Tog == 1)a=2;
                           break;
                     case 2:
-                             STPS[X].mmToTravel = calcSteps(151.25,8.06);
+                             STPS[X].mmToTravel = calcSteps(125.25,8.06);
                              speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
-                             STPS[Z].mmToTravel = calcSteps(-25.25,8.06);
-                             speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
-                             T8IE_bit         = 1;
-                             DualAxisStep(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
+                             STPS[Y].mmToTravel = calcSteps(-25.25,8.06);
+                             speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+                           //  DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
+                             STPS[X].mmToTravel = calcSteps(25.25,8.06);
+                             speed_cntr_Move(STPS[X].mmToTravel, 2000,X);
+                             SingleAxisStep(STPS[X].mmToTravel,X);
                              a = 3;
                              SV.Tog = 1;
                           break;

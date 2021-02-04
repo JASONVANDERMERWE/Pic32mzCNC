@@ -152,7 +152,7 @@ void speed_cntr_Init_Timer1(void);
 static unsigned long sqrt_(unsigned long v);
 unsigned int min_(unsigned long x, unsigned long y);
 void DualAxisStep(long newx,long newy,int axis_combo);
-void SingleAxixStep(long newxyz);
+void SingleAxisStep(long newxyz,int axis_No);
 int Pulse(int axis_No);
 void CalcDly(int axis_No);
 void StepperConstants(long accel,long decel);

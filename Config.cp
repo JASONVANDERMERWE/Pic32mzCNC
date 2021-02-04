@@ -314,6 +314,20 @@ void OutPutPulseXYZ(){
 
 
 
+
+void InitTimer1(){
+ T1CON = 0x8000;
+ T1IP0_bit = 1;
+ T1IP1_bit = 1;
+ T1IP2_bit = 1;
+ T1IF_bit = 0;
+ T1IE_bit = 1;
+ PR1 = 100;
+ TMR1 = 0;
+}
+
+
+
 void InitTimer6(){
  T6CON = 0x8000;
  T6IP0_bit = 0;

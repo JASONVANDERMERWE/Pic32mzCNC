@@ -227,7 +227,7 @@ void speed_cntr_Init_Timer1(void);
 static unsigned long sqrt_(unsigned long v);
 unsigned int min_(unsigned long x, unsigned long y);
 void DualAxisStep(long newx,long newy,int axis_combo);
-void SingleAxixStep(long newxyz);
+void SingleAxisStep(long newxyz,int axis_No);
 int Pulse(int axis_No);
 void CalcDly(int axis_No);
 void StepperConstants(long accel,long decel);
@@ -263,7 +263,15 @@ unsigned char LCD_01_ADDRESS = 0x4E;
 unsigned int ii;
 unsigned long testOcr;
 static unsigned int a;
-#line 42 "C:/Users/GIT/Pic32mzCNC/Main.c"
+
+
+
+void Timer1Interrupt() iv IVT_TIMER_1 ilevel 7 ics ICS_SRS {
+ T1IF_bit = 0;
+
+}
+
+
 void Timer7Interrupt() iv IVT_TIMER_7 ilevel 4 ics ICS_SRS{
  T7IF_bit = 0;
 
@@ -369,7 +377,7 @@ void StepY() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
 }
 void StepZ() iv IVT_OUTPUT_COMPARE_8 ilevel 3 ics ICS_AUTO {
 
- STmr.compOCxRunning = 1;
+ STmr.compOCxRunning = 3;
  TMR6 = 0xFFFF;
  OC8IF_bit = 0;
 
@@ -403,12 +411,15 @@ unsigned char j;
  if(oneShotA){
  switch(a){
  case 0:
+
  STPS[X].mmToTravel = calcSteps(-25.25,8.06);
  speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
- STPS[Z].mmToTravel = calcSteps(125.25,8.06);
- speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
- T8IE_bit = 1;
- DualAxisStep(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
+ STPS[Y].mmToTravel = calcSteps(125.25,8.06);
+ speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+
+ STPS[Y].mmToTravel = calcSteps(-25.25,8.06);
+ speed_cntr_Move(STPS[Y].mmToTravel, 2000,Y);
+ SingleAxisStep(STPS[Y].mmToTravel,Y);
  a = 1;
  SV.Tog = 1;
  break;
@@ -419,12 +430,14 @@ unsigned char j;
  if(SV.Tog == 1)a=2;
  break;
  case 2:
- STPS[X].mmToTravel = calcSteps(151.25,8.06);
+ STPS[X].mmToTravel = calcSteps(125.25,8.06);
  speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
- STPS[Z].mmToTravel = calcSteps(-25.25,8.06);
- speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
- T8IE_bit = 1;
- DualAxisStep(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
+ STPS[Y].mmToTravel = calcSteps(-25.25,8.06);
+ speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+
+ STPS[X].mmToTravel = calcSteps(25.25,8.06);
+ speed_cntr_Move(STPS[X].mmToTravel, 2000,X);
+ SingleAxisStep(STPS[X].mmToTravel,X);
  a = 3;
  SV.Tog = 1;
  break;

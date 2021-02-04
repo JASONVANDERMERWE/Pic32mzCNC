@@ -36790,6 +36790,7 @@ initid7_sbt6elog1_bit
 initid7_sbt7elog1_bit
 initid7_sbt8elog1_bit
 initid7_sbt9elog1_bit
+inittimer1
 inittimer6
 inittimer7
 inittimer8
@@ -63020,6 +63021,7 @@ thsbt2
 thsbt2_bit
 thsbt3
 thsbt3_bit
+timer1interrupt
 timer7interrupt
 timer8interrupt
 tmr

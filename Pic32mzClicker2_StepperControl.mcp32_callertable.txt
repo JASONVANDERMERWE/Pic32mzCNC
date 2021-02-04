@@ -79,7 +79,7 @@ main
 	speed_cntr_Move
 		abs
 		sqrt_
-	DualAxisStep
+	SingleAxisStep
 		abs
 		toggleOCx
 		Pulse
@@ -92,17 +92,18 @@ main
 			fround
 	__CC2DW
 	__FillZeros
-StepZ
 StepY
 StepX
+StepZ
 Timer7Interrupt
 Timer8Interrupt
 	CycleStart
 	CycleStop
+DMA_CH1_ISR
 DMA_CH0_ISR
 	strlen
 	memcpy
-DMA_CH1_ISR
+Timer1Interrupt
 uart2_Rx_interrupt
 	UART2_Read
 	UART2_Write
