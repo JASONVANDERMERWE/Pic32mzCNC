@@ -37,7 +37,7 @@ extern sfr FLT_Step_PinDirY;
 
 
 typedef unsigned short UInt8_t;
-#line 74 "c:/users/git/pic32mzcnc/stepper.h"
+#line 81 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
@@ -54,6 +54,7 @@ typedef struct genVars{
  long px;
  long py;
  long pz;
+ long psingle;
  long over;
  long acc;
  long dec;
@@ -116,7 +117,34 @@ typedef struct Steps{
 
  signed long mmToTravel;
 }STP;
-extern STP STPS[ 2 ];
+extern STP STPS[ 3 ];
+
+
+
+typedef struct{
+float deg;
+float degreeDeg;
+float degreeRadians;
+float deg_A;
+float deg_B;
+float divisor;
+float newdeg_;
+float I;
+float J;
+float N;
+float radius;
+int dir;
+int quadrant_start;
+float xRad;
+float yRad;
+float xStart;
+float yStart;
+float xFin;
+float yFin;
+}Circle;
+extern Circle Circ;
+
+
 
 enum xyz{X,Y,Z};
 enum axis_combination {xy,xz,yz};
@@ -136,15 +164,27 @@ void EnStepperX();
 void EnStepperY();
 void EnStepperZ();
 void DisableStepper();
+void disableOCx();
+
+
 void speed_cntr_Move(long mmSteps, long speed, int axis_combo);
 void speed_cntr_Init_Timer1(void);
 static unsigned long sqrt_(unsigned long v);
 unsigned int min_(unsigned long x, unsigned long y);
-void DualAxisStep(long newx,long newy,int axis_combo);
-void SingleAxisStep(long newxyz,int axis_No);
-int Pulse(int axis_No);
 void CalcDly(int axis_No);
 void StepperConstants(long accel,long decel);
+
+
+void DualAxisStep(long newx,long newy,int axis_combo);
+void SingleAxisStep(long newxyz,int axis_No);
+
+
+void CalcRadius(Circle* cir);
+int QuadrantStart(float i,float j);
+void CircDir(Circle* cir);
+
+
+int Pulse(int axis_No);
 void toggleOCx(int axis_No);
 void AccDec(int axix_No);
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
@@ -155,7 +195,7 @@ unsigned int Toggle;
 
 
 
- STP STPS[ 2 ];
+ STP STPS[ 3 ];
  sVars SV;
  StepTmr STmr;
 
@@ -336,9 +376,7 @@ int ii;
  STPS[axis_No].accel_count = 1;
 
  SV.Tog = 0;
- SV.px = 0;
- SV.py = 0;
- SV.pz = 0;
+#line 213 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
  SV.running = 1;
 }
 
@@ -347,9 +385,9 @@ int ii;
 void CycleStop(){
 int ii;
  STmr.uSec = 0;
- for(ii = 0;ii< 2 ;ii++){
+ for(ii = 0;ii< 3 ;ii++){
  STPS[ii].microSec = 0;
- if(ii >  2 )break;
+ if(ii >  3 )break;
  }
 }
 
@@ -357,8 +395,8 @@ void CycleStart(){
 int ii;
 
  if(SV.Tog == 0){
- for(ii = 0; ii <  2 ;ii++){
- if(ii >  2 )break;
+ for(ii = 0; ii <  3 ;ii++){
+ if(ii >  3 )break;
  STPS[ii].microSec++;
  }
  }
@@ -366,12 +404,32 @@ int ii;
 #line 242 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
 void SingleAxisStep(long newxyz,int axis_No){
 int dir;
+static long dist;
+#line 249 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+ switch(axis_No){
+ case 0:OC5IE_bit = 1;OC5CONbits.ON = 1;
+ OC3IE_bit = 0;OC3CONbits.ON = 0;
+ OC8IE_bit = 0;OC8CONbits.ON = 0;
+ break;
+ case 1:OC5IE_bit = 0;OC5CONbits.ON = 0;
+ OC3IE_bit = 1;OC3CONbits.ON = 1;
+ OC8IE_bit = 0;OC8CONbits.ON = 0;
+ break;
+ case 2:OC5IE_bit = 0;OC5CONbits.ON = 0;
+ OC3IE_bit = 0;OC3CONbits.ON = 0;
+ OC8IE_bit = 1;OC8CONbits.ON = 1;
+ break;
+ default: break;
+ }
+ SV.psingle = 0;
+ dist = newxyz - SV.psingle;
+ dist = abs(dist);
 
  if(newxyz < 0)
  dir =  1 ;
  else
  dir =  0 ;
- SV.dx = abs(newxyz);
+
  switch(axis_No){
  case X:
  DIR_StepX = dir;
@@ -385,7 +443,7 @@ int dir;
  default: break;
  }
  if(SV.Tog == 0){
- for(STPS[axis_No].step_count = 0;STPS[axis_No].step_count < SV.dx; ++STPS[axis_No].step_count){
+ for(STPS[axis_No].step_count = 0;STPS[axis_No].step_count < dist; ++STPS[axis_No].step_count){
  STmr.compOCxRunning = 0;
  toggleOCx(axis_No);
  Pulse(axis_No);
@@ -394,6 +452,7 @@ int dir;
  }
  }
 
+ disableOCx();
 }
 
 void DualAxisStep(long newx,long newy,int axis_combo){
@@ -405,9 +464,12 @@ void DualAxisStep(long newx,long newy,int axis_combo){
  SV.px = 0;
  SV.py = 0;
  SV.pz = 0;
-#line 287 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+#line 311 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
  switch(axis_combo){
  case xy:
+ OC5IE_bit = 1;OC5CONbits.ON = 1;
+ OC3IE_bit = 1;OC3CONbits.ON = 1;
+ OC8IE_bit = 0;OC8CONbits.ON = 0;
  SV.dx = newx - SV.px;
  SV.dy = newy - SV.py;
 
@@ -437,7 +499,7 @@ void DualAxisStep(long newx,long newy,int axis_combo){
  Pulse(Y);
  }
 
- while(STmr.compOCxRunning != 1);
+ while(STmr.compOCxRunning == 0);
  }
  }else{
  for(STPS[Y].step_count = 0;STPS[Y].step_count < SV.dy; ++STPS[Y].step_count){
@@ -451,12 +513,15 @@ void DualAxisStep(long newx,long newy,int axis_combo){
  Pulse(X);
  }
 
- while(STmr.compOCxRunning != 2);
+ while(STmr.compOCxRunning == 0);
  }
  }
  }
  break;
  case xz:
+ OC5IE_bit = 1;OC5CONbits.ON = 1;
+ OC3IE_bit = 0;OC3CONbits.ON = 0;
+ OC8IE_bit = 1;OC8CONbits.ON = 1;
  SV.dx = newx - SV.px;
  SV.dz = newy - SV.pz;
 
@@ -474,8 +539,8 @@ void DualAxisStep(long newx,long newy,int axis_combo){
  else d2 = 2* (SV.dx - SV.dz);
  if(SV.Tog == 0){
  LATE7_bit = 1;
- if(SV.dx > SV.dy){
- for(STPS[X].step_count = 0;STPS[X].step_count < SV.dx; ++STPS[X].step_count) {
+ if(SV.dx > SV.dz){
+ for(STPS[X].step_count = 0;STPS[X].step_count < SV.dx; ++STPS[X].step_count){
  STmr.compOCxRunning = 0;
  toggleOCx(X);
  Pulse(X);
@@ -486,10 +551,10 @@ void DualAxisStep(long newx,long newy,int axis_combo){
  Pulse(Z);
  }
 
- while(STmr.compOCxRunning != 3);
+ while(STmr.compOCxRunning == 0);
  }
  }else{
- for(STPS[Z].step_count = 0;STPS[Z].step_count < SV.dy; ++STPS[Z].step_count){
+ for(STPS[Z].step_count = 0;STPS[Z].step_count < SV.dz; ++STPS[Z].step_count){
  STmr.compOCxRunning = 0;
  toggleOCx(Z);
  Pulse(Z);
@@ -500,12 +565,15 @@ void DualAxisStep(long newx,long newy,int axis_combo){
  Pulse(X);
  }
 
- while(STmr.compOCxRunning != 2);
+ while(STmr.compOCxRunning == 0);
  }
  }
  }
  break;
  case yz:
+ OC5IE_bit = 0;OC5CONbits.ON = 0;
+ OC3IE_bit = 1;OC3CONbits.ON = 1;
+ OC8IE_bit = 1;OC8CONbits.ON = 1;
  SV.dy = newx - SV.pz;
  SV.dz = newy - SV.py;
 
@@ -535,10 +603,10 @@ void DualAxisStep(long newx,long newy,int axis_combo){
  Pulse(Z);
  }
 
- while(STmr.compOCxRunning != 3);
+ while(STmr.compOCxRunning == 0);
  }
  }else{
- for(STPS[Z].step_count = 0;STPS[Z].step_count < SV.dy; ++STPS[Z].step_count){
+ for(STPS[Z].step_count = 0;STPS[Z].step_count < SV.dz; ++STPS[Z].step_count){
  STmr.compOCxRunning = 0;
  toggleOCx(Z);
  Pulse(Z);
@@ -549,7 +617,7 @@ void DualAxisStep(long newx,long newy,int axis_combo){
  Pulse(Y);
  }
 
- while(STmr.compOCxRunning != 2);
+ while(STmr.compOCxRunning == 0);
  }
  }
  }
@@ -558,9 +626,83 @@ void DualAxisStep(long newx,long newy,int axis_combo){
  default: break;
 
  }
-#line 450 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+
+
+
+ disableOCx();
+#line 483 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
 }
 
+
+
+void CalcRadius(Circle* cir){
+ float xRad,yRad,X,Y,angA,angB;
+
+ cir->xRad = fabs(cir->xStart + cir->I);
+ cir->yRad = fabs(cir->yStart + cir->J);
+ cir->radius = sqrt((cir->xRad*cir->xRad) + (cir->yRad*cir->yRad));
+ angA = atan2(cir->yRad,cir->xRad);
+
+
+ cir->degreeDeg = angA *  (180.00/ 3.14159 ) ;
+
+ cir->quadrant_start = QuadrantStart(cir->I,cir->J);
+
+ if(cir->quadrant_start == 1 || cir->quadrant_start == 3)
+ angB = cir->deg - cir->degreeDeg;
+ if(cir->quadrant_start == 1 || cir->quadrant_start == 3)
+ angB = cir->deg + cir->degreeDeg;
+
+ cir->degreeRadians = angB *  ( 3.14159 /180.00) ;
+}
+
+int QuadrantStart(float i,float j){
+ if((i <= 0)&&(j >= 0))
+ return 1;
+ else if((i > 0)&&(j > 0))
+ return 2;
+ else if((i > 0)&&(j < 0))
+ return 3;
+ else if((i < 0)&&(j < 0))
+ return 4;
+ else
+ return 0;
+}
+
+void CircDir(Circle* cir){
+float newDeg;
+ if(cir->dir ==  0 ){
+ newDeg = 360 / cir->deg;
+ cir->N = (2* 3.14159 *cir->radius)/newDeg;
+ cir->divisor = cir->deg / newDeg;
+ }
+
+ if(cir->dir ==  0 )
+ cir->deg = 0.00;
+ if(cir->dir ==  1 )
+ cir->deg = 360.00;
+}
+
+void Cir_Interpolation(float xPresent,float yPresent,Circle* cir){
+static int quad = 1;
+ cir->xStart = xPresent;
+ cir->yStart = yPresent;
+ CalcRadius(cir);
+
+
+ while(quad){
+ break;
+ if(quad == 1 || quad == 4){
+ cir->xFin = cir->xRad + (cir->radius * cos(cir->degreeRadians));
+ cir->yFin = cir->yRad + (cir->radius * sin(cir->degreeRadians));
+ }
+ if(quad == 2 || quad == 3){
+ cir->xFin = cir->xRad - (cir->radius * cos(cir->degreeRadians));
+
+ }
+
+ }
+}
 
 
 
@@ -588,14 +730,19 @@ void toggleOCx(int axis_No){
 }
 
 
+void disableOCx(){
+ OC5IE_bit = 0;OC5CONbits.ON = 0;
+ OC3IE_bit = 0;OC3CONbits.ON = 0;
+ OC8IE_bit = 0;OC8CONbits.ON = 0;
+}
+
+
 int Pulse(int axis_No){
 
  if(!STPS[axis_No].PLS_Step_ ){
-#line 486 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
  STPS[axis_No].PLS_Step_ = 1;
-
  }
-#line 492 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+
  switch(STPS[axis_No].run_state) {
  case  0 :
  LATE7_bit = 0;
@@ -605,8 +752,7 @@ int Pulse(int axis_No){
 
  case  1 :
  AccDec(axis_No);
-
-
+#line 608 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
  if(STPS[axis_No].step_delay <= STPS[axis_No].min_delay){
 
  STPS[axis_No].step_delay = STPS[axis_No].min_delay;
@@ -636,7 +782,6 @@ int Pulse(int axis_No){
  case  2 :
 
 
-
  AccDec(axis_No);
  if(STPS[axis_No].accel_count >= -2 ){
  STPS[axis_No].run_state =  0 ;
@@ -654,7 +799,7 @@ void AccDec(int axis_No){
  STPS[axis_No].step_delay = STPS[axis_No].new_step_delay;
 
 }
-#line 560 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+#line 664 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
 static unsigned long sqrt_(unsigned long x){
 
  register unsigned long xr;
@@ -685,7 +830,7 @@ static unsigned long sqrt_(unsigned long x){
  return xr;
  }
 }
-#line 596 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+#line 700 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
 unsigned int min_(unsigned int x, unsigned int y)
 {
  if(x < y){
@@ -694,4 +839,28 @@ unsigned int min_(unsigned int x, unsigned int y)
  else{
  return y;
  }
+}
+
+
+
+void StepX() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
+
+ STmr.compOCxRunning = 1;
+ TMR4 = 0xFFFF;
+ OC3IF_bit = 0;
+
+}
+void StepY() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
+
+ STmr.compOCxRunning = 2;
+ TMR2 = 0xFFFF;
+ OC5IF_bit = 0;
+
+}
+void StepZ() iv IVT_OUTPUT_COMPARE_8 ilevel 3 ics ICS_AUTO {
+
+ STmr.compOCxRunning = 3;
+ TMR6 = 0xFFFF;
+ OC8IF_bit = 0;
+
 }

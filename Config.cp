@@ -325,24 +325,7 @@ void InitTimer1(){
  PR1 = 100;
  TMR1 = 0;
 }
-
-
-
-void InitTimer6(){
- T6CON = 0x8000;
- T6IP0_bit = 0;
- T6IP1_bit = 0;
- T6IP2_bit = 1;
- T6IS0_bit = 1;
- T6IS1_bit = 0;
- T6IF_bit = 0;
- T6IE_bit = 0;
- PR6 = 500;
- TMR6 = 0;
-}
-
-
-
+#line 279 "C:/Users/GIT/Pic32mzCNC/Config.c"
 void InitTimer7(){
  T7CON = 0x8000;
  T7IP0_bit = 0;

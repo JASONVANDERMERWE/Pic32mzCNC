@@ -9627,6 +9627,7 @@ cal8
 cal8_bit
 cal9
 cal9_bit
+calcradius
 calcsteps
 can1ie
 can1ie
@@ -14024,6 +14025,8 @@ chtaif_dch4int_bit
 chtaif_dch5int_bit
 chtaif_dch6int_bit
 chtaif_dch7int_bit
+cir_interpolation
+circdir
 cke
 cke
 cke
@@ -23481,6 +23484,7 @@ dir_stepz
 dirx
 diry
 dirz
+disableocx
 disablestepper
 disablethreads
 disconie
@@ -36791,7 +36795,6 @@ initid7_sbt7elog1_bit
 initid7_sbt8elog1_bit
 initid7_sbt9elog1_bit
 inittimer1
-inittimer6
 inittimer7
 inittimer8
 int0ep
@@ -45860,6 +45863,7 @@ psidl
 psidl
 psidl
 psidl_bit
+psingle
 psintv
 psintv0
 psintv0_bit
@@ -46103,6 +46107,7 @@ pwrconsetbits
 px
 py
 pz
+quadrantstart
 r_w
 r_w
 r_w

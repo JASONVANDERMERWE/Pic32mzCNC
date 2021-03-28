@@ -84,6 +84,12 @@ main
 		toggleOCx
 		Pulse
 			AccDec
+		disableOCx
+	DualAxisStep
+		abs
+		toggleOCx
+		Pulse
+		disableOCx
 	DisableStepper
 	sprintf
 		_doprntf
@@ -92,18 +98,18 @@ main
 			fround
 	__CC2DW
 	__FillZeros
-StepY
 StepX
+StepY
 StepZ
-Timer7Interrupt
 Timer8Interrupt
 	CycleStart
 	CycleStop
+Timer7Interrupt
 DMA_CH1_ISR
 DMA_CH0_ISR
 	strlen
 	memcpy
-Timer1Interrupt
 uart2_Rx_interrupt
 	UART2_Read
 	UART2_Write
+Timer1Interrupt

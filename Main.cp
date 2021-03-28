@@ -123,7 +123,7 @@ extern sfr FLT_Step_PinDirY;
 
 
 typedef unsigned short UInt8_t;
-#line 74 "c:/users/git/pic32mzcnc/stepper.h"
+#line 81 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
@@ -140,6 +140,7 @@ typedef struct genVars{
  long px;
  long py;
  long pz;
+ long psingle;
  long over;
  long acc;
  long dec;
@@ -202,7 +203,34 @@ typedef struct Steps{
 
  signed long mmToTravel;
 }STP;
-extern STP STPS[ 2 ];
+extern STP STPS[ 3 ];
+
+
+
+typedef struct{
+float deg;
+float degreeDeg;
+float degreeRadians;
+float deg_A;
+float deg_B;
+float divisor;
+float newdeg_;
+float I;
+float J;
+float N;
+float radius;
+int dir;
+int quadrant_start;
+float xRad;
+float yRad;
+float xStart;
+float yStart;
+float xFin;
+float yFin;
+}Circle;
+extern Circle Circ;
+
+
 
 enum xyz{X,Y,Z};
 enum axis_combination {xy,xz,yz};
@@ -222,15 +250,27 @@ void EnStepperX();
 void EnStepperY();
 void EnStepperZ();
 void DisableStepper();
+void disableOCx();
+
+
 void speed_cntr_Move(long mmSteps, long speed, int axis_combo);
 void speed_cntr_Init_Timer1(void);
 static unsigned long sqrt_(unsigned long v);
 unsigned int min_(unsigned long x, unsigned long y);
-void DualAxisStep(long newx,long newy,int axis_combo);
-void SingleAxisStep(long newxyz,int axis_No);
-int Pulse(int axis_No);
 void CalcDly(int axis_No);
 void StepperConstants(long accel,long decel);
+
+
+void DualAxisStep(long newx,long newy,int axis_combo);
+void SingleAxisStep(long newxyz,int axis_No);
+
+
+void CalcRadius(Circle* cir);
+int QuadrantStart(float i,float j);
+void CircDir(Circle* cir);
+
+
+int Pulse(int axis_No);
 void toggleOCx(int axis_No);
 void AccDec(int axix_No);
 #line 1 "c:/users/git/pic32mzcnc/steptodistance.h"
@@ -263,41 +303,6 @@ unsigned char LCD_01_ADDRESS = 0x4E;
 unsigned int ii;
 unsigned long testOcr;
 static unsigned int a;
-
-
-
-void Timer1Interrupt() iv IVT_TIMER_1 ilevel 7 ics ICS_SRS {
- T1IF_bit = 0;
-
-}
-
-
-void Timer7Interrupt() iv IVT_TIMER_7 ilevel 4 ics ICS_SRS{
- T7IF_bit = 0;
-
- TMR.mSec++;
- if(TMR.mSec > 999){
- LATA9_bit = !LATA9_bit;
- TMR.mSec = 0;
- TMR.Sec++;
- if(TMR.Sec > 59){
- TMR.Sec = 0;
- }
- }
-}
-
-
-void Timer8Interrupt() iv IVT_TIMER_8 ilevel 4 ics ICS_SRS {
-
-
- if(oneShotA){
- CycleStart();
- }else{
- CycleStop();
- }
- T8IF_bit = 0;
-}
-
 
 
 
@@ -361,102 +366,113 @@ char ptrAdd[6];
 
 
 
-void StepX() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
-
- STmr.compOCxRunning = 2;
- TMR4 = 0xFFFF;
- OC3IF_bit = 0;
-
-}
-void StepY() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
-
- STmr.compOCxRunning = 1;
- TMR2 = 0xFFFF;
- OC5IF_bit = 0;
-
-}
-void StepZ() iv IVT_OUTPUT_COMPARE_8 ilevel 3 ics ICS_AUTO {
-
- STmr.compOCxRunning = 3;
- TMR6 = 0xFFFF;
- OC8IF_bit = 0;
-
-}
-
 
 void main() {
 unsigned char j;
 
  PinMode();
  SetPinMode();
- StepperConstants(4500,4500);
+ StepperConstants(8500,8500);
  EnableInterrupts();
  oneShotA = 0;
  I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
  while(1){
 
- if((!RC3_bit)&&(!oneShotA)){
+ if((RB0_bit)&&(!oneShotA)){
 
  oneShotA = 1;
 
- SV.px = 0;
- SV.py = 0;
- SV.pz = 0;
  EnStepperX();
  EnStepperY();
  EnStepperZ();
- a = 2;
+ a = 0;
 
  }
  if(oneShotA){
+ LATA9_bit = 1;
  switch(a){
  case 0:
-
- STPS[X].mmToTravel = calcSteps(-25.25,8.06);
- speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
- STPS[Y].mmToTravel = calcSteps(125.25,8.06);
- speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
-
- STPS[Y].mmToTravel = calcSteps(-25.25,8.06);
- speed_cntr_Move(STPS[Y].mmToTravel, 2000,Y);
- SingleAxisStep(STPS[Y].mmToTravel,Y);
+ STPS[Z].mmToTravel = calcSteps(-125.25,8.06);
+ speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
+ SingleAxisStep(STPS[Z].mmToTravel,Z);
  a = 1;
  SV.Tog = 1;
  break;
  case 1:
- SV.px = 0;
- SV.py = 0;
- SV.pz = 0;
+
+
+
  if(SV.Tog == 1)a=2;
  break;
  case 2:
  STPS[X].mmToTravel = calcSteps(125.25,8.06);
  speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
- STPS[Y].mmToTravel = calcSteps(-25.25,8.06);
- speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
-
- STPS[X].mmToTravel = calcSteps(25.25,8.06);
- speed_cntr_Move(STPS[X].mmToTravel, 2000,X);
  SingleAxisStep(STPS[X].mmToTravel,X);
  a = 3;
  SV.Tog = 1;
  break;
  case 3:
- SV.px = 0;
- SV.py = 0;
- SV.pz = 0;
+ if(SV.Tog == 1) a = 4;
+ break;
+ case 4:
+ STPS[Y].mmToTravel = calcSteps(202.00,8.06);
+ speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+ SingleAxisStep(STPS[Y].mmToTravel,Y);
+ a = 5;
+ SV.Tog = 1;
+ break;
+ case 5:
+ if(SV.Tog == 1) a = 6;
+ break;
+ case 6:
+ STPS[Y].mmToTravel = calcSteps(125.25,8.06);
+ speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+ STPS[Z].mmToTravel = calcSteps(-25.25,8.06);
+ speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
+ DualAxisStep(STPS[Y].mmToTravel, STPS[Z].mmToTravel,yz);
+ a = 7;
+ SV.Tog = 1;
+ break;
+ case 7:
+ if(SV.Tog == 1) a = 8;
+ break;
+ case 8:
+ STPS[X].mmToTravel = calcSteps(225.25,8.06);
+ speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
+ STPS[Y].mmToTravel = calcSteps(-25.25,8.06);
+ speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+ DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
+ a = 9;
+ SV.Tog = 1;
+ break;
+ case 9:
+ if(SV.Tog == 1) a = 10;
+ break;
+ case 10:
+ STPS[X].mmToTravel = calcSteps(125.25,8.06);
+ speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
+ STPS[Z].mmToTravel = calcSteps(-25.25,8.06);
+ speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
+ DualAxisStep(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
+ a = 11;
+ SV.Tog = 1;
+ break;
+ case 11:
  if(SV.Tog == 1) a = 0;
  break;
- default: a = 2;
+ default: a = 0;
  break;
  }
  }
- if((!RB0_bit)&&(Toggle))oneShotA = 0;
+
+ if((!RC3_bit)&&(Toggle))
+ oneShotA = 0;
+
  if(!oneShotA){
  DisableStepper();
  }
 
- if(!RB0_bit){
+ if((!RC3_bit)&&(!Toggle)){
  oneShotB = 0;
  oneShotA = 0;
  STPS[X].mmToTravel = calcSteps(151.25,8.06);

@@ -601,82 +601,39 @@ NOP
 ; end of _OutPutPulseXYZ
 _InitTimer1:
 ;Config.c,251 :: 		void InitTimer1(){
-;Config.c,252 :: 		T1CON	 = 0x8000;
+;Config.c,252 :: 		T1CON         = 0x8000;
 ORI	R2, R0, 32768
 SW	R2, Offset(T1CON+0)(GP)
-;Config.c,253 :: 		T1IP0_bit	 = 1;
+;Config.c,253 :: 		T1IP0_bit         = 1;
 LUI	R2, BitMask(T1IP0_bit+0)
 ORI	R2, R2, BitMask(T1IP0_bit+0)
 _SX	
-;Config.c,254 :: 		T1IP1_bit	 = 1;
+;Config.c,254 :: 		T1IP1_bit         = 1;
 LUI	R2, BitMask(T1IP1_bit+0)
 ORI	R2, R2, BitMask(T1IP1_bit+0)
 _SX	
-;Config.c,255 :: 		T1IP2_bit	 = 1;
+;Config.c,255 :: 		T1IP2_bit         = 1;
 LUI	R2, BitMask(T1IP2_bit+0)
 ORI	R2, R2, BitMask(T1IP2_bit+0)
 _SX	
-;Config.c,256 :: 		T1IF_bit	 = 0;
+;Config.c,256 :: 		T1IF_bit         = 0;
 LUI	R2, BitMask(T1IF_bit+0)
 ORI	R2, R2, BitMask(T1IF_bit+0)
 _SX	
-;Config.c,257 :: 		T1IE_bit	 = 1;
+;Config.c,257 :: 		T1IE_bit         = 1;
 LUI	R2, BitMask(T1IE_bit+0)
 ORI	R2, R2, BitMask(T1IE_bit+0)
 _SX	
-;Config.c,258 :: 		PR1		 = 100;
+;Config.c,258 :: 		PR1                 = 100;
 ORI	R2, R0, 100
 SW	R2, Offset(PR1+0)(GP)
-;Config.c,259 :: 		TMR1		 = 0;
+;Config.c,259 :: 		TMR1                 = 0;
 SW	R0, Offset(TMR1+0)(GP)
 ;Config.c,260 :: 		}
 L_end_InitTimer1:
 JR	RA
 NOP	
 ; end of _InitTimer1
-_InitTimer6:
-;Config.c,264 :: 		void InitTimer6(){
-;Config.c,265 :: 		T6CON             = 0x8000;
-ORI	R2, R0, 32768
-SW	R2, Offset(T6CON+0)(GP)
-;Config.c,266 :: 		T6IP0_bit         = 0;
-LUI	R2, BitMask(T6IP0_bit+0)
-ORI	R2, R2, BitMask(T6IP0_bit+0)
-_SX	
-;Config.c,267 :: 		T6IP1_bit         = 0;
-LUI	R2, BitMask(T6IP1_bit+0)
-ORI	R2, R2, BitMask(T6IP1_bit+0)
-_SX	
-;Config.c,268 :: 		T6IP2_bit         = 1;
-LUI	R2, BitMask(T6IP2_bit+0)
-ORI	R2, R2, BitMask(T6IP2_bit+0)
-_SX	
-;Config.c,269 :: 		T6IS0_bit         = 1;
-LUI	R2, BitMask(T6IS0_bit+0)
-ORI	R2, R2, BitMask(T6IS0_bit+0)
-_SX	
-;Config.c,270 :: 		T6IS1_bit         = 0;
-LUI	R2, BitMask(T6IS1_bit+0)
-ORI	R2, R2, BitMask(T6IS1_bit+0)
-_SX	
-;Config.c,271 :: 		T6IF_bit          = 0;
-LUI	R2, BitMask(T6IF_bit+0)
-ORI	R2, R2, BitMask(T6IF_bit+0)
-_SX	
-;Config.c,272 :: 		T6IE_bit          = 0;
-LUI	R2, BitMask(T6IE_bit+0)
-ORI	R2, R2, BitMask(T6IE_bit+0)
-_SX	
-;Config.c,273 :: 		PR6               = 500;
-ORI	R2, R0, 500
-SW	R2, Offset(PR6+0)(GP)
-;Config.c,274 :: 		TMR6              = 0;
-SW	R0, Offset(TMR6+0)(GP)
-;Config.c,275 :: 		}
-L_end_InitTimer6:
-JR	RA
-NOP	
-; end of _InitTimer6
 _InitTimer7:
 ;Config.c,279 :: 		void InitTimer7(){
 ;Config.c,280 :: 		T7CON             = 0x8000;
