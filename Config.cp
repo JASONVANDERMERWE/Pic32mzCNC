@@ -1,15 +1,9 @@
-#line 1 "C:/Users/GIT/Pic32mzCNC/Config.c"
+#line 1 "C:/Users/Git/Pic32mzCNC/Config.c"
 #line 1 "c:/users/git/pic32mzcnc/config.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
-<<<<<<< HEAD
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
 #line 62 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
-=======
-#line 41 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
-extern int I2CUnit;
-#line 60 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
->>>>>>> e5fb2513a44ab744a2e9f52d68d0cb6b15e785c8
 typedef enum{
  _LCD_FIRST_ROW = 1,
  _LCD_SECOND_ROW,
@@ -28,21 +22,12 @@ typedef enum{
  _LCD_SHIFT_RIGHT,
  _LCD_INCREMENT_NO_SHIFT
 }Cmd_Type;
+
 extern Cmd_Type Cmd;
 
 
-typedef enum{
- I2C1 = 1,
- I2C2,
- I2C3,
- I2C4,
- I2C5,
- I2C6
-}I2C_Type;
-extern I2C_Type I2C_No;
 
-
-  unsigned char  I2C_PCF8574_Write( unsigned char  addr, unsigned char  Data );
+  unsigned char  I2C_PCF8574_Write( unsigned char  addr, unsigned char  Data);
  void I2C_LCD_putcmd( unsigned char  addr,  unsigned char  dta, unsigned char  cmdtype);
  void I2C_LCD_goto( unsigned char  addr, unsigned char  row,  unsigned char  col);
  void I2C_Lcd_Cmd( unsigned char  addr,Cmd_Type cmd, unsigned char  col);
@@ -50,18 +35,11 @@ extern I2C_Type I2C_No;
  void I2C_LCD_Out( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  *s);
  void I2C_Lcd_Chr( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  out_char);
  void I2C_LCD_init( unsigned char  addr);
-<<<<<<< HEAD
  void I2C_LCD_init4l( unsigned char  addr);
  void I2C_Pins(char i2c_pins);
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
-
-
-
-
-
-
-
-
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 13 "c:/users/git/pic32mzcnc/stepper.h"
 extern sfr EN_StepX;
 extern sfr EN_Step_PinDirX;
 extern sfr RST_StepX;
@@ -91,7 +69,7 @@ extern sfr FLT_Step_PinDirY;
 
 
 typedef unsigned short UInt8_t;
-#line 74 "c:/users/git/pic32mzcnc/stepper.h"
+#line 85 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
@@ -104,14 +82,17 @@ typedef struct genVars{
  long i;
  long dx;
  long dy;
+ long dz;
  long px;
  long py;
+ long pz;
+ long psingle;
  long over;
  long acc;
  long dec;
  int dirx;
  int diry;
-
+ int dirz;
 }sVars;
 extern sVars SV;
 
@@ -168,9 +149,37 @@ typedef struct Steps{
 
  signed long mmToTravel;
 }STP;
-extern STP STPS[ 2 ];
+extern STP STPS[ 3 ];
+
+
+
+typedef struct{
+float deg;
+float degreeDeg;
+float degreeRadians;
+float deg_A;
+float deg_B;
+float divisor;
+float newdeg_;
+float I;
+float J;
+float N;
+float radius;
+int dir;
+int quadrant_start;
+float xRad;
+float yRad;
+float xStart;
+float yStart;
+float xFin;
+float yFin;
+}Circle;
+extern Circle Circ;
+
+
 
 enum xyz{X,Y,Z};
+enum axis_combination {xy,xz,yz};
 enum swt{FALSE,TRUE};
 
 
@@ -183,28 +192,39 @@ enum swt{FALSE,TRUE};
 void SetPinMode();
 void CycleStart();
 void CycleStop();
-void EnStepper();
+void EnStepperX();
+void EnStepperY();
+void EnStepperZ();
 void DisableStepper();
-void speed_cntr_Move(long mmSteps, long speed, int axix_No);
+void disableOCx();
+
+
+void speed_cntr_Move(long mmSteps, long speed, int axis_combo);
 void speed_cntr_Init_Timer1(void);
 static unsigned long sqrt_(unsigned long v);
 unsigned int min_(unsigned long x, unsigned long y);
-void Step(long newx,long newy);
-int Pulse(int axis_No);
 void CalcDly(int axis_No);
 void StepperConstants(long accel,long decel);
+
+
+void DualAxisStep(long newx,long newy,int axis_combo);
+void SingleAxisStep(long newxyz,int axis_No);
+
+
+void CalcRadius(Circle* cir);
+int QuadrantStart(float i,float j);
+void CircDir(Circle* cir);
+
+
+int Pulse(int axis_No);
 void toggleOCx(int axis_No);
 void AccDec(int axix_No);
 #line 1 "c:/users/git/pic32mzcnc/steptodistance.h"
-
-
-
-
-
-
-
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 11 "c:/users/git/pic32mzcnc/steptodistance.h"
 const float Dia;
-#line 20 "c:/users/git/pic32mzcnc/steptodistance.h"
+#line 23 "c:/users/git/pic32mzcnc/steptodistance.h"
 signed long calcSteps( double mmsToMove, double Dia);
 #line 12 "c:/users/git/pic32mzcnc/config.h"
 extern unsigned char LCD_01_ADDRESS;
@@ -239,11 +259,6 @@ void initDMA_global();
 void initDMA0();
 void initDMA1();
 #line 3 "C:/Users/Git/Pic32mzCNC/Config.c"
-=======
- void I2C_LCD_init4l( unsigned char  addr,I2C_Type I2C_No);
- void I2CNo_Init(I2C_Type I2C_No);
-#line 4 "C:/Users/GIT/Pic32mzCNC/Config.c"
->>>>>>> e5fb2513a44ab744a2e9f52d68d0cb6b15e785c8
 void PinMode(){
 
  SYSKEY = 0xAA996655;
@@ -399,7 +414,6 @@ unsigned long cp0;
  PRECONbits.PFMSECEN = 0;
  PRECONbits.PREFEN = 0b11;
  PRECONbits.PFMWS = 0b100;
-<<<<<<< HEAD
 
 
 
@@ -409,9 +423,6 @@ unsigned long cp0;
  CP0_SET(CP0_CONFIG,cp0);
 
 
-=======
-#line 166 "C:/Users/GIT/Pic32mzCNC/Config.c"
->>>>>>> e5fb2513a44ab744a2e9f52d68d0cb6b15e785c8
  SYSKEY = 0x33333333;
 
 
@@ -424,11 +435,7 @@ unsigned long cp0;
 
 
 void OutPutPulseXYZ(){
-<<<<<<< HEAD
-#line 181 "C:/Users/Git/Pic32mzCNC/Config.c"
-=======
-#line 176 "C:/Users/GIT/Pic32mzCNC/Config.c"
->>>>>>> e5fb2513a44ab744a2e9f52d68d0cb6b15e785c8
+#line 184 "C:/Users/Git/Pic32mzCNC/Config.c"
  OC3CON = 0x0000;
  OC5CON = 0x0000;
  OC8CON = 0X0000;
@@ -449,12 +456,8 @@ void OutPutPulseXYZ(){
 
  OC3CON = 0x0004;
  OC5CON = 0x0004;
-<<<<<<< HEAD
-#line 207 "C:/Users/Git/Pic32mzCNC/Config.c"
-=======
  OC8CON = 0x0004;
-#line 205 "C:/Users/GIT/Pic32mzCNC/Config.c"
->>>>>>> e5fb2513a44ab744a2e9f52d68d0cb6b15e785c8
+#line 213 "C:/Users/Git/Pic32mzCNC/Config.c"
  OC3R = 0x5;
  OC3RS = 0x234;
  OC5R = 0x5;
@@ -511,7 +514,7 @@ void InitTimer1(){
  PR1 = 100;
  TMR1 = 0;
 }
-#line 279 "C:/Users/GIT/Pic32mzCNC/Config.c"
+#line 287 "C:/Users/Git/Pic32mzCNC/Config.c"
 void InitTimer7(){
  T7CON = 0x8000;
  T7IP0_bit = 0;
@@ -541,11 +544,6 @@ void InitTimer8(){
 
 void LcdI2CConfig(){
 
-<<<<<<< HEAD
-
-=======
- I2CNo_Init(I2C4);
->>>>>>> e5fb2513a44ab744a2e9f52d68d0cb6b15e785c8
  I2C4_Init_Advanced(50000, 100000);
  I2C_Set_Active(&I2C4_Start, &I2C4_Restart, &I2C4_Read, &I2C4_Write,
  &I2C4_Stop,&I2C4_Is_Idle);

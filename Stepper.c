@@ -1,7 +1,5 @@
 #include "Stepper.h"
-#include "built_in.h"
-/*#include "I2C_LCD.h"
-#include "Config.h"*/
+
 
 
 unsigned char txt1[] = "       ";
@@ -307,19 +305,6 @@ void DualAxisStep(long newx,long newy,int axis_combo){
 /*!
  *use Bressenhams algorithm here
  */
-<<<<<<< HEAD
-  SV.dx   = newx - SV.px;           // distance to move (delta)
-  SV.dy   = newy - SV.py;
-  // direction to move
-  SV.dirx = SV.dx > 0?1:-1;
-  SV.diry = SV.dy > 0?1:-1;
-  // Set direction from sign on step value.
-  if(SV.dirx < 0)DIR_StepX = CCW;
-  else DIR_StepX = CW;
-  if(SV.diry < 0) DIR_StepY = CCW;
-  else DIR_StepY = CW;
-=======
->>>>>>> e5fb2513a44ab744a2e9f52d68d0cb6b15e785c8
 
   switch(axis_combo){
     case xy:

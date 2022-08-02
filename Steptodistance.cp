@@ -1,24 +1,8 @@
-#line 1 "C:/Users/GIT/Pic32mzCNC/Steptodistance.c"
+#line 1 "C:/Users/Git/Pic32mzCNC/Steptodistance.c"
 #line 1 "c:/users/git/pic32mzcnc/steptodistance.h"
-
-
-
-
-
-
-
-const float Dia;
-#line 20 "c:/users/git/pic32mzcnc/steptodistance.h"
-signed long calcSteps( double mmsToMove, double Dia);
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
-
-
-
-
-
-
-
-
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 13 "c:/users/git/pic32mzcnc/stepper.h"
 extern sfr EN_StepX;
 extern sfr EN_Step_PinDirX;
 extern sfr RST_StepX;
@@ -48,7 +32,7 @@ extern sfr FLT_Step_PinDirY;
 
 
 typedef unsigned short UInt8_t;
-#line 81 "c:/users/git/pic32mzcnc/stepper.h"
+#line 85 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
@@ -199,14 +183,18 @@ int Pulse(int axis_No);
 void toggleOCx(int axis_No);
 void AccDec(int axix_No);
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 8 "C:/Users/GIT/Pic32mzCNC/Steptodistance.c"
+#line 11 "c:/users/git/pic32mzcnc/steptodistance.h"
+const float Dia;
+#line 23 "c:/users/git/pic32mzcnc/steptodistance.h"
+signed long calcSteps( double mmsToMove, double Dia);
+#line 7 "C:/Users/Git/Pic32mzCNC/Steptodistance.c"
 signed long calcSteps(double mmsToMove, double Dia){
 double circ,cirDivision,stepsToMove;
 
 
 
 
- circ = Dia* 3.14159 ;
+ circ = Dia* 3.142 ;
 
 
 

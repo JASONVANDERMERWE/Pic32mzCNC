@@ -1,6 +1,9 @@
 #ifndef STEPTODISTANCE_H
 #define STEPTODISTANCE
 
+#include "Stepper.h"
+#include "built_in.h"
+
 ///////////////////////////////////////////////
 //constants and defines
 #define Pi 3.142

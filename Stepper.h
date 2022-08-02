@@ -1,6 +1,10 @@
 #ifndef STEPPER_H
 #define STEPPER_H
 
+ #include "built_in.h"
+/*#include "I2C_LCD.h"
+#include "Config.h"*/
+
 
 //extern bit PLS_Step_;sfr;
 ///////////////////////////////////////////

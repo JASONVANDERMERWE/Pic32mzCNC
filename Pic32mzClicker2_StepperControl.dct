@@ -34451,7 +34451,6 @@ i2cmsk9_i2c2msk_bit
 i2cmsk9_i2c3msk_bit
 i2cmsk9_i2c4msk_bit
 i2cmsk9_i2c5msk_bit
-i2cno_init
 i2cov
 i2cov
 i2cov
@@ -34666,7 +34665,6 @@ i2ctrn7_i2c2trn_bit
 i2ctrn7_i2c3trn_bit
 i2ctrn7_i2c4trn_bit
 i2ctrn7_i2c5trn_bit
-i2cunit
 ib0f
 ib0f
 ib0f
@@ -63026,9 +63024,6 @@ thsbt2
 thsbt2_bit
 thsbt3
 thsbt3_bit
-timer1interrupt
-timer7interrupt
-timer8interrupt
 tmr
 tmr1
 tmr1bits

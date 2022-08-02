@@ -1,13 +1,7 @@
-#line 1 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+#line 1 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
-
-
-
-
-
-
-
-
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 13 "c:/users/git/pic32mzcnc/stepper.h"
 extern sfr EN_StepX;
 extern sfr EN_Step_PinDirX;
 extern sfr RST_StepX;
@@ -37,7 +31,7 @@ extern sfr FLT_Step_PinDirY;
 
 
 typedef unsigned short UInt8_t;
-#line 81 "c:/users/git/pic32mzcnc/stepper.h"
+#line 85 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
@@ -187,8 +181,7 @@ void CircDir(Circle* cir);
 int Pulse(int axis_No);
 void toggleOCx(int axis_No);
 void AccDec(int axix_No);
-#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 7 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+#line 5 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 unsigned char txt1[] = "       ";
 unsigned char AxisNo;
 unsigned int Toggle;
@@ -293,7 +286,7 @@ void DisableStepper(){
  EN_StepY = 1;
  EN_StepZ = 1;
 }
-#line 128 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+#line 126 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void speed_cntr_Move(signed long mmSteps, signed long speed, int axis_No){
 int ii;
 
@@ -376,7 +369,7 @@ int ii;
  STPS[axis_No].accel_count = 1;
 
  SV.Tog = 0;
-#line 213 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+#line 211 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  SV.running = 1;
 }
 
@@ -401,11 +394,11 @@ int ii;
  }
  }
 }
-#line 242 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+#line 240 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void SingleAxisStep(long newxyz,int axis_No){
 int dir;
 static long dist;
-#line 249 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+#line 247 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  switch(axis_No){
  case 0:OC5IE_bit = 1;OC5CONbits.ON = 1;
  OC3IE_bit = 0;OC3CONbits.ON = 0;
@@ -464,7 +457,7 @@ void DualAxisStep(long newx,long newy,int axis_combo){
  SV.px = 0;
  SV.py = 0;
  SV.pz = 0;
-#line 311 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+#line 309 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  switch(axis_combo){
  case xy:
  OC5IE_bit = 1;OC5CONbits.ON = 1;
@@ -630,7 +623,7 @@ void DualAxisStep(long newx,long newy,int axis_combo){
 
 
  disableOCx();
-#line 483 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+#line 481 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 }
 
 
@@ -752,7 +745,7 @@ int Pulse(int axis_No){
 
  case  1 :
  AccDec(axis_No);
-#line 608 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+#line 606 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  if(STPS[axis_No].step_delay <= STPS[axis_No].min_delay){
 
  STPS[axis_No].step_delay = STPS[axis_No].min_delay;
@@ -799,7 +792,7 @@ void AccDec(int axis_No){
  STPS[axis_No].step_delay = STPS[axis_No].new_step_delay;
 
 }
-#line 664 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+#line 662 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 static unsigned long sqrt_(unsigned long x){
 
  register unsigned long xr;
@@ -830,7 +823,7 @@ static unsigned long sqrt_(unsigned long x){
  return xr;
  }
 }
-#line 700 "C:/Users/GIT/Pic32mzCNC/Stepper.c"
+#line 698 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 unsigned int min_(unsigned int x, unsigned int y)
 {
  if(x < y){
