@@ -11,11 +11,15 @@ main
 				UART_Calc_BRG
 			UART_Set_Active
 		set_performance_mode
+<<<<<<< HEAD
 		Uart2InterruptSetup
 		InitTimer6
+=======
+>>>>>>> e5fb2513a44ab744a2e9f52d68d0cb6b15e785c8
 		InitTimer7
 		InitTimer8
 		LcdI2CConfig
+			I2CNo_Init
 			I2C4_Init_Advanced
 				SetI2C4Ptrs
 				Get_Fosc_kHz
@@ -25,6 +29,16 @@ main
 			I2C_LCD_init
 				I2C_LCD_putcmd
 					I2C_PCF8574_Write
+<<<<<<< HEAD
+=======
+						I2C1_Start
+							I2C1_Wait_For_Idle
+								I2C1_Is_Idle
+						I2C1_Write
+							I2C1_Wait_For_Idle
+						I2C1_Stop
+							I2C1_Wait_For_Idle
+>>>>>>> e5fb2513a44ab744a2e9f52d68d0cb6b15e785c8
 						I2C2_Start
 							I2C2_Wait_For_Idle
 								I2C2_Is_Idle
@@ -45,6 +59,13 @@ main
 							I2C4_Wait_For_Idle
 						I2C4_Stop
 							I2C4_Wait_For_Idle
+						I2C5_Start
+							I2C5_Wait_For_Idle
+								I2C5_Is_Idle
+						I2C5_Write
+							I2C5_Wait_For_Idle
+						I2C5_Stop
+							I2C5_Wait_For_Idle
 			I2C_Lcd_Cmd
 				I2C_LCD_goto
 					I2C_LCD_putcmd
@@ -59,16 +80,28 @@ main
 		I2C_LCD_goto
 		I2C_LCD_putch
 			I2C_PCF8574_Write
+<<<<<<< HEAD
 	EnStepper
+=======
+	EnStepperX
+	EnStepperY
+	EnStepperZ
+>>>>>>> e5fb2513a44ab744a2e9f52d68d0cb6b15e785c8
 	calcSteps
 	speed_cntr_Move
 		abs
 		sqrt_
-	Step
+	SingleAxisStep
 		abs
 		toggleOCx
 		Pulse
 			AccDec
+		disableOCx
+	DualAxisStep
+		abs
+		toggleOCx
+		Pulse
+		disableOCx
 	DisableStepper
 	sprintf
 		_doprntf
@@ -79,6 +112,7 @@ main
 	__FillZeros
 StepX
 StepY
+StepZ
 Timer8Interrupt
 	CycleStart
 	CycleStop
@@ -88,7 +122,7 @@ DMA_CH0_ISR
 	__CC2DW
 	strlen
 	memcpy
-Timer6Interrupt
 uart2_Rx_interrupt
 	UART2_Read
 	UART2_Write
+Timer1Interrupt

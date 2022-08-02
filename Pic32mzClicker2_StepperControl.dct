@@ -9627,6 +9627,7 @@ cal8
 cal8_bit
 cal9
 cal9_bit
+calcradius
 calcsteps
 can1ie
 can1ie
@@ -14024,6 +14025,8 @@ chtaif_dch4int_bit
 chtaif_dch5int_bit
 chtaif_dch6int_bit
 chtaif_dch7int_bit
+cir_interpolation
+circdir
 cke
 cke
 cke
@@ -23474,10 +23477,14 @@ digen7
 digen7_bit
 dir_step_pindirx
 dir_step_pindiry
+dir_step_pindirz
 dir_stepx
 dir_stepy
+dir_stepz
 dirx
 diry
+dirz
+disableocx
 disablestepper
 disablethreads
 disconie
@@ -25296,6 +25303,7 @@ dtwren_usbe4csr0_bit
 dtwren_usbe5csr0_bit
 dtwren_usbe6csr0_bit
 dtwren_usbe7csr0_bit
+dualaxisstep
 dualbuf
 dualbuf
 dualbuf
@@ -25314,6 +25322,7 @@ dy
 dynfifos
 dynfifos
 dynfifos_bit
+dz
 ebia0en
 ebia0en
 ebia0en
@@ -27720,8 +27729,10 @@ en
 en_bit
 en_step_pindirx
 en_step_pindiry
+en_step_pindirz
 en_stepx
 en_stepy
+en_stepz
 endcmp
 endcmp
 endcmp
@@ -27780,7 +27791,9 @@ enhbuf_spi3con_bit
 enhbuf_spi4con_bit
 enhbuf_spi5con_bit
 enhbuf_spi6con_bit
-enstepper
+enstepperx
+ensteppery
+enstepperz
 eosien
 eosien
 eosien_bit
@@ -34438,6 +34451,7 @@ i2cmsk9_i2c2msk_bit
 i2cmsk9_i2c3msk_bit
 i2cmsk9_i2c4msk_bit
 i2cmsk9_i2c5msk_bit
+i2cno_init
 i2cov
 i2cov
 i2cov
@@ -34652,6 +34666,7 @@ i2ctrn7_i2c2trn_bit
 i2ctrn7_i2c3trn_bit
 i2ctrn7_i2c4trn_bit
 i2ctrn7_i2c5trn_bit
+i2cunit
 ib0f
 ib0f
 ib0f
@@ -36779,7 +36794,7 @@ initid7_sbt6elog1_bit
 initid7_sbt7elog1_bit
 initid7_sbt8elog1_bit
 initid7_sbt9elog1_bit
-inittimer6
+inittimer1
 inittimer7
 inittimer8
 int0ep
@@ -44483,8 +44498,10 @@ pllrange2
 pllrange2_bit
 pls_step_pindirx
 pls_step_pindiry
+pls_step_pindirz
 pls_stepx
 pls_stepy
+pls_stepz
 pmaddr
 pmaddrbits
 pmaddrclr
@@ -45846,6 +45863,7 @@ psidl
 psidl
 psidl
 psidl_bit
+psingle
 psintv
 psintv0
 psintv0_bit
@@ -46088,6 +46106,8 @@ pwrconset
 pwrconsetbits
 px
 py
+pz
+quadrantstart
 r_w
 r_w
 r_w
@@ -58119,6 +58139,7 @@ simreset
 simreset_bit
 simreset_emacxcfg1_bit
 sin
+singleaxisstep
 sinh
 sirq
 sirq
@@ -60920,7 +60941,6 @@ stattype1_bit
 status
 status
 status_bit
-step
 step1
 step10
 step10_bit
@@ -60958,6 +60978,7 @@ step27_bit
 stepperconstants
 stepx
 stepy
+stepz
 stmr
 stnaddr1
 stnaddr1
@@ -63005,7 +63026,7 @@ thsbt2
 thsbt2_bit
 thsbt3
 thsbt3_bit
-timer6interrupt
+timer1interrupt
 timer7interrupt
 timer8interrupt
 tmr

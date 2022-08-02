@@ -13,11 +13,12 @@ unsigned int Toggle;
  STP STPS[NoOfAxis];
  sVars SV;
  StepTmr STmr;
+ 
 //////////////////////////////////
+//define pin modes as symbolic text
 //sfr bits
 //bit PLS_Step_;sfr;
-//////////////////////////////////
-//pin modes
+
 sbit EN_StepX at LATG0_bit;               //LATB13_bit;   LATD9_bit
 sbit EN_Step_PinDirX at TRISG0_bit;       //TRISB13_bit;  TRISD9
 //sbit RST_StepX at LATA10_bit;
@@ -40,7 +41,16 @@ sbit PLS_Step_PinDirY at TRISD4_bit;
 sbit DIR_StepY at LATD5_bit;
 sbit DIR_Step_PinDirY at TRISD5_bit;
 
-
+sbit EN_StepZ at LATG14_bit;
+sbit EN_Step_PinDirZ at TRISG14_bit;
+//sbit RST_StepX at LATA10_bit;
+//sbit RST_Step_PinDirX at TRISA10_bit;
+//sbit SLP_FLT_StepY at LATB10_bit;
+//sbit SLP_FLT_Step_PinDirY at TRISB10_bit;
+sbit PLS_StepZ at LATE3_bit;
+sbit PLS_Step_PinDirZ at TRISE3_bit;
+sbit DIR_StepZ at LATG12_bit;
+sbit DIR_Step_PinDirZ at TRISG12_bit;
 
 //////////////////////////////////
 //Set up pin outs
@@ -58,6 +68,13 @@ void SetPinMode(){
 //  SLP_FLT_Step_PinDirY = 0;
   PLS_Step_PinDirY = 0;
   DIR_Step_PinDirY = 0;
+//zaxis
+  EN_Step_PinDirZ  = 0; //output
+//  RST_Step_PinDirZ = 0;
+//  SLP_FLT_Step_PinDirZ = 0;
+  PLS_Step_PinDirZ = 0;
+  DIR_Step_PinDirZ = 0;
+  
 }
 
 /////////////////////////////////
@@ -69,20 +86,27 @@ void StepperConstants(long accel,long decel){
 
 /////////////////////////////////
 //Enable Steppers
-void EnStepper(){
-//  Xaxis
+void EnStepperX(){
 //  SLP_FLT_StepX = 1;
 //  RST_StepX     = 1;
    EN_StepX       = 0;
-//  Yaxis
+}
+
+void EnStepperY(){
 //  SLP_FLT_StepY = 1;
 //  RST_StepY     = 1;
    EN_StepY       = 0;
+}
+void EnStepperZ(){
+//  SLP_FLT_StepZ = 1;
+//  RST_StepZ     = 1;
+   EN_StepZ       = 0;
 }
 
 void DisableStepper(){
    EN_StepX      = 1;
    EN_StepY      = 1;
+   EN_StepZ      = 1;
 }
 
 
@@ -127,7 +151,7 @@ int ii;
 
 /*if(8000 < STPS[axis_No].StartUp_delay)STPS[axis_No].StartUp_delay = 2000;*/
     
-    // Find out after how many steps does the speed hit the max speed limit.
+    // Find out after how many steps does the speed hits the max speed limit.
     STPS[axis_No].max_step_lim = (speed*speed)/(long)(2.0*ALPHA*(double)SV.acc*100.0);
     
     //STPS.max_s_lim = (long)speed*speed/(long)(((long)A_x20000*accel)/100);
@@ -183,8 +207,9 @@ int ii;
       STPS[axis_No].accel_count = 1;
 
       SV.Tog   = 0;
-      SV.px    = 0;
+/*SV.px    = 0;
       SV.py    = 0;
+      SV.pz    = 0;*/
       SV.running = 1;
 }
 
@@ -209,17 +234,80 @@ int ii;
    }
   }
 }
+/*****************************************************
+*single axix step rate need to be doubled to compensate
+*speed increase due to no 2nd axis interpolation
+*use a dummy axis or increase the speed
+*****************************************************/
+void SingleAxisStep(long newxyz,int axis_No){
+int dir;
+static long dist;
+       /*if(SV.psingle != newxyz)
+          SV.psingle = newxyz;
+       else*/
+       
+     switch(axis_No){
+       case 0:OC5IE_bit = 1;OC5CONbits.ON = 1;
+              OC3IE_bit = 0;OC3CONbits.ON = 0;
+              OC8IE_bit = 0;OC8CONbits.ON = 0;
+              break;
+       case 1:OC5IE_bit = 0;OC5CONbits.ON = 0;
+              OC3IE_bit = 1;OC3CONbits.ON = 1;
+              OC8IE_bit = 0;OC8CONbits.ON = 0;
+              break;
+       case 2:OC5IE_bit = 0;OC5CONbits.ON = 0;
+              OC3IE_bit = 0;OC3CONbits.ON = 0;
+              OC8IE_bit = 1;OC8CONbits.ON = 1;
+              break;
+       default: break;
+     }
+     SV.psingle  = 0;
+     dist = newxyz - SV.psingle;
+     dist = abs(dist);
+     
+     if(newxyz < 0)
+           dir = CCW;
+     else
+           dir = CW;
 
-void Step(long newx,long newy){
+         switch(axis_No){
+           case X:
+                DIR_StepX = dir;
+                break;
+           case Y:
+                DIR_StepY = dir;
+                break;
+           case Z:
+                DIR_StepZ = dir;
+                break;
+           default: break;
+         }
+                if(SV.Tog == 0){
+                  for(STPS[axis_No].step_count = 0;STPS[axis_No].step_count < dist; ++STPS[axis_No].step_count){
+                    STmr.compOCxRunning = 0;
+                    toggleOCx(axis_No);
+                    Pulse(axis_No);
+                    //wait for next time delay try modified to prevent blocking
+                    while(STmr.compOCxRunning == 0);
+                  }
+                }
+                
+        disableOCx();
+}
+
+void DualAxisStep(long newx,long newy,int axis_combo){
  long i;
  static long d2;
    SV.over=0;
    d2 = 0;
+   //will need to change these 3 lines when implimenting position referenc??
    SV.px = 0;
    SV.py = 0;
+   SV.pz = 0;
 /*!
  *use Bressenhams algorithm here
  */
+<<<<<<< HEAD
   SV.dx   = newx - SV.px;           // distance to move (delta)
   SV.dy   = newy - SV.py;
   // direction to move
@@ -230,51 +318,175 @@ void Step(long newx,long newy){
   else DIR_StepX = CW;
   if(SV.diry < 0) DIR_StepY = CCW;
   else DIR_StepY = CW;
+=======
+>>>>>>> e5fb2513a44ab744a2e9f52d68d0cb6b15e785c8
 
-  SV.dx = abs(SV.dx);
-  SV.dy = abs(SV.dy);
-  
-  if(SV.dx > SV.dy) d2 = 2*(SV.dy - SV.dx);
-  else d2 = 2* (SV.dx - SV.dy);
-  
-
-   if(SV.Tog == 0){  //? round this start up bit
-     LATE7_bit = 1;
-     if(SV.dx > SV.dy){
-        for(STPS[X].step_count = 0;STPS[X].step_count < SV.dx; ++STPS[X].step_count)/*(i=0; i < SV.dx; ++i)*/{
-
-          STmr.compOCxRunning = 0;
-          toggleOCx(X);
-          Pulse(X);
-           if(d2 < 0)d2 += 2*SV.dy;
-           else{
-              d2 += 2 * (SV.dy - SV.dx);
-              toggleOCx(Y);
-              Pulse(Y);
-           }
-
-           //wait for next time delay
-           while(STmr.compOCxRunning != 1);//STPS[X].microSec < STPS[X].step_delay);
+  switch(axis_combo){
+    case xy:
+              OC5IE_bit = 1;OC5CONbits.ON = 1;
+              OC3IE_bit = 1;OC3CONbits.ON = 1;
+              OC8IE_bit = 0;OC8CONbits.ON = 0;
+          SV.dx   = newx - SV.px;           // distance to move (delta)
+          SV.dy   = newy - SV.py;
+          // direction to move
+          SV.dirx = SV.dx > 0?1:-1;
+          SV.diry = SV.dy > 0?1:-1;
+            // Set direction from sign on step value.
+          if(SV.dirx < 0)DIR_StepX = CCW;
+          else DIR_StepX = CW;
+          if(SV.diry < 0) DIR_StepY = CCW;
+          else DIR_StepY = CW;
+          SV.dx = abs(SV.dx);
+          SV.dy = abs(SV.dy);
+          
+         if(SV.dx > SV.dy) d2 = 2*(SV.dy - SV.dx);
+         else d2 = 2* (SV.dx - SV.dy);
+         if(SV.Tog == 0){  //? round this start up bit
+             LATE7_bit = 1;
+             if(SV.dx > SV.dy){
+                for(STPS[X].step_count = 0;STPS[X].step_count < SV.dx; ++STPS[X].step_count){
+                    STmr.compOCxRunning = 0;
+                    toggleOCx(X);
+                    Pulse(X);
+                    if(d2 < 0)d2 += 2*SV.dy;
+                    else{
+                      d2 += 2 * (SV.dy - SV.dx);
+                      toggleOCx(Y);
+                      Pulse(Y);
+                    }
+                   //wait for next time delay try modified to prevent blocking
+                    while(STmr.compOCxRunning == 0);
+                }
+            }else{
+                for(STPS[Y].step_count = 0;STPS[Y].step_count < SV.dy; ++STPS[Y].step_count){
+                   STmr.compOCxRunning = 0;
+                   toggleOCx(Y);
+                   Pulse(Y);
+                   if(d2 < 0)d2 += 2 * SV.dx;
+                   else{
+                       d2 += 2 * (SV.dx - SV.dy);
+                       toggleOCx(X);
+                       Pulse(X);
+                   }
+                   //wait for next time delay try modified to prevent blocking
+                    while(STmr.compOCxRunning == 0);
+                }
+            }
+         }
+         break;
+    case xz:
+              OC5IE_bit = 1;OC5CONbits.ON = 1;
+              OC3IE_bit = 0;OC3CONbits.ON = 0;
+              OC8IE_bit = 1;OC8CONbits.ON = 1;
+          SV.dx   = newx - SV.px;           // distance to move (delta)
+          SV.dz   = newy - SV.pz;
+          // direction to move
+          SV.dirx = SV.dx > 0?1:-1;
+          SV.dirz = SV.dz > 0?1:-1;
+          // Set direction from sign on step value.
+          if(SV.dirx < 0)DIR_StepX = CCW;
+          else DIR_StepX = CW;
+          if(SV.dirz < 0) DIR_StepZ = CCW;
+          else DIR_StepZ = CW;
+          SV.dx = abs(SV.dx);
+          SV.dz = abs(SV.dz);
+          
+        if(SV.dx > SV.dz) d2 = 2*(SV.dz - SV.dx);
+        else d2 = 2* (SV.dx - SV.dz);
+        if(SV.Tog == 0){  //? round this start up bit
+            LATE7_bit = 1;
+            if(SV.dx > SV.dz){
+                for(STPS[X].step_count = 0;STPS[X].step_count < SV.dx; ++STPS[X].step_count){
+                    STmr.compOCxRunning = 0;
+                    toggleOCx(X);
+                    Pulse(X);
+                    if(d2 < 0)d2 += 2*SV.dz;
+                    else{
+                      d2 += 2 * (SV.dz - SV.dx);
+                      toggleOCx(Z);
+                      Pulse(Z);
+                    }
+                   //wait for next time delay
+                    while(STmr.compOCxRunning == 0);
+                }
+            }else{
+                for(STPS[Z].step_count = 0;STPS[Z].step_count < SV.dz; ++STPS[Z].step_count){
+                   STmr.compOCxRunning = 0;
+                   toggleOCx(Z);
+                   Pulse(Z);
+                   if(d2 < 0)d2 += 2 * SV.dx;
+                   else{
+                       d2 += 2 * (SV.dx - SV.dz);
+                       toggleOCx(X);
+                       Pulse(X);
+                   }
+                   //wait for next time delay
+                    while(STmr.compOCxRunning == 0);
+                }
+             }
         }
-     }else{
-     
-        for(STPS[Y].step_count = 0;STPS[Y].step_count < SV.dy; ++STPS[Y].step_count)/*(i=0;i < SV.dy;++i)*/{
+         break;
+    case yz:
+              OC5IE_bit = 0;OC5CONbits.ON = 0;
+              OC3IE_bit = 1;OC3CONbits.ON = 1;
+              OC8IE_bit = 1;OC8CONbits.ON = 1;
+          SV.dy   = newx - SV.pz;           // distance to move (delta)
+          SV.dz   = newy - SV.py;
+          // direction to move
+          SV.diry = SV.dy > 0?1:-1;
+          SV.dirz = SV.dz > 0?1:-1;
+          // Set direction from sign on step value.
+          if(SV.diry < 0)DIR_StepY = CCW;
+          else DIR_StepY = CW;
+          if(SV.dirz < 0) DIR_StepZ = CCW;
+          else DIR_StepZ = CW;
+          SV.dy = abs(SV.dy);
+          SV.dz = abs(SV.dz);
+          
+         if(SV.dy > SV.dz) d2 = 2*(SV.dz - SV.dy);
+         else d2 = 2* (SV.dy - SV.dz);
+         if(SV.Tog == 0){  //? round this start up bit
+              LATE7_bit = 1;
+              if(SV.dy > SV.dz){
+                  for(STPS[Y].step_count = 0;STPS[Y].step_count < SV.dy; ++STPS[Y].step_count){
+                      STmr.compOCxRunning = 0;
+                      toggleOCx(Y);
+                      Pulse(Y);
+                      if(d2 < 0)d2 += 2*SV.dz;
+                      else{
+                        d2 += 2 * (SV.dz - SV.dy);
+                        toggleOCx(Z);
+                        Pulse(Z);
+                      }
+                     //wait for next time delay
+                      while(STmr.compOCxRunning == 0);
+                  }
+              }else{
+                  for(STPS[Z].step_count = 0;STPS[Z].step_count < SV.dz; ++STPS[Z].step_count){
+                     STmr.compOCxRunning = 0;
+                     toggleOCx(Z);
+                     Pulse(Z);
+                     if(d2 < 0)d2 += 2 * SV.dy;
+                     else{
+                         d2 += 2 * (SV.dy - SV.dz);
+                         toggleOCx(Y);
+                         Pulse(Y);
+                     }
+                     //wait for next time delay
+                      while(STmr.compOCxRunning == 0);
+                  }
+               }
+         }
+         
+         break;
+    default: break;
 
-           STmr.compOCxRunning = 0;
-           toggleOCx(Y);
-           Pulse(Y);
-           if(d2 < 0)d2 += 2 * SV.dx;
-           else{
-               d2 += 2 * (SV.dx - SV.dy);
-               toggleOCx(X);
-               Pulse(X);
-           }
-           //wait for next time delay
-            while(STmr.compOCxRunning != 2);//STPS[Y].microSec < STPS[y].step_delay);
-        }
-      }
-      
-   }
+  }
+  
+
+  
+  disableOCx();
+
 /*!
  * update the logical position. We don't just = newx because
  * px + dx * dirx == newx could be false by a tiny margin and we don't want rounding errors.
@@ -283,6 +495,76 @@ void Step(long newx,long newy){
     SV.py += SV.dy * SV.diry;*/
 }
 
+/////////////////////////////////////////////////
+//Circular Interpolation
+void CalcRadius(Circle* cir){
+ float xRad,yRad,X,Y,angA,angB;
+
+   cir->xRad = fabs(cir->xStart + cir->I);
+   cir->yRad = fabs(cir->yStart + cir->J);
+   cir->radius = sqrt((cir->xRad*cir->xRad) + (cir->yRad*cir->yRad));
+   angA = atan2(cir->yRad,cir->xRad);
+   
+   
+   cir->degreeDeg = angA * rad2deg;
+   
+   cir->quadrant_start = QuadrantStart(cir->I,cir->J);
+    //deg is 360 or 0 and subtract the actual from deg
+   if(cir->quadrant_start == 1 || cir->quadrant_start == 3)
+       angB = cir->deg - cir->degreeDeg;
+   if(cir->quadrant_start == 1 || cir->quadrant_start == 3)
+       angB = cir->deg + cir->degreeDeg;
+       
+   cir->degreeRadians = angB * deg2rad;
+}
+
+int QuadrantStart(float i,float j){
+    if((i <= 0)&&(j >= 0))
+          return 1;
+    else if((i > 0)&&(j > 0))
+         return 2;
+    else if((i > 0)&&(j < 0))
+         return 3;
+    else if((i < 0)&&(j < 0))
+         return 4;
+    else
+        return 0;
+}
+
+void CircDir(Circle* cir){
+float newDeg;
+   if(cir->dir == CW){
+        newDeg = 360 / cir->deg;
+        cir->N = (2*Pi*cir->radius)/newDeg;
+        cir->divisor = cir->deg / newDeg;
+   }
+
+   if(cir->dir == CW)
+       cir->deg = 0.00;
+   if(cir->dir == CCW)
+       cir->deg = 360.00;
+}
+
+void Cir_Interpolation(float xPresent,float yPresent,Circle* cir){
+static int quad = 1;
+      cir->xStart = xPresent;
+      cir->yStart = yPresent;
+      CalcRadius(cir);
+    //  quad = QuadrantStart(cir);
+    
+    while(quad){
+       break;//!!!
+       if(quad == 1 || quad == 4){
+         cir->xFin = cir->xRad + (cir->radius * cos(cir->degreeRadians));
+         cir->yFin = cir->yRad + (cir->radius * sin(cir->degreeRadians));
+       }
+       if(quad == 2 || quad == 3){
+         cir->xFin = cir->xRad - (cir->radius * cos(cir->degreeRadians));
+        // cir->yFin = cir>-yRad - (cir->radius * sin(cir->degreeRadians));
+       }
+       
+     }
+}
 
 //////////////////////////////////////////////////
 //toggle the OCxCON regs
@@ -298,26 +580,31 @@ void toggleOCx(int axis_No){
                 TMR4   =  0xFFFF;
                 OC3CON =  0x8004; //restart the output compare module
              break;
+        case 2: OC8R   = 0x5;
+                OC8RS  = STPS[Z].step_delay & 0xFFFF;
+                TMR6   =  0xFFFF;
+                OC8CON =  0x8004; //restart the output compare module
+             break;
         default:
              break;
       }
 
+}
+
+
+void disableOCx(){
+     OC5IE_bit = 0;OC5CONbits.ON = 0;
+     OC3IE_bit = 0;OC3CONbits.ON = 0;
+     OC8IE_bit = 0;OC8CONbits.ON = 0;
 }
 //////////////////////////////////////////////////
 //reset the pulse
 int Pulse(int axis_No){
 
     if(!STPS[axis_No].PLS_Step_ ){
-     //STPS[axis_No].step_count++;
-     /*T6IE_bit                  = 1;
-      T6IF_bit                  = 0;
-      STPS[axis_No].microSec    = 0;*/
       STPS[axis_No].PLS_Step_   = 1;
-
     }
-/*if((SV.dx > SV.dy)&&(axis_No == Y))return axis_No;
-    if((SV.dx < SV.dy)&&(axis_No == X))return axis_No;*/
-
+    
     switch(STPS[axis_No].run_state) {
       case STOP:
            LATE7_bit = 0;
@@ -327,8 +614,10 @@ int Pulse(int axis_No){
 
       case ACCEL:
         AccDec(axis_No);
-        // Chech if we should start decelration.
-        // Check if we hitted max speed.
+        /*
+        * Chech if we should start decelration.
+        * Check if we hit max speed.
+        */
         if(STPS[axis_No].step_delay <= STPS[axis_No].min_delay){
         //  STPS.last_accel_delay = STPS.new_step_delay;
              STPS[axis_No].step_delay = STPS[axis_No].min_delay;
@@ -350,13 +639,12 @@ int Pulse(int axis_No){
         if(STPS[axis_No].step_count >= STPS[axis_No].decel_start) {
              STPS[axis_No].accel_count = STPS[axis_No].decel_val;
              STPS[axis_No].rest        = 0;
-      // Start decelration with same delay as accel ended with.
+        // Start decelration with same delay as accel ended with.
              STPS[axis_No].run_state   =  DECEL;
         }
         break;
 
       case DECEL:
-
         // else STPS[axis_No].new_step_delay = STPS[axis_No].StartUp_delay;
         // Check if we at last step
         AccDec(axis_No);
@@ -379,7 +667,7 @@ void AccDec(int axis_No){
 
 /*!  
  *    brief Square root routine.
- *    sqrt routine 'grupe', from comp.sys.ibm.pc.programmer
+ *    sqrt routine, from comp.sys.ibm.pc.programmer
  *    Subject: Summary: SQRT(int) algorithm (with profiling)
  *    From: warwick@cs.uq.oz.au (Warwick Allison)
  *    Date: Tue Oct 8 09:16:35 1991
@@ -432,14 +720,45 @@ unsigned int min_(unsigned int x, unsigned int y)
   }
 }
 
+//////////////////////////////////////////////////////////////
+//output compare 3 pin RF1 interrupt
+void StepX() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
 
-/*SV.over += SV.dy;
-           if(SV.over >= SV.dx){
-            SV.over -= SV.dx;
-            STmr.axisTosample = Pulse(Y);
-           }*/
-/*SV.over += SV.dx;
-           if(SV.over >= SV.dy){
-              SV.over -= SV.dy;
-              Pulse(X);
-           }*/
+     STmr.compOCxRunning = 1;
+     TMR4 =  0xFFFF;
+     OC3IF_bit = 0;
+   //  OC3CON    =  0x8004; //restart the output compare module
+}
+void StepY() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
+
+     STmr.compOCxRunning = 2;
+     TMR2 =  0xFFFF;
+     OC5IF_bit = 0;
+    // OC5CON    =  0x8004; //restart the output compare module
+}
+void StepZ() iv IVT_OUTPUT_COMPARE_8 ilevel 3 ics ICS_AUTO {
+
+     STmr.compOCxRunning = 3;
+     TMR6 =  0xFFFF;
+     OC8IF_bit = 0;
+    // OC8CON    =  0x8004; //restart the output compare module
+}
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+//TEST CODE
+ /*if(OC3RS > 2000)OC3RS -= 100;
+     else{
+         OC3RS -= 1;
+         if(OC3RS < 350)OC3RS = 350;
+     }*/
+
+
+/*if(OC6RS > 2000)OC6RS -= 100;
+     else{
+         OC6RS -= 1;
+         if(OC6RS < 350)OC6RS = 350;
+     }*/

@@ -1,9 +1,15 @@
-#line 1 "C:/Users/Git/Pic32mzCNC/Config.c"
+#line 1 "C:/Users/GIT/Pic32mzCNC/Config.c"
 #line 1 "c:/users/git/pic32mzcnc/config.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
+<<<<<<< HEAD
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
 #line 62 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
+=======
+#line 41 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
+extern int I2CUnit;
+#line 60 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
+>>>>>>> e5fb2513a44ab744a2e9f52d68d0cb6b15e785c8
 typedef enum{
  _LCD_FIRST_ROW = 1,
  _LCD_SECOND_ROW,
@@ -22,12 +28,21 @@ typedef enum{
  _LCD_SHIFT_RIGHT,
  _LCD_INCREMENT_NO_SHIFT
 }Cmd_Type;
-
 extern Cmd_Type Cmd;
 
 
+typedef enum{
+ I2C1 = 1,
+ I2C2,
+ I2C3,
+ I2C4,
+ I2C5,
+ I2C6
+}I2C_Type;
+extern I2C_Type I2C_No;
 
-  unsigned char  I2C_PCF8574_Write( unsigned char  addr, unsigned char  Data);
+
+  unsigned char  I2C_PCF8574_Write( unsigned char  addr, unsigned char  Data );
  void I2C_LCD_putcmd( unsigned char  addr,  unsigned char  dta, unsigned char  cmdtype);
  void I2C_LCD_goto( unsigned char  addr, unsigned char  row,  unsigned char  col);
  void I2C_Lcd_Cmd( unsigned char  addr,Cmd_Type cmd, unsigned char  col);
@@ -35,6 +50,7 @@ extern Cmd_Type Cmd;
  void I2C_LCD_Out( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  *s);
  void I2C_Lcd_Chr( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  out_char);
  void I2C_LCD_init( unsigned char  addr);
+<<<<<<< HEAD
  void I2C_LCD_init4l( unsigned char  addr);
  void I2C_Pins(char i2c_pins);
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
@@ -223,6 +239,11 @@ void initDMA_global();
 void initDMA0();
 void initDMA1();
 #line 3 "C:/Users/Git/Pic32mzCNC/Config.c"
+=======
+ void I2C_LCD_init4l( unsigned char  addr,I2C_Type I2C_No);
+ void I2CNo_Init(I2C_Type I2C_No);
+#line 4 "C:/Users/GIT/Pic32mzCNC/Config.c"
+>>>>>>> e5fb2513a44ab744a2e9f52d68d0cb6b15e785c8
 void PinMode(){
 
  SYSKEY = 0xAA996655;
@@ -251,6 +272,8 @@ void PinMode(){
  TRISF1_bit = 0;
  TRISG0_bit = 0;
  TRISG1_bit = 0;
+ TRISG14_bit = 0;
+ TRISG15_bit = 0;
 
 
  TRISB0_bit = 1;
@@ -268,6 +291,7 @@ void PinMode(){
  PPS_Mapping_NoLock(_RPF1, _OUTPUT, _OC3);
  PPS_Mapping_NoLock(_RPD4, _OUTPUT, _OC5);
  PPS_Mapping_NoLock(_RPE3, _OUTPUT, _OC8);
+ PPS_Mapping_NoLock(_RPG9, _OUTPUT, _OC9);
  Lock_IOLOCK();
 
 
@@ -284,7 +308,7 @@ void PinMode(){
 
 
 
- InitTimer6();
+
  InitTimer7();
  InitTimer8();
 
@@ -375,6 +399,7 @@ unsigned long cp0;
  PRECONbits.PFMSECEN = 0;
  PRECONbits.PREFEN = 0b11;
  PRECONbits.PFMWS = 0b100;
+<<<<<<< HEAD
 
 
 
@@ -384,6 +409,9 @@ unsigned long cp0;
  CP0_SET(CP0_CONFIG,cp0);
 
 
+=======
+#line 166 "C:/Users/GIT/Pic32mzCNC/Config.c"
+>>>>>>> e5fb2513a44ab744a2e9f52d68d0cb6b15e785c8
  SYSKEY = 0x33333333;
 
 
@@ -396,30 +424,43 @@ unsigned long cp0;
 
 
 void OutPutPulseXYZ(){
+<<<<<<< HEAD
 #line 181 "C:/Users/Git/Pic32mzCNC/Config.c"
+=======
+#line 176 "C:/Users/GIT/Pic32mzCNC/Config.c"
+>>>>>>> e5fb2513a44ab744a2e9f52d68d0cb6b15e785c8
  OC3CON = 0x0000;
  OC5CON = 0x0000;
-
+ OC8CON = 0X0000;
 
  T2CON = 0x0000;
  T4CON = 0x0000;
-
+ T6CON = 0x0000;
 
  T2CON = 0x0060;
  T4CON = 0x0060;
+ T6CON = 0x0060;
 
 
  PR2 = 0xFFFF;
  PR4 = 0xFFFF;
+ PR6 = 0xFFFF;
 
 
  OC3CON = 0x0004;
  OC5CON = 0x0004;
+<<<<<<< HEAD
 #line 207 "C:/Users/Git/Pic32mzCNC/Config.c"
+=======
+ OC8CON = 0x0004;
+#line 205 "C:/Users/GIT/Pic32mzCNC/Config.c"
+>>>>>>> e5fb2513a44ab744a2e9f52d68d0cb6b15e785c8
  OC3R = 0x5;
  OC3RS = 0x234;
  OC5R = 0x5;
  OC5RS = 0x234;
+ OC8R = 0x5;
+ OC8RS = 0x234;
 
 
  OC3IP0_bit = 1;
@@ -438,9 +479,18 @@ void OutPutPulseXYZ(){
  OC5IF_bit = 0;
  OC5IE_bit = 1;
 
+ OC8IP0_bit = 1;
+ OC8IP1_bit = 1;
+ OC8IP2_bit = 0;
+ OC8IS0_bit = 1;
+ OC8IS1_bit = 0;
+ OC8IF_bit = 0;
+ OC8IE_bit = 1;
+
 
  T2CONSET = 0x8000;
  T4CONSET = 0x8000;
+ T6CONSET = 0x8000;
 
 
 
@@ -449,21 +499,19 @@ void OutPutPulseXYZ(){
 }
 
 
-void InitTimer6(){
- T6CON = 0x8000;
- T6IP0_bit = 0;
- T6IP1_bit = 0;
- T6IP2_bit = 1;
- T6IS0_bit = 1;
- T6IS1_bit = 0;
- T6IF_bit = 0;
- T6IE_bit = 0;
- PR6 = 500;
- TMR6 = 0;
+
+
+void InitTimer1(){
+ T1CON = 0x8000;
+ T1IP0_bit = 1;
+ T1IP1_bit = 1;
+ T1IP2_bit = 1;
+ T1IF_bit = 0;
+ T1IE_bit = 1;
+ PR1 = 100;
+ TMR1 = 0;
 }
-
-
-
+#line 279 "C:/Users/GIT/Pic32mzCNC/Config.c"
 void InitTimer7(){
  T7CON = 0x8000;
  T7IP0_bit = 0;
@@ -493,7 +541,11 @@ void InitTimer8(){
 
 void LcdI2CConfig(){
 
+<<<<<<< HEAD
 
+=======
+ I2CNo_Init(I2C4);
+>>>>>>> e5fb2513a44ab744a2e9f52d68d0cb6b15e785c8
  I2C4_Init_Advanced(50000, 100000);
  I2C_Set_Active(&I2C4_Start, &I2C4_Restart, &I2C4_Read, &I2C4_Write,
  &I2C4_Stop,&I2C4_Is_Idle);

@@ -36,7 +36,7 @@ extern sfr FLT_Step_PinDirY;
 //defines
 typedef unsigned short UInt8_t;
 // Decide how many axis you would like to run
-#define NoOfAxis 2
+#define NoOfAxis 3
 // Direction of stepper motor movement
 #define CW  0
 #define CCW 1
@@ -68,6 +68,13 @@ typedef unsigned short UInt8_t;
 #define DECEL 2
 #define RUN   3
 
+
+//Circle defines and consts
+#define  Pi         3.14159
+#define  rad2deg   (180.00/Pi)
+#define  deg2rad   (Pi/180.00)
+
+
 // Constants for accelleration
 
   //! Stop and Start toggle bit
@@ -83,14 +90,17 @@ typedef struct genVars{
   long  i;
   long  dx;
   long  dy;
+  long  dz;
   long  px;
   long  py;
+  long  pz;
+  long  psingle;
   long  over;
   long  acc;
   long  dec;
   int   dirx;
   int   diry;
-  
+  int   dirz;
 }sVars;
 extern sVars SV;
 
@@ -149,7 +159,35 @@ typedef struct Steps{
 }STP;
 extern STP STPS[NoOfAxis];
 
+
+//circular data
+typedef struct{
+float deg;
+float degreeDeg;
+float degreeRadians;
+float deg_A;
+float deg_B;
+float divisor;
+float newdeg_;
+float I;
+float J;
+float N;
+float radius;
+int   dir;
+int   quadrant_start;
+float xRad;
+float yRad;
+float xStart;
+float yStart;
+float xFin;
+float yFin;
+}Circle;
+extern Circle Circ;
+
+
+//enums
 enum xyz{X,Y,Z};
+enum axis_combination {xy,xz,yz};
 enum swt{FALSE,TRUE};
 
 //enum StepState{STOP,ACCEL,RUN,DECEL};
@@ -162,16 +200,31 @@ enum swt{FALSE,TRUE};
 void SetPinMode();
 void CycleStart();
 void CycleStop();
-void EnStepper();
+void EnStepperX();
+void EnStepperY();
+void EnStepperZ();
 void DisableStepper();
-void speed_cntr_Move(long mmSteps, long speed, int axix_No);
+void disableOCx();
+
+//Acceleration, speed and Circ calcs
+void speed_cntr_Move(long mmSteps, long speed, int axis_combo);
 void speed_cntr_Init_Timer1(void);
 static unsigned long sqrt_(unsigned long v);
 unsigned int min_(unsigned long x, unsigned long y);
-void Step(long newx,long newy);
-int Pulse(int axis_No);
 void CalcDly(int axis_No);
 void StepperConstants(long accel,long decel);
+
+//Move inline
+void DualAxisStep(long newx,long newy,int axis_combo);
+void SingleAxisStep(long newxyz,int axis_No);
+
+//Circle move axis
+void CalcRadius(Circle* cir);
+int QuadrantStart(float i,float j);
+void CircDir(Circle* cir);
+
+//Step control using Output compare module
+int Pulse(int axis_No);
 void toggleOCx(int axis_No);
 void AccDec(int axix_No);
 #endif

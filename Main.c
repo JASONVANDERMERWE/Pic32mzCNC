@@ -19,48 +19,6 @@ unsigned char LCD_01_ADDRESS = 0x4E;//7E; //PCF8574T
 unsigned int ii;
 unsigned long testOcr;
 static unsigned int a;
-void Timer6Interrupt() iv IVT_TIMER_6 ilevel 7 ics ICS_SRS {
-volatile int ii;
-
-   //Enter your code here
-  if(SV.Tog == 0){
-   for(ii = 0; ii < NoOfAxis;ii++){
-     STPS[ii].PLS_Step_     = 0;
-     if(ii > NoOfAxis)break;
-         if(ii == X)PLS_StepX   = 0;
-         if(ii == Y)PLS_StepY   = 0;
-     }
-  }
-   T6IE_bit      = 0;
-}
-//////////////////////////////////////////
-// TMR 7 interrupts at 1ms
-void Timer7Interrupt() iv IVT_TIMER_7 ilevel 4 ics ICS_SRS{
-  T7IF_bit  = 0;
-  //Enter your code here
-    TMR.mSec++;
-    if(TMR.mSec > 999){
-       LATA9_bit = !LATA9_bit;
-       TMR.mSec = 0;
-       TMR.Sec++;
-       if(TMR.Sec > 59){
-         TMR.Sec = 0;
-       }
-    }
-}
-//////////////////////////////////////////
-// TMR 8 interrupts
-void Timer8Interrupt() iv IVT_TIMER_8 ilevel 4 ics ICS_SRS {
-//Enter your code here
-//oneShot to start the steppers runnin
-  if(oneShotA){
-     CycleStart();
-  }else{
-     CycleStop();
-  }
-  T8IF_bit  = 0;
-}
-
 
 ////////////////////////////////////////
 //UART 2 interrupts
@@ -122,22 +80,7 @@ char ptrAdd[6];
 
 }
 
-//////////////////////////////////////////////////////////////
-//output compare 3 pin RF1 interrupt
-void StepX() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
 
-     STmr.compOCxRunning = 2;
-     TMR4 =  0xFFFF;
-     OC3IF_bit = 0;
-   //  OC3CON    =  0x8004; //restart the output compare module
-}
-void StepY() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
-
-     STmr.compOCxRunning = 1;
-     TMR2 =  0xFFFF;
-     OC5IF_bit = 0;
-    // OC5CON    =  0x8004; //restart the output compare module
-}
 /////////////////////////////////////////
 //main function
 void main() {
@@ -145,64 +88,107 @@ unsigned char j;
 
   PinMode();
   SetPinMode();
-  StepperConstants(4500,4500);
+  StepperConstants(8500,8500);
   EnableInterrupts();
   oneShotA = 0;
   I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
   while(1){
   
-         if((!RC3_bit)&&(!oneShotA)){
+         if((RB0_bit)&&(!oneShotA)){
 
                oneShotA     = 1;
               // T8IE_bit     = 1;
-               SV.px = 0;
-               SV.py = 0;
-               EnStepper();
-               a = 2;
+               EnStepperX();
+               EnStepperY();
+               EnStepperZ();
+               a = 0;
 
          }
          if(oneShotA){
+                LATA9_bit = 1;
                 switch(a){
                      case 0:
-                             STPS[X].mmToTravel = calcSteps(-25.25,8.06);
-                             speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
-                             STPS[Y].mmToTravel = calcSteps(125.25,8.06);
-                             speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
-                             T8IE_bit         = 1;
-                             Step(STPS[X].mmToTravel, STPS[Y].mmToTravel);
+                             STPS[Z].mmToTravel = calcSteps(-125.25,8.06);
+                             speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
+                             SingleAxisStep(STPS[Z].mmToTravel,Z);
                              a = 1;
                              SV.Tog = 1;
                           break;
                     case 1:
-                             SV.px = 0;
-                             SV.py = 0;
+                    
+                    
+                    
                              if(SV.Tog == 1)a=2;
                           break;
                     case 2:
-                             STPS[X].mmToTravel = calcSteps(151.25,8.06);
+                             STPS[X].mmToTravel = calcSteps(125.25,8.06);
                              speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
-                             STPS[Y].mmToTravel = calcSteps(-25.25,8.06);
-                             speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
-                             T8IE_bit         = 1;
-                             Step(STPS[X].mmToTravel, STPS[Y].mmToTravel);
+                             SingleAxisStep(STPS[X].mmToTravel,X);
                              a = 3;
                              SV.Tog = 1;
                           break;
                     case 3: 
-                             SV.px = 0;
-                             SV.py = 0;
+                             if(SV.Tog == 1) a = 4;
+                          break;
+                    case 4:
+                             STPS[Y].mmToTravel = calcSteps(202.00,8.06);
+                             speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+                             SingleAxisStep(STPS[Y].mmToTravel,Y);
+                             a = 5;
+                             SV.Tog = 1;
+                          break;
+                   case 5:
+                             if(SV.Tog == 1) a = 6;
+                          break;
+                   case 6:
+                             STPS[Y].mmToTravel = calcSteps(125.25,8.06);
+                             speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+                             STPS[Z].mmToTravel = calcSteps(-25.25,8.06);
+                             speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
+                             DualAxisStep(STPS[Y].mmToTravel, STPS[Z].mmToTravel,yz);
+                             a = 7;
+                             SV.Tog = 1;
+                          break;
+                   case 7:
+                             if(SV.Tog == 1) a = 8;
+                          break;
+                   case 8:
+                             STPS[X].mmToTravel = calcSteps(225.25,8.06);
+                             speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
+                             STPS[Y].mmToTravel = calcSteps(-25.25,8.06);
+                             speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+                             DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
+                             a = 9;
+                             SV.Tog = 1;
+                          break;
+                   case 9:
+                             if(SV.Tog == 1) a = 10;
+                          break;
+                   case 10:
+                             STPS[X].mmToTravel = calcSteps(125.25,8.06);
+                             speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
+                             STPS[Z].mmToTravel = calcSteps(-25.25,8.06);
+                             speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
+                             DualAxisStep(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
+                             a = 11;
+                             SV.Tog = 1;
+                          break;
+                   case 11:
                              if(SV.Tog == 1) a = 0;
                           break;
-                    default: a = 2;
+                    default: a = 0;
                           break;
                 }
          }
-         if((!RB0_bit)&&(Toggle))oneShotA = 0;
+         
+         if((!RC3_bit)&&(Toggle))
+            oneShotA = 0;
+            
          if(!oneShotA){
             DisableStepper();
          }
          
-         if(!RB0_bit){
+         if((!RC3_bit)&&(!Toggle)){
            oneShotB       = 0;
            oneShotA       = 0;
                  STPS[X].mmToTravel = calcSteps(151.25,8.06);
@@ -211,7 +197,7 @@ unsigned char j;
                  speed_cntr_Move(STPS[Y].mmToTravel, 2500,Y);
 
                //line 1
-               // Find out after how many Steps before we must start dmeceleration.
+               // Find out after how many Steps before we must start deceleration.
                sprintf(txt,"%d",STPS[0].accel_lim);
                I2C_LCD_Out(LCD_01_ADDRESS,1,1,txt);
                // Find step to start decleration.
@@ -240,15 +226,3 @@ unsigned char j;
 }
 
 
-/*if(OC3RS > 2000)OC3RS -= 100;
-     else{
-         OC3RS -= 1;
-         if(OC3RS < 350)OC3RS = 350;
-     }*/
-     
-
-/*if(OC6RS > 2000)OC6RS -= 100;
-     else{
-         OC6RS -= 1;
-         if(OC6RS < 350)OC6RS = 350;
-     }*/
