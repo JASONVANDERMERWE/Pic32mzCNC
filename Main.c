@@ -1,8 +1,5 @@
 #include "Config.h"
-#include "built_in.h"
-#include "I2C_LCD.h"
-#include "Stepper.h"
-#include "Steptodistance.h"
+
 
 char txt[] = "Start......";
 char rxBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0}  absolute 0xA0002000 ; //resides in flash ??
@@ -16,7 +13,7 @@ bit oneShotA; sfr;
 bit oneShotB; sfr;
 char uart_rd;
 struct Timer TMR;
-unsigned char LCD_01_ADDRESS = 0x4E; //PCF8574T
+unsigned char LCD_01_ADDRESS = 0x4E;//7E; //PCF8574T
 //////////////////////////////////////////
 // temp vars
 unsigned int ii;
@@ -151,7 +148,7 @@ unsigned char j;
   StepperConstants(4500,4500);
   EnableInterrupts();
   oneShotA = 0;
- // I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
+  I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
   while(1){
   
          if((!RC3_bit)&&(!oneShotA)){

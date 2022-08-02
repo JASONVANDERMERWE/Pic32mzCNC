@@ -1,6 +1,10 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include "built_in.h"
+#include "I2C_LCD.h"
+#include "Stepper.h"
+#include "Steptodistance.h"
 
 #define BUFFER_LENGTH 200
 ////////////////////////////////////////////////////

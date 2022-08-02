@@ -81,7 +81,7 @@ void EnStepper(){
 }
 
 void DisableStepper(){
-   EN_Stepx      = 1;
+   EN_StepX      = 1;
    EN_StepY      = 1;
 }
 
@@ -228,7 +228,7 @@ void Step(long newx,long newy){
   // Set direction from sign on step value.
   if(SV.dirx < 0)DIR_StepX = CCW;
   else DIR_StepX = CW;
-  if(SV.dirY < 0) DIR_StepY = CCW;
+  if(SV.diry < 0) DIR_StepY = CCW;
   else DIR_StepY = CW;
 
   SV.dx = abs(SV.dx);

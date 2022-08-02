@@ -1,46 +1,9 @@
 #line 1 "C:/Users/Git/Pic32mzCNC/Config.c"
 #line 1 "c:/users/git/pic32mzcnc/config.h"
-
-
-
-
-
-
-
-extern unsigned char LCD_01_ADDRESS;
-extern bit oneShotA; sfr;
-extern bit oneShotB; sfr;
-
-
-
-
-struct Timer{
-unsigned int uSec;
-unsigned int uMs;
-unsigned int uSSec;
-unsigned int OlduSSec;
-unsigned int mSec;
-unsigned short Sec;
-unsigned short OldSec;
-};
-extern struct Timer TMR;
-
-
-void PinMode();
-void UartConfig();
-void set_performance_mode();
-void Uart2InterruptSetup();
-void InitTimer6();
-void InitTimer7();
-void InitTimer8();
-void LcdI2CConfig();
-void OutPutPulseXYZ();
-void initDMA_global();
-void initDMA0();
-void initDMA1();
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
-#line 59 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 62 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
 typedef enum{
  _LCD_FIRST_ROW = 1,
  _LCD_SECOND_ROW,
@@ -73,7 +36,193 @@ extern Cmd_Type Cmd;
  void I2C_Lcd_Chr( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  out_char);
  void I2C_LCD_init( unsigned char  addr);
  void I2C_LCD_init4l( unsigned char  addr);
-#line 4 "C:/Users/Git/Pic32mzCNC/Config.c"
+ void I2C_Pins(char i2c_pins);
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
+
+
+
+
+
+
+
+
+extern sfr EN_StepX;
+extern sfr EN_Step_PinDirX;
+extern sfr RST_StepX;
+extern sfr RST_Step_PinDirX;
+extern sfr SLP_FLT_StepX;
+extern sfr SLP_FLT_Step_PinDirX;
+extern sfr PLS_StepX;
+extern sfr PLS_Step_PinDirX;
+extern sfr DIR_StepX;
+extern sfr DIR_Step_PinDirX;
+extern sfr FLT_StepX;
+extern sfr FLT_Step_PinDirX;
+
+extern sfr EN_StepY;
+extern sfr EN_Step_PinDirY;
+extern sfr RST_StepY;
+extern sfr RST_Step_PinDirY;
+extern sfr SLP_FLT_StepY;
+extern sfr SLP_FLT_Step_PinDirY;
+extern sfr PLS_StepY;
+extern sfr PLS_Step_PinDirY;
+extern sfr DIR_StepY;
+extern sfr DIR_Step_PinDirY;
+extern sfr FLT_StepY;
+extern sfr FLT_Step_PinDirY;
+
+
+
+typedef unsigned short UInt8_t;
+#line 74 "c:/users/git/pic32mzcnc/stepper.h"
+extern unsigned int Toggle;
+
+
+
+typedef struct genVars{
+ UInt8_t running: 1;
+ UInt8_t startPulses: 1;
+ int Tog;
+ int AxisNo;
+ long i;
+ long dx;
+ long dy;
+ long px;
+ long py;
+ long over;
+ long acc;
+ long dec;
+ int dirx;
+ int diry;
+
+}sVars;
+extern sVars SV;
+
+typedef struct STPT {
+
+ long uSec;
+
+ int axisTosample;
+
+ int howManyOCxRunning;
+
+ int compOCxRunning;
+}StepTmr;
+extern StepTmr STmr;
+
+typedef struct Steps{
+
+ signed long microSec;
+
+ unsigned short CheckStep: 1;
+
+ unsigned short PLS_Step_ : 1;
+
+ unsigned short StepBits: 1;
+
+ unsigned short stopAxis: 1;
+
+ unsigned char run_state ;
+
+ long step_delay;
+
+ long decel_start;
+
+ long decel_val;
+
+ long min_delay;
+
+ long accel_count;
+ long deccl_count;
+
+ long step_count;
+
+ long new_step_delay;
+
+ long last_accel_delay;
+
+ long accel_lim;
+
+ long max_step_lim;
+
+ long rest;
+
+ long StartUp_delay;
+
+ signed long mmToTravel;
+}STP;
+extern STP STPS[ 2 ];
+
+enum xyz{X,Y,Z};
+enum swt{FALSE,TRUE};
+
+
+
+
+
+
+
+
+void SetPinMode();
+void CycleStart();
+void CycleStop();
+void EnStepper();
+void DisableStepper();
+void speed_cntr_Move(long mmSteps, long speed, int axix_No);
+void speed_cntr_Init_Timer1(void);
+static unsigned long sqrt_(unsigned long v);
+unsigned int min_(unsigned long x, unsigned long y);
+void Step(long newx,long newy);
+int Pulse(int axis_No);
+void CalcDly(int axis_No);
+void StepperConstants(long accel,long decel);
+void toggleOCx(int axis_No);
+void AccDec(int axix_No);
+#line 1 "c:/users/git/pic32mzcnc/steptodistance.h"
+
+
+
+
+
+
+
+const float Dia;
+#line 20 "c:/users/git/pic32mzcnc/steptodistance.h"
+signed long calcSteps( double mmsToMove, double Dia);
+#line 12 "c:/users/git/pic32mzcnc/config.h"
+extern unsigned char LCD_01_ADDRESS;
+extern bit oneShotA; sfr;
+extern bit oneShotB; sfr;
+
+
+
+
+struct Timer{
+unsigned int uSec;
+unsigned int uMs;
+unsigned int uSSec;
+unsigned int OlduSSec;
+unsigned int mSec;
+unsigned short Sec;
+unsigned short OldSec;
+};
+extern struct Timer TMR;
+
+
+void PinMode();
+void UartConfig();
+void set_performance_mode();
+void Uart2InterruptSetup();
+void InitTimer6();
+void InitTimer7();
+void InitTimer8();
+void LcdI2CConfig();
+void OutPutPulseXYZ();
+void initDMA_global();
+void initDMA0();
+void initDMA1();
+#line 3 "C:/Users/Git/Pic32mzCNC/Config.c"
 void PinMode(){
 
  SYSKEY = 0xAA996655;
@@ -131,7 +280,7 @@ void PinMode(){
 
 
 
-
+ Uart2InterruptSetup();
 
 
 
@@ -178,6 +327,7 @@ void Uart2InterruptSetup(){
 }
 
 void set_performance_mode(){
+unsigned long cp0;
 
 
  DI();
@@ -225,13 +375,28 @@ void set_performance_mode(){
  PRECONbits.PFMSECEN = 0;
  PRECONbits.PREFEN = 0b11;
  PRECONbits.PFMWS = 0b100;
-#line 163 "C:/Users/Git/Pic32mzCNC/Config.c"
+
+
+
+ cp0 = CP0_GET(CP0_CONFIG);
+ cp0 &= ~0x07;
+ cp0 |= 0b011;
+ CP0_SET(CP0_CONFIG,cp0);
+
+
  SYSKEY = 0x33333333;
+
+
+ PREFEN0_bit = 1;
+ PREFEN1_bit = 1;
+ PFMWS0_bit = 0;
+ PFMWS1_bit = 1;
+ PFMWS2_bit = 0;
 }
 
 
 void OutPutPulseXYZ(){
-#line 173 "C:/Users/Git/Pic32mzCNC/Config.c"
+#line 181 "C:/Users/Git/Pic32mzCNC/Config.c"
  OC3CON = 0x0000;
  OC5CON = 0x0000;
 
@@ -250,7 +415,7 @@ void OutPutPulseXYZ(){
 
  OC3CON = 0x0004;
  OC5CON = 0x0004;
-#line 199 "C:/Users/Git/Pic32mzCNC/Config.c"
+#line 207 "C:/Users/Git/Pic32mzCNC/Config.c"
  OC3R = 0x5;
  OC3RS = 0x234;
  OC5R = 0x5;
@@ -328,11 +493,12 @@ void InitTimer8(){
 
 void LcdI2CConfig(){
 
+
  I2C4_Init_Advanced(50000, 100000);
  I2C_Set_Active(&I2C4_Start, &I2C4_Restart, &I2C4_Read, &I2C4_Write,
  &I2C4_Stop,&I2C4_Is_Idle);
  Delay_ms(100);
- I2C_LCD_init(LCD_01_ADDRESS);
+ I2C_LCD_init(LCD_01_ADDRESS,4);
  Delay_ms(100);
  I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_FIRST_ROW,1);
  I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_CURSOR_OFF,1);

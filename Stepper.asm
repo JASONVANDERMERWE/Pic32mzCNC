@@ -60,7 +60,7 @@ NOP
 ; end of _EnStepper
 _DisableStepper:
 ;Stepper.c,83 :: 		void DisableStepper(){
-;Stepper.c,84 :: 		EN_Stepx      = 1;
+;Stepper.c,84 :: 		EN_StepX      = 1;
 LUI	R2, BitMask(LATG0_bit+0)
 ORI	R2, R2, BitMask(LATG0_bit+0)
 _SX	
@@ -784,7 +784,7 @@ LUI	R2, BitMask(LATG1_bit+0)
 ORI	R2, R2, BitMask(LATG1_bit+0)
 _SX	
 L_Step34:
-;Stepper.c,231 :: 		if(SV.dirY < 0) DIR_StepY = CCW;
+;Stepper.c,231 :: 		if(SV.diry < 0) DIR_StepY = CCW;
 LH	R2, Offset(_SV+42)(GP)
 SLTI	R2, R2, 0
 BNE	R2, R0, L__Step119

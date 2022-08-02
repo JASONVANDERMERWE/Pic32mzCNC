@@ -11,6 +11,7 @@ main
 				UART_Calc_BRG
 			UART_Set_Active
 		set_performance_mode
+		Uart2InterruptSetup
 		InitTimer6
 		InitTimer7
 		InitTimer8
@@ -24,6 +25,20 @@ main
 			I2C_LCD_init
 				I2C_LCD_putcmd
 					I2C_PCF8574_Write
+						I2C2_Start
+							I2C2_Wait_For_Idle
+								I2C2_Is_Idle
+						I2C2_Write
+							I2C2_Wait_For_Idle
+						I2C2_Stop
+							I2C2_Wait_For_Idle
+						I2C3_Start
+							I2C3_Wait_For_Idle
+								I2C3_Is_Idle
+						I2C3_Write
+							I2C3_Wait_For_Idle
+						I2C3_Stop
+							I2C3_Wait_For_Idle
 						I2C4_Start
 							I2C4_Wait_For_Idle
 						I2C4_Write
@@ -40,6 +55,10 @@ main
 		OutPutPulseXYZ
 	SetPinMode
 	StepperConstants
+	I2C_LCD_Out
+		I2C_LCD_goto
+		I2C_LCD_putch
+			I2C_PCF8574_Write
 	EnStepper
 	calcSteps
 	speed_cntr_Move
@@ -56,10 +75,6 @@ main
 			isdigit
 			scale
 			fround
-	I2C_LCD_Out
-		I2C_LCD_goto
-		I2C_LCD_putch
-			I2C_PCF8574_Write
 	__CC2DW
 	__FillZeros
 StepX
@@ -70,6 +85,7 @@ Timer8Interrupt
 Timer7Interrupt
 DMA_CH1_ISR
 DMA_CH0_ISR
+	__CC2DW
 	strlen
 	memcpy
 Timer6Interrupt

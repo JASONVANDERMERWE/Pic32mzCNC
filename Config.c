@@ -1,6 +1,5 @@
 #include "Config.h"
-#include "built_in.h"
-#include "I2C_LCD.h"
+
 void PinMode(){
 
      SYSKEY = 0xAA996655;
@@ -58,7 +57,7 @@ void PinMode(){
 
 //////////////////////////////////////////////////
 //configure the interrupts
-  //  Uart2InterruptSetup();
+    Uart2InterruptSetup();
 
 //////////////////////////////////////////////////
 //TMR7&8 config
@@ -105,6 +104,7 @@ void Uart2InterruptSetup(){
 }
 
 void set_performance_mode(){
+unsigned long cp0;
 ////////////////////////////////////////////////
 //setup the clks performance for all periphials
     DI(); // Disable all interrupts
@@ -154,13 +154,21 @@ void set_performance_mode(){
     PRECONbits.PFMWS = 0b100; // PFM Access Time Defined in Terms of SYSCLK Wait States (Two wait states)
 
     // Set up caching
-   /*cp0 = _mfc0(16, 0);
+
+    cp0 = CP0_GET(CP0_CONFIG);
     cp0 &= ~0x07;
     cp0 |= 0b011; // K0 = Cacheable, non-coherent, write-back, write allocate
-    _mtc0(16, 0, cp0);*/
+    CP0_SET(CP0_CONFIG,cp0);
 
     // Lock Sequence
     SYSKEY = 0x33333333;
+
+    // SETTING UP PREFETCH MODULE
+    PREFEN0_bit = 1;
+    PREFEN1_bit = 1;
+    PFMWS0_bit = 0;
+    PFMWS1_bit = 1;
+    PFMWS2_bit = 0;
 }
 //////////////////////////////////////////////////////////////////
 //configure the output pulse mode OCx  use 16bit as 1.28us tick on tmrs
@@ -272,12 +280,13 @@ void InitTimer8(){
 }
 
 void LcdI2CConfig(){
-    // I2C4_Init(100000);//INIT I2C AT 100KHZ
+
+     //I2C4_Init(100000);//INIT I2C AT 100KHZ
      I2C4_Init_Advanced(50000, 100000);
      I2C_Set_Active(&I2C4_Start, &I2C4_Restart, &I2C4_Read, &I2C4_Write,
                     &I2C4_Stop,&I2C4_Is_Idle); // Sets the I2C4 module active
      Delay_ms(100);
-     I2C_LCD_init(LCD_01_ADDRESS);
+     I2C_LCD_init(LCD_01_ADDRESS,4);
      Delay_ms(100);
      I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_FIRST_ROW,1);
      I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_CURSOR_OFF,1); // Cursor off

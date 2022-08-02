@@ -220,7 +220,7 @@ void EnStepper(){
 }
 
 void DisableStepper(){
- EN_Stepx = 1;
+ EN_StepX = 1;
  EN_StepY = 1;
 }
 #line 104 "C:/Users/Git/Pic32mzCNC/Stepper.c"
@@ -349,7 +349,7 @@ void Step(long newx,long newy){
 
  if(SV.dirx < 0)DIR_StepX =  1 ;
  else DIR_StepX =  0 ;
- if(SV.dirY < 0) DIR_StepY =  1 ;
+ if(SV.diry < 0) DIR_StepY =  1 ;
  else DIR_StepY =  0 ;
 
  SV.dx = abs(SV.dx);

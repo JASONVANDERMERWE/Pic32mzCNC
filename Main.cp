@@ -1,46 +1,9 @@
 #line 1 "C:/Users/Git/Pic32mzCNC/Main.c"
 #line 1 "c:/users/git/pic32mzcnc/config.h"
-
-
-
-
-
-
-
-extern unsigned char LCD_01_ADDRESS;
-extern bit oneShotA; sfr;
-extern bit oneShotB; sfr;
-
-
-
-
-struct Timer{
-unsigned int uSec;
-unsigned int uMs;
-unsigned int uSSec;
-unsigned int OlduSSec;
-unsigned int mSec;
-unsigned short Sec;
-unsigned short OldSec;
-};
-extern struct Timer TMR;
-
-
-void PinMode();
-void UartConfig();
-void set_performance_mode();
-void Uart2InterruptSetup();
-void InitTimer6();
-void InitTimer7();
-void InitTimer8();
-void LcdI2CConfig();
-void OutPutPulseXYZ();
-void initDMA_global();
-void initDMA0();
-void initDMA1();
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
-#line 59 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 62 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
 typedef enum{
  _LCD_FIRST_ROW = 1,
  _LCD_SECOND_ROW,
@@ -73,6 +36,7 @@ extern Cmd_Type Cmd;
  void I2C_Lcd_Chr( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  out_char);
  void I2C_LCD_init( unsigned char  addr);
  void I2C_LCD_init4l( unsigned char  addr);
+ void I2C_Pins(char i2c_pins);
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
 
 
@@ -226,7 +190,39 @@ void AccDec(int axix_No);
 const float Dia;
 #line 20 "c:/users/git/pic32mzcnc/steptodistance.h"
 signed long calcSteps( double mmsToMove, double Dia);
-#line 7 "C:/Users/Git/Pic32mzCNC/Main.c"
+#line 12 "c:/users/git/pic32mzcnc/config.h"
+extern unsigned char LCD_01_ADDRESS;
+extern bit oneShotA; sfr;
+extern bit oneShotB; sfr;
+
+
+
+
+struct Timer{
+unsigned int uSec;
+unsigned int uMs;
+unsigned int uSSec;
+unsigned int OlduSSec;
+unsigned int mSec;
+unsigned short Sec;
+unsigned short OldSec;
+};
+extern struct Timer TMR;
+
+
+void PinMode();
+void UartConfig();
+void set_performance_mode();
+void Uart2InterruptSetup();
+void InitTimer6();
+void InitTimer7();
+void InitTimer8();
+void LcdI2CConfig();
+void OutPutPulseXYZ();
+void initDMA_global();
+void initDMA0();
+void initDMA1();
+#line 4 "C:/Users/Git/Pic32mzCNC/Main.c"
 char txt[] = "Start......";
 char rxBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0} absolute 0xA0002000 ;
 char txBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0} absolute 0xA0002200 ;
@@ -374,7 +370,7 @@ unsigned char j;
  StepperConstants(4500,4500);
  EnableInterrupts();
  oneShotA = 0;
-
+ I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
  while(1){
 
  if((!RC3_bit)&&(!oneShotA)){
