@@ -38576,6 +38576,7 @@ lbwpulock
 lbwpulock
 lbwpulock_bit
 lcd_01_address
+lcd_display
 lcdi2cconfig
 ldexp
 ldiv
@@ -62716,6 +62717,7 @@ tcs_t9con_bit
 tdoen
 tdoen
 tdoen_bit
+temp_move
 tep
 tep
 tep

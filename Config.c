@@ -63,13 +63,11 @@ void PinMode(){
     Uart2InterruptSetup();
 
 //////////////////////////////////////////////////
-//TMR7&8 config
-  // InitTimer6();
-     InitTimer7();
+//TMR8 config
      InitTimer8();
 /////////////////////////////////////////////////
 //setup i2c_lcd
-    LcdI2CConfig();
+  //  LcdI2CConfig();
 
 ////////////////////////////////////////////////
 //DMA CONFIG
@@ -185,18 +183,18 @@ void OutPutPulseXYZ(){
   OC5CON = 0x0000; // disable OC5 module |
   OC8CON = 0X0000; // disable OC8 module |_using tmr6
 //clear  Tmr2 & 4
-  T2CON  = 0x0000;  // disable Timer2
-  T4CON  = 0x0000;  // disable Timer4
-  T6CON  = 0x0000;  // disable Timer6
+  T2CON  = 0x0000;  // disable Timer2  OC5
+  T4CON  = 0x0000;  // disable Timer4  OC3
+  T6CON  = 0x0000;  // disable Timer6  OC8
 //setup  Tmr2,4&6 as 1:64 prescaler 16bit
   T2CON  = 0x0060;  //   a prescaler of 1:64 to get 1.28usec tick resolution
   T4CON  = 0x0060;  //   a prescaler of 1:64 to get 1.28usec tick resolution
   T6CON  = 0x0060;  //   a prescaler of 1:64 to get 1.28usec tick resolution
   
 // Set period (PR2 is 32-bits wide) and common to all OCx compares
-  PR2    = 0xFFFF;
-  PR4    = 0xFFFF;
-  PR6    = 0xFFFF;
+  PR2    = 0xFFFF;   //OC5
+  PR4    = 0xFFFF;   //OC3
+  PR6    = 0xFFFF;   //OC8
   
 //setup OC3_OC6 32bit but only using in 16bit mode
   OC3CON = 0x0004; // Conf OC3 module for dual single Pulse output 16bit tmr2

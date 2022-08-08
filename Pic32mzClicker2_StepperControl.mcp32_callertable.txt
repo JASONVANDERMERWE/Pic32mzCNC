@@ -1,4 +1,6 @@
 main
+	__CC2DW
+	__FillZeros
 	PinMode
 		Unlock_IOLOCK
 		PPS_Mapping_NoLock
@@ -12,52 +14,13 @@ main
 			UART_Set_Active
 		set_performance_mode
 		Uart2InterruptSetup
-		InitTimer7
 		InitTimer8
-		LcdI2CConfig
-			I2C4_Init_Advanced
-				SetI2C4Ptrs
-				Get_Fosc_kHz
-				I2C4_Wait_For_Idle
-					I2C4_Is_Idle
-			I2C_Set_Active
-			I2C_LCD_init
-				I2C_LCD_putcmd
-					I2C_PCF8574_Write
-						I2C2_Start
-							I2C2_Wait_For_Idle
-								I2C2_Is_Idle
-						I2C2_Write
-							I2C2_Wait_For_Idle
-						I2C2_Stop
-							I2C2_Wait_For_Idle
-						I2C3_Start
-							I2C3_Wait_For_Idle
-								I2C3_Is_Idle
-						I2C3_Write
-							I2C3_Wait_For_Idle
-						I2C3_Stop
-							I2C3_Wait_For_Idle
-						I2C4_Start
-							I2C4_Wait_For_Idle
-						I2C4_Write
-							I2C4_Wait_For_Idle
-						I2C4_Stop
-							I2C4_Wait_For_Idle
-			I2C_Lcd_Cmd
-				I2C_LCD_goto
-					I2C_LCD_putcmd
-				I2C_LCD_putcmd
 		initDMA_global
 		initDMA0
 		initDMA1
 		OutPutPulseXYZ
 	SetPinMode
 	StepperConstants
-	I2C_LCD_Out
-		I2C_LCD_goto
-		I2C_LCD_putch
-			I2C_PCF8574_Write
 	EnStepperX
 	EnStepperY
 	EnStepperZ
@@ -71,22 +34,12 @@ main
 			toggleOCx
 			Pulse
 				AccDec
-	DualAxisStep
-		abs
-		toggleOCx
-		Pulse
-		disableOCx
-	DisableStepper
-	sprintf
-		_doprntf
-			isdigit
-			scale
-			fround
-	__CC2DW
-	__FillZeros
 StepX
+	Step_Cycle
 StepY
+	Step_Cycle
 StepZ
+	Step_Cycle
 Timer8Interrupt
 	CycleStart
 	CycleStop

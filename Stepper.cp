@@ -200,16 +200,16 @@ unsigned int Toggle;
 
 
 
-sbit EN_StepX at LATG0_bit;
-sbit EN_Step_PinDirX at TRISG0_bit;
+sbit EN_StepX at LATG1_bit;
+sbit EN_Step_PinDirX at TRISG1_bit;
 
 
 
 
 sbit PLS_StepX at LATF1_bit;
 sbit PLS_Step_PinDirX at TRISF1_bit;
-sbit DIR_StepX at LATG1_bit;
-sbit DIR_Step_PinDirX at TRISG1_bit;
+sbit DIR_StepX at LATG0_bit;
+sbit DIR_Step_PinDirX at TRISG0_bit;
 
 sbit EN_StepY at LATF0_bit;
 sbit EN_Step_PinDirY at TRISF0_bit;
@@ -370,7 +370,7 @@ int ii;
  STPS[axis_No].rest = 0;
  STPS[axis_No].microSec = 0;
  STPS[axis_No].accel_count = 1;
-
+ STPS[axis_No].dist = 0;
  SV.Tog = 0;
 #line 211 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  SV.running = 1;
@@ -400,26 +400,25 @@ int ii;
 #line 240 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void SingleAxisStep(long newxyz,int axis_No){
 int dir;
-static long dist;
 #line 247 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  switch(axis_No){
- case 0:OC5IE_bit = 1;OC5CONbits.ON = 1;
- OC3IE_bit = 0;OC3CONbits.ON = 0;
+ case 0:OC3IE_bit = 1;OC3CONbits.ON = 1;
+ OC5IE_bit = 0;OC5CONbits.ON = 0;
  OC8IE_bit = 0;OC8CONbits.ON = 0;
  break;
- case 1:OC5IE_bit = 0;OC5CONbits.ON = 0;
- OC3IE_bit = 1;OC3CONbits.ON = 1;
+ case 1:OC3IE_bit = 0;OC3CONbits.ON = 0;
+ OC5IE_bit = 1;OC5CONbits.ON = 1;
  OC8IE_bit = 0;OC8CONbits.ON = 0;
  break;
- case 2:OC5IE_bit = 0;OC5CONbits.ON = 0;
- OC3IE_bit = 0;OC3CONbits.ON = 0;
+ case 2:OC3IE_bit = 0;OC3CONbits.ON = 0;
+ OC5IE_bit = 0;OC5CONbits.ON = 0;
  OC8IE_bit = 1;OC8CONbits.ON = 1;
  break;
  default: break;
  }
  SV.psingle = 0;
- dist = newxyz - SV.psingle;
- dist = abs(dist);
+ STPS[axis_No].dist = newxyz - SV.psingle;
+ STPS[axis_No].dist = abs(STPS[axis_No].dist);
 
  if(newxyz < 0)
  dir =  1 ;
@@ -438,8 +437,8 @@ static long dist;
  break;
  default: break;
  }
- if(SV.Tog == 0){
- STPS[axis_No].dist = 0;
+
+ STPS[axis_No].step_count = 0;
  Step_Cycle(axis_No);
 
 
@@ -448,7 +447,7 @@ static long dist;
 
 
 
- }
+
 
 
 }
@@ -634,14 +633,6 @@ void DualAxisStep(long newx,long newy,int axis_combo){
 
 
 
-
-void Step_Cycle(int axis_No){
-
- toggleOCx(axis_No);
- Pulse(axis_No);
-}
-
-
 void CalcRadius(Circle* cir){
  float xRad,yRad,X,Y,angA,angB;
 
@@ -711,32 +702,6 @@ static int quad = 1;
  }
 }
 
-
-
-void toggleOCx(int axis_No){
- switch(axis_No){
- case 0: OC5R = 0x5;
- OC5RS = STPS[X].step_delay & 0xFFFF;
- TMR2 = 0xFFFF;
- OC5CON = 0x8004;
- break;
- case 1: OC3R = 0x5;
- OC3RS = STPS[Y].step_delay & 0xFFFF;
- TMR4 = 0xFFFF;
- OC3CON = 0x8004;
- break;
- case 2: OC8R = 0x5;
- OC8RS = STPS[Z].step_delay & 0xFFFF;
- TMR6 = 0xFFFF;
- OC8CON = 0x8004;
- break;
- default:
- break;
- }
-
-}
-
-
 void disableOCx(){
  OC5IE_bit = 0;OC5CONbits.ON = 0;
  OC3IE_bit = 0;OC3CONbits.ON = 0;
@@ -759,7 +724,7 @@ int Pulse(int axis_No){
 
  case  1 :
  AccDec(axis_No);
-#line 617 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 583 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  if(STPS[axis_No].step_delay <= STPS[axis_No].min_delay){
 
  STPS[axis_No].step_delay = STPS[axis_No].min_delay;
@@ -806,7 +771,7 @@ void AccDec(int axis_No){
  STPS[axis_No].step_delay = STPS[axis_No].new_step_delay;
 
 }
-#line 673 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 639 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 static unsigned long sqrt_(unsigned long x){
 
  register unsigned long xr;
@@ -837,9 +802,8 @@ static unsigned long sqrt_(unsigned long x){
  return xr;
  }
 }
-#line 709 "C:/Users/Git/Pic32mzCNC/Stepper.c"
-unsigned int min_(unsigned int x, unsigned int y)
-{
+#line 675 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+unsigned int min_(unsigned int x, unsigned int y){
  if(x < y){
  return x;
  }
@@ -850,24 +814,73 @@ unsigned int min_(unsigned int x, unsigned int y)
 
 
 
+
+void Step_Cycle(int axis_No){
+ toggleOCx(axis_No);
+ Pulse(axis_No);
+}
+
+
+
 void StepX() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
- STPS[X].dist++;
- STmr.compOCxRunning = 1;
- TMR4 = 0xFFFF;
+
+
+ STPS[X].step_count++;
  OC3IF_bit = 0;
+ if(STPS[X].step_count >= STPS[X].dist){
+ OC3IE_bit = 0;
+ OC3CONbits.ON = 0;
+ }
+ else
+ Step_Cycle(X);
 
 }
 void StepY() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
- STPS[Y].dist++;
- STmr.compOCxRunning = 2;
- TMR2 = 0xFFFF;
+
+
+ STPS[Y].step_count++;
  OC5IF_bit = 0;
+ if(STPS[Y].step_count >= STPS[Y].dist){
+ OC5IE_bit = 0;OC5CONbits.ON = 0;
+ }
+ else
+ Step_Cycle(Y);
 
 }
 void StepZ() iv IVT_OUTPUT_COMPARE_8 ilevel 3 ics ICS_AUTO {
- STPS[Y].dist++;
- STmr.compOCxRunning = 3;
- TMR6 = 0xFFFF;
+
+
+ STPS[Z].step_count++;
  OC8IF_bit = 0;
+ if(STPS[Z].step_count >= STPS[Z].dist){
+ OC8IE_bit = 0;OC8CONbits.ON = 0;
+ }
+ else
+ Step_Cycle(Z);
+
+}
+
+
+
+void toggleOCx(int axis_No){
+ switch(axis_No){
+ case 0: OC3R = 0x5;
+ OC3RS = STPS[X].step_delay & 0xFFFF;
+ TMR4 = 0xFFFF;
+ OC3CON = 0x8004;
+ break;
+ case 1: OC5R = 0x5;
+ OC5RS = STPS[Y].step_delay & 0xFFFF;
+ TMR2 = 0xFFFF;
+ OC5CON = 0x8004;
+ break;
+ case 2: OC8R = 0x5;
+ OC8RS = STPS[Z].step_delay & 0xFFFF;
+ TMR6 = 0xFFFF;
+ OC8CON = 0x8004;
+ break;
+ default:
+ break;
+ }
 
 }

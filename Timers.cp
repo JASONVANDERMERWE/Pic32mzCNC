@@ -261,6 +261,8 @@ void OutPutPulseXYZ();
 void initDMA_global();
 void initDMA0();
 void initDMA1();
+void Temp_Move(int a);
+void LCD_Display();
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"

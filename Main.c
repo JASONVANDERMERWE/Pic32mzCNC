@@ -85,28 +85,41 @@ char ptrAdd[6];
 //main function
 void main() {
 unsigned char j;
-
+int xyz_ = 0;
   PinMode();
   SetPinMode();
   StepperConstants(8500,8500);
   EnableInterrupts();
   oneShotA = 0;
-  I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
+  //I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
   while(1){
-  
-         if((RB0_bit)&&(!oneShotA)){
 
-               oneShotA     = 1;
-              // T8IE_bit     = 1;
+         if(!RB0_bit){
+               LATE7_bit = 0;
+               Toggle            = 0;
+              // T8IE_bit        = 1;
                EnStepperX();
                EnStepperY();
                EnStepperZ();
                a = 0;
 
          }
-         if(oneShotA){
-                LATA9_bit = 1;
-                switch(a){
+
+         if((!RC3_bit)&&(!Toggle)){
+            Toggle = 1;
+            LATE7_bit = 1;
+            STPS[xyz_].mmToTravel = calcSteps(-125.25,8.06);
+            speed_cntr_Move(STPS[xyz_].mmToTravel, 20000,xyz_);
+            SingleAxisStep(STPS[xyz_].mmToTravel,xyz_);
+            xyz_++;
+            if(xyz_ > 2)xyz_ = 0;
+         }
+
+  }
+}
+
+void Temp_Move(int a){
+         switch(a){
                      case 0:
                              STPS[Z].mmToTravel = calcSteps(-125.25,8.06);
                              speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
@@ -115,9 +128,6 @@ unsigned char j;
                              SV.Tog = 1;
                           break;
                     case 1:
-                    
-                    
-                    
                              if(SV.Tog == 1)a=2;
                           break;
                     case 2:
@@ -127,7 +137,7 @@ unsigned char j;
                              a = 3;
                              SV.Tog = 1;
                           break;
-                    case 3: 
+                    case 3:
                              if(SV.Tog == 1) a = 4;
                           break;
                     case 4:
@@ -179,50 +189,37 @@ unsigned char j;
                     default: a = 0;
                           break;
                 }
-         }
-         
-         if((!RC3_bit)&&(Toggle))
-            oneShotA = 0;
-            
-         if(!oneShotA){
-            DisableStepper();
-         }
-         
-         if((!RC3_bit)&&(!Toggle)){
-           oneShotB       = 0;
-           oneShotA       = 0;
-                 STPS[X].mmToTravel = calcSteps(151.25,8.06);
-                 speed_cntr_Move(STPS[X].mmToTravel, 2500,X);
-                 STPS[Y].mmToTravel = calcSteps(-151.25,8.06);
-                 speed_cntr_Move(STPS[Y].mmToTravel, 2500,Y);
 
-               //line 1
-               // Find out after how many Steps before we must start deceleration.
-               sprintf(txt,"%d",STPS[0].accel_lim);
-               I2C_LCD_Out(LCD_01_ADDRESS,1,1,txt);
-               // Find step to start decleration.
-               sprintf(txt,"%d",STPS[0].decel_start);
-               I2C_LCD_Out(LCD_01_ADDRESS,1,11,txt);
-
-               //Line 2
-               // Set accelration/speed/deccelration  by  step delay .
-               sprintf(txt,"%d",STPS[0].step_delay);
-               I2C_LCD_Out(LCD_01_ADDRESS,2,1,txt);
-               // Set max speed limit, by calc min_delay to use in timer.
-               sprintf(txt,"%d",STPS[0].min_delay);
-               I2C_LCD_Out(LCD_01_ADDRESS,2,11,txt);
-
-               //Line 3
-               // Find out after how many steps does the speed hit the max speed limit.
-               sprintf(txt,"%d",STPS[0].max_step_lim);
-               I2C_LCD_Out(LCD_01_ADDRESS,3,1,txt);
-               // decelrate  value start
-               sprintf(txt,"%d",STPS[0].decel_val);
-               I2C_LCD_Out(LCD_01_ADDRESS,3,11,txt);
-               
-         }
-
-  }
 }
 
+void LCD_Display(){
 
+     STPS[X].mmToTravel = calcSteps(151.25,8.06);
+     speed_cntr_Move(STPS[X].mmToTravel, 2500,X);
+     STPS[Y].mmToTravel = calcSteps(-151.25,8.06);
+     speed_cntr_Move(STPS[Y].mmToTravel, 2500,Y);
+
+     //line 1
+     // Find out after how many Steps before we must start deceleration.
+     sprintf(txt,"%d",STPS[0].accel_lim);
+     I2C_LCD_Out(LCD_01_ADDRESS,1,1,txt);
+     // Find step to start decleration.
+     sprintf(txt,"%d",STPS[0].decel_start);
+     I2C_LCD_Out(LCD_01_ADDRESS,1,11,txt);
+
+     //Line 2
+     // Set accelration/speed/deccelration  by  step delay .
+     sprintf(txt,"%d",STPS[0].step_delay);
+     I2C_LCD_Out(LCD_01_ADDRESS,2,1,txt);
+     // Set max speed limit, by calc min_delay to use in timer.
+     sprintf(txt,"%d",STPS[0].min_delay);
+     I2C_LCD_Out(LCD_01_ADDRESS,2,11,txt);
+
+     //Line 3
+     // Find out after how many steps does the speed hit the max speed limit.
+     sprintf(txt,"%d",STPS[0].max_step_lim);
+     I2C_LCD_Out(LCD_01_ADDRESS,3,1,txt);
+     // decelrate  value start
+     sprintf(txt,"%d",STPS[0].decel_val);
+     I2C_LCD_Out(LCD_01_ADDRESS,3,11,txt);
+}

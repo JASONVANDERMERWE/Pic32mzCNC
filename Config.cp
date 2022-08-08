@@ -261,6 +261,8 @@ void OutPutPulseXYZ();
 void initDMA_global();
 void initDMA0();
 void initDMA1();
+void Temp_Move(int a);
+void LCD_Display();
 #line 3 "C:/Users/Git/Pic32mzCNC/Config.c"
 void PinMode(){
 
@@ -326,12 +328,10 @@ void PinMode(){
 
 
 
-
- InitTimer7();
  InitTimer8();
 
 
- LcdI2CConfig();
+
 
 
 
@@ -438,7 +438,7 @@ unsigned long cp0;
 
 
 void OutPutPulseXYZ(){
-#line 184 "C:/Users/Git/Pic32mzCNC/Config.c"
+#line 182 "C:/Users/Git/Pic32mzCNC/Config.c"
  OC3CON = 0x0000;
  OC5CON = 0x0000;
  OC8CON = 0X0000;
@@ -460,7 +460,7 @@ void OutPutPulseXYZ(){
  OC3CON = 0x0004;
  OC5CON = 0x0004;
  OC8CON = 0x0004;
-#line 213 "C:/Users/Git/Pic32mzCNC/Config.c"
+#line 211 "C:/Users/Git/Pic32mzCNC/Config.c"
  OC3R = 0x5;
  OC3RS = 0x234;
  OC5R = 0x5;
@@ -517,7 +517,7 @@ void InitTimer1(){
  PR1 = 100;
  TMR1 = 0;
 }
-#line 287 "C:/Users/Git/Pic32mzCNC/Config.c"
+#line 285 "C:/Users/Git/Pic32mzCNC/Config.c"
 void InitTimer7(){
  T7CON = 0x8000;
  T7IP0_bit = 0;

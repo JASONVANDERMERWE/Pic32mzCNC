@@ -17,16 +17,16 @@ unsigned int Toggle;
 //sfr bits
 //bit PLS_Step_;sfr;
 
-sbit EN_StepX at LATG0_bit;               //LATB13_bit;   LATD9_bit
-sbit EN_Step_PinDirX at TRISG0_bit;       //TRISB13_bit;  TRISD9
+sbit EN_StepX at LATG1_bit;               //LATB13_bit;   LATD9_bit
+sbit EN_Step_PinDirX at TRISG1_bit;       //TRISB13_bit;  TRISD9
 //sbit RST_StepX at LATA10_bit;
 //sbit RST_Step_PinDirX at TRISA10_bit;
 //sbit SLP_FLT_StepX at LATB15_bit;         //LATD9_bit;
 //sbit SLP_FLT_Step_PinDirX at TRISB15_bit; //TRISD9_bit;
 sbit PLS_StepX at LATF1_bit;                //LATB14_bit;
 sbit PLS_Step_PinDirX at TRISF1_bit;
-sbit DIR_StepX at LATG1_bit;               //LATB13_bit;
-sbit DIR_Step_PinDirX at TRISG1_bit;
+sbit DIR_StepX at LATG0_bit;               //LATB13_bit;
+sbit DIR_Step_PinDirX at TRISG0_bit;
 
 sbit EN_StepY at LATF0_bit;
 sbit EN_Step_PinDirY at TRISF0_bit;
@@ -203,9 +203,9 @@ int ii;
       STPS[axis_No].rest        = 0;
       STPS[axis_No].microSec    = 0;
       STPS[axis_No].accel_count = 1;
-
+      STPS[axis_No].dist        = 0;
       SV.Tog   = 0;
-/*SV.px    = 0;
+      /*SV.px    = 0;
       SV.py    = 0;
       SV.pz    = 0;*/
       SV.running = 1;
@@ -239,29 +239,29 @@ int ii;
 *****************************************************/
 void SingleAxisStep(long newxyz,int axis_No){
 int dir;
-static long dist;
+//static long dist;
        /*if(SV.psingle != newxyz)
           SV.psingle = newxyz;
        else*/
        
      switch(axis_No){
-       case 0:OC5IE_bit = 1;OC5CONbits.ON = 1;
-              OC3IE_bit = 0;OC3CONbits.ON = 0;
+       case 0:OC3IE_bit = 1;OC3CONbits.ON = 1;
+              OC5IE_bit = 0;OC5CONbits.ON = 0;
               OC8IE_bit = 0;OC8CONbits.ON = 0;
               break;
-       case 1:OC5IE_bit = 0;OC5CONbits.ON = 0;
-              OC3IE_bit = 1;OC3CONbits.ON = 1;
+       case 1:OC3IE_bit = 0;OC3CONbits.ON = 0;
+              OC5IE_bit = 1;OC5CONbits.ON = 1;
               OC8IE_bit = 0;OC8CONbits.ON = 0;
               break;
-       case 2:OC5IE_bit = 0;OC5CONbits.ON = 0;
-              OC3IE_bit = 0;OC3CONbits.ON = 0;
+       case 2:OC3IE_bit = 0;OC3CONbits.ON = 0;
+              OC5IE_bit = 0;OC5CONbits.ON = 0;
               OC8IE_bit = 1;OC8CONbits.ON = 1;
               break;
        default: break;
      }
      SV.psingle  = 0;
-     dist = newxyz - SV.psingle;
-     dist = abs(dist);
+     STPS[axis_No].dist = newxyz - SV.psingle;
+     STPS[axis_No].dist = abs(STPS[axis_No].dist);
      
      if(newxyz < 0)
            dir = CCW;
@@ -280,8 +280,8 @@ static long dist;
                 break;
            default: break;
          }
-         if(SV.Tog == 0){
-                 STPS[axis_No].dist = 0;
+        // if(SV.Tog == 0){
+                 STPS[axis_No].step_count = 0;
                  Step_Cycle(axis_No);
               //    for(STPS[axis_No].step_count = 0;STPS[axis_No].step_count < dist; ++STPS[axis_No].step_count){
               //      STmr.compOCxRunning = 0;
@@ -290,7 +290,7 @@ static long dist;
                     //wait for next time delay try modified to prevent blocking
               //     while(STmr.compOCxRunning == 0);
               //    }
-         }
+       //  }
                 
        // disableOCx();
 }
@@ -483,14 +483,6 @@ void DualAxisStep(long newx,long newy,int axis_combo){
 }
 
 
-
-/////////////////////////////////////////////////
-//Step cycle out of for loop
-void Step_Cycle(int axis_No){
-
-      toggleOCx(axis_No);
-      Pulse(axis_No);
-}
 /////////////////////////////////////////////////
 //Circular Interpolation
 void CalcRadius(Circle* cir){
@@ -561,32 +553,6 @@ static int quad = 1;
        
      }
 }
-
-//////////////////////////////////////////////////
-//toggle the OCxCON regs
-void toggleOCx(int axis_No){
-      switch(axis_No){
-        case 0: OC5R   = 0x5;
-                OC5RS  = STPS[X].step_delay & 0xFFFF;//0x234;
-                TMR2   =  0xFFFF;
-                OC5CON =  0x8004; //restart the output compare module
-             break;
-        case 1: OC3R   = 0x5;
-                OC3RS  = STPS[Y].step_delay & 0xFFFF;
-                TMR4   =  0xFFFF;
-                OC3CON =  0x8004; //restart the output compare module
-             break;
-        case 2: OC8R   = 0x5;
-                OC8RS  = STPS[Z].step_delay & 0xFFFF;
-                TMR6   =  0xFFFF;
-                OC8CON =  0x8004; //restart the output compare module
-             break;
-        default:
-             break;
-      }
-
-}
-
 
 void disableOCx(){
      OC5IE_bit = 0;OC5CONbits.ON = 0;
@@ -706,8 +672,7 @@ static unsigned long sqrt_(unsigned long x){
  *  Returns the smallest value.
  *  return  Min(x,y).
  */
-unsigned int min_(unsigned int x, unsigned int y)
-{
+unsigned int min_(unsigned int x, unsigned int y){
   if(x < y){
     return x;
   }
@@ -716,31 +681,78 @@ unsigned int min_(unsigned int x, unsigned int y)
   }
 }
 
+
+/////////////////////////////////////////////////
+//Step cycle out of for loop
+void Step_Cycle(int axis_No){
+      toggleOCx(axis_No);
+      Pulse(axis_No);
+}
+
 //////////////////////////////////////////////////////////////
 //output compare 3 pin RF1 interrupt
 void StepX() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
-     STPS[X].dist++;
-     STmr.compOCxRunning = 1;
-     TMR4 =  0xFFFF;
+    // STmr.compOCxRunning = 1;
+    // TMR4 =  0xFFFF;
+     STPS[X].step_count++;
      OC3IF_bit = 0;
+     if(STPS[X].step_count >= STPS[X].dist){
+         OC3IE_bit = 0;
+         OC3CONbits.ON = 0;
+     }
+     else
+        Step_Cycle(X);
    //  OC3CON    =  0x8004; //restart the output compare module
 }
 void StepY() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
-     STPS[Y].dist++;
-     STmr.compOCxRunning = 2;
-     TMR2 =  0xFFFF;
+    // STmr.compOCxRunning = 2;
+   //  TMR2 =  0xFFFF;
+     STPS[Y].step_count++;
      OC5IF_bit = 0;
+     if(STPS[Y].step_count >= STPS[Y].dist){
+         OC5IE_bit = 0;OC5CONbits.ON = 0;
+     }
+     else
+        Step_Cycle(Y);
     // OC5CON    =  0x8004; //restart the output compare module
 }
 void StepZ() iv IVT_OUTPUT_COMPARE_8 ilevel 3 ics ICS_AUTO {
-     STPS[Y].dist++;
-     STmr.compOCxRunning = 3;
-     TMR6 =  0xFFFF;
+    // STmr.compOCxRunning = 3;
+    // TMR6 =  0xFFFF;
+     STPS[Z].step_count++;
      OC8IF_bit = 0;
+     if(STPS[Z].step_count >= STPS[Z].dist){
+         OC8IE_bit = 0;OC8CONbits.ON = 0;
+     }
+     else
+       Step_Cycle(Z);
     // OC8CON    =  0x8004; //restart the output compare module
 }
 
+//////////////////////////////////////////////////
+//toggle the OCxCON regs
+void toggleOCx(int axis_No){
+      switch(axis_No){
+        case 0: OC3R   = 0x5;
+                OC3RS  = STPS[X].step_delay & 0xFFFF;//0x234;
+                TMR4   =  0xFFFF;
+                OC3CON =  0x8004; //restart the output compare module
+             break;
+        case 1: OC5R   = 0x5;
+                OC5RS  = STPS[Y].step_delay & 0xFFFF;
+                TMR2   =  0xFFFF;
+                OC5CON =  0x8004; //restart the output compare module
+             break;
+        case 2: OC8R   = 0x5;
+                OC8RS  = STPS[Z].step_delay & 0xFFFF;
+                TMR6   =  0xFFFF;
+                OC8CON =  0x8004; //restart the output compare module
+             break;
+        default:
+             break;
+      }
 
+}
 
 
 

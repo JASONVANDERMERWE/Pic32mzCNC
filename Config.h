@@ -40,4 +40,6 @@ void OutPutPulseXYZ(); // setup output pulse OC3
 void initDMA_global();
 void  initDMA0();
 void initDMA1();
+void Temp_Move(int a);
+void LCD_Display();
 #endif

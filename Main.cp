@@ -261,6 +261,8 @@ void OutPutPulseXYZ();
 void initDMA_global();
 void initDMA0();
 void initDMA1();
+void Temp_Move(int a);
+void LCD_Display();
 #line 4 "C:/Users/Git/Pic32mzCNC/Main.c"
 char txt[] = "Start......";
 char rxBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0} absolute 0xA0002000 ;
@@ -346,18 +348,18 @@ char ptrAdd[6];
 
 void main() {
 unsigned char j;
-
+int xyz_ = 0;
  PinMode();
  SetPinMode();
  StepperConstants(8500,8500);
  EnableInterrupts();
  oneShotA = 0;
- I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
+
  while(1){
 
- if((RB0_bit)&&(!oneShotA)){
-
- oneShotA = 1;
+ if(!RB0_bit){
+ LATE7_bit = 0;
+ Toggle = 0;
 
  EnStepperX();
  EnStepperY();
@@ -365,8 +367,21 @@ unsigned char j;
  a = 0;
 
  }
- if(oneShotA){
- LATA9_bit = 1;
+
+ if((!RC3_bit)&&(!Toggle)){
+ Toggle = 1;
+ LATE7_bit = 1;
+ STPS[xyz_].mmToTravel = calcSteps(-125.25,8.06);
+ speed_cntr_Move(STPS[xyz_].mmToTravel, 20000,xyz_);
+ SingleAxisStep(STPS[xyz_].mmToTravel,xyz_);
+ xyz_++;
+ if(xyz_ > 2)xyz_ = 0;
+ }
+
+ }
+}
+
+void Temp_Move(int a){
  switch(a){
  case 0:
  STPS[Z].mmToTravel = calcSteps(-125.25,8.06);
@@ -376,9 +391,6 @@ unsigned char j;
  SV.Tog = 1;
  break;
  case 1:
-
-
-
  if(SV.Tog == 1)a=2;
  break;
  case 2:
@@ -440,18 +452,11 @@ unsigned char j;
  default: a = 0;
  break;
  }
- }
 
- if((!RC3_bit)&&(Toggle))
- oneShotA = 0;
+}
 
- if(!oneShotA){
- DisableStepper();
- }
+void LCD_Display(){
 
- if((!RC3_bit)&&(!Toggle)){
- oneShotB = 0;
- oneShotA = 0;
  STPS[X].mmToTravel = calcSteps(151.25,8.06);
  speed_cntr_Move(STPS[X].mmToTravel, 2500,X);
  STPS[Y].mmToTravel = calcSteps(-151.25,8.06);
@@ -480,8 +485,4 @@ unsigned char j;
 
  sprintf(txt,"%d",STPS[0].decel_val);
  I2C_LCD_Out(LCD_01_ADDRESS,3,11,txt);
-
- }
-
- }
 }
