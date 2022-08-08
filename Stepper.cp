@@ -403,15 +403,15 @@ int dir;
 #line 247 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  switch(axis_No){
  case 0:OC3IE_bit = 1;OC3CONbits.ON = 1;
- OC5IE_bit = 0;OC5CONbits.ON = 0;
- OC8IE_bit = 0;OC8CONbits.ON = 0;
+
+
  break;
- case 1:OC3IE_bit = 0;OC3CONbits.ON = 0;
+ case 1:
  OC5IE_bit = 1;OC5CONbits.ON = 1;
- OC8IE_bit = 0;OC8CONbits.ON = 0;
+
  break;
- case 2:OC3IE_bit = 0;OC3CONbits.ON = 0;
- OC5IE_bit = 0;OC5CONbits.ON = 0;
+ case 2:
+
  OC8IE_bit = 1;OC8CONbits.ON = 1;
  break;
  default: break;
@@ -439,16 +439,8 @@ int dir;
  }
 
  STPS[axis_No].step_count = 0;
+
  Step_Cycle(axis_No);
-
-
-
-
-
-
-
-
-
 
 }
 
@@ -461,7 +453,7 @@ void DualAxisStep(long newx,long newy,int axis_combo){
  SV.px = 0;
  SV.py = 0;
  SV.pz = 0;
-#line 311 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 303 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  switch(axis_combo){
  case xy:
  OC5IE_bit = 1;OC5CONbits.ON = 1;
@@ -627,7 +619,7 @@ void DualAxisStep(long newx,long newy,int axis_combo){
 
 
  disableOCx();
-#line 483 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 475 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 }
 
 
@@ -724,7 +716,7 @@ int Pulse(int axis_No){
 
  case  1 :
  AccDec(axis_No);
-#line 583 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 575 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  if(STPS[axis_No].step_delay <= STPS[axis_No].min_delay){
 
  STPS[axis_No].step_delay = STPS[axis_No].min_delay;
@@ -771,7 +763,7 @@ void AccDec(int axis_No){
  STPS[axis_No].step_delay = STPS[axis_No].new_step_delay;
 
 }
-#line 639 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 631 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 static unsigned long sqrt_(unsigned long x){
 
  register unsigned long xr;
@@ -802,7 +794,7 @@ static unsigned long sqrt_(unsigned long x){
  return xr;
  }
 }
-#line 675 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 667 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 unsigned int min_(unsigned int x, unsigned int y){
  if(x < y){
  return x;

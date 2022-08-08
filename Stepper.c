@@ -246,15 +246,15 @@ int dir;
        
      switch(axis_No){
        case 0:OC3IE_bit = 1;OC3CONbits.ON = 1;
-              OC5IE_bit = 0;OC5CONbits.ON = 0;
-              OC8IE_bit = 0;OC8CONbits.ON = 0;
+             // OC5IE_bit = 0;OC5CONbits.ON = 0;
+             // OC8IE_bit = 0;OC8CONbits.ON = 0;
               break;
-       case 1:OC3IE_bit = 0;OC3CONbits.ON = 0;
+       case 1://OC3IE_bit = 0;OC3CONbits.ON = 0;
               OC5IE_bit = 1;OC5CONbits.ON = 1;
-              OC8IE_bit = 0;OC8CONbits.ON = 0;
+             // OC8IE_bit = 0;OC8CONbits.ON = 0;
               break;
-       case 2:OC3IE_bit = 0;OC3CONbits.ON = 0;
-              OC5IE_bit = 0;OC5CONbits.ON = 0;
+       case 2://OC3IE_bit = 0;OC3CONbits.ON = 0;
+              //OC5IE_bit = 0;OC5CONbits.ON = 0;
               OC8IE_bit = 1;OC8CONbits.ON = 1;
               break;
        default: break;
@@ -280,19 +280,11 @@ int dir;
                 break;
            default: break;
          }
-        // if(SV.Tog == 0){
-                 STPS[axis_No].step_count = 0;
-                 Step_Cycle(axis_No);
-              //    for(STPS[axis_No].step_count = 0;STPS[axis_No].step_count < dist; ++STPS[axis_No].step_count){
-              //      STmr.compOCxRunning = 0;
-              //      toggleOCx(axis_No);
-              //      Pulse(axis_No);
-                    //wait for next time delay try modified to prevent blocking
-              //     while(STmr.compOCxRunning == 0);
-              //    }
-       //  }
-                
-       // disableOCx();
+
+          STPS[axis_No].step_count = 0;
+          //Start output compare module
+          Step_Cycle(axis_No);
+
 }
 
 void DualAxisStep(long newx,long newy,int axis_combo){
