@@ -135,6 +135,8 @@ typedef struct Steps{
 
  long step_count;
 
+ long dist;
+
  long new_step_delay;
 
  long last_accel_delay;
@@ -218,7 +220,8 @@ void CircDir(Circle* cir);
 
 int Pulse(int axis_No);
 void toggleOCx(int axis_No);
-void AccDec(int axix_No);
+void AccDec(int axis_No);
+void Step_Cycle(int axis_No);
 #line 1 "c:/users/git/pic32mzcnc/steptodistance.h"
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"

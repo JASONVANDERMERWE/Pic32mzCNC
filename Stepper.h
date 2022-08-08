@@ -146,6 +146,8 @@ typedef struct Steps{
    long deccl_count;
   //! Counter used when accelerateing/decelerateing to calculate step_delay.
    long step_count;
+  //! Distance calculated to travel
+   long dist;
   //! Counter used when accelerateing/decelerateing to calculate step_delay.
    long new_step_delay;
   //! Counter used when accelerateing/decelerateing to calculate step_delay.
@@ -230,5 +232,6 @@ void CircDir(Circle* cir);
 //Step control using Output compare module
 int Pulse(int axis_No);
 void toggleOCx(int axis_No);
-void AccDec(int axix_No);
+void AccDec(int axis_No);
+void Step_Cycle(int axis_No);
 #endif

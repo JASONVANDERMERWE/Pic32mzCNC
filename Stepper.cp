@@ -97,6 +97,8 @@ typedef struct Steps{
 
  long step_count;
 
+ long dist;
+
  long new_step_delay;
 
  long last_accel_delay;
@@ -180,7 +182,8 @@ void CircDir(Circle* cir);
 
 int Pulse(int axis_No);
 void toggleOCx(int axis_No);
-void AccDec(int axix_No);
+void AccDec(int axis_No);
+void Step_Cycle(int axis_No);
 #line 5 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 unsigned char txt1[] = "       ";
 unsigned char AxisNo;
@@ -436,16 +439,18 @@ static long dist;
  default: break;
  }
  if(SV.Tog == 0){
- for(STPS[axis_No].step_count = 0;STPS[axis_No].step_count < dist; ++STPS[axis_No].step_count){
- STmr.compOCxRunning = 0;
- toggleOCx(axis_No);
- Pulse(axis_No);
+ STPS[axis_No].dist = 0;
+ Step_Cycle(axis_No);
 
- while(STmr.compOCxRunning == 0);
- }
+
+
+
+
+
+
  }
 
- disableOCx();
+
 }
 
 void DualAxisStep(long newx,long newy,int axis_combo){
@@ -457,7 +462,7 @@ void DualAxisStep(long newx,long newy,int axis_combo){
  SV.px = 0;
  SV.py = 0;
  SV.pz = 0;
-#line 309 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 311 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  switch(axis_combo){
  case xy:
  OC5IE_bit = 1;OC5CONbits.ON = 1;
@@ -623,9 +628,18 @@ void DualAxisStep(long newx,long newy,int axis_combo){
 
 
  disableOCx();
-#line 481 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 483 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 }
 
+
+
+
+
+void Step_Cycle(int axis_No){
+
+ toggleOCx(axis_No);
+ Pulse(axis_No);
+}
 
 
 void CalcRadius(Circle* cir){
@@ -745,7 +759,7 @@ int Pulse(int axis_No){
 
  case  1 :
  AccDec(axis_No);
-#line 606 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 617 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  if(STPS[axis_No].step_delay <= STPS[axis_No].min_delay){
 
  STPS[axis_No].step_delay = STPS[axis_No].min_delay;
@@ -792,7 +806,7 @@ void AccDec(int axis_No){
  STPS[axis_No].step_delay = STPS[axis_No].new_step_delay;
 
 }
-#line 662 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 673 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 static unsigned long sqrt_(unsigned long x){
 
  register unsigned long xr;
@@ -823,7 +837,7 @@ static unsigned long sqrt_(unsigned long x){
  return xr;
  }
 }
-#line 698 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 709 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 unsigned int min_(unsigned int x, unsigned int y)
 {
  if(x < y){
@@ -837,21 +851,21 @@ unsigned int min_(unsigned int x, unsigned int y)
 
 
 void StepX() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
-
+ STPS[X].dist++;
  STmr.compOCxRunning = 1;
  TMR4 = 0xFFFF;
  OC3IF_bit = 0;
 
 }
 void StepY() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
-
+ STPS[Y].dist++;
  STmr.compOCxRunning = 2;
  TMR2 = 0xFFFF;
  OC5IF_bit = 0;
 
 }
 void StepZ() iv IVT_OUTPUT_COMPARE_8 ilevel 3 ics ICS_AUTO {
-
+ STPS[Y].dist++;
  STmr.compOCxRunning = 3;
  TMR6 = 0xFFFF;
  OC8IF_bit = 0;

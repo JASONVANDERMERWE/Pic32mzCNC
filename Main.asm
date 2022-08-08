@@ -310,7 +310,7 @@ MTC1	R3, S13
 MTC1	R2, S12
 JAL	_calcSteps+0
 NOP	
-SW	R2, Offset(_STPS+188)(GP)
+SW	R2, Offset(_STPS+200)(GP)
 ;Main.c,112 :: 		speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
 ORI	R27, R0, 2
 ORI	R26, R0, 25000
@@ -319,7 +319,7 @@ JAL	_speed_cntr_Move+0
 NOP	
 ;Main.c,113 :: 		SingleAxisStep(STPS[Z].mmToTravel,Z);
 ORI	R26, R0, 2
-LW	R25, Offset(_STPS+188)(GP)
+LW	R25, Offset(_STPS+200)(GP)
 JAL	_SingleAxisStep+0
 NOP	
 ;Main.c,114 :: 		a = 1;
@@ -358,7 +358,7 @@ MTC1	R3, S13
 MTC1	R2, S12
 JAL	_calcSteps+0
 NOP	
-SW	R2, Offset(_STPS+60)(GP)
+SW	R2, Offset(_STPS+64)(GP)
 ;Main.c,125 :: 		speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
 MOVZ	R27, R0, R0
 ORI	R26, R0, 25000
@@ -367,7 +367,7 @@ JAL	_speed_cntr_Move+0
 NOP	
 ;Main.c,126 :: 		SingleAxisStep(STPS[X].mmToTravel,X);
 MOVZ	R26, R0, R0
-LW	R25, Offset(_STPS+60)(GP)
+LW	R25, Offset(_STPS+64)(GP)
 JAL	_SingleAxisStep+0
 NOP	
 ;Main.c,127 :: 		a = 3;
@@ -406,7 +406,7 @@ MTC1	R3, S13
 MTC1	R2, S12
 JAL	_calcSteps+0
 NOP	
-SW	R2, Offset(_STPS+124)(GP)
+SW	R2, Offset(_STPS+132)(GP)
 ;Main.c,135 :: 		speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
 ORI	R27, R0, 1
 ORI	R26, R0, 25000
@@ -415,7 +415,7 @@ JAL	_speed_cntr_Move+0
 NOP	
 ;Main.c,136 :: 		SingleAxisStep(STPS[Y].mmToTravel,Y);
 ORI	R26, R0, 1
-LW	R25, Offset(_STPS+124)(GP)
+LW	R25, Offset(_STPS+132)(GP)
 JAL	_SingleAxisStep+0
 NOP	
 ;Main.c,137 :: 		a = 5;
@@ -454,7 +454,7 @@ MTC1	R3, S13
 MTC1	R2, S12
 JAL	_calcSteps+0
 NOP	
-SW	R2, Offset(_STPS+124)(GP)
+SW	R2, Offset(_STPS+132)(GP)
 ;Main.c,145 :: 		speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
 ORI	R27, R0, 1
 ORI	R26, R0, 25000
@@ -470,7 +470,7 @@ MTC1	R3, S13
 MTC1	R2, S12
 JAL	_calcSteps+0
 NOP	
-SW	R2, Offset(_STPS+188)(GP)
+SW	R2, Offset(_STPS+200)(GP)
 ;Main.c,147 :: 		speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
 ORI	R27, R0, 2
 ORI	R26, R0, 25000
@@ -479,8 +479,8 @@ JAL	_speed_cntr_Move+0
 NOP	
 ;Main.c,148 :: 		DualAxisStep(STPS[Y].mmToTravel, STPS[Z].mmToTravel,yz);
 ORI	R27, R0, 2
-LW	R26, Offset(_STPS+188)(GP)
-LW	R25, Offset(_STPS+124)(GP)
+LW	R26, Offset(_STPS+200)(GP)
+LW	R25, Offset(_STPS+132)(GP)
 JAL	_DualAxisStep+0
 NOP	
 ;Main.c,149 :: 		a = 7;
@@ -519,7 +519,7 @@ MTC1	R3, S13
 MTC1	R2, S12
 JAL	_calcSteps+0
 NOP	
-SW	R2, Offset(_STPS+60)(GP)
+SW	R2, Offset(_STPS+64)(GP)
 ;Main.c,157 :: 		speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
 MOVZ	R27, R0, R0
 ORI	R26, R0, 25000
@@ -535,7 +535,7 @@ MTC1	R3, S13
 MTC1	R2, S12
 JAL	_calcSteps+0
 NOP	
-SW	R2, Offset(_STPS+124)(GP)
+SW	R2, Offset(_STPS+132)(GP)
 ;Main.c,159 :: 		speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
 ORI	R27, R0, 1
 ORI	R26, R0, 25000
@@ -544,8 +544,8 @@ JAL	_speed_cntr_Move+0
 NOP	
 ;Main.c,160 :: 		DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
 MOVZ	R27, R0, R0
-LW	R26, Offset(_STPS+124)(GP)
-LW	R25, Offset(_STPS+60)(GP)
+LW	R26, Offset(_STPS+132)(GP)
+LW	R25, Offset(_STPS+64)(GP)
 JAL	_DualAxisStep+0
 NOP	
 ;Main.c,161 :: 		a = 9;
@@ -584,7 +584,7 @@ MTC1	R3, S13
 MTC1	R2, S12
 JAL	_calcSteps+0
 NOP	
-SW	R2, Offset(_STPS+60)(GP)
+SW	R2, Offset(_STPS+64)(GP)
 ;Main.c,169 :: 		speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
 MOVZ	R27, R0, R0
 ORI	R26, R0, 25000
@@ -600,7 +600,7 @@ MTC1	R3, S13
 MTC1	R2, S12
 JAL	_calcSteps+0
 NOP	
-SW	R2, Offset(_STPS+188)(GP)
+SW	R2, Offset(_STPS+200)(GP)
 ;Main.c,171 :: 		speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
 ORI	R27, R0, 2
 ORI	R26, R0, 25000
@@ -609,8 +609,8 @@ JAL	_speed_cntr_Move+0
 NOP	
 ;Main.c,172 :: 		DualAxisStep(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
 ORI	R27, R0, 1
-LW	R26, Offset(_STPS+188)(GP)
-LW	R25, Offset(_STPS+60)(GP)
+LW	R26, Offset(_STPS+200)(GP)
+LW	R25, Offset(_STPS+64)(GP)
 JAL	_DualAxisStep+0
 NOP	
 ;Main.c,173 :: 		a = 11;
@@ -800,7 +800,7 @@ MTC1	R3, S13
 MTC1	R2, S12
 JAL	_calcSteps+0
 NOP	
-SW	R2, Offset(_STPS+60)(GP)
+SW	R2, Offset(_STPS+64)(GP)
 ;Main.c,195 :: 		speed_cntr_Move(STPS[X].mmToTravel, 2500,X);
 MOVZ	R27, R0, R0
 ORI	R26, R0, 2500
@@ -816,7 +816,7 @@ MTC1	R3, S13
 MTC1	R2, S12
 JAL	_calcSteps+0
 NOP	
-SW	R2, Offset(_STPS+124)(GP)
+SW	R2, Offset(_STPS+132)(GP)
 ;Main.c,197 :: 		speed_cntr_Move(STPS[Y].mmToTravel, 2500,Y);
 ORI	R27, R0, 1
 ORI	R26, R0, 2500
@@ -824,7 +824,7 @@ MOVZ	R25, R2, R0
 JAL	_speed_cntr_Move+0
 NOP	
 ;Main.c,201 :: 		sprintf(txt,"%d",STPS[0].accel_lim);
-LW	R2, Offset(_STPS+44)(GP)
+LW	R2, Offset(_STPS+48)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
 LUI	R2, hi_addr(?lstr_2_Main+0)
@@ -908,7 +908,7 @@ LBU	R25, Offset(_LCD_01_ADDRESS+0)(GP)
 JAL	_I2C_LCD_Out+0
 NOP	
 ;Main.c,217 :: 		sprintf(txt,"%d",STPS[0].max_step_lim);
-LW	R2, Offset(_STPS+48)(GP)
+LW	R2, Offset(_STPS+52)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
 LUI	R2, hi_addr(?lstr_6_Main+0)

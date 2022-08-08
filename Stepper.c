@@ -280,17 +280,19 @@ static long dist;
                 break;
            default: break;
          }
-                if(SV.Tog == 0){
-                  for(STPS[axis_No].step_count = 0;STPS[axis_No].step_count < dist; ++STPS[axis_No].step_count){
-                    STmr.compOCxRunning = 0;
-                    toggleOCx(axis_No);
-                    Pulse(axis_No);
+         if(SV.Tog == 0){
+                 STPS[axis_No].dist = 0;
+                 Step_Cycle(axis_No);
+              //    for(STPS[axis_No].step_count = 0;STPS[axis_No].step_count < dist; ++STPS[axis_No].step_count){
+              //      STmr.compOCxRunning = 0;
+              //      toggleOCx(axis_No);
+              //      Pulse(axis_No);
                     //wait for next time delay try modified to prevent blocking
-                    while(STmr.compOCxRunning == 0);
-                  }
-                }
+              //     while(STmr.compOCxRunning == 0);
+              //    }
+         }
                 
-        disableOCx();
+       // disableOCx();
 }
 
 void DualAxisStep(long newx,long newy,int axis_combo){
@@ -480,6 +482,15 @@ void DualAxisStep(long newx,long newy,int axis_combo){
     SV.py += SV.dy * SV.diry;*/
 }
 
+
+
+/////////////////////////////////////////////////
+//Step cycle out of for loop
+void Step_Cycle(int axis_No){
+
+      toggleOCx(axis_No);
+      Pulse(axis_No);
+}
 /////////////////////////////////////////////////
 //Circular Interpolation
 void CalcRadius(Circle* cir){
@@ -708,21 +719,21 @@ unsigned int min_(unsigned int x, unsigned int y)
 //////////////////////////////////////////////////////////////
 //output compare 3 pin RF1 interrupt
 void StepX() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
-
+     STPS[X].dist++;
      STmr.compOCxRunning = 1;
      TMR4 =  0xFFFF;
      OC3IF_bit = 0;
    //  OC3CON    =  0x8004; //restart the output compare module
 }
 void StepY() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
-
+     STPS[Y].dist++;
      STmr.compOCxRunning = 2;
      TMR2 =  0xFFFF;
      OC5IF_bit = 0;
     // OC5CON    =  0x8004; //restart the output compare module
 }
 void StepZ() iv IVT_OUTPUT_COMPARE_8 ilevel 3 ics ICS_AUTO {
-
+     STPS[Y].dist++;
      STmr.compOCxRunning = 3;
      TMR6 =  0xFFFF;
      OC8IF_bit = 0;

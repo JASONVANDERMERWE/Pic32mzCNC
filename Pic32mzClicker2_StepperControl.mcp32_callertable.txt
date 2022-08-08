@@ -67,10 +67,10 @@ main
 		sqrt_
 	SingleAxisStep
 		abs
-		toggleOCx
-		Pulse
-			AccDec
-		disableOCx
+		Step_Cycle
+			toggleOCx
+			Pulse
+				AccDec
 	DualAxisStep
 		abs
 		toggleOCx
