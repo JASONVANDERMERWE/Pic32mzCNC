@@ -1,48 +1,9 @@
-#line 1 "C:/Users/GIT/Pic32mzCNC/Timers.c"
+#line 1 "C:/Users/Git/Pic32mzCNC/Timers.c"
 #line 1 "c:/users/git/pic32mzcnc/config.h"
-
-
-
-
-
-
-
-extern unsigned char LCD_01_ADDRESS;
-extern bit oneShotA; sfr;
-extern bit oneShotB; sfr;
-
-
-
-
-struct Timer{
-unsigned int uSec;
-unsigned int uMs;
-unsigned int uSSec;
-unsigned int OlduSSec;
-unsigned int mSec;
-unsigned short Sec;
-unsigned short OldSec;
-};
-extern struct Timer TMR;
-
-
-void PinMode();
-void UartConfig();
-void set_performance_mode();
-void Uart2InterruptSetup();
-void InitTimer6();
-void InitTimer7();
-void InitTimer8();
-void LcdI2CConfig();
-void OutPutPulseXYZ();
-void initDMA_global();
-void initDMA0();
-void initDMA1();
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
-#line 41 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
-extern int I2CUnit;
-#line 60 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 62 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
 typedef enum{
  _LCD_FIRST_ROW = 1,
  _LCD_SECOND_ROW,
@@ -61,21 +22,12 @@ typedef enum{
  _LCD_SHIFT_RIGHT,
  _LCD_INCREMENT_NO_SHIFT
 }Cmd_Type;
+
 extern Cmd_Type Cmd;
 
 
-typedef enum{
- I2C1 = 1,
- I2C2,
- I2C3,
- I2C4,
- I2C5,
- I2C6
-}I2C_Type;
-extern I2C_Type I2C_No;
 
-
-  unsigned char  I2C_PCF8574_Write( unsigned char  addr, unsigned char  Data );
+  unsigned char  I2C_PCF8574_Write( unsigned char  addr, unsigned char  Data);
  void I2C_LCD_putcmd( unsigned char  addr,  unsigned char  dta, unsigned char  cmdtype);
  void I2C_LCD_goto( unsigned char  addr, unsigned char  row,  unsigned char  col);
  void I2C_Lcd_Cmd( unsigned char  addr,Cmd_Type cmd, unsigned char  col);
@@ -83,17 +35,11 @@ extern I2C_Type I2C_No;
  void I2C_LCD_Out( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  *s);
  void I2C_Lcd_Chr( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  out_char);
  void I2C_LCD_init( unsigned char  addr);
- void I2C_LCD_init4l( unsigned char  addr,I2C_Type I2C_No);
- void I2CNo_Init(I2C_Type I2C_No);
+ void I2C_LCD_init4l( unsigned char  addr);
+ void I2C_Pins(char i2c_pins);
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
-
-
-
-
-
-
-
-
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 13 "c:/users/git/pic32mzcnc/stepper.h"
 extern sfr EN_StepX;
 extern sfr EN_Step_PinDirX;
 extern sfr RST_StepX;
@@ -123,7 +69,7 @@ extern sfr FLT_Step_PinDirY;
 
 
 typedef unsigned short UInt8_t;
-#line 81 "c:/users/git/pic32mzcnc/stepper.h"
+#line 85 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
@@ -273,7 +219,49 @@ void CircDir(Circle* cir);
 int Pulse(int axis_No);
 void toggleOCx(int axis_No);
 void AccDec(int axix_No);
-#line 9 "C:/Users/GIT/Pic32mzCNC/Timers.c"
+#line 1 "c:/users/git/pic32mzcnc/steptodistance.h"
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 11 "c:/users/git/pic32mzcnc/steptodistance.h"
+const float Dia;
+#line 23 "c:/users/git/pic32mzcnc/steptodistance.h"
+signed long calcSteps( double mmsToMove, double Dia);
+#line 12 "c:/users/git/pic32mzcnc/config.h"
+extern unsigned char LCD_01_ADDRESS;
+extern bit oneShotA; sfr;
+extern bit oneShotB; sfr;
+
+
+
+
+struct Timer{
+unsigned int uSec;
+unsigned int uMs;
+unsigned int uSSec;
+unsigned int OlduSSec;
+unsigned int mSec;
+unsigned short Sec;
+unsigned short OldSec;
+};
+extern struct Timer TMR;
+
+
+void PinMode();
+void UartConfig();
+void set_performance_mode();
+void Uart2InterruptSetup();
+void InitTimer6();
+void InitTimer7();
+void InitTimer8();
+void LcdI2CConfig();
+void OutPutPulseXYZ();
+void initDMA_global();
+void initDMA0();
+void initDMA1();
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
+#line 9 "C:/Users/Git/Pic32mzCNC/Timers.c"
 void Timer1Interrupt() iv IVT_TIMER_1 ilevel 7 ics ICS_SRS {
  T1IF_bit = 0;
 
