@@ -75,11 +75,13 @@ extern unsigned int Toggle;
 
 
 typedef struct genVars{
+ char Single_Dual: 1;
  UInt8_t running: 1;
  UInt8_t startPulses: 1;
  int Tog;
  int AxisNo;
  long i;
+ long d2;
  long dx;
  long dy;
  long dz;
@@ -211,6 +213,12 @@ void StepperConstants(long accel,long decel);
 
 void DualAxisStep(long newx,long newy,int axis_combo);
 void SingleAxisStep(long newxyz,int axis_No);
+void SingleStepX();
+void SingleStepY();
+void SingleStepZ();
+void XY_Interpolate();
+void XZ_Interpolate();
+void YZ_Interpolate();
 
 
 void CalcRadius(Circle* cir);
@@ -371,15 +379,16 @@ int xyz_ = 0;
  if((!RC3_bit)&&(!Toggle)){
  Toggle = 1;
  LATE7_bit = 1;
- STPS[X].mmToTravel = calcSteps(-125.25,8.06);
- speed_cntr_Move(STPS[X].mmToTravel, 20000,X);
- SingleAxisStep(STPS[X].mmToTravel,X);
-
- STPS[Y].mmToTravel = calcSteps(-125.25,8.06);
- speed_cntr_Move(STPS[Y].mmToTravel, 20000,Y);
- SingleAxisStep(STPS[Y].mmToTravel,Y);
+#line 119 "C:/Users/Git/Pic32mzCNC/Main.c"
  xyz_++;
  if(xyz_ > 2)xyz_ = 0;
+
+ STPS[X].mmToTravel = calcSteps(225.25,8.06);
+ speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
+ STPS[Y].mmToTravel = calcSteps(-25.25,8.06);
+ speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+ DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
+
  }
 
  }

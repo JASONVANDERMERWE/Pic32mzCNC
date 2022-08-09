@@ -38,11 +38,13 @@ extern unsigned int Toggle;
 
 
 typedef struct genVars{
+ char Single_Dual: 1;
  UInt8_t running: 1;
  UInt8_t startPulses: 1;
  int Tog;
  int AxisNo;
  long i;
+ long d2;
  long dx;
  long dy;
  long dz;
@@ -174,6 +176,12 @@ void StepperConstants(long accel,long decel);
 
 void DualAxisStep(long newx,long newy,int axis_combo);
 void SingleAxisStep(long newxyz,int axis_No);
+void SingleStepX();
+void SingleStepY();
+void SingleStepZ();
+void XY_Interpolate();
+void XZ_Interpolate();
+void YZ_Interpolate();
 
 
 void CalcRadius(Circle* cir);

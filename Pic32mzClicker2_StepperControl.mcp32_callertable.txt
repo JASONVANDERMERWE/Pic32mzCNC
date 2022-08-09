@@ -13,7 +13,6 @@ main
 				UART_Calc_BRG
 			UART_Set_Active
 		set_performance_mode
-		Uart2InterruptSetup
 		InitTimer8
 		initDMA_global
 		initDMA0
@@ -28,18 +27,45 @@ main
 	speed_cntr_Move
 		abs
 		sqrt_
-	SingleAxisStep
+	DualAxisStep
 		abs
-		Step_Cycle
-			toggleOCx
-			Pulse
-				AccDec
+		XY_Interpolate
+			Step_Cycle
+				toggleOCx
+				Pulse
+					AccDec
+		toggleOCx
+		Pulse
 StepX
-	Step_Cycle
+	SingleStepX
+		Step_Cycle
+	XY_Interpolate
 StepY
-	Step_Cycle
+	SingleStepY
+		Step_Cycle
+	I2C4_Stop
+		I2C4_Wait_For_Idle
+			I2C4_Is_Idle
+	I2C1_Stop
+		I2C1_Wait_For_Idle
+			I2C1_Is_Idle
+	I2C2_Stop
+		I2C2_Wait_For_Idle
+			I2C2_Is_Idle
+	I2C3_Stop
+		I2C3_Wait_For_Idle
+			I2C3_Is_Idle
+	I2C5_Stop
+		I2C5_Wait_For_Idle
+			I2C5_Is_Idle
 StepZ
-	Step_Cycle
+	SingleStepZ
+		Step_Cycle
+	I2C4_Stop
+	I2C1_Stop
+	I2C2_Stop
+	I2C3_Stop
+	I2C5_Stop
 Timer8Interrupt
 	CycleStart
 	CycleStop

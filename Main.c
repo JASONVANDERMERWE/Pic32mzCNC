@@ -108,15 +108,23 @@ int xyz_ = 0;
          if((!RC3_bit)&&(!Toggle)){
             Toggle = 1;
             LATE7_bit = 1;
-            STPS[X].mmToTravel = calcSteps(-125.25,8.06);
+        /*   STPS[X].mmToTravel = calcSteps(-125.25,8.06);
             speed_cntr_Move(STPS[X].mmToTravel, 20000,X);
             SingleAxisStep(STPS[X].mmToTravel,X);
             
             STPS[Y].mmToTravel = calcSteps(-125.25,8.06);
             speed_cntr_Move(STPS[Y].mmToTravel, 20000,Y);
             SingleAxisStep(STPS[Y].mmToTravel,Y);
+          */
             xyz_++;
             if(xyz_ > 2)xyz_ = 0;
+            
+            STPS[X].mmToTravel = calcSteps(225.25,8.06);
+            speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
+            STPS[Y].mmToTravel = calcSteps(-25.25,8.06);
+            speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+            DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
+
          }
 
   }

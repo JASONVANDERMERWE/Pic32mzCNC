@@ -158,9 +158,6 @@ NOP
 ;Config.c,59 :: 		set_performance_mode();
 JAL	_set_performance_mode+0
 NOP	
-;Config.c,63 :: 		Uart2InterruptSetup();
-JAL	_Uart2InterruptSetup+0
-NOP	
 ;Config.c,67 :: 		InitTimer8();
 JAL	_InitTimer8+0
 NOP	

@@ -1,11 +1,21 @@
 #include "Stepper.h"
 
-
+//////////////////////////////////
+//FUNCTION POINTERS
+void (*AxisPulse)();//= {
+/*  SingleStepX,
+  SingleStepY,
+  SingleStepZ,
+  XY_Interpolate,
+  XZ_Interpolate,
+  YZ_Interpolate
+};  */
 
 unsigned char txt1[] = "       ";
 unsigned char AxisNo;
 unsigned int Toggle;
-
+//Differential position for interpolation
+static long d2;
 //////////////////////////////////
 //structs
  STP STPS[NoOfAxis];
@@ -223,7 +233,7 @@ int dir;
        /*if(SV.psingle != newxyz)
           SV.psingle = newxyz;
        else*/
-       
+     SV.Single_Dual = 0;
      switch(axis_No){
        case 0:OC3IE_bit = 1;OC3CONbits.ON = 1;
              // OC5IE_bit = 0;OC5CONbits.ON = 0;
@@ -267,9 +277,12 @@ int dir;
 
 }
 
+//////////////////////////////////////////////////////////
+//         DUAL AXIS INTERPOLATION SECTION              //
+//////////////////////////////////////////////////////////
 void DualAxisStep(long newx,long newy,int axis_combo){
  long i;
- static long d2;
+ static long d2 = 0;
    SV.over=0;
    d2 = 0;
    //will need to change these 3 lines when implimenting position referenc??
@@ -279,59 +292,43 @@ void DualAxisStep(long newx,long newy,int axis_combo){
 /*!
  *use Bressenhams algorithm here
  */
-
+  SV.Single_Dual = 1;
   switch(axis_combo){
     case xy:
-              OC5IE_bit = 1;OC5CONbits.ON = 1;
-              OC3IE_bit = 1;OC3CONbits.ON = 1;
-              OC8IE_bit = 0;OC8CONbits.ON = 0;
+          OC5IE_bit = 1;OC5CONbits.ON = 1;
+          OC3IE_bit = 1;OC3CONbits.ON = 1;
+          OC8IE_bit = 0;OC8CONbits.ON = 0;
+
           SV.dx   = newx - SV.px;           // distance to move (delta)
           SV.dy   = newy - SV.py;
+          
           // direction to move
           SV.dirx = SV.dx > 0?1:-1;
           SV.diry = SV.dy > 0?1:-1;
-            // Set direction from sign on step value.
-          if(SV.dirx < 0)DIR_StepX = CCW;
-          else DIR_StepX = CW;
-          if(SV.diry < 0) DIR_StepY = CCW;
-          else DIR_StepY = CW;
+          
+          // Set direction from sign on step value.
+          if(SV.dirx < 0)
+            DIR_StepX = CCW;
+          else
+            DIR_StepX = CW;
+            
+          if(SV.diry < 0)
+            DIR_StepY = CCW;
+          else 
+            DIR_StepY = CW;
+          
           SV.dx = abs(SV.dx);
           SV.dy = abs(SV.dy);
           
-         if(SV.dx > SV.dy) d2 = 2*(SV.dy - SV.dx);
-         else d2 = 2* (SV.dx - SV.dy);
-         if(SV.Tog == 0){  //? round this start up bit
-             LATE7_bit = 1;
-             if(SV.dx > SV.dy){
-                for(STPS[X].step_count = 0;STPS[X].step_count < SV.dx; ++STPS[X].step_count){
-                    STmr.compOCxRunning = 0;
-                    toggleOCx(X);
-                    Pulse(X);
-                    if(d2 < 0)d2 += 2*SV.dy;
-                    else{
-                      d2 += 2 * (SV.dy - SV.dx);
-                      toggleOCx(Y);
-                      Pulse(Y);
-                    }
-                   //wait for next time delay try modified to prevent blocking
-                    while(STmr.compOCxRunning == 0);
-                }
-            }else{
-                for(STPS[Y].step_count = 0;STPS[Y].step_count < SV.dy; ++STPS[Y].step_count){
-                   STmr.compOCxRunning = 0;
-                   toggleOCx(Y);
-                   Pulse(Y);
-                   if(d2 < 0)d2 += 2 * SV.dx;
-                   else{
-                       d2 += 2 * (SV.dx - SV.dy);
-                       toggleOCx(X);
-                       Pulse(X);
-                   }
-                   //wait for next time delay try modified to prevent blocking
-                    while(STmr.compOCxRunning == 0);
-                }
-            }
-         }
+          if(SV.dx > SV.dy)
+             SV.d2 = 2*(SV.dy - SV.dx);
+          else 
+             SV.d2 = 2* (SV.dx - SV.dy);
+             
+          //if(SV.Tog == 0){
+             STPS[X].step_count = 0;
+             XY_Interpolate();
+          //}
          break;
     case xz:
               OC5IE_bit = 1;OC5CONbits.ON = 1;
@@ -441,11 +438,7 @@ void DualAxisStep(long newx,long newy,int axis_combo){
     default: break;
 
   }
-  
-
-  
-  disableOCx();
-
+  //disableOCx();
 /*!
  * update the logical position. We don't just = newx because
  * px + dx * dirx == newx could be false by a tiny margin and we don't want rounding errors.
@@ -454,19 +447,52 @@ void DualAxisStep(long newx,long newy,int axis_combo){
     SV.py += SV.dy * SV.diry;*/
 }
 
+// AXIS COMBOS
+void XY_Interpolate(){
 
+   if(SV.dx > SV.dy){
+      //if(STPS[X].step_count > SV.dx)
+       //    return;// ++STPS[X].step_count;
+       Step_Cycle(X);
+       if(SV.d2 < 0){
+          SV.d2 += 2*SV.dy;
+       }else{
+          SV.d2 += 2 * (SV.dy - SV.dx);
+          Step_Cycle(Y);
+       }
 
+   }else{
+        //  if(STPS[Y].step_count > SV.dy)
+         //     return;// ++STPS[Y].step_count;
+          Step_Cycle(Y);
+          if(SV.d2 < 0){
+             SV.d2 += 2 * SV.dx;
+          }else{
+             SV.d2 += 2 * (SV.dx - SV.dy);
+             Step_Cycle(X);
+           }
+    }
+}
 
+void XZ_Interpolate(){
+
+}
+void YZ_Interpolate(){
+
+}
 
 
 /////////////////////////////////////////////////
+//       STEPS CYCLE CONTROL SECTION           //
+/////////////////////////////////////////////////
+
 //Step cycle out of for loop
 void Step_Cycle(int axis_No){
       toggleOCx(axis_No);
       Pulse(axis_No);
 }
 
-//////////////////////////////////////////////////
+
 //toggle the OCxCON regs
 void toggleOCx(int axis_No){
       switch(axis_No){
@@ -491,7 +517,7 @@ void toggleOCx(int axis_No){
 
 }
 
-//////////////////////////////////////////////////
+
 //reset the pulse
 int Pulse(int axis_No){
 
@@ -551,7 +577,7 @@ int Pulse(int axis_No){
   return axis_No;
 }
 
-///////////////////////////////////////////////////////////////
+
 //Accel Decel calculation and test
 void AccDec(int axis_No){
           STPS[axis_No].accel_count++;
@@ -561,47 +587,63 @@ void AccDec(int axis_No){
 
 }
 
-//////////////////////////////////////////////////////////////
+
 //output compare 3 pin RF1 interrupt
 void StepX() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
-    // STmr.compOCxRunning = 1;
-    // TMR4 =  0xFFFF;
      STPS[X].step_count++;
      OC3IF_bit = 0;
-     if(STPS[X].step_count >= STPS[X].dist){
+    if(STPS[X].step_count >= STPS[X].dist){  //i think this is where the problem lies
          OC3IE_bit = 0;
          OC3CONbits.ON = 0;
      }
-     else
-        Step_Cycle(X);
-   //  OC3CON    =  0x8004; //restart the output compare module
-}
-void StepY() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
-    // STmr.compOCxRunning = 2;
-   //  TMR2 =  0xFFFF;
-     STPS[Y].step_count++;
-     OC5IF_bit = 0;
-     if(STPS[Y].step_count >= STPS[Y].dist){
-         OC5IE_bit = 0;OC5CONbits.ON = 0;
+     else{
+        if(!SV.Single_Dual)
+          SingleStepX();
+        else
+          XY_Interpolate();
      }
-     else
-        Step_Cycle(Y);
-    // OC5CON    =  0x8004; //restart the output compare module
-}
-void StepZ() iv IVT_OUTPUT_COMPARE_8 ilevel 3 ics ICS_AUTO {
-    // STmr.compOCxRunning = 3;
-    // TMR6 =  0xFFFF;
-     STPS[Z].step_count++;
-     OC8IF_bit = 0;
-     if(STPS[Z].step_count >= STPS[Z].dist){
-         OC8IE_bit = 0;OC8CONbits.ON = 0;
-     }
-     else
-       Step_Cycle(Z);
-    // OC8CON    =  0x8004; //restart the output compare module
 }
 
-///////////////////////////////////////////////
+void SingleStepX(){
+        Step_Cycle(X);
+}
+
+void StepY() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
+   STPS[Y].step_count++;
+   OC5IF_bit = 0;
+   if(STPS[Y].step_count >= STPS[Y].dist){
+     OC5IE_bit = 0;OC5CONbits.ON = 0;
+   }
+   else{
+        if(!SV.Single_Dual)
+          SingleStepY();
+        else
+          AxisPulse();
+   }
+}
+
+void SingleStepY(){
+     Step_Cycle(Y);
+}
+
+void StepZ() iv IVT_OUTPUT_COMPARE_8 ilevel 3 ics ICS_AUTO {
+   STPS[Z].step_count++;
+   OC8IF_bit = 0;
+   if(STPS[Z].step_count >= STPS[Z].dist){
+      OC8IE_bit = 0;OC8CONbits.ON = 0;
+   }
+   else{
+        if(!SV.Single_Dual)
+          SingleStepZ();
+        else
+          AxisPulse();
+   }
+}
+
+void SingleStepZ(){
+      Step_Cycle(Z);
+}
+
 //Disable the Steppers Output compare module only
 //to disable the drives call Stepn_Disable
 void disableOCx(){

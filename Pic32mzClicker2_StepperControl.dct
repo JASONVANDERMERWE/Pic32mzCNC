@@ -5157,6 +5157,7 @@ autoset_usbe6csr0_bit
 autoset_usbe7csr0_bit
 axisno
 axisno
+axispulse
 axistosample
 b0
 b1
@@ -19965,6 +19966,7 @@ d_a_i2c2stat_bit
 d_a_i2c3stat_bit
 d_a_i2c4stat_bit
 d_a_i2c5stat_bit
+d2
 dassert
 dassert
 dassert_bit
@@ -58138,7 +58140,11 @@ simreset
 simreset_bit
 simreset_emacxcfg1_bit
 sin
+single_dual
 singleaxisstep
+singlestepx
+singlestepy
+singlestepz
 sinh
 sirq
 sirq
@@ -81351,6 +81357,8 @@ wtid2_bit
 wtid3
 wtid3_bit
 xtoi
+xy_interpolate
+xz_interpolate
 year01
 year01
 year01
@@ -81375,3 +81383,4 @@ year102
 year102_bit
 year103
 year103_bit
+yz_interpolate
