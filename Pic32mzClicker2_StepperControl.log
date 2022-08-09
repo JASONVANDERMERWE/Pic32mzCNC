@@ -24,16 +24,16 @@ diagnostics: 0	122	Compilation Started	i2c_lcd.h
 diagnostics: 395	123	Compiled Successfully	Config.c
 diagnostics: 0	122	Compilation Started	stepper.h
 hint: 127	1163	Variable 'ii' has been declared, but not used	Stepper.c
-hint: 291	1163	Variable 'i' has been declared, but not used	Stepper.c
-hint: 481	1163	Variable 'xRad' has been declared, but not used	Stepper.c
-hint: 481	1163	Variable 'yRad' has been declared, but not used	Stepper.c
-hint: 481	1163	Variable 'X' has been declared, but not used	Stepper.c
-hint: 481	1163	Variable 'Y' has been declared, but not used	Stepper.c
+hint: 271	1163	Variable 'i' has been declared, but not used	Stepper.c
 hint: 0	1004	interrupt handler (StepX at 0x0011)	Stepper.c
 hint: 0	1004	interrupt handler (StepY at 0x001B)	Stepper.c
 hint: 0	1004	interrupt handler (StepZ at 0x0027)	Stepper.c
-diagnostics: 747	123	Compiled Successfully	Stepper.c
-hint: 481	1164	Variable 'angA' has been eliminated by optimizer	Stepper.c
+hint: 673	1163	Variable 'xRad' has been declared, but not used	Stepper.c
+hint: 673	1163	Variable 'yRad' has been declared, but not used	Stepper.c
+hint: 673	1163	Variable 'X' has been declared, but not used	Stepper.c
+hint: 673	1163	Variable 'Y' has been declared, but not used	Stepper.c
+diagnostics: 781	123	Compiled Successfully	Stepper.c
+hint: 673	1164	Variable 'angA' has been eliminated by optimizer	Stepper.c
 hint: 9	1354	 warning: The macro is redefined     #define Pi 3.142     from C:/Users/Git/Pic32mzCNC/Steptodistance.c: 1:    #include "Steptodistance.h"     previously macro "Pi" defined as: #define Pi  3.14159 	c:\users\git\pic32mzcnc\steptodistance.h
 diagnostics: 0	122	Compilation Started	stepper.h
 diagnostics: 21	123	Compiled Successfully	Steptodistance.c
@@ -52,6 +52,6 @@ hint: 0	1144	Static RAM (bytes): 337   Dynamic RAM (bytes): 515569	Static RAM (b
 hint: 0	1144	Used ROM (bytes): 17305 (1%)  Free ROM (bytes): 2079847 (99%)	Used ROM (bytes): 17305 (1%)  Free ROM (bytes): 2079847 (99%)
 hint: 0	1144	Used BOOTROM (bytes): 792 (1%)  Free BOOTROM (bytes): 146219 (99%)	Used BOOTROM (bytes): 792 (1%)  Free BOOTROM (bytes): 146219 (99%)
 diagnostics: 0	125	Project Linked Successfully	Pic32mzClicker2_StepperControl.mcp32
-diagnostics: 0	128	Linked in 547 ms	 
-diagnostics: 0	129	Project 'Pic32mzClicker2_StepperControl.mcp32' completed: 2781 ms	 
-diagnostics: 0	103	Finished successfully: 08 Aug 2022, 23:17:30	Pic32mzClicker2_StepperControl.mcp32
+diagnostics: 0	128	Linked in 516 ms	 
+diagnostics: 0	129	Project 'Pic32mzClicker2_StepperControl.mcp32' completed: 2750 ms	 
+diagnostics: 0	103	Finished successfully: 09 Aug 2022, 20:35:11	Pic32mzClicker2_StepperControl.mcp32

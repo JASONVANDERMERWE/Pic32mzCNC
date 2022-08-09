@@ -375,32 +375,10 @@ int ii;
 #line 211 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  SV.running = 1;
 }
-
-
-
-void CycleStop(){
-int ii;
- STmr.uSec = 0;
- for(ii = 0;ii< 3 ;ii++){
- STPS[ii].microSec = 0;
- if(ii >  3 )break;
- }
-}
-
-void CycleStart(){
-int ii;
-
- if(SV.Tog == 0){
- for(ii = 0; ii <  3 ;ii++){
- if(ii >  3 )break;
- STPS[ii].microSec++;
- }
- }
-}
-#line 240 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 220 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void SingleAxisStep(long newxyz,int axis_No){
 int dir;
-#line 247 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 227 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  switch(axis_No){
  case 0:OC3IE_bit = 1;OC3CONbits.ON = 1;
 
@@ -453,7 +431,7 @@ void DualAxisStep(long newx,long newy,int axis_combo){
  SV.px = 0;
  SV.py = 0;
  SV.pz = 0;
-#line 303 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 283 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  switch(axis_combo){
  case xy:
  OC5IE_bit = 1;OC5CONbits.ON = 1;
@@ -619,10 +597,201 @@ void DualAxisStep(long newx,long newy,int axis_combo){
 
 
  disableOCx();
-#line 475 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 455 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 }
 
 
+
+
+
+
+
+
+void Step_Cycle(int axis_No){
+ toggleOCx(axis_No);
+ Pulse(axis_No);
+}
+
+
+
+void toggleOCx(int axis_No){
+ switch(axis_No){
+ case 0: OC3R = 0x5;
+ OC3RS = STPS[X].step_delay & 0xFFFF;
+ TMR4 = 0xFFFF;
+ OC3CON = 0x8004;
+ break;
+ case 1: OC5R = 0x5;
+ OC5RS = STPS[Y].step_delay & 0xFFFF;
+ TMR2 = 0xFFFF;
+ OC5CON = 0x8004;
+ break;
+ case 2: OC8R = 0x5;
+ OC8RS = STPS[Z].step_delay & 0xFFFF;
+ TMR6 = 0xFFFF;
+ OC8CON = 0x8004;
+ break;
+ default:
+ break;
+ }
+
+}
+
+
+
+int Pulse(int axis_No){
+
+ if(!STPS[axis_No].PLS_Step_ ){
+ STPS[axis_No].PLS_Step_ = 1;
+ }
+
+ switch(STPS[axis_No].run_state) {
+ case  0 :
+ LATE7_bit = 0;
+ T8IE_bit = 0;
+ SV.Tog = 1;
+ break;
+
+ case  1 :
+ AccDec(axis_No);
+#line 515 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+ if(STPS[axis_No].step_delay <= STPS[axis_No].min_delay){
+
+ STPS[axis_No].step_delay = STPS[axis_No].min_delay;
+ STPS[axis_No].run_state =  3 ;
+ }
+ if(STPS[axis_No].step_delay > STPS[axis_No].accel_lim){
+ STPS[axis_No].run_state =  3 ;
+ }
+ if(STPS[axis_No].step_count >= STPS[axis_No].decel_start) {
+ STPS[axis_No].accel_count = STPS[axis_No].decel_val;
+ STPS[axis_No].rest = 0;
+ STPS[axis_No].run_state =  2 ;
+ }
+ break;
+
+ case  3 :
+ STPS[axis_No].step_delay = STPS[axis_No].min_delay;
+
+ if(STPS[axis_No].step_count >= STPS[axis_No].decel_start) {
+ STPS[axis_No].accel_count = STPS[axis_No].decel_val;
+ STPS[axis_No].rest = 0;
+
+ STPS[axis_No].run_state =  2 ;
+ }
+ break;
+
+ case  2 :
+
+
+ AccDec(axis_No);
+ if(STPS[axis_No].accel_count >= -2 ){
+ STPS[axis_No].run_state =  0 ;
+ }
+ break;
+ default:break;
+ }
+ return axis_No;
+}
+
+
+
+void AccDec(int axis_No){
+ STPS[axis_No].accel_count++;
+ STPS[axis_No].new_step_delay = STPS[axis_No].step_delay - (( STPS[axis_No].step_delay << 1) + STPS[axis_No].rest)/((STPS[axis_No].accel_count << 2) + 1);
+ STPS[axis_No].rest = ((STPS[axis_No].step_delay << 1)+STPS[axis_No].rest)%((STPS[axis_No].accel_count << 2 ) + 1);
+ STPS[axis_No].step_delay = STPS[axis_No].new_step_delay;
+
+}
+
+
+
+void StepX() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
+
+
+ STPS[X].step_count++;
+ OC3IF_bit = 0;
+ if(STPS[X].step_count >= STPS[X].dist){
+ OC3IE_bit = 0;
+ OC3CONbits.ON = 0;
+ }
+ else
+ Step_Cycle(X);
+
+}
+void StepY() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
+
+
+ STPS[Y].step_count++;
+ OC5IF_bit = 0;
+ if(STPS[Y].step_count >= STPS[Y].dist){
+ OC5IE_bit = 0;OC5CONbits.ON = 0;
+ }
+ else
+ Step_Cycle(Y);
+
+}
+void StepZ() iv IVT_OUTPUT_COMPARE_8 ilevel 3 ics ICS_AUTO {
+
+
+ STPS[Z].step_count++;
+ OC8IF_bit = 0;
+ if(STPS[Z].step_count >= STPS[Z].dist){
+ OC8IE_bit = 0;OC8CONbits.ON = 0;
+ }
+ else
+ Step_Cycle(Z);
+
+}
+
+
+
+
+void disableOCx(){
+ OC5IE_bit = 0;OC5CONbits.ON = 0;
+ OC3IE_bit = 0;OC3CONbits.ON = 0;
+ OC8IE_bit = 0;OC8CONbits.ON = 0;
+}
+#line 623 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+unsigned int min_(unsigned int x, unsigned int y){
+ if(x < y){
+ return x;
+ }
+ else{
+ return y;
+ }
+}
+#line 640 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+static unsigned long sqrt_(unsigned long x){
+
+ register unsigned long xr;
+ register unsigned long q2;
+ register unsigned char f;
+
+ xr = 0;
+ q2 = 0x40000000L;
+ do
+ {
+ if((xr + q2) <= x)
+ {
+ x -= xr + q2;
+ f = 1;
+ }
+ else{
+ f = 0;
+ }
+ xr >>= 1;
+ if(f){
+ xr += q2;
+ }
+ } while(q2 >>= 2);
+ if(xr < x){
+ return xr +1;
+ }
+ else{
+ return xr;
+ }
+}
 
 
 void CalcRadius(Circle* cir){
@@ -693,186 +862,23 @@ static int quad = 1;
 
  }
 }
-
-void disableOCx(){
- OC5IE_bit = 0;OC5CONbits.ON = 0;
- OC3IE_bit = 0;OC3CONbits.ON = 0;
- OC8IE_bit = 0;OC8CONbits.ON = 0;
-}
-
-
-int Pulse(int axis_No){
-
- if(!STPS[axis_No].PLS_Step_ ){
- STPS[axis_No].PLS_Step_ = 1;
- }
-
- switch(STPS[axis_No].run_state) {
- case  0 :
- LATE7_bit = 0;
- T8IE_bit = 0;
- SV.Tog = 1;
- break;
-
- case  1 :
- AccDec(axis_No);
-#line 575 "C:/Users/Git/Pic32mzCNC/Stepper.c"
- if(STPS[axis_No].step_delay <= STPS[axis_No].min_delay){
-
- STPS[axis_No].step_delay = STPS[axis_No].min_delay;
- STPS[axis_No].run_state =  3 ;
- }
- if(STPS[axis_No].step_delay > STPS[axis_No].accel_lim){
- STPS[axis_No].run_state =  3 ;
- }
- if(STPS[axis_No].step_count >= STPS[axis_No].decel_start) {
- STPS[axis_No].accel_count = STPS[axis_No].decel_val;
- STPS[axis_No].rest = 0;
- STPS[axis_No].run_state =  2 ;
- }
- break;
-
- case  3 :
- STPS[axis_No].step_delay = STPS[axis_No].min_delay;
-
- if(STPS[axis_No].step_count >= STPS[axis_No].decel_start) {
- STPS[axis_No].accel_count = STPS[axis_No].decel_val;
- STPS[axis_No].rest = 0;
-
- STPS[axis_No].run_state =  2 ;
- }
- break;
-
- case  2 :
-
-
- AccDec(axis_No);
- if(STPS[axis_No].accel_count >= -2 ){
- STPS[axis_No].run_state =  0 ;
- }
- break;
- default:break;
- }
- return axis_No;
-}
-
-void AccDec(int axis_No){
- STPS[axis_No].accel_count++;
- STPS[axis_No].new_step_delay = STPS[axis_No].step_delay - (( STPS[axis_No].step_delay << 1) + STPS[axis_No].rest)/((STPS[axis_No].accel_count << 2) + 1);
- STPS[axis_No].rest = ((STPS[axis_No].step_delay << 1)+STPS[axis_No].rest)%((STPS[axis_No].accel_count << 2 ) + 1);
- STPS[axis_No].step_delay = STPS[axis_No].new_step_delay;
-
-}
-#line 631 "C:/Users/Git/Pic32mzCNC/Stepper.c"
-static unsigned long sqrt_(unsigned long x){
-
- register unsigned long xr;
- register unsigned long q2;
- register unsigned char f;
-
- xr = 0;
- q2 = 0x40000000L;
- do
- {
- if((xr + q2) <= x)
- {
- x -= xr + q2;
- f = 1;
- }
- else{
- f = 0;
- }
- xr >>= 1;
- if(f){
- xr += q2;
- }
- } while(q2 >>= 2);
- if(xr < x){
- return xr +1;
- }
- else{
- return xr;
- }
-}
-#line 667 "C:/Users/Git/Pic32mzCNC/Stepper.c"
-unsigned int min_(unsigned int x, unsigned int y){
- if(x < y){
- return x;
- }
- else{
- return y;
+#line 763 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+void CycleStop(){
+int ii;
+ STmr.uSec = 0;
+ for(ii = 0;ii< 3 ;ii++){
+ STPS[ii].microSec = 0;
+ if(ii >  3 )break;
  }
 }
 
+void CycleStart(){
+int ii;
 
-
-
-void Step_Cycle(int axis_No){
- toggleOCx(axis_No);
- Pulse(axis_No);
-}
-
-
-
-void StepX() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
-
-
- STPS[X].step_count++;
- OC3IF_bit = 0;
- if(STPS[X].step_count >= STPS[X].dist){
- OC3IE_bit = 0;
- OC3CONbits.ON = 0;
+ if(SV.Tog == 0){
+ for(ii = 0; ii <  3 ;ii++){
+ if(ii >  3 )break;
+ STPS[ii].microSec++;
  }
- else
- Step_Cycle(X);
-
-}
-void StepY() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
-
-
- STPS[Y].step_count++;
- OC5IF_bit = 0;
- if(STPS[Y].step_count >= STPS[Y].dist){
- OC5IE_bit = 0;OC5CONbits.ON = 0;
  }
- else
- Step_Cycle(Y);
-
-}
-void StepZ() iv IVT_OUTPUT_COMPARE_8 ilevel 3 ics ICS_AUTO {
-
-
- STPS[Z].step_count++;
- OC8IF_bit = 0;
- if(STPS[Z].step_count >= STPS[Z].dist){
- OC8IE_bit = 0;OC8CONbits.ON = 0;
- }
- else
- Step_Cycle(Z);
-
-}
-
-
-
-void toggleOCx(int axis_No){
- switch(axis_No){
- case 0: OC3R = 0x5;
- OC3RS = STPS[X].step_delay & 0xFFFF;
- TMR4 = 0xFFFF;
- OC3CON = 0x8004;
- break;
- case 1: OC5R = 0x5;
- OC5RS = STPS[Y].step_delay & 0xFFFF;
- TMR2 = 0xFFFF;
- OC5CON = 0x8004;
- break;
- case 2: OC8R = 0x5;
- OC8RS = STPS[Z].step_delay & 0xFFFF;
- TMR6 = 0xFFFF;
- OC8CON = 0x8004;
- break;
- default:
- break;
- }
-
 }

@@ -211,27 +211,7 @@ int ii;
       SV.running = 1;
 }
 
-//////////////////////////////////
-//interrupt cycles
-void CycleStop(){
-int ii;
-   STmr.uSec = 0;
-   for(ii = 0;ii<NoOfAxis;ii++){
-    STPS[ii].microSec = 0;
-    if(ii > NoOfAxis)break;
-   }
-}
 
-void CycleStart(){
-int ii;
-
-  if(SV.Tog == 0){
-   for(ii = 0; ii < NoOfAxis;ii++){
-     if(ii > NoOfAxis)break;
-     STPS[ii].microSec++;
-   }
-  }
-}
 /*****************************************************
 *single axix step rate need to be doubled to compensate
 *speed increase due to no 2nd axis interpolation
@@ -475,82 +455,42 @@ void DualAxisStep(long newx,long newy,int axis_combo){
 }
 
 
+
+
+
+
 /////////////////////////////////////////////////
-//Circular Interpolation
-void CalcRadius(Circle* cir){
- float xRad,yRad,X,Y,angA,angB;
-
-   cir->xRad = fabs(cir->xStart + cir->I);
-   cir->yRad = fabs(cir->yStart + cir->J);
-   cir->radius = sqrt((cir->xRad*cir->xRad) + (cir->yRad*cir->yRad));
-   angA = atan2(cir->yRad,cir->xRad);
-   
-   
-   cir->degreeDeg = angA * rad2deg;
-   
-   cir->quadrant_start = QuadrantStart(cir->I,cir->J);
-    //deg is 360 or 0 and subtract the actual from deg
-   if(cir->quadrant_start == 1 || cir->quadrant_start == 3)
-       angB = cir->deg - cir->degreeDeg;
-   if(cir->quadrant_start == 1 || cir->quadrant_start == 3)
-       angB = cir->deg + cir->degreeDeg;
-       
-   cir->degreeRadians = angB * deg2rad;
+//Step cycle out of for loop
+void Step_Cycle(int axis_No){
+      toggleOCx(axis_No);
+      Pulse(axis_No);
 }
 
-int QuadrantStart(float i,float j){
-    if((i <= 0)&&(j >= 0))
-          return 1;
-    else if((i > 0)&&(j > 0))
-         return 2;
-    else if((i > 0)&&(j < 0))
-         return 3;
-    else if((i < 0)&&(j < 0))
-         return 4;
-    else
-        return 0;
+//////////////////////////////////////////////////
+//toggle the OCxCON regs
+void toggleOCx(int axis_No){
+      switch(axis_No){
+        case 0: OC3R   = 0x5;
+                OC3RS  = STPS[X].step_delay & 0xFFFF;//0x234;
+                TMR4   =  0xFFFF;
+                OC3CON =  0x8004; //restart the output compare module
+             break;
+        case 1: OC5R   = 0x5;
+                OC5RS  = STPS[Y].step_delay & 0xFFFF;
+                TMR2   =  0xFFFF;
+                OC5CON =  0x8004; //restart the output compare module
+             break;
+        case 2: OC8R   = 0x5;
+                OC8RS  = STPS[Z].step_delay & 0xFFFF;
+                TMR6   =  0xFFFF;
+                OC8CON =  0x8004; //restart the output compare module
+             break;
+        default:
+             break;
+      }
+
 }
 
-void CircDir(Circle* cir){
-float newDeg;
-   if(cir->dir == CW){
-        newDeg = 360 / cir->deg;
-        cir->N = (2*Pi*cir->radius)/newDeg;
-        cir->divisor = cir->deg / newDeg;
-   }
-
-   if(cir->dir == CW)
-       cir->deg = 0.00;
-   if(cir->dir == CCW)
-       cir->deg = 360.00;
-}
-
-void Cir_Interpolation(float xPresent,float yPresent,Circle* cir){
-static int quad = 1;
-      cir->xStart = xPresent;
-      cir->yStart = yPresent;
-      CalcRadius(cir);
-    //  quad = QuadrantStart(cir);
-    
-    while(quad){
-       break;//!!!
-       if(quad == 1 || quad == 4){
-         cir->xFin = cir->xRad + (cir->radius * cos(cir->degreeRadians));
-         cir->yFin = cir->yRad + (cir->radius * sin(cir->degreeRadians));
-       }
-       if(quad == 2 || quad == 3){
-         cir->xFin = cir->xRad - (cir->radius * cos(cir->degreeRadians));
-        // cir->yFin = cir>-yRad - (cir->radius * sin(cir->degreeRadians));
-       }
-       
-     }
-}
-
-void disableOCx(){
-     OC5IE_bit = 0;OC5CONbits.ON = 0;
-     OC3IE_bit = 0;OC3CONbits.ON = 0;
-     OC8IE_bit = 0;OC8CONbits.ON = 0;
-}
 //////////////////////////////////////////////////
 //reset the pulse
 int Pulse(int axis_No){
@@ -558,7 +498,7 @@ int Pulse(int axis_No){
     if(!STPS[axis_No].PLS_Step_ ){
       STPS[axis_No].PLS_Step_   = 1;
     }
-    
+
     switch(STPS[axis_No].run_state) {
       case STOP:
            LATE7_bit = 0;
@@ -611,74 +551,14 @@ int Pulse(int axis_No){
   return axis_No;
 }
 
+///////////////////////////////////////////////////////////////
+//Accel Decel calculation and test
 void AccDec(int axis_No){
           STPS[axis_No].accel_count++;
           STPS[axis_No].new_step_delay = STPS[axis_No].step_delay - (( STPS[axis_No].step_delay << 1) + STPS[axis_No].rest)/((STPS[axis_No].accel_count << 2) + 1);
           STPS[axis_No].rest = ((STPS[axis_No].step_delay << 1)+STPS[axis_No].rest)%((STPS[axis_No].accel_count << 2 ) + 1);
           STPS[axis_No].step_delay = STPS[axis_No].new_step_delay;
 
-}
-
-/*!  
- *    brief Square root routine.
- *    sqrt routine, from comp.sys.ibm.pc.programmer
- *    Subject: Summary: SQRT(int) algorithm (with profiling)
- *    From: warwick@cs.uq.oz.au (Warwick Allison)
- *    Date: Tue Oct 8 09:16:35 1991
- *    param x  Value to find square root of.
- *    return  Square root of x.
- */
-static unsigned long sqrt_(unsigned long x){
-
-  register unsigned long xr;  // result register
-  register unsigned long q2;  // scan-bit register
-  register unsigned char f;   // flag (one bit)
-
-  xr = 0;                     // clear result
-  q2 = 0x40000000L;           // higest possible result bit
-  do
-  {
-    if((xr + q2) <= x)
-    {
-      x -= xr + q2;
-      f = 1;                  // set flag
-    }
-    else{
-      f = 0;                  // clear flag
-    }
-    xr >>= 1;
-    if(f){
-      xr += q2;               // test flag
-    }
-  } while(q2 >>= 2);          // shift twice
-  if(xr < x){
-    return xr +1;             // add for rounding
-  }
-  else{
-    return xr;
-  }
-}
-
-/*!
- *  brief Find minimum value.
- *  Returns the smallest value.
- *  return  Min(x,y).
- */
-unsigned int min_(unsigned int x, unsigned int y){
-  if(x < y){
-    return x;
-  }
-  else{
-    return y;
-  }
-}
-
-
-/////////////////////////////////////////////////
-//Step cycle out of for loop
-void Step_Cycle(int axis_No){
-      toggleOCx(axis_No);
-      Pulse(axis_No);
 }
 
 //////////////////////////////////////////////////////////////
@@ -721,32 +601,142 @@ void StepZ() iv IVT_OUTPUT_COMPARE_8 ilevel 3 ics ICS_AUTO {
     // OC8CON    =  0x8004; //restart the output compare module
 }
 
-//////////////////////////////////////////////////
-//toggle the OCxCON regs
-void toggleOCx(int axis_No){
-      switch(axis_No){
-        case 0: OC3R   = 0x5;
-                OC3RS  = STPS[X].step_delay & 0xFFFF;//0x234;
-                TMR4   =  0xFFFF;
-                OC3CON =  0x8004; //restart the output compare module
-             break;
-        case 1: OC5R   = 0x5;
-                OC5RS  = STPS[Y].step_delay & 0xFFFF;
-                TMR2   =  0xFFFF;
-                OC5CON =  0x8004; //restart the output compare module
-             break;
-        case 2: OC8R   = 0x5;
-                OC8RS  = STPS[Z].step_delay & 0xFFFF;
-                TMR6   =  0xFFFF;
-                OC8CON =  0x8004; //restart the output compare module
-             break;
-        default:
-             break;
-      }
-
+///////////////////////////////////////////////
+//Disable the Steppers Output compare module only
+//to disable the drives call Stepn_Disable
+void disableOCx(){
+     OC5IE_bit = 0;OC5CONbits.ON = 0;
+     OC3IE_bit = 0;OC3CONbits.ON = 0;
+     OC8IE_bit = 0;OC8CONbits.ON = 0;
 }
 
 
+////////////////////////////////////////////////
+//              CALCULATIONS                  //
+////////////////////////////////////////////////
+
+/*!
+ *  brief Find minimum value.
+ *  Returns the smallest value.
+ *  return  Min(x,y).
+ */
+unsigned int min_(unsigned int x, unsigned int y){
+  if(x < y){
+    return x;
+  }
+  else{
+    return y;
+  }
+}
+/*!
+ *    brief Square root routine.
+ *    sqrt routine, from comp.sys.ibm.pc.programmer
+ *    Subject: Summary: SQRT(int) algorithm (with profiling)
+ *    From: warwick@cs.uq.oz.au (Warwick Allison)
+ *    Date: Tue Oct 8 09:16:35 1991
+ *    param x  Value to find square root of.
+ *    return  Square root of x.
+ */
+static unsigned long sqrt_(unsigned long x){
+
+  register unsigned long xr;  // result register
+  register unsigned long q2;  // scan-bit register
+  register unsigned char f;   // flag (one bit)
+
+  xr = 0;                     // clear result
+  q2 = 0x40000000L;           // higest possible result bit
+  do
+  {
+    if((xr + q2) <= x)
+    {
+      x -= xr + q2;
+      f = 1;                  // set flag
+    }
+    else{
+      f = 0;                  // clear flag
+    }
+    xr >>= 1;
+    if(f){
+      xr += q2;               // test flag
+    }
+  } while(q2 >>= 2);          // shift twice
+  if(xr < x){
+    return xr +1;             // add for rounding
+  }
+  else{
+    return xr;
+  }
+}
+/////////////////////////////////////////////////
+//Circular Interpolation
+void CalcRadius(Circle* cir){
+ float xRad,yRad,X,Y,angA,angB;
+
+   cir->xRad = fabs(cir->xStart + cir->I);
+   cir->yRad = fabs(cir->yStart + cir->J);
+   cir->radius = sqrt((cir->xRad*cir->xRad) + (cir->yRad*cir->yRad));
+   angA = atan2(cir->yRad,cir->xRad);
+
+
+   cir->degreeDeg = angA * rad2deg;
+
+   cir->quadrant_start = QuadrantStart(cir->I,cir->J);
+    //deg is 360 or 0 and subtract the actual from deg
+   if(cir->quadrant_start == 1 || cir->quadrant_start == 3)
+       angB = cir->deg - cir->degreeDeg;
+   if(cir->quadrant_start == 1 || cir->quadrant_start == 3)
+       angB = cir->deg + cir->degreeDeg;
+
+   cir->degreeRadians = angB * deg2rad;
+}
+
+int QuadrantStart(float i,float j){
+    if((i <= 0)&&(j >= 0))
+          return 1;
+    else if((i > 0)&&(j > 0))
+         return 2;
+    else if((i > 0)&&(j < 0))
+         return 3;
+    else if((i < 0)&&(j < 0))
+         return 4;
+    else
+        return 0;
+}
+
+void CircDir(Circle* cir){
+float newDeg;
+   if(cir->dir == CW){
+        newDeg = 360 / cir->deg;
+        cir->N = (2*Pi*cir->radius)/newDeg;
+        cir->divisor = cir->deg / newDeg;
+   }
+
+   if(cir->dir == CW)
+       cir->deg = 0.00;
+   if(cir->dir == CCW)
+       cir->deg = 360.00;
+}
+
+void Cir_Interpolation(float xPresent,float yPresent,Circle* cir){
+static int quad = 1;
+      cir->xStart = xPresent;
+      cir->yStart = yPresent;
+      CalcRadius(cir);
+    //  quad = QuadrantStart(cir);
+
+    while(quad){
+       break;//!!!
+       if(quad == 1 || quad == 4){
+         cir->xFin = cir->xRad + (cir->radius * cos(cir->degreeRadians));
+         cir->yFin = cir->yRad + (cir->radius * sin(cir->degreeRadians));
+       }
+       if(quad == 2 || quad == 3){
+         cir->xFin = cir->xRad - (cir->radius * cos(cir->degreeRadians));
+        // cir->yFin = cir>-yRad - (cir->radius * sin(cir->degreeRadians));
+       }
+
+     }
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 //TEST CODE
@@ -762,3 +752,30 @@ void toggleOCx(int axis_No){
          OC6RS -= 1;
          if(OC6RS < 350)OC6RS = 350;
      }*/
+     
+     
+////////////////////////////////////////////////////////
+//            OBSOLETE CODE                           //
+////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////
+//interrupt cycles  run from 1.25us clock pulse
+void CycleStop(){
+int ii;
+   STmr.uSec = 0;
+   for(ii = 0;ii<NoOfAxis;ii++){
+    STPS[ii].microSec = 0;
+    if(ii > NoOfAxis)break;
+   }
+}
+
+void CycleStart(){
+int ii;
+
+  if(SV.Tog == 0){
+   for(ii = 0; ii < NoOfAxis;ii++){
+     if(ii > NoOfAxis)break;
+     STPS[ii].microSec++;
+   }
+  }
+}
