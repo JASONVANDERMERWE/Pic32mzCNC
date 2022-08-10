@@ -145,7 +145,7 @@ extern Circle Circ;
 
 
 enum xyz{X,Y,Z};
-enum axis_combination {xy,xz,yz};
+typedef enum {xy,xz,yz}axis_combination ;
 enum swt{FALSE,TRUE};
 
 
@@ -181,6 +181,9 @@ void SingleStepZ();
 void XY_Interpolate();
 void XZ_Interpolate();
 void YZ_Interpolate();
+void StopX();
+void StopY();
+void StopZ();
 
 
 void CalcRadius(Circle* cir);
@@ -192,9 +195,14 @@ int Pulse(int axis_No);
 void toggleOCx(int axis_No);
 void AccDec(int axis_No);
 void Step_Cycle(int axis_No);
+void Axis_Enable(axis_combination axis);
 #line 5 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void (*AxisPulse)();
-#line 14 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+
+
+
+axis_combination axis_xyz;
+
 unsigned char txt1[] = "       ";
 unsigned char AxisNo;
 unsigned int Toggle;
@@ -300,7 +308,7 @@ void DisableStepper(){
  EN_StepY = 1;
  EN_StepZ = 1;
 }
-#line 136 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 133 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void speed_cntr_Move(signed long mmSteps, signed long speed, int axis_No){
 int ii;
 
@@ -383,13 +391,13 @@ int ii;
  STPS[axis_No].accel_count = 1;
  STPS[axis_No].dist = 0;
  SV.Tog = 0;
-#line 221 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 218 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  SV.running = 1;
 }
-#line 230 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 227 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void SingleAxisStep(long newxyz,int axis_No){
 int dir;
-#line 236 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 233 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  SV.Single_Dual = 0;
  switch(axis_No){
  case 0:OC3IE_bit = 1;OC3CONbits.ON = 1;
@@ -446,13 +454,14 @@ void DualAxisStep(long newx,long newy,int axis_combo){
  SV.px = 0;
  SV.py = 0;
  SV.pz = 0;
-#line 295 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 292 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  SV.Single_Dual = 1;
  switch(axis_combo){
  case xy:
- OC5IE_bit = 1;OC5CONbits.ON = 1;
- OC3IE_bit = 1;OC3CONbits.ON = 1;
- OC8IE_bit = 0;OC8CONbits.ON = 0;
+ AxisPulse = XY_Interpolate;
+ axis_xyz = xy;
+ Axis_Enable(axis_xyz);
+
 
  SV.dx = newx - SV.px;
  SV.dy = newy - SV.py;
@@ -480,128 +489,84 @@ void DualAxisStep(long newx,long newy,int axis_combo){
  else
  SV.d2 = 2* (SV.dx - SV.dy);
 
-
  STPS[X].step_count = 0;
- XY_Interpolate();
+ STPS[Y].step_count = 0;
+ AxisPulse();
 
  break;
  case xz:
- OC5IE_bit = 1;OC5CONbits.ON = 1;
- OC3IE_bit = 0;OC3CONbits.ON = 0;
- OC8IE_bit = 1;OC8CONbits.ON = 1;
+ AxisPulse = XZ_Interpolate;
+ axis_xyz = xz;
+ Axis_Enable(axis_xyz);
+
  SV.dx = newx - SV.px;
  SV.dz = newy - SV.pz;
+
 
  SV.dirx = SV.dx > 0?1:-1;
  SV.dirz = SV.dz > 0?1:-1;
 
+
  if(SV.dirx < 0)DIR_StepX =  1 ;
  else DIR_StepX =  0 ;
+
  if(SV.dirz < 0) DIR_StepZ =  1 ;
  else DIR_StepZ =  0 ;
+
  SV.dx = abs(SV.dx);
  SV.dz = abs(SV.dz);
 
  if(SV.dx > SV.dz) d2 = 2*(SV.dz - SV.dx);
  else d2 = 2* (SV.dx - SV.dz);
- if(SV.Tog == 0){
- LATE7_bit = 1;
- if(SV.dx > SV.dz){
- for(STPS[X].step_count = 0;STPS[X].step_count < SV.dx; ++STPS[X].step_count){
- STmr.compOCxRunning = 0;
- toggleOCx(X);
- Pulse(X);
- if(d2 < 0)d2 += 2*SV.dz;
- else{
- d2 += 2 * (SV.dz - SV.dx);
- toggleOCx(Z);
- Pulse(Z);
- }
 
- while(STmr.compOCxRunning == 0);
- }
- }else{
- for(STPS[Z].step_count = 0;STPS[Z].step_count < SV.dz; ++STPS[Z].step_count){
- STmr.compOCxRunning = 0;
- toggleOCx(Z);
- Pulse(Z);
- if(d2 < 0)d2 += 2 * SV.dx;
- else{
- d2 += 2 * (SV.dx - SV.dz);
- toggleOCx(X);
- Pulse(X);
- }
-
- while(STmr.compOCxRunning == 0);
- }
- }
- }
+ STPS[X].step_count = 0;
+ STPS[Z].step_count = 0;
+ AxisPulse();
  break;
  case yz:
- OC5IE_bit = 0;OC5CONbits.ON = 0;
- OC3IE_bit = 1;OC3CONbits.ON = 1;
- OC8IE_bit = 1;OC8CONbits.ON = 1;
+ AxisPulse = YZ_Interpolate;
+ axis_xyz = yz;
+ Axis_Enable(axis_xyz);
+
+
  SV.dy = newx - SV.pz;
  SV.dz = newy - SV.py;
 
+
  SV.diry = SV.dy > 0?1:-1;
  SV.dirz = SV.dz > 0?1:-1;
+
 
  if(SV.diry < 0)DIR_StepY =  1 ;
  else DIR_StepY =  0 ;
  if(SV.dirz < 0) DIR_StepZ =  1 ;
  else DIR_StepZ =  0 ;
+
  SV.dy = abs(SV.dy);
  SV.dz = abs(SV.dz);
 
  if(SV.dy > SV.dz) d2 = 2*(SV.dz - SV.dy);
  else d2 = 2* (SV.dy - SV.dz);
- if(SV.Tog == 0){
- LATE7_bit = 1;
- if(SV.dy > SV.dz){
- for(STPS[Y].step_count = 0;STPS[Y].step_count < SV.dy; ++STPS[Y].step_count){
- STmr.compOCxRunning = 0;
- toggleOCx(Y);
- Pulse(Y);
- if(d2 < 0)d2 += 2*SV.dz;
- else{
- d2 += 2 * (SV.dz - SV.dy);
- toggleOCx(Z);
- Pulse(Z);
- }
 
- while(STmr.compOCxRunning == 0);
- }
- }else{
- for(STPS[Z].step_count = 0;STPS[Z].step_count < SV.dz; ++STPS[Z].step_count){
- STmr.compOCxRunning = 0;
- toggleOCx(Z);
- Pulse(Z);
- if(d2 < 0)d2 += 2 * SV.dy;
- else{
- d2 += 2 * (SV.dy - SV.dz);
- toggleOCx(Y);
- Pulse(Y);
- }
-
- while(STmr.compOCxRunning == 0);
- }
- }
- }
-
+ STPS[Y].step_count = 0;
+ STPS[Z].step_count = 0;
+ AxisPulse();
  break;
  default: break;
 
  }
-#line 448 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 }
+
 
 
 void XY_Interpolate(){
 
  if(SV.dx > SV.dy){
-
-
+ if((STPS[X].step_count > SV.dx)||(STPS[Y].step_count > SV.dy)){
+ StopX();
+ StopY();
+ return;
+ }
  Step_Cycle(X);
  if(SV.d2 < 0){
  SV.d2 += 2*SV.dy;
@@ -609,10 +574,12 @@ void XY_Interpolate(){
  SV.d2 += 2 * (SV.dy - SV.dx);
  Step_Cycle(Y);
  }
-
  }else{
-
-
+ if((STPS[Y].step_count > SV.dy)||(STPS[X].step_count > SV.dx)){
+ StopY();
+ StopX();
+ return;
+ }
  Step_Cycle(Y);
  if(SV.d2 < 0){
  SV.d2 += 2 * SV.dx;
@@ -625,8 +592,65 @@ void XY_Interpolate(){
 
 void XZ_Interpolate(){
 
+ if(SV.dx > SV.dz){
+ if((STPS[X].step_count > SV.dx)||(STPS[Z].step_count > SV.dz)){
+ StopX();
+ StopZ();
+ return;
+ }
+ Step_Cycle(X);
+ if(d2 < 0)
+ d2 += 2*SV.dz;
+ else{
+ d2 += 2 * (SV.dz - SV.dx);
+ Step_Cycle(Z);
+ }
+
+ }else{
+ if((STPS[Z].step_count > SV.dz)||(STPS[X].step_count > SV.dx)){
+ StopZ();
+ StopX();
+ return;
+ }
+ Step_Cycle(Z);
+ if(d2 < 0)
+ d2 += 2 * SV.dx;
+ else{
+ d2 += 2 * (SV.dx - SV.dz);
+ Step_Cycle(X);
+ }
+ }
 }
+
 void YZ_Interpolate(){
+
+ if(SV.dy > SV.dz){
+ if((STPS[Y].step_count > SV.dy)||(STPS[Z].step_count > SV.dz)){
+ StopY();
+ StopZ();
+ return;
+ }
+ Step_Cycle(Y);
+ if(d2 < 0)
+ d2 += 2*SV.dz;
+ else{
+ d2 += 2 * (SV.dz - SV.dy);
+ Step_Cycle(Z);
+ }
+ }else{
+ if((STPS[Z].step_count > SV.dz)||(STPS[Y].step_count > SV.dy)){
+ StopZ();
+ StopY();
+ return;
+ }
+ Step_Cycle(Z);
+ if(d2 < 0)
+ d2 += 2 * SV.dy;
+ else{
+ d2 += 2 * (SV.dy - SV.dz);
+ Step_Cycle(Y);
+ }
+ }
 
 }
 
@@ -645,17 +669,17 @@ void Step_Cycle(int axis_No){
 
 void toggleOCx(int axis_No){
  switch(axis_No){
- case 0: OC3R = 0x5;
+ case X: OC3R = 0x5;
  OC3RS = STPS[X].step_delay & 0xFFFF;
  TMR4 = 0xFFFF;
  OC3CON = 0x8004;
  break;
- case 1: OC5R = 0x5;
+ case Y: OC5R = 0x5;
  OC5RS = STPS[Y].step_delay & 0xFFFF;
  TMR2 = 0xFFFF;
  OC5CON = 0x8004;
  break;
- case 2: OC8R = 0x5;
+ case Z: OC8R = 0x5;
  OC8RS = STPS[Z].step_delay & 0xFFFF;
  TMR6 = 0xFFFF;
  OC8CON = 0x8004;
@@ -683,7 +707,7 @@ int Pulse(int axis_No){
 
  case  1 :
  AccDec(axis_No);
-#line 541 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 548 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  if(STPS[axis_No].step_delay <= STPS[axis_No].min_delay){
 
  STPS[axis_No].step_delay = STPS[axis_No].min_delay;
@@ -735,69 +759,114 @@ void AccDec(int axis_No){
 
 
 
-void StepX() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
- STPS[X].step_count++;
- OC3IF_bit = 0;
- if(STPS[X].step_count >= STPS[X].dist){
- OC3IE_bit = 0;
- OC3CONbits.ON = 0;
- }
- else{
- if(!SV.Single_Dual)
- SingleStepX();
- else
- XY_Interpolate();
+
+void Axis_Enable(axis_combination axis){
+ switch(axis){
+ case xy:
+ OC3IE_bit = 1;OC3CONbits.ON = 1;
+ OC5IE_bit = 1;OC5CONbits.ON = 1;
+ break;
+ case xz:
+ OC3IE_bit = 1;OC3CONbits.ON = 1;
+ OC8IE_bit = 1;OC8CONbits.ON = 1;
+ break;
+ case yz:
+ OC5IE_bit = 1;OC5CONbits.ON = 1;
+ OC8IE_bit = 1;OC8CONbits.ON = 1;
+ break;
+ default:
+ break;
  }
 }
 
-void SingleStepX(){
- Step_Cycle(X);
+void disableOCx(){
+ OC3IE_bit = 0;OC3CONbits.ON = 0;
+ OC5IE_bit = 0;OC5CONbits.ON = 0;
+ OC8IE_bit = 0;OC8CONbits.ON = 0;
 }
+
+
+
+
+void StepX() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
+ STPS[X].step_count++;
+ OC3IF_bit = 0;
+ if(SV.Single_Dual == 0)
+ SingleStepX();
+ else
+ AxisPulse();
+}
+
+void SingleStepX(){
+ if(STPS[X].step_count >= STPS[X].dist){
+ StopX();
+ }
+ else{
+ Step_Cycle(X);
+ }
+}
+
+
+void StopX(){
+ OC3IE_bit = 0;
+ OC3CONbits.ON = 0;
+}
+
+
+
+
 
 void StepY() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
  STPS[Y].step_count++;
  OC5IF_bit = 0;
- if(STPS[Y].step_count >= STPS[Y].dist){
- OC5IE_bit = 0;OC5CONbits.ON = 0;
- }
- else{
- if(!SV.Single_Dual)
+ if(SV.Single_Dual == 0)
  SingleStepY();
  else
  AxisPulse();
- }
 }
 
 void SingleStepY(){
+ if(STPS[Y].step_count >= STPS[Y].dist){
+ StopY();
+ }
+ else{
  Step_Cycle(Y);
+ }
 }
+
+void StopY(){
+ OC5IE_bit = 0;
+ OC5CONbits.ON = 0;
+}
+
+
+
+
 
 void StepZ() iv IVT_OUTPUT_COMPARE_8 ilevel 3 ics ICS_AUTO {
  STPS[Z].step_count++;
  OC8IF_bit = 0;
- if(STPS[Z].step_count >= STPS[Z].dist){
- OC8IE_bit = 0;OC8CONbits.ON = 0;
- }
- else{
  if(!SV.Single_Dual)
  SingleStepZ();
  else
  AxisPulse();
- }
+
 }
 
 void SingleStepZ(){
+ if(STPS[Z].step_count >= STPS[Z].dist){
+ StopZ();
+ }
+ else{
  Step_Cycle(Z);
+ }
 }
 
-
-
-void disableOCx(){
- OC5IE_bit = 0;OC5CONbits.ON = 0;
- OC3IE_bit = 0;OC3CONbits.ON = 0;
- OC8IE_bit = 0;OC8CONbits.ON = 0;
+void StopZ(){
+ OC8IE_bit = 0;
+ OC8CONbits.ON = 0;
 }
-#line 665 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 716 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 unsigned int min_(unsigned int x, unsigned int y){
  if(x < y){
  return x;
@@ -806,7 +875,7 @@ unsigned int min_(unsigned int x, unsigned int y){
  return y;
  }
 }
-#line 682 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 733 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 static unsigned long sqrt_(unsigned long x){
 
  register unsigned long xr;
@@ -907,7 +976,7 @@ static int quad = 1;
 
  }
 }
-#line 805 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 856 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void CycleStop(){
 int ii;
  STmr.uSec = 0;

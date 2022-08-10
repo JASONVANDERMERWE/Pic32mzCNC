@@ -195,7 +195,7 @@ extern Circle Circ;
 
 //enums
 enum xyz{X,Y,Z};
-enum axis_combination {xy,xz,yz};
+typedef enum {xy,xz,yz}axis_combination ;
 enum swt{FALSE,TRUE};
 
 //enum StepState{STOP,ACCEL,RUN,DECEL};
@@ -231,6 +231,9 @@ void SingleStepZ();
 void XY_Interpolate();
 void XZ_Interpolate();
 void YZ_Interpolate();
+void StopX();
+void StopY();
+void StopZ();
 
 //Circle move axis
 void CalcRadius(Circle* cir);
@@ -242,4 +245,5 @@ int Pulse(int axis_No);
 void toggleOCx(int axis_No);
 void AccDec(int axis_No);
 void Step_Cycle(int axis_No);
+void Axis_Enable(axis_combination axis);
 #endif

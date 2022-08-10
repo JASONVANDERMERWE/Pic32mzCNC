@@ -183,7 +183,7 @@ extern Circle Circ;
 
 
 enum xyz{X,Y,Z};
-enum axis_combination {xy,xz,yz};
+typedef enum {xy,xz,yz}axis_combination ;
 enum swt{FALSE,TRUE};
 
 
@@ -219,6 +219,9 @@ void SingleStepZ();
 void XY_Interpolate();
 void XZ_Interpolate();
 void YZ_Interpolate();
+void StopX();
+void StopY();
+void StopZ();
 
 
 void CalcRadius(Circle* cir);
@@ -230,6 +233,7 @@ int Pulse(int axis_No);
 void toggleOCx(int axis_No);
 void AccDec(int axis_No);
 void Step_Cycle(int axis_No);
+void Axis_Enable(axis_combination axis);
 #line 1 "c:/users/git/pic32mzcnc/steptodistance.h"
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
@@ -359,7 +363,7 @@ unsigned char j;
 int xyz_ = 0;
  PinMode();
  SetPinMode();
- StepperConstants(8500,8500);
+ StepperConstants(15500,15500);
  EnableInterrupts();
  oneShotA = 0;
 
@@ -372,7 +376,7 @@ int xyz_ = 0;
  EnStepperX();
  EnStepperY();
  EnStepperZ();
- a = 0;
+
 
  }
 
@@ -382,50 +386,51 @@ int xyz_ = 0;
 #line 119 "C:/Users/Git/Pic32mzCNC/Main.c"
  xyz_++;
  if(xyz_ > 2)xyz_ = 0;
-
- STPS[X].mmToTravel = calcSteps(225.25,8.06);
- speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
- STPS[Y].mmToTravel = calcSteps(-25.25,8.06);
- speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
- DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
-
+#line 128 "C:/Users/Git/Pic32mzCNC/Main.c"
+ Temp_Move(a);
+ a++;
+ if(a > 11) a = 0;
  }
+
+
+
 
  }
 }
 
 
 void Temp_Move(int a){
+
  switch(a){
  case 0:
  STPS[Z].mmToTravel = calcSteps(-125.25,8.06);
  speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
  SingleAxisStep(STPS[Z].mmToTravel,Z);
- a = 1;
- SV.Tog = 1;
+
+
  break;
  case 1:
- if(SV.Tog == 1)a=2;
+
  break;
  case 2:
  STPS[X].mmToTravel = calcSteps(125.25,8.06);
  speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
  SingleAxisStep(STPS[X].mmToTravel,X);
- a = 3;
- SV.Tog = 1;
+
+
  break;
  case 3:
- if(SV.Tog == 1) a = 4;
+
  break;
  case 4:
  STPS[Y].mmToTravel = calcSteps(202.00,8.06);
  speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
  SingleAxisStep(STPS[Y].mmToTravel,Y);
- a = 5;
- SV.Tog = 1;
+
+
  break;
  case 5:
- if(SV.Tog == 1) a = 6;
+
  break;
  case 6:
  STPS[Y].mmToTravel = calcSteps(125.25,8.06);
@@ -433,11 +438,11 @@ void Temp_Move(int a){
  STPS[Z].mmToTravel = calcSteps(-25.25,8.06);
  speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
  DualAxisStep(STPS[Y].mmToTravel, STPS[Z].mmToTravel,yz);
- a = 7;
- SV.Tog = 1;
+
+
  break;
  case 7:
- if(SV.Tog == 1) a = 8;
+
  break;
  case 8:
  STPS[X].mmToTravel = calcSteps(225.25,8.06);
@@ -445,11 +450,11 @@ void Temp_Move(int a){
  STPS[Y].mmToTravel = calcSteps(-25.25,8.06);
  speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
  DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
- a = 9;
- SV.Tog = 1;
+
+
  break;
  case 9:
- if(SV.Tog == 1) a = 10;
+
  break;
  case 10:
  STPS[X].mmToTravel = calcSteps(125.25,8.06);
@@ -457,16 +462,15 @@ void Temp_Move(int a){
  STPS[Z].mmToTravel = calcSteps(-25.25,8.06);
  speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
  DualAxisStep(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
- a = 11;
- SV.Tog = 1;
+
+
  break;
  case 11:
- if(SV.Tog == 1) a = 0;
+
  break;
  default: a = 0;
  break;
  }
-
 }
 
 void LCD_Display(){

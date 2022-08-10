@@ -23,45 +23,79 @@ main
 	EnStepperX
 	EnStepperY
 	EnStepperZ
-	calcSteps
-	speed_cntr_Move
-		abs
-		sqrt_
-	DualAxisStep
-		abs
-		XY_Interpolate
+	Temp_Move
+		calcSteps
+		speed_cntr_Move
+			abs
+			sqrt_
+		SingleAxisStep
+			abs
 			Step_Cycle
 				toggleOCx
 				Pulse
 					AccDec
-		toggleOCx
-		Pulse
+		DualAxisStep
+			Axis_Enable
+			abs
+			I2C4_Stop
+				I2C4_Wait_For_Idle
+					I2C4_Is_Idle
+			XY_Interpolate
+				StopX
+				StopY
+				Step_Cycle
+			XZ_Interpolate
+				StopX
+				StopZ
+				Step_Cycle
+			YZ_Interpolate
+				StopY
+				StopZ
+				Step_Cycle
+			I2C1_Stop
+				I2C1_Wait_For_Idle
+					I2C1_Is_Idle
+			I2C2_Stop
+				I2C2_Wait_For_Idle
+					I2C2_Is_Idle
+			I2C3_Stop
+				I2C3_Wait_For_Idle
+					I2C3_Is_Idle
+			I2C5_Stop
+				I2C5_Wait_For_Idle
+					I2C5_Is_Idle
 StepX
 	SingleStepX
+		StopX
 		Step_Cycle
+	I2C4_Stop
 	XY_Interpolate
+	XZ_Interpolate
+	YZ_Interpolate
+	I2C1_Stop
+	I2C2_Stop
+	I2C3_Stop
+	I2C5_Stop
 StepY
 	SingleStepY
+		StopY
 		Step_Cycle
 	I2C4_Stop
-		I2C4_Wait_For_Idle
-			I2C4_Is_Idle
+	XY_Interpolate
+	XZ_Interpolate
+	YZ_Interpolate
 	I2C1_Stop
-		I2C1_Wait_For_Idle
-			I2C1_Is_Idle
 	I2C2_Stop
-		I2C2_Wait_For_Idle
-			I2C2_Is_Idle
 	I2C3_Stop
-		I2C3_Wait_For_Idle
-			I2C3_Is_Idle
 	I2C5_Stop
-		I2C5_Wait_For_Idle
-			I2C5_Is_Idle
 StepZ
 	SingleStepZ
+		StopZ
 		Step_Cycle
 	I2C4_Stop
+	XY_Interpolate
+	XZ_Interpolate
+	YZ_Interpolate
 	I2C1_Stop
 	I2C2_Stop
 	I2C3_Stop

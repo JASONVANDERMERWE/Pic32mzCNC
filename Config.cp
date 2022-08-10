@@ -183,7 +183,7 @@ extern Circle Circ;
 
 
 enum xyz{X,Y,Z};
-enum axis_combination {xy,xz,yz};
+typedef enum {xy,xz,yz}axis_combination ;
 enum swt{FALSE,TRUE};
 
 
@@ -219,6 +219,9 @@ void SingleStepZ();
 void XY_Interpolate();
 void XZ_Interpolate();
 void YZ_Interpolate();
+void StopX();
+void StopY();
+void StopZ();
 
 
 void CalcRadius(Circle* cir);
@@ -230,6 +233,7 @@ int Pulse(int axis_No);
 void toggleOCx(int axis_No);
 void AccDec(int axis_No);
 void Step_Cycle(int axis_No);
+void Axis_Enable(axis_combination axis);
 #line 1 "c:/users/git/pic32mzcnc/steptodistance.h"
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"

@@ -5155,6 +5155,8 @@ autoset_usbe4csr0_bit
 autoset_usbe5csr0_bit
 autoset_usbe6csr0_bit
 autoset_usbe7csr0_bit
+axis_enable
+axis_xyz
 axisno
 axisno
 axispulse
@@ -61160,6 +61162,9 @@ stnaddr66_emacxsa0_bit
 stnaddr67
 stnaddr67_bit
 stnaddr67_emacxsa0_bit
+stopx
+stopy
+stopz
 stps
 strcat
 strchr
