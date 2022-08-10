@@ -101,15 +101,12 @@ StepZ
 	I2C3_Stop
 	I2C5_Stop
 Timer8Interrupt
-	CycleStart
-	CycleStop
-Timer7Interrupt
-DMA_CH1_ISR
 DMA_CH0_ISR
 	__CC2DW
 	strlen
 	memcpy
+DMA_CH1_ISR
+Timer1Interrupt
 uart2_Rx_interrupt
 	UART2_Read
 	UART2_Write
-Timer1Interrupt

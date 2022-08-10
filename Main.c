@@ -92,6 +92,7 @@ int xyz_ = 0;
   EnableInterrupts();
   oneShotA = 0;
   //I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
+  a=4;
   while(1){
 
          if(!RB0_bit){
@@ -127,7 +128,7 @@ int xyz_ = 0;
            */
             Temp_Move(a);
             a++;
-            if(a > 11) a = 0;
+            if(a > 5)a=4;
          }
 
 
@@ -144,67 +145,37 @@ void Temp_Move(int a){
                              STPS[Z].mmToTravel = calcSteps(-125.25,8.06);
                              speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
                              SingleAxisStep(STPS[Z].mmToTravel,Z);
-                           //  a = 1;
-                           //  SV.Tog = 0;
                           break;
                     case 1:
-                           //  if(SV.Tog == 1)a=2;
-                          break;
-                    case 2:
                              STPS[X].mmToTravel = calcSteps(125.25,8.06);
                              speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
                              SingleAxisStep(STPS[X].mmToTravel,X);
-                           //  a = 3;
-                           //  SV.Tog = 1;
                           break;
-                    case 3:
-                          //   if(SV.Tog == 1) a = 4;
-                          break;
-                    case 4:
+                    case 2:
                              STPS[Y].mmToTravel = calcSteps(202.00,8.06);
                              speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
                              SingleAxisStep(STPS[Y].mmToTravel,Y);
-                          //   a = 5;
-                          //   SV.Tog = 1;
                           break;
-                   case 5:
-                          //   if(SV.Tog == 1) a = 6;
-                          break;
-                   case 6:
+                   case 3:
                              STPS[Y].mmToTravel = calcSteps(125.25,8.06);
                              speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
-                             STPS[Z].mmToTravel = calcSteps(-25.25,8.06);
+                             STPS[Z].mmToTravel = calcSteps(25.25,8.06);
                              speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
                              DualAxisStep(STPS[Y].mmToTravel, STPS[Z].mmToTravel,yz);
-                           //  a = 7;
-                           //  SV.Tog = 1;
                           break;
-                   case 7:
-                           //  if(SV.Tog == 1) a = 8;
-                          break;
-                   case 8:
-                             STPS[X].mmToTravel = calcSteps(225.25,8.06);
+                   case 4:
+                             STPS[X].mmToTravel = calcSteps(228.25,8.06);
                              speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
                              STPS[Y].mmToTravel = calcSteps(-25.25,8.06);
                              speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
                              DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
-                           //  a = 9;
-                           //  SV.Tog = 1;
                           break;
-                   case 9:
-                           //  if(SV.Tog == 1) a = 10;
-                          break;
-                   case 10:
-                             STPS[X].mmToTravel = calcSteps(125.25,8.06);
+                   case 5:
+                             STPS[X].mmToTravel = calcSteps(-228.25,8.06);
                              speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
-                             STPS[Z].mmToTravel = calcSteps(-25.25,8.06);
-                             speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
-                             DualAxisStep(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
-                          //   a = 11;
-                          //   SV.Tog = 1;
-                          break;
-                   case 11:
-                          //   if(SV.Tog == 1) a = 0;
+                             STPS[Y].mmToTravel = calcSteps(25.25,8.06);
+                             speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+                             DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
                           break;
                     default: a = 0;
                           break;

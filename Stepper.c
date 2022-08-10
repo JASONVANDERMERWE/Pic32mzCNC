@@ -212,9 +212,6 @@ int ii;
       STPS[axis_No].accel_count = 1;
       STPS[axis_No].dist        = 0;
       SV.Tog   = 0;
-      /*SV.px    = 0;
-      SV.py    = 0;
-      SV.pz    = 0;*/
       SV.running = 1;
 }
 
@@ -233,15 +230,11 @@ int dir;
      SV.Single_Dual = 0;
      switch(axis_No){
        case 0:OC3IE_bit = 1;OC3CONbits.ON = 1;
-             // OC5IE_bit = 0;OC5CONbits.ON = 0;
-             // OC8IE_bit = 0;OC8CONbits.ON = 0;
               break;
-       case 1://OC3IE_bit = 0;OC3CONbits.ON = 0;
+       case 1:
               OC5IE_bit = 1;OC5CONbits.ON = 1;
-             // OC8IE_bit = 0;OC8CONbits.ON = 0;
               break;
-       case 2://OC3IE_bit = 0;OC3CONbits.ON = 0;
-              //OC5IE_bit = 0;OC5CONbits.ON = 0;
+       case 2:
               OC8IE_bit = 1;OC8CONbits.ON = 1;
               break;
        default: break;
@@ -278,10 +271,8 @@ int dir;
 //         DUAL AXIS INTERPOLATION SECTION              //
 //////////////////////////////////////////////////////////
 void DualAxisStep(long newx,long newy,int axis_combo){
- long i;
- static long d2 = 0;
+
    SV.over=0;
-   d2 = 0;
    //will need to change these 3 lines when implimenting position referenc??
    SV.px = 0;
    SV.py = 0;
@@ -295,7 +286,6 @@ void DualAxisStep(long newx,long newy,int axis_combo){
           AxisPulse = XY_Interpolate;
           axis_xyz = xy;
           Axis_Enable(axis_xyz);
-
 
           SV.dx   = newx - SV.px;           // distance to move (delta)
           SV.dy   = newy - SV.py;
@@ -528,9 +518,9 @@ void toggleOCx(int axis_No){
 //reset the pulse
 int Pulse(int axis_No){
 
-    if(!STPS[axis_No].PLS_Step_ ){
+/*if(!STPS[axis_No].PLS_Step_ ){
       STPS[axis_No].PLS_Step_   = 1;
-    }
+    }*/
 
     switch(STPS[axis_No].run_state) {
       case STOP:
@@ -540,11 +530,11 @@ int Pulse(int axis_No){
         break;
 
       case ACCEL:
-        AccDec(axis_No);
         /*
         * Chech if we should start decelration.
         * Check if we hit max speed.
         */
+        AccDec(axis_No);
         if(STPS[axis_No].step_delay <= STPS[axis_No].min_delay){
         //  STPS.last_accel_delay = STPS.new_step_delay;
              STPS[axis_No].step_delay = STPS[axis_No].min_delay;
@@ -572,10 +562,15 @@ int Pulse(int axis_No){
         break;
 
       case DECEL:
+        /*
+        * Chech if we should start decelration.
+        * Check if we hit max speed.
+        */
+        AccDec(axis_No);
         // else STPS[axis_No].new_step_delay = STPS[axis_No].StartUp_delay;
         // Check if we at last step
-        AccDec(axis_No);
-        if(STPS[axis_No].accel_count >= -2 ){
+
+        if(STPS[axis_No].accel_count >= 0 ){
          STPS[axis_No].run_state = STOP;
         }
         break;
