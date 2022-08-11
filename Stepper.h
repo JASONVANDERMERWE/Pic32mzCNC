@@ -2,6 +2,7 @@
 #define STEPPER_H
 
  #include "built_in.h"
+ #include "Timers.h"
 /*#include "I2C_LCD.h"
 #include "Config.h"*/
 
@@ -39,14 +40,18 @@ extern sfr FLT_Step_PinDirY;
 //////////////////////////////////////////////
 //defines
 typedef unsigned short UInt8_t;
+
+
 // Decide how many axis you would like to run
 #define NoOfAxis 3
+
+
 // Direction of stepper motor movement
 #define CW  0
 #define CCW 1
 
 /*! \Brief Frequency of timer1 in [Hz].
- *
+ * Newtimer 50000000
  * Modify this according to frequency used. Because of the prescaler setting,
  * the timer1 frequency is the clock frequency divided by 8.
  */

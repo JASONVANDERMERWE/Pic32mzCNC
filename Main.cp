@@ -1,5 +1,7 @@
 #line 1 "C:/Users/Git/Pic32mzCNC/Main.c"
 #line 1 "c:/users/git/pic32mzcnc/config.h"
+#line 1 "c:/users/git/pic32mzcnc/timers.h"
+#line 1 "c:/users/git/pic32mzcnc/config.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
@@ -39,7 +41,8 @@ extern Cmd_Type Cmd;
  void I2C_Pins(char i2c_pins);
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 13 "c:/users/git/pic32mzcnc/stepper.h"
+#line 1 "c:/users/git/pic32mzcnc/timers.h"
+#line 14 "c:/users/git/pic32mzcnc/stepper.h"
 extern sfr EN_StepX;
 extern sfr EN_Step_PinDirX;
 extern sfr RST_StepX;
@@ -69,7 +72,7 @@ extern sfr FLT_Step_PinDirY;
 
 
 typedef unsigned short UInt8_t;
-#line 85 "c:/users/git/pic32mzcnc/stepper.h"
+#line 90 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
@@ -234,21 +237,7 @@ void toggleOCx(int axis_No);
 void AccDec(int axis_No);
 void Step_Cycle(int axis_No);
 void Axis_Enable(axis_combination axis);
-#line 1 "c:/users/git/pic32mzcnc/steptodistance.h"
-#line 1 "c:/users/git/pic32mzcnc/stepper.h"
-#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 11 "c:/users/git/pic32mzcnc/steptodistance.h"
-const float Dia;
-#line 23 "c:/users/git/pic32mzcnc/steptodistance.h"
-signed long calcSteps( double mmsToMove, double Dia);
-#line 12 "c:/users/git/pic32mzcnc/config.h"
-extern unsigned char LCD_01_ADDRESS;
-extern bit oneShotA; sfr;
-extern bit oneShotB; sfr;
-
-
-
-
+#line 12 "c:/users/git/pic32mzcnc/timers.h"
 struct Timer{
 unsigned int uSec;
 unsigned int uMs;
@@ -261,13 +250,33 @@ unsigned short OldSec;
 extern struct Timer TMR;
 
 
+void InitTimer1();
+void InitTimer8();
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
+#line 1 "c:/users/git/pic32mzcnc/steptodistance.h"
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 11 "c:/users/git/pic32mzcnc/steptodistance.h"
+const float Dia;
+#line 23 "c:/users/git/pic32mzcnc/steptodistance.h"
+signed long calcSteps( double mmsToMove, double Dia);
+#line 13 "c:/users/git/pic32mzcnc/config.h"
+extern unsigned char LCD_01_ADDRESS;
+extern bit oneShotA; sfr;
+extern bit oneShotB; sfr;
+
+
+
+
+
+
+
 void PinMode();
 void UartConfig();
 void set_performance_mode();
 void Uart2InterruptSetup();
-void InitTimer6();
-void InitTimer7();
-void InitTimer8();
 void LcdI2CConfig();
 void OutPutPulseXYZ();
 void initDMA_global();
@@ -287,7 +296,7 @@ bit testISR;
 bit oneShotA; sfr;
 bit oneShotB; sfr;
 char uart_rd;
-struct Timer TMR;
+
 unsigned char LCD_01_ADDRESS = 0x4E;
 
 
@@ -383,7 +392,6 @@ int xyz_ = 0;
 
  if((!RC3_bit)&&(!Toggle)){
  Toggle = 1;
- LATE7_bit = 1;
 #line 120 "C:/Users/Git/Pic32mzCNC/Main.c"
  xyz_++;
  if(xyz_ > 2)xyz_ = 0;
@@ -392,8 +400,11 @@ int xyz_ = 0;
  a++;
  if(a > 5)a=4;
  }
-
-
+ if(!OC3IE_bit && !OC5IE_bit && !OC8IE_bit){
+ Temp_Move(a);
+ a++;
+ LATE7_bit != LATE7_bit;
+ }
 
 
  }
@@ -428,9 +439,9 @@ void Temp_Move(int a){
  case 4:
  STPS[X].mmToTravel = calcSteps(228.25,8.06);
  speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
- STPS[Y].mmToTravel = calcSteps(-25.25,8.06);
- speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
- DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
+ STPS[Z].mmToTravel = calcSteps(-25.25,8.06);
+ speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
+ DualAxisStep(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
  break;
  case 5:
  STPS[X].mmToTravel = calcSteps(-228.25,8.06);

@@ -1,7 +1,95 @@
 #line 1 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 13 "c:/users/git/pic32mzcnc/stepper.h"
+#line 1 "c:/users/git/pic32mzcnc/timers.h"
+#line 1 "c:/users/git/pic32mzcnc/config.h"
+#line 1 "c:/users/git/pic32mzcnc/timers.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 62 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
+typedef enum{
+ _LCD_FIRST_ROW = 1,
+ _LCD_SECOND_ROW,
+ _LCD_THIRD_ROW,
+ _LCD_FOURTH_ROW,
+ _LCD_CLEAR,
+ _LCD_RETURN_HOME,
+ _LCD_CURSOR_OFF,
+ _LCD_UNDERLINE_ON,
+ _LCD_BLINK_CURSOR_ON,
+ _LCD_MOVE_CURSOR_LEFT,
+ _LCD_MOVE_CURSOR_RIGHT,
+ _LCD_TURN_ON,
+ _LCD_TURN_OFF,
+ _LCD_SHIFT_LEFT,
+ _LCD_SHIFT_RIGHT,
+ _LCD_INCREMENT_NO_SHIFT
+}Cmd_Type;
+
+extern Cmd_Type Cmd;
+
+
+
+  unsigned char  I2C_PCF8574_Write( unsigned char  addr, unsigned char  Data);
+ void I2C_LCD_putcmd( unsigned char  addr,  unsigned char  dta, unsigned char  cmdtype);
+ void I2C_LCD_goto( unsigned char  addr, unsigned char  row,  unsigned char  col);
+ void I2C_Lcd_Cmd( unsigned char  addr,Cmd_Type cmd, unsigned char  col);
+ void I2C_LCD_putch( unsigned char  addr,  unsigned char  dta);
+ void I2C_LCD_Out( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  *s);
+ void I2C_Lcd_Chr( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  out_char);
+ void I2C_LCD_init( unsigned char  addr);
+ void I2C_LCD_init4l( unsigned char  addr);
+ void I2C_Pins(char i2c_pins);
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
+#line 1 "c:/users/git/pic32mzcnc/steptodistance.h"
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 11 "c:/users/git/pic32mzcnc/steptodistance.h"
+const float Dia;
+#line 23 "c:/users/git/pic32mzcnc/steptodistance.h"
+signed long calcSteps( double mmsToMove, double Dia);
+#line 13 "c:/users/git/pic32mzcnc/config.h"
+extern unsigned char LCD_01_ADDRESS;
+extern bit oneShotA; sfr;
+extern bit oneShotB; sfr;
+
+
+
+
+
+
+
+void PinMode();
+void UartConfig();
+void set_performance_mode();
+void Uart2InterruptSetup();
+void LcdI2CConfig();
+void OutPutPulseXYZ();
+void initDMA_global();
+void initDMA0();
+void initDMA1();
+void Temp_Move(int a);
+void LCD_Display();
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
+#line 12 "c:/users/git/pic32mzcnc/timers.h"
+struct Timer{
+unsigned int uSec;
+unsigned int uMs;
+unsigned int uSSec;
+unsigned int OlduSSec;
+unsigned int mSec;
+unsigned short Sec;
+unsigned short OldSec;
+};
+extern struct Timer TMR;
+
+
+void InitTimer1();
+void InitTimer8();
+#line 14 "c:/users/git/pic32mzcnc/stepper.h"
 extern sfr EN_StepX;
 extern sfr EN_Step_PinDirX;
 extern sfr RST_StepX;
@@ -31,7 +119,7 @@ extern sfr FLT_Step_PinDirY;
 
 
 typedef unsigned short UInt8_t;
-#line 85 "c:/users/git/pic32mzcnc/stepper.h"
+#line 90 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
@@ -552,13 +640,13 @@ void DualAxisStep(long newx,long newy,int axis_combo){
 
 
 void XY_Interpolate(){
-
- if(SV.dx > SV.dy){
  if((STPS[X].step_count > SV.dx)||(STPS[Y].step_count > SV.dy)){
  StopX();
  StopY();
  return;
  }
+
+ if(SV.dx > SV.dy){
  Step_Cycle(X);
  if(SV.d2 < 0){
  SV.d2 += 2*SV.dy;
@@ -567,11 +655,6 @@ void XY_Interpolate(){
  Step_Cycle(Y);
  }
  }else{
- if((STPS[Y].step_count > SV.dy)||(STPS[X].step_count > SV.dx)){
- StopY();
- StopX();
- return;
- }
  Step_Cycle(Y);
  if(SV.d2 < 0){
  SV.d2 += 2 * SV.dx;
@@ -584,12 +667,14 @@ void XY_Interpolate(){
 
 void XZ_Interpolate(){
 
- if(SV.dx > SV.dz){
  if((STPS[X].step_count > SV.dx)||(STPS[Z].step_count > SV.dz)){
  StopX();
  StopZ();
+
  return;
  }
+
+ if(SV.dx > SV.dz){
  Step_Cycle(X);
  if(d2 < 0)
  d2 += 2*SV.dz;
@@ -599,11 +684,6 @@ void XZ_Interpolate(){
  }
 
  }else{
- if((STPS[Z].step_count > SV.dz)||(STPS[X].step_count > SV.dx)){
- StopZ();
- StopX();
- return;
- }
  Step_Cycle(Z);
  if(d2 < 0)
  d2 += 2 * SV.dx;
@@ -615,13 +695,13 @@ void XZ_Interpolate(){
 }
 
 void YZ_Interpolate(){
-
- if(SV.dy > SV.dz){
  if((STPS[Y].step_count > SV.dy)||(STPS[Z].step_count > SV.dz)){
  StopY();
  StopZ();
  return;
  }
+
+ if(SV.dy > SV.dz){
  Step_Cycle(Y);
  if(d2 < 0)
  d2 += 2*SV.dz;
@@ -630,11 +710,6 @@ void YZ_Interpolate(){
  Step_Cycle(Z);
  }
  }else{
- if((STPS[Z].step_count > SV.dz)||(STPS[Y].step_count > SV.dy)){
- StopZ();
- StopY();
- return;
- }
  Step_Cycle(Z);
  if(d2 < 0)
  d2 += 2 * SV.dy;
@@ -685,7 +760,7 @@ void toggleOCx(int axis_No){
 
 
 int Pulse(int axis_No){
-#line 525 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 512 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  switch(STPS[axis_No].run_state) {
  case  0 :
  LATE7_bit = 0;
@@ -694,7 +769,7 @@ int Pulse(int axis_No){
  break;
 
  case  1 :
-#line 537 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 524 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  AccDec(axis_No);
  if(STPS[axis_No].step_delay <= STPS[axis_No].min_delay){
 
@@ -723,7 +798,7 @@ int Pulse(int axis_No){
  break;
 
  case  2 :
-#line 569 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 556 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  AccDec(axis_No);
 
 
@@ -856,7 +931,7 @@ void StopZ(){
  OC8IE_bit = 0;
  OC8CONbits.ON = 0;
 }
-#line 711 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 698 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 unsigned int min_(unsigned int x, unsigned int y){
  if(x < y){
  return x;
@@ -865,7 +940,7 @@ unsigned int min_(unsigned int x, unsigned int y){
  return y;
  }
 }
-#line 728 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 715 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 static unsigned long sqrt_(unsigned long x){
 
  register unsigned long xr;
@@ -966,7 +1041,7 @@ static int quad = 1;
 
  }
 }
-#line 851 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 838 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void CycleStop(){
 int ii;
  STmr.uSec = 0;

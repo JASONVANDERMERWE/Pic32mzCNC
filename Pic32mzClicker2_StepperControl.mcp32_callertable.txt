@@ -13,6 +13,7 @@ main
 				UART_Calc_BRG
 			UART_Set_Active
 		set_performance_mode
+		InitTimer1
 		InitTimer8
 		initDMA_global
 		initDMA0
@@ -64,9 +65,9 @@ main
 			I2C5_Stop
 				I2C5_Wait_For_Idle
 					I2C5_Is_Idle
-StepX
-	SingleStepX
-		StopX
+StepZ
+	SingleStepZ
+		StopZ
 		Step_Cycle
 	I2C4_Stop
 	XY_Interpolate
@@ -88,9 +89,11 @@ StepY
 	I2C2_Stop
 	I2C3_Stop
 	I2C5_Stop
-StepZ
-	SingleStepZ
-		StopZ
+Timer8Interrupt
+Timer1Interrupt
+StepX
+	SingleStepX
+		StopX
 		Step_Cycle
 	I2C4_Stop
 	XY_Interpolate
@@ -100,13 +103,11 @@ StepZ
 	I2C2_Stop
 	I2C3_Stop
 	I2C5_Stop
-Timer8Interrupt
 DMA_CH0_ISR
 	__CC2DW
 	strlen
 	memcpy
 DMA_CH1_ISR
-Timer1Interrupt
 uart2_Rx_interrupt
 	UART2_Read
 	UART2_Write

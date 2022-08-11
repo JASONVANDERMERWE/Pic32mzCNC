@@ -12,7 +12,7 @@ bit testISR;
 bit oneShotA; sfr;
 bit oneShotB; sfr;
 char uart_rd;
-struct Timer TMR;
+//struct Timer TMR;
 unsigned char LCD_01_ADDRESS = 0x4E;//7E; //PCF8574T
 //////////////////////////////////////////
 // temp vars
@@ -108,7 +108,7 @@ int xyz_ = 0;
 
          if((!RC3_bit)&&(!Toggle)){
             Toggle = 1;
-            LATE7_bit = 1;
+           // LATE7_bit = 1;
         /*   STPS[X].mmToTravel = calcSteps(-125.25,8.06);
             speed_cntr_Move(STPS[X].mmToTravel, 20000,X);
             SingleAxisStep(STPS[X].mmToTravel,X);
@@ -130,8 +130,11 @@ int xyz_ = 0;
             a++;
             if(a > 5)a=4;
          }
-
-
+         if(!OC3IE_bit && !OC5IE_bit && !OC8IE_bit){
+             Temp_Move(a);
+             a++;
+             LATE7_bit != LATE7_bit;
+         }
             
 
   }
@@ -140,46 +143,46 @@ int xyz_ = 0;
 //Temp code for trsting
 void Temp_Move(int a){
 
-         switch(a){
-                     case 0:
-                             STPS[Z].mmToTravel = calcSteps(-125.25,8.06);
-                             speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
-                             SingleAxisStep(STPS[Z].mmToTravel,Z);
-                          break;
-                    case 1:
-                             STPS[X].mmToTravel = calcSteps(125.25,8.06);
-                             speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
-                             SingleAxisStep(STPS[X].mmToTravel,X);
-                          break;
-                    case 2:
-                             STPS[Y].mmToTravel = calcSteps(202.00,8.06);
-                             speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
-                             SingleAxisStep(STPS[Y].mmToTravel,Y);
-                          break;
-                   case 3:
-                             STPS[Y].mmToTravel = calcSteps(125.25,8.06);
-                             speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
-                             STPS[Z].mmToTravel = calcSteps(25.25,8.06);
-                             speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
-                             DualAxisStep(STPS[Y].mmToTravel, STPS[Z].mmToTravel,yz);
-                          break;
-                   case 4:
-                             STPS[X].mmToTravel = calcSteps(228.25,8.06);
-                             speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
-                             STPS[Y].mmToTravel = calcSteps(-25.25,8.06);
-                             speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
-                             DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
-                          break;
-                   case 5:
-                             STPS[X].mmToTravel = calcSteps(-228.25,8.06);
-                             speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
-                             STPS[Y].mmToTravel = calcSteps(25.25,8.06);
-                             speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
-                             DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
-                          break;
-                    default: a = 0;
-                          break;
-                }
+    switch(a){
+         case 0:
+                 STPS[Z].mmToTravel = calcSteps(-125.25,8.06);
+                 speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
+                 SingleAxisStep(STPS[Z].mmToTravel,Z);
+              break;
+        case 1:
+                 STPS[X].mmToTravel = calcSteps(125.25,8.06);
+                 speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
+                 SingleAxisStep(STPS[X].mmToTravel,X);
+              break;
+        case 2:
+                 STPS[Y].mmToTravel = calcSteps(202.00,8.06);
+                 speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+                 SingleAxisStep(STPS[Y].mmToTravel,Y);
+              break;
+       case 3:
+                 STPS[Y].mmToTravel = calcSteps(125.25,8.06);
+                 speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+                 STPS[Z].mmToTravel = calcSteps(25.25,8.06);
+                 speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
+                 DualAxisStep(STPS[Y].mmToTravel, STPS[Z].mmToTravel,yz);
+              break;
+       case 4:
+                 STPS[X].mmToTravel = calcSteps(228.25,8.06);
+                 speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
+                 STPS[Z].mmToTravel = calcSteps(-25.25,8.06);
+                 speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
+                 DualAxisStep(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
+              break;
+       case 5:
+                 STPS[X].mmToTravel = calcSteps(-228.25,8.06);
+                 speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
+                 STPS[Y].mmToTravel = calcSteps(25.25,8.06);
+                 speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+                 DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
+              break;
+        default: a = 0;
+              break;
+    }
 }
 
 void LCD_Display(){

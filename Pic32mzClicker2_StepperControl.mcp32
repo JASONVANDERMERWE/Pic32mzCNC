@@ -6,7 +6,7 @@ Value=0
 [BUILD_TYPE]
 Value=0
 [ACTIVE_TAB]
-Value=Stepper.c
+Value=Config.h
 [USE_EEPROM]
 Value=0
 [USE_HEAP]
@@ -51,7 +51,8 @@ Count=1
 File0=Config.h
 File1=Stepper.h
 File2=Steptodistance.h
-Count=3
+File3=Timers.h
+Count=4
 [PLDS]
 Count=0
 [Useses]

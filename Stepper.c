@@ -384,13 +384,13 @@ void DualAxisStep(long newx,long newy,int axis_combo){
 //////////////////////////////////////////////////////////
 // X AXIS COMBOS
 void XY_Interpolate(){
-
-   if(SV.dx > SV.dy){
-      if((STPS[X].step_count > SV.dx)||(STPS[Y].step_count > SV.dy)){
+   if((STPS[X].step_count > SV.dx)||(STPS[Y].step_count > SV.dy)){
         StopX();
         StopY();
         return;
-      }
+   }
+   
+   if(SV.dx > SV.dy){
       Step_Cycle(X);
       if(SV.d2 < 0){
           SV.d2 += 2*SV.dy;
@@ -399,11 +399,6 @@ void XY_Interpolate(){
           Step_Cycle(Y);
       }
    }else{
-      if((STPS[Y].step_count > SV.dy)||(STPS[X].step_count > SV.dx)){
-        StopY();
-        StopX();
-        return;// ++STPS[Y].step_count;
-      }
       Step_Cycle(Y);
       if(SV.d2 < 0){
          SV.d2 += 2 * SV.dx;
@@ -416,12 +411,14 @@ void XY_Interpolate(){
 
 void XZ_Interpolate(){
 
-   if(SV.dx > SV.dz){
-      if((STPS[X].step_count > SV.dx)||(STPS[Z].step_count > SV.dz)){
+    if((STPS[X].step_count > SV.dx)||(STPS[Z].step_count > SV.dz)){
         StopX();
         StopZ();
+        
         return;
-      }
+    }
+      
+   if(SV.dx > SV.dz){
       Step_Cycle(X);
       if(d2 < 0)
         d2 += 2*SV.dz;
@@ -431,11 +428,6 @@ void XZ_Interpolate(){
       }
 
     }else{
-        if((STPS[Z].step_count > SV.dz)||(STPS[X].step_count > SV.dx)){
-           StopZ();
-           StopX();
-           return;
-        }
         Step_Cycle(Z);
         if(d2 < 0)
             d2 += 2 * SV.dx;
@@ -447,13 +439,13 @@ void XZ_Interpolate(){
 }
 
 void YZ_Interpolate(){
-
+    if((STPS[Y].step_count > SV.dy)||(STPS[Z].step_count > SV.dz)){
+       StopY();
+       StopZ();
+       return;
+    }
+      
     if(SV.dy > SV.dz){
-      if((STPS[Y].step_count > SV.dy)||(STPS[Z].step_count > SV.dz)){
-         StopY();
-         StopZ();
-         return;
-      }
       Step_Cycle(Y);
       if(d2 < 0)
         d2 += 2*SV.dz;
@@ -462,11 +454,6 @@ void YZ_Interpolate(){
         Step_Cycle(Z);
       }
     }else{
-      if((STPS[Z].step_count > SV.dz)||(STPS[Y].step_count > SV.dy)){
-        StopZ();
-        StopY();
-        return;
-      }
       Step_Cycle(Z);
       if(d2 < 0)
          d2 += 2 * SV.dy;

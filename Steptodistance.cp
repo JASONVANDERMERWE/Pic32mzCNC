@@ -2,7 +2,95 @@
 #line 1 "c:/users/git/pic32mzcnc/steptodistance.h"
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 13 "c:/users/git/pic32mzcnc/stepper.h"
+#line 1 "c:/users/git/pic32mzcnc/timers.h"
+#line 1 "c:/users/git/pic32mzcnc/config.h"
+#line 1 "c:/users/git/pic32mzcnc/timers.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 62 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
+typedef enum{
+ _LCD_FIRST_ROW = 1,
+ _LCD_SECOND_ROW,
+ _LCD_THIRD_ROW,
+ _LCD_FOURTH_ROW,
+ _LCD_CLEAR,
+ _LCD_RETURN_HOME,
+ _LCD_CURSOR_OFF,
+ _LCD_UNDERLINE_ON,
+ _LCD_BLINK_CURSOR_ON,
+ _LCD_MOVE_CURSOR_LEFT,
+ _LCD_MOVE_CURSOR_RIGHT,
+ _LCD_TURN_ON,
+ _LCD_TURN_OFF,
+ _LCD_SHIFT_LEFT,
+ _LCD_SHIFT_RIGHT,
+ _LCD_INCREMENT_NO_SHIFT
+}Cmd_Type;
+
+extern Cmd_Type Cmd;
+
+
+
+  unsigned char  I2C_PCF8574_Write( unsigned char  addr, unsigned char  Data);
+ void I2C_LCD_putcmd( unsigned char  addr,  unsigned char  dta, unsigned char  cmdtype);
+ void I2C_LCD_goto( unsigned char  addr, unsigned char  row,  unsigned char  col);
+ void I2C_Lcd_Cmd( unsigned char  addr,Cmd_Type cmd, unsigned char  col);
+ void I2C_LCD_putch( unsigned char  addr,  unsigned char  dta);
+ void I2C_LCD_Out( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  *s);
+ void I2C_Lcd_Chr( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  out_char);
+ void I2C_LCD_init( unsigned char  addr);
+ void I2C_LCD_init4l( unsigned char  addr);
+ void I2C_Pins(char i2c_pins);
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
+#line 1 "c:/users/git/pic32mzcnc/steptodistance.h"
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 11 "c:/users/git/pic32mzcnc/steptodistance.h"
+const float Dia;
+#line 23 "c:/users/git/pic32mzcnc/steptodistance.h"
+signed long calcSteps( double mmsToMove, double Dia);
+#line 13 "c:/users/git/pic32mzcnc/config.h"
+extern unsigned char LCD_01_ADDRESS;
+extern bit oneShotA; sfr;
+extern bit oneShotB; sfr;
+
+
+
+
+
+
+
+void PinMode();
+void UartConfig();
+void set_performance_mode();
+void Uart2InterruptSetup();
+void LcdI2CConfig();
+void OutPutPulseXYZ();
+void initDMA_global();
+void initDMA0();
+void initDMA1();
+void Temp_Move(int a);
+void LCD_Display();
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
+#line 12 "c:/users/git/pic32mzcnc/timers.h"
+struct Timer{
+unsigned int uSec;
+unsigned int uMs;
+unsigned int uSSec;
+unsigned int OlduSSec;
+unsigned int mSec;
+unsigned short Sec;
+unsigned short OldSec;
+};
+extern struct Timer TMR;
+
+
+void InitTimer1();
+void InitTimer8();
+#line 14 "c:/users/git/pic32mzcnc/stepper.h"
 extern sfr EN_StepX;
 extern sfr EN_Step_PinDirX;
 extern sfr RST_StepX;
@@ -32,7 +120,7 @@ extern sfr FLT_Step_PinDirY;
 
 
 typedef unsigned short UInt8_t;
-#line 85 "c:/users/git/pic32mzcnc/stepper.h"
+#line 90 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 

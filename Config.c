@@ -64,7 +64,8 @@ void PinMode(){
 
 //////////////////////////////////////////////////
 //TMR8 config
-     InitTimer8();
+   InitTimer1();
+   InitTimer8();
 /////////////////////////////////////////////////
 //setup i2c_lcd
   //  LcdI2CConfig();
@@ -124,7 +125,7 @@ unsigned long cp0;
     while(!PB2DIVbits.PBDIVRDY);
     PB2DIVbits.PBDIV = 0x07; // Peripheral Bus 2 Clock Divisor Control (PBCLK2 is SYSCLK "200MHZ" / 8)
 
-    // PB3DIV
+    // PB3DIV   TIMERS
     PB3DIVbits.ON = 1; // Peripheral Bus 2 Output Clock Enable (Output clock is enabled)
     while(!PB3DIVbits.PBDIVRDY);
     PB3DIVbits.PBDIV = 3; // Peripheral Bus 3 Clock Divisor Control (PBCLK3 is SYSCLK divided by 4)
@@ -222,7 +223,7 @@ void OutPutPulseXYZ(){
   OC3IS0_bit = 0;  // Set OC3 sub priority 1
   OC3IS1_bit = 0;
   OC3IF_bit  = 0;   // reset interrupt flag
-  OC3IE_bit  = 1;   // enable interrupt
+  OC3IE_bit  = 0;   // enable interrupt
   
   OC5IP0_bit = 1;  // Set OC5 interrupt priority to 3
   OC5IP1_bit = 1;
@@ -230,7 +231,7 @@ void OutPutPulseXYZ(){
   OC5IS0_bit = 1;  // Set OC5 sub priority 2
   OC5IS1_bit = 0;
   OC5IF_bit  = 0;  // reset interrupt flag
-  OC5IE_bit  = 1;  // enable interrupt
+  OC5IE_bit  = 0;  // enable interrupt
 
   OC8IP0_bit = 1;  // Set OC8 interrupt priority to 3
   OC8IP1_bit = 1;
@@ -238,7 +239,7 @@ void OutPutPulseXYZ(){
   OC8IS0_bit = 1;  // Set OC8 sub priority 2
   OC8IS1_bit = 0;
   OC8IF_bit  = 0;  // reset interrupt flag
-  OC8IE_bit  = 1;  // enable interrupt
+  OC8IE_bit  = 0;  // enable interrupt
   
 //set Timers on
   T2CONSET  = 0x8000; // Enable Timer2 0C5
@@ -251,63 +252,7 @@ void OutPutPulseXYZ(){
  // OC8CONSET = 0x8000; // Enable OC8
 }
 
-/////////////////////////////////////////////////////////////////
-//TMR 1 setup for 1us pusles as a dummy axis for single puls to
-//keep the seep equivilant to Bres algo dual axis.
-void InitTimer1(){
-  T1CON         = 0x8000;
-  T1IP0_bit         = 1;
-  T1IP1_bit         = 1;
-  T1IP2_bit         = 1;
-  T1IF_bit         = 0;
-  T1IE_bit         = 1;
-  PR1                 = 100;
-  TMR1                 = 0;
-}
-//////////////////////////////////////////////////////////////////
-//TMR 6 initialized to 1us interrupt
-// {--NOT USED--} //
-/*void InitTimer6(){
-  T6CON             = 0x8000;
-  T6IP0_bit         = 0;
-  T6IP1_bit         = 0;
-  T6IP2_bit         = 1;
-  T6IS0_bit         = 1;
-  T6IS1_bit         = 0;
-  T6IF_bit          = 0;
-  T6IE_bit          = 0;
-  PR6               = 500;
-  TMR6              = 0;
-}*/
 
-//////////////////////////////////////////////////////////////////
-//TMR 7 initialized to 1ms interrupt
-void InitTimer7(){
-  T7CON             = 0x8000;
-  T7IP0_bit         = 0;
-  T7IP1_bit         = 0;
-  T7IP2_bit         = 1;
-  T7IS0_bit         = 1;
-  T7IS1_bit         = 1;
-  T7IF_bit          = 0;
-  T7IE_bit          = 0;
-  PR7               = 50000;
-  TMR7              = 0;
-}
-///////////////////////////////////////////////////////////////////
-//TMR 8 initialized to interrupt at 1us
-void InitTimer8(){
-  T8CON            = 0x8000;
-  T8IP0_bit        = 0;
-  T8IP1_bit        = 0;
-  T8IP2_bit        = 1;
-  T8IS0_bit        = 0;
-  T8IS1_bit        = 1;
-  T8IF_bit         = 0;
-  T8IE_bit         = 0;
-  PR8              = 50;
-  TMR8             = 0;
-}
 
 void LcdI2CConfig(){
 
@@ -340,7 +285,7 @@ void  initDMA0(){
     DCH0ECON      =(146 << 8 ) | 0x30;         // DCH0ECON Specific INTERRUPT IRQ NUMBER (146) for UART 2 RX
     DCH0DAT       =  0x0D;
 
-    DCH0SSA       = KVA_TO_PA(0xBF822230);    // RxBuf virtual address     [0xBF822230 = U1RXREG]
+    DCH0SSA       = KVA_TO_PA(0xBF822230);    // RxBuf virtual address     [0xBF822230 = U2RXREG]
     DCH0DSA       = KVA_TO_PA(0xA0002000);    //   virtual address:= IN RAM FOR RECIEVED DATA
 
     DCH0SSIZ      = 200  ;  // source size = size of buffer set up rcBuf, x bytes at a time
