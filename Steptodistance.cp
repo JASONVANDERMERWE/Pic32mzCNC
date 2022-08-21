@@ -50,7 +50,21 @@ extern Cmd_Type Cmd;
 const float Dia;
 #line 23 "c:/users/git/pic32mzcnc/steptodistance.h"
 signed long calcSteps( double mmsToMove, double Dia);
-#line 13 "c:/users/git/pic32mzcnc/config.h"
+#line 14 "c:/users/git/pic32mzcnc/config.h"
+extern sfr LED1;
+extern sfr LED1_Dir;
+extern sfr LED2;
+extern sfr LED2_Dir;
+
+
+
+extern sfr SW1;
+extern sfr SW1_Dir;
+extern sfr SW2;
+extern sfr SW2_Dir;
+
+
+
 extern unsigned char LCD_01_ADDRESS;
 extern bit oneShotA; sfr;
 extern bit oneShotB; sfr;
@@ -117,10 +131,36 @@ extern sfr DIR_Step_PinDirY;
 extern sfr FLT_StepY;
 extern sfr FLT_Step_PinDirY;
 
+extern sfr EN_StepZ;
+extern sfr EN_Step_PinDirZ;
+extern sfr RST_StepZ;
+extern sfr RST_Step_PinDirZ;
+extern sfr SLP_FLT_StepZ;
+extern sfr SLP_FLT_Step_PinDirZ;
+extern sfr PLS_StepZ;
+extern sfr PLS_Step_PinDirZ;
+extern sfr DIR_StepZ;
+extern sfr DIR_Step_PinDirZ;
+extern sfr FLT_StepZ;
+extern sfr FLT_Step_PinDirZ;
+
+extern sfr EN_StepA;
+extern sfr EN_Step_PinDirA;
+extern sfr RST_StepA;
+extern sfr RST_Step_PinDirA;
+extern sfr SLP_FLT_StepA;
+extern sfr SLP_FLT_Step_PinDirA;
+extern sfr PLS_StepA;
+extern sfr PLS_Step_PinDirA;
+extern sfr DIR_StepA;
+extern sfr DIR_Step_PinDirA;
+extern sfr FLT_StepA;
+extern sfr FLT_Step_PinDirA;
+
 
 
 typedef unsigned short UInt8_t;
-#line 90 "c:/users/git/pic32mzcnc/stepper.h"
+#line 116 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
@@ -136,9 +176,11 @@ typedef struct genVars{
  long dx;
  long dy;
  long dz;
+ long da;
  long px;
  long py;
  long pz;
+ long pa;
  long psingle;
  long over;
  long acc;
@@ -146,6 +188,9 @@ typedef struct genVars{
  int dirx;
  int diry;
  int dirz;
+ int dira;
+ int dirb;
+ int dirc;
 }sVars;
 extern sVars SV;
 
@@ -204,7 +249,7 @@ typedef struct Steps{
 
  signed long mmToTravel;
 }STP;
-extern STP STPS[ 3 ];
+extern STP STPS[ 6 ];
 
 
 
@@ -233,8 +278,8 @@ extern Circle Circ;
 
 
 
-enum xyz{X,Y,Z};
-typedef enum {xy,xz,yz}axis_combination ;
+enum xyz{X,Y,Z,A,B,C};
+typedef enum {xy,xz,yz,xa,ya,za}axis_combination ;
 enum swt{FALSE,TRUE};
 
 
@@ -250,6 +295,7 @@ void CycleStop();
 void EnStepperX();
 void EnStepperY();
 void EnStepperZ();
+void EnStepperA();
 void DisableStepper();
 void disableOCx();
 
@@ -264,15 +310,23 @@ void StepperConstants(long accel,long decel);
 
 void DualAxisStep(long newx,long newy,int axis_combo);
 void SingleAxisStep(long newxyz,int axis_No);
+
 void SingleStepX();
 void SingleStepY();
 void SingleStepZ();
+void SingleStepA();
+
 void XY_Interpolate();
 void XZ_Interpolate();
 void YZ_Interpolate();
+void XA_Interpolate();
+void YA_Interpolate();
+void ZA_Interpolate();
+
 void StopX();
 void StopY();
 void StopZ();
+void StopA();
 
 
 void CalcRadius(Circle* cir);

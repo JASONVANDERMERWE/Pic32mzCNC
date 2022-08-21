@@ -36,6 +36,32 @@ extern sfr DIR_StepY;
 extern sfr DIR_Step_PinDirY;
 extern sfr FLT_StepY;
 extern sfr FLT_Step_PinDirY;
+//Zaxis
+extern sfr EN_StepZ;
+extern sfr EN_Step_PinDirZ;
+extern sfr RST_StepZ;
+extern sfr RST_Step_PinDirZ;
+extern sfr SLP_FLT_StepZ;
+extern sfr SLP_FLT_Step_PinDirZ;
+extern sfr PLS_StepZ;
+extern sfr PLS_Step_PinDirZ;
+extern sfr DIR_StepZ;
+extern sfr DIR_Step_PinDirZ;
+extern sfr FLT_StepZ;
+extern sfr FLT_Step_PinDirZ;
+//Aaxis
+extern sfr EN_StepA;
+extern sfr EN_Step_PinDirA;
+extern sfr RST_StepA;
+extern sfr RST_Step_PinDirA;
+extern sfr SLP_FLT_StepA;
+extern sfr SLP_FLT_Step_PinDirA;
+extern sfr PLS_StepA;
+extern sfr PLS_Step_PinDirA;
+extern sfr DIR_StepA;
+extern sfr DIR_Step_PinDirA;
+extern sfr FLT_StepA;
+extern sfr FLT_Step_PinDirA;
 
 //////////////////////////////////////////////
 //defines
@@ -43,7 +69,7 @@ typedef unsigned short UInt8_t;
 
 
 // Decide how many axis you would like to run
-#define NoOfAxis 3
+#define NoOfAxis 6
 
 
 // Direction of stepper motor movement
@@ -102,9 +128,11 @@ typedef struct genVars{
   long  dx;
   long  dy;
   long  dz;
+  long  da;
   long  px;
   long  py;
   long  pz;
+  long  pa;
   long  psingle;
   long  over;
   long  acc;
@@ -112,6 +140,9 @@ typedef struct genVars{
   int   dirx;
   int   diry;
   int   dirz;
+  int   dira;
+  int   dirb;
+  int   dirc;
 }sVars;
 extern sVars SV;
 
@@ -199,8 +230,8 @@ extern Circle Circ;
 
 
 //enums
-enum xyz{X,Y,Z};
-typedef enum {xy,xz,yz}axis_combination ;
+enum xyz{X,Y,Z,A,B,C};
+typedef enum {xy,xz,yz,xa,ya,za}axis_combination ;
 enum swt{FALSE,TRUE};
 
 //enum StepState{STOP,ACCEL,RUN,DECEL};
@@ -216,6 +247,7 @@ void CycleStop();
 void EnStepperX();
 void EnStepperY();
 void EnStepperZ();
+void EnStepperA();
 void DisableStepper();
 void disableOCx();
 
@@ -230,15 +262,23 @@ void StepperConstants(long accel,long decel);
 //Move inline
 void DualAxisStep(long newx,long newy,int axis_combo);
 void SingleAxisStep(long newxyz,int axis_No);
+
 void SingleStepX();
 void SingleStepY();
 void SingleStepZ();
+void SingleStepA();
+
 void XY_Interpolate();
 void XZ_Interpolate();
 void YZ_Interpolate();
+void XA_Interpolate();
+void YA_Interpolate();
+void ZA_Interpolate();
+
 void StopX();
 void StopY();
 void StopZ();
+void StopA();
 
 //Circle move axis
 void CalcRadius(Circle* cir);

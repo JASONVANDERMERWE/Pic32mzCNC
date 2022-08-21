@@ -19969,6 +19969,7 @@ d_a_i2c3stat_bit
 d_a_i2c4stat_bit
 d_a_i2c5stat_bit
 d2
+da
 dassert
 dassert
 dassert_bit
@@ -23479,12 +23480,17 @@ digen4_bit
 digen7
 digen7
 digen7_bit
+dir_step_pindira
 dir_step_pindirx
 dir_step_pindiry
 dir_step_pindirz
+dir_stepa
 dir_stepx
 dir_stepy
 dir_stepz
+dira
+dirb
+dirc
 dirx
 diry
 dirz
@@ -27731,9 +27737,11 @@ emacxtestset
 en
 en
 en_bit
+en_step_pindira
 en_step_pindirx
 en_step_pindiry
 en_step_pindirz
+en_stepa
 en_stepx
 en_stepy
 en_stepz
@@ -27795,6 +27803,7 @@ enhbuf_spi3con_bit
 enhbuf_spi4con_bit
 enhbuf_spi5con_bit
 enhbuf_spi6con_bit
+ensteppera
 enstepperx
 ensteppery
 enstepperz
@@ -38583,6 +38592,10 @@ lcd_display
 lcdi2cconfig
 ldexp
 ldiv
+led1
+led1_dir
+led2
+led2_dir
 lengthck
 lengthck
 lengthck
@@ -43748,6 +43761,7 @@ p_i2c2stat_bit
 p_i2c3stat_bit
 p_i2c4stat_bit
 p_i2c5stat_bit
+pa
 packet
 packet
 packet_bit
@@ -44498,9 +44512,11 @@ pllrange1
 pllrange1_bit
 pllrange2
 pllrange2_bit
+pls_step_pindira
 pls_step_pindirx
 pls_step_pindiry
 pls_step_pindirz
+pls_stepa
 pls_stepx
 pls_stepy
 pls_stepz
@@ -58143,6 +58159,7 @@ simreset_emacxcfg1_bit
 sin
 single_dual
 singleaxisstep
+singlestepa
 singlestepx
 singlestepy
 singlestepz
@@ -60982,6 +60999,7 @@ step26
 step26_bit
 step27
 step27_bit
+stepa
 stepperconstants
 stepx
 stepy
@@ -61161,6 +61179,7 @@ stnaddr66_emacxsa0_bit
 stnaddr67
 stnaddr67_bit
 stnaddr67_emacxsa0_bit
+stopa
 stopx
 stopy
 stopz
@@ -61360,6 +61379,10 @@ suspmode
 suspmode
 suspmode_bit
 sv
+sw1
+sw1_dir
+sw2
+sw2_dir
 swap
 swap
 swap

@@ -8,6 +8,21 @@
 #include "Steptodistance.h"
 
 #define BUFFER_LENGTH 200
+
+////////////////////////////////////////////////////
+//LEDS
+extern sfr LED1;
+extern sfr LED1_Dir;
+extern sfr LED2;
+extern sfr LED2_Dir;
+
+///////////////////////////////////////////////////
+//ON BOARD SWITRCHES
+extern sfr SW1;
+extern sfr SW1_Dir;
+extern sfr SW2;
+extern sfr SW2_Dir;
+
 ////////////////////////////////////////////////////
 //constants
 extern unsigned char LCD_01_ADDRESS; //PCF8574T

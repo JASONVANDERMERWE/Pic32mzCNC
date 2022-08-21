@@ -24,38 +24,53 @@ static long d2;
 //sfr bits
 //bit PLS_Step_;sfr;
 
-sbit EN_StepX at LATG1_bit;               //LATB13_bit;   LATD9_bit
-sbit EN_Step_PinDirX at TRISG1_bit;       //TRISB13_bit;  TRISD9
+sbit EN_StepX at LATB15_bit;
+sbit EN_Step_PinDirX at TRISB15_bit;
+sbit DIR_StepX at LATB1_bit;
+sbit DIR_Step_PinDirX at TRISB1_bit;
 //sbit RST_StepX at LATA10_bit;
 //sbit RST_Step_PinDirX at TRISA10_bit;
-//sbit SLP_FLT_StepX at LATB15_bit;         //LATD9_bit;
-//sbit SLP_FLT_Step_PinDirX at TRISB15_bit; //TRISD9_bit;
-sbit PLS_StepX at LATF1_bit;                //LATB14_bit;
-sbit PLS_Step_PinDirX at TRISF1_bit;
-sbit DIR_StepX at LATG0_bit;               //LATB13_bit;
-sbit DIR_Step_PinDirX at TRISG0_bit;
+//sbit SLP_FLT_StepX at LATB15_bit;
+//sbit SLP_FLT_Step_PinDirX at TRISB15_bit;
+sbit PLS_StepX at LATD4_bit;
+sbit PLS_Step_PinDirX at TRISD4_bit;
 
-sbit EN_StepY at LATF0_bit;
-sbit EN_Step_PinDirY at TRISF0_bit;
+
+sbit EN_StepY at LATE1_bit;
+sbit EN_Step_PinDirY at TRISE1_bit;
+sbit DIR_StepY at LATE0_bit;
+sbit DIR_Step_PinDirY at TRISE0_bit;
 //sbit RST_StepX at LATA10_bit;
 //sbit RST_Step_PinDirX at TRISA10_bit;
 //sbit SLP_FLT_StepY at LATB10_bit;
 //sbit SLP_FLT_Step_PinDirY at TRISB10_bit;
-sbit PLS_StepY at LATD4_bit;
-sbit PLS_Step_PinDirY at TRISD4_bit;
-sbit DIR_StepY at LATD5_bit;
-sbit DIR_Step_PinDirY at TRISD5_bit;
+sbit PLS_StepY at LATD5_bit;
+sbit PLS_Step_PinDirY at TRISD5_bit;
 
-sbit EN_StepZ at LATG14_bit;
-sbit EN_Step_PinDirZ at TRISG14_bit;
+
+sbit EN_StepZ at LATA7_bit;
+sbit EN_Step_PinDirZ at TRISA7_bit;
+sbit DIR_StepZ at LATA6_bit;
+sbit DIR_Step_PinDirZ at TRISA6_bit;
 //sbit RST_StepX at LATA10_bit;
 //sbit RST_Step_PinDirX at TRISA10_bit;
 //sbit SLP_FLT_StepY at LATB10_bit;
 //sbit SLP_FLT_Step_PinDirY at TRISB10_bit;
-sbit PLS_StepZ at LATE3_bit;
-sbit PLS_Step_PinDirZ at TRISE3_bit;
-sbit DIR_StepZ at LATG12_bit;
-sbit DIR_Step_PinDirZ at TRISG12_bit;
+sbit PLS_StepZ at LATF0_bit;
+sbit PLS_Step_PinDirZ at TRISF0_bit;
+
+
+sbit EN_StepA at LATD13_bit;
+sbit EN_Step_PinDirA at TRISD13_bit;
+sbit DIR_StepA at LATD0_bit;
+sbit DIR_Step_PinDirA at TRISD0_bit;
+//sbit RST_StepX at LATA10_bit;
+//sbit RST_Step_PinDirX at TRISA10_bit;
+//sbit SLP_FLT_StepY at LATB10_bit;
+//sbit SLP_FLT_Step_PinDirY at TRISB10_bit;
+sbit PLS_StepA at LATF1_bit;
+sbit PLS_Step_PinDirA at TRISF1_bit;
+
 
 //////////////////////////////////
 //Set up pin outs
@@ -79,7 +94,12 @@ void SetPinMode(){
 //  SLP_FLT_Step_PinDirZ = 0;
   PLS_Step_PinDirZ = 0;
   DIR_Step_PinDirZ = 0;
-  
+//aaxis
+  EN_Step_PinDirA  = 0; //output
+//  RST_Step_PinDirA = 0;
+//  SLP_FLT_Step_PinDirA = 0;
+  PLS_Step_PinDirA = 0;
+  DIR_Step_PinDirA = 0;
 }
 
 /////////////////////////////////
@@ -107,11 +127,17 @@ void EnStepperZ(){
 //  RST_StepZ     = 1;
    EN_StepZ       = 0;
 }
+void EnStepperA(){
+//  SLP_FLT_StepA = 1;
+//  RST_StepA    = 1;
+   EN_StepA       = 0;
+}
 
 void DisableStepper(){
    EN_StepX      = 1;
    EN_StepY      = 1;
    EN_StepZ      = 1;
+   EN_StepA      = 1;
 }
 
 
@@ -229,13 +255,17 @@ int dir;
        else*/
      SV.Single_Dual = 0;
      switch(axis_No){
-       case 0:OC3IE_bit = 1;OC3CONbits.ON = 1;
-              break;
-       case 1:
+       case X:
               OC5IE_bit = 1;OC5CONbits.ON = 1;
               break;
-       case 2:
-              OC8IE_bit = 1;OC8CONbits.ON = 1;
+       case Y:
+              OC2IE_bit = 1;OC2CONbits.ON = 1;
+              break;
+       case Z:
+              OC7IE_bit = 1;OC7CONbits.ON = 1;
+              break;
+       case A:
+              OC3IE_bit = 1;OC3CONbits.ON = 1;
               break;
        default: break;
      }
@@ -248,18 +278,21 @@ int dir;
      else
            dir = CW;
 
-         switch(axis_No){
-           case X:
-                DIR_StepX = dir;
-                break;
-           case Y:
-                DIR_StepY = dir;
-                break;
-           case Z:
-                DIR_StepZ = dir;
-                break;
-           default: break;
-         }
+     switch(axis_No){
+       case X:
+            DIR_StepX = dir;
+            break;
+       case Y:
+            DIR_StepY = dir;
+            break;
+       case Z:
+            DIR_StepZ = dir;
+            break;
+       case A:
+            DIR_StepA = dir;
+            break;
+       default: break;
+     }
 
           STPS[axis_No].step_count = 0;
           //Start output compare module
@@ -480,20 +513,35 @@ void Step_Cycle(int axis_No){
 //toggle the OCxCON regs
 void toggleOCx(int axis_No){
       switch(axis_No){
-        case X: OC3R   = 0x5;
-                OC3RS  = STPS[X].step_delay & 0xFFFF;//0x234;
-                TMR4   =  0xFFFF;
-                OC3CON =  0x8004; //restart the output compare module
-             break;
-        case Y: OC5R   = 0x5;
-                OC5RS  = STPS[Y].step_delay & 0xFFFF;
+        case X: OC5R   = 0x5;
+                OC5RS  = STPS[X].step_delay & 0xFFFF;//0x234;
                 TMR2   =  0xFFFF;
                 OC5CON =  0x8004; //restart the output compare module
              break;
-        case Z: OC8R   = 0x5;
-                OC8RS  = STPS[Z].step_delay & 0xFFFF;
+        case Y: OC2R   = 0x5;
+                OC2RS  = STPS[Y].step_delay & 0xFFFF;
+                TMR4   =  0xFFFF;
+                OC2CON =  0x8004; //restart the output compare module
+             break;
+        case Z: OC7R   = 0x5;
+                OC7RS  = STPS[Z].step_delay & 0xFFFF;
                 TMR6   =  0xFFFF;
-                OC8CON =  0x8004; //restart the output compare module
+                OC7CON =  0x8004; //restart the output compare module
+             break;
+        case A: OC3R   = 0x5;
+                OC3RS  = STPS[A].step_delay & 0xFFFF;
+                TMR5   =  0xFFFF;
+                OC3CON =  0x800C; //restart the output compare module
+             break;
+        case B: OC6R   = 0x5;
+                OC6RS  = STPS[B].step_delay & 0xFFFF;
+                TMR3   =  0xFFFF;
+                OC6CON =  0x800C; //restart the output compare module
+             break;
+        case C: OC8R   = 0x5;
+                OC8RS  = STPS[C].step_delay & 0xFFFF;
+                TMR7   =  0xFFFF;
+                OC8CON =  0x800C; //restart the output compare module
              break;
         default:
              break;
@@ -511,7 +559,7 @@ int Pulse(int axis_No){
 
     switch(STPS[axis_No].run_state) {
       case STOP:
-           LATE7_bit = 0;
+           LED1 = 0;
            T8IE_bit         = 0;
            SV.Tog = 1;
         break;
@@ -582,16 +630,28 @@ void AccDec(int axis_No){
 void Axis_Enable(axis_combination axis){
    switch(axis){
      case xy:
-          OC3IE_bit = 1;OC3CONbits.ON = 1;
-          OC5IE_bit = 1;OC5CONbits.ON = 1;
+          OC5IE_bit = 1;OC5CONbits.ON = 1;  //X
+          OC2IE_bit = 1;OC2CONbits.ON = 1;  //Y
           break;
      case xz:
-          OC3IE_bit = 1;OC3CONbits.ON = 1;
-          OC8IE_bit = 1;OC8CONbits.ON = 1;
+          OC5IE_bit = 1;OC5CONbits.ON = 1;  //X
+          OC7IE_bit = 1;OC7CONbits.ON = 1;  //Y
           break;
      case yz:
-          OC5IE_bit = 1;OC5CONbits.ON = 1;
-          OC8IE_bit = 1;OC8CONbits.ON = 1;
+          OC2IE_bit = 1;OC2CONbits.ON = 1;  //Y
+          OC7IE_bit = 1;OC7CONbits.ON = 1;  //Z
+          break;
+     case xa:
+          OC5IE_bit = 1;OC5CONbits.ON = 1;  //Y
+          OC3IE_bit = 1;OC3CONbits.ON = 1;  //Z
+          break;
+     case ya:
+          OC2IE_bit = 1;OC2CONbits.ON = 1;  //Y
+          OC3IE_bit = 1;OC3CONbits.ON = 1;  //Z
+          break;
+     case za:
+          OC7IE_bit = 1;OC7CONbits.ON = 1;  //Y
+          OC3IE_bit = 1;OC3CONbits.ON = 1;  //Z
           break;
      default:
           break;
@@ -599,17 +659,21 @@ void Axis_Enable(axis_combination axis){
 }
 
 void disableOCx(){
-     OC3IE_bit = 0;OC3CONbits.ON = 0; //X
-     OC5IE_bit = 0;OC5CONbits.ON = 0; //Y
+     OC5IE_bit = 0;OC5CONbits.ON = 0; //X
+     OC2IE_bit = 0;OC2CONbits.ON = 0; //Y
+     OC7IE_bit = 0;OC7CONbits.ON = 0; //Z
+
+     OC3IE_bit = 0;OC3CONbits.ON = 0; //A
+     OC6IE_bit = 0;OC6CONbits.ON = 0; //B
      OC8IE_bit = 0;OC8CONbits.ON = 0; //Z
 }
 
 //////////////////////////////////////////////////////////
 //            X AXIS PULSE CONTROL                      //
 //////////////////////////////////////////////////////////
-void StepX() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
+void StepX() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
      STPS[X].step_count++;
-     OC3IF_bit = 0;
+     OC5IF_bit = 0;
      if(SV.Single_Dual == 0)
         SingleStepX();
      else
@@ -627,17 +691,17 @@ void SingleStepX(){
 
 
 void StopX(){
-   OC3IE_bit = 0;
-   OC3CONbits.ON = 0;
+   OC5IE_bit = 0;
+   OC5CONbits.ON = 0;
 }
 
 
 //////////////////////////////////////////////////////////
 //            Y AXIS PULSE CONTROL                      //
 //////////////////////////////////////////////////////////
-void StepY() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
+void StepY() iv IVT_OUTPUT_COMPARE_2 ilevel 3 ics ICS_AUTO {
    STPS[Y].step_count++;
-   OC5IF_bit = 0;
+   OC2IF_bit = 0;
    if(SV.Single_Dual == 0)
         SingleStepY();
    else
@@ -654,17 +718,17 @@ void SingleStepY(){
 }
 
 void StopY(){
-   OC5IE_bit = 0;
-   OC5CONbits.ON = 0;
+   OC2IE_bit = 0;
+   OC2CONbits.ON = 0;
 }
 
 
 //////////////////////////////////////////////////////////
 //            Z AXIS PULSE CONTROL                      //
 //////////////////////////////////////////////////////////
-void StepZ() iv IVT_OUTPUT_COMPARE_8 ilevel 3 ics ICS_AUTO {
+void StepZ() iv IVT_OUTPUT_COMPARE_7 ilevel 3 ics ICS_AUTO {
    STPS[Z].step_count++;
-   OC8IF_bit = 0;
+   OC7IF_bit = 0;
    if(!SV.Single_Dual)
         SingleStepZ();
    else
@@ -682,8 +746,35 @@ void SingleStepZ(){
 }
 
 void StopZ(){
-   OC8IE_bit = 0;
-   OC8CONbits.ON = 0;
+   OC7IE_bit = 0;
+   OC7CONbits.ON = 0;
+}
+
+//////////////////////////////////////////////////////////
+//            A AXIS PULSE CONTROL                      //
+//////////////////////////////////////////////////////////
+void StepA() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
+   STPS[A].step_count++;
+   OC3IF_bit = 0;
+   if(!SV.Single_Dual)
+        SingleStepA();
+   else
+        AxisPulse();
+
+}
+
+void SingleStepA(){
+   if(STPS[A].step_count >= STPS[A].dist){
+      StopA();
+   }
+   else{
+      Step_Cycle(A);
+   }
+}
+
+void StopA(){
+   OC3IE_bit = 0;
+   OC3CONbits.ON = 0;
 }
 
 ////////////////////////////////////////////////

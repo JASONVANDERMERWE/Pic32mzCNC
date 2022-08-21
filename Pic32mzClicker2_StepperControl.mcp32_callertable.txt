@@ -24,6 +24,7 @@ main
 	EnStepperX
 	EnStepperY
 	EnStepperZ
+	EnStepperA
 	Temp_Move
 		calcSteps
 		speed_cntr_Move
@@ -65,6 +66,18 @@ main
 			I2C5_Stop
 				I2C5_Wait_For_Idle
 					I2C5_Is_Idle
+StepA
+	SingleStepA
+		StopA
+		Step_Cycle
+	I2C4_Stop
+	XY_Interpolate
+	XZ_Interpolate
+	YZ_Interpolate
+	I2C1_Stop
+	I2C2_Stop
+	I2C3_Stop
+	I2C5_Stop
 StepZ
 	SingleStepZ
 		StopZ
@@ -77,6 +90,8 @@ StepZ
 	I2C2_Stop
 	I2C3_Stop
 	I2C5_Stop
+Timer8Interrupt
+Timer1Interrupt
 StepY
 	SingleStepY
 		StopY
@@ -89,8 +104,6 @@ StepY
 	I2C2_Stop
 	I2C3_Stop
 	I2C5_Stop
-Timer8Interrupt
-Timer1Interrupt
 StepX
 	SingleStepX
 		StopX

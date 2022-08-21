@@ -95,18 +95,19 @@ int xyz_ = 0;
   a=4;
   while(1){
 
-         if(!RB0_bit){
-               LATE7_bit = 0;
+         if(!SW2){
+               LED2 = 0;
                Toggle            = 0;
               // T8IE_bit        = 1;
                EnStepperX();
                EnStepperY();
                EnStepperZ();
+               EnStepperA();
                //a = 0;
 
          }
 
-         if((!RC3_bit)&&(!Toggle)){
+         if((!SW1)&&(!Toggle)){
             Toggle = 1;
            // LATE7_bit = 1;
         /*   STPS[X].mmToTravel = calcSteps(-125.25,8.06);
@@ -128,12 +129,13 @@ int xyz_ = 0;
            */
             Temp_Move(a);
             a++;
-            if(a > 5)a=4;
+            if(a > 6)a=4;
          }
-         if(!OC3IE_bit && !OC5IE_bit && !OC8IE_bit){
+         //X Y Z
+         if(!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit){
              Temp_Move(a);
              a++;
-             LATE7_bit != LATE7_bit;
+             LED2 != LED2;
          }
             
 
@@ -180,6 +182,11 @@ void Temp_Move(int a){
                  speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
                  DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
               break;
+       case 6:
+                 STPS[A].mmToTravel = calcSteps(-125.25,8.06);
+                 speed_cntr_Move(STPS[A].mmToTravel, 25000,A);
+                 SingleAxisStep(STPS[A].mmToTravel,A);
+             break;
         default: a = 0;
               break;
     }

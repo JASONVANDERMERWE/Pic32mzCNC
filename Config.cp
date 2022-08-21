@@ -69,10 +69,36 @@ extern sfr DIR_Step_PinDirY;
 extern sfr FLT_StepY;
 extern sfr FLT_Step_PinDirY;
 
+extern sfr EN_StepZ;
+extern sfr EN_Step_PinDirZ;
+extern sfr RST_StepZ;
+extern sfr RST_Step_PinDirZ;
+extern sfr SLP_FLT_StepZ;
+extern sfr SLP_FLT_Step_PinDirZ;
+extern sfr PLS_StepZ;
+extern sfr PLS_Step_PinDirZ;
+extern sfr DIR_StepZ;
+extern sfr DIR_Step_PinDirZ;
+extern sfr FLT_StepZ;
+extern sfr FLT_Step_PinDirZ;
+
+extern sfr EN_StepA;
+extern sfr EN_Step_PinDirA;
+extern sfr RST_StepA;
+extern sfr RST_Step_PinDirA;
+extern sfr SLP_FLT_StepA;
+extern sfr SLP_FLT_Step_PinDirA;
+extern sfr PLS_StepA;
+extern sfr PLS_Step_PinDirA;
+extern sfr DIR_StepA;
+extern sfr DIR_Step_PinDirA;
+extern sfr FLT_StepA;
+extern sfr FLT_Step_PinDirA;
+
 
 
 typedef unsigned short UInt8_t;
-#line 90 "c:/users/git/pic32mzcnc/stepper.h"
+#line 116 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
@@ -88,9 +114,11 @@ typedef struct genVars{
  long dx;
  long dy;
  long dz;
+ long da;
  long px;
  long py;
  long pz;
+ long pa;
  long psingle;
  long over;
  long acc;
@@ -98,6 +126,9 @@ typedef struct genVars{
  int dirx;
  int diry;
  int dirz;
+ int dira;
+ int dirb;
+ int dirc;
 }sVars;
 extern sVars SV;
 
@@ -156,7 +187,7 @@ typedef struct Steps{
 
  signed long mmToTravel;
 }STP;
-extern STP STPS[ 3 ];
+extern STP STPS[ 6 ];
 
 
 
@@ -185,8 +216,8 @@ extern Circle Circ;
 
 
 
-enum xyz{X,Y,Z};
-typedef enum {xy,xz,yz}axis_combination ;
+enum xyz{X,Y,Z,A,B,C};
+typedef enum {xy,xz,yz,xa,ya,za}axis_combination ;
 enum swt{FALSE,TRUE};
 
 
@@ -202,6 +233,7 @@ void CycleStop();
 void EnStepperX();
 void EnStepperY();
 void EnStepperZ();
+void EnStepperA();
 void DisableStepper();
 void disableOCx();
 
@@ -216,15 +248,23 @@ void StepperConstants(long accel,long decel);
 
 void DualAxisStep(long newx,long newy,int axis_combo);
 void SingleAxisStep(long newxyz,int axis_No);
+
 void SingleStepX();
 void SingleStepY();
 void SingleStepZ();
+void SingleStepA();
+
 void XY_Interpolate();
 void XZ_Interpolate();
 void YZ_Interpolate();
+void XA_Interpolate();
+void YA_Interpolate();
+void ZA_Interpolate();
+
 void StopX();
 void StopY();
 void StopZ();
+void StopA();
 
 
 void CalcRadius(Circle* cir);
@@ -262,7 +302,21 @@ void InitTimer8();
 const float Dia;
 #line 23 "c:/users/git/pic32mzcnc/steptodistance.h"
 signed long calcSteps( double mmsToMove, double Dia);
-#line 13 "c:/users/git/pic32mzcnc/config.h"
+#line 14 "c:/users/git/pic32mzcnc/config.h"
+extern sfr LED1;
+extern sfr LED1_Dir;
+extern sfr LED2;
+extern sfr LED2_Dir;
+
+
+
+extern sfr SW1;
+extern sfr SW1_Dir;
+extern sfr SW2;
+extern sfr SW2_Dir;
+
+
+
 extern unsigned char LCD_01_ADDRESS;
 extern bit oneShotA; sfr;
 extern bit oneShotB; sfr;
@@ -285,6 +339,16 @@ void initDMA1();
 void Temp_Move(int a);
 void LCD_Display();
 #line 3 "C:/Users/Git/Pic32mzCNC/Config.c"
+ sbit LED2 at LATA9_bit;
+ sbit LED2_Dir at TRISA9_bit;
+ sbit LED1 at LATE7_bit;
+ sbit LED1_Dir at TRISE7_bit;
+
+ sbit SW1 at TRISC3_bit;
+ sbit SW1_Dir at TRISC3_bit;
+ sbit SW2 at TRISB0_bit;
+ sbit SW2_Dir at TRISB0_bit;
+
 void PinMode(){
 
  SYSKEY = 0xAA996655;
@@ -306,19 +370,15 @@ void PinMode(){
  CNPUB = 0x0000;
 
 
- TRISA9_bit = 0;
- TRISD4_bit = 0;
- TRISE7_bit = 0;
- TRISF0_bit = 0;
- TRISF1_bit = 0;
- TRISG0_bit = 0;
- TRISG1_bit = 0;
- TRISG14_bit = 0;
- TRISG15_bit = 0;
+ LED1_Dir = 0;
+ LED2_Dir = 0;
 
 
- TRISB0_bit = 1;
- TRISC3_bit = 1;
+
+
+ SW1_Dir = 1;
+ SW2_Dir = 1;
+
  TRISG7_bit = 1;
  TRISG8_bit = 1;
 
@@ -329,10 +389,12 @@ void PinMode(){
  PPS_Mapping_NoLock(_RPE9, _INPUT, _U2RX);
  PPS_Mapping_NoLock(_RPB9, _OUTPUT, _NULL);
  PPS_Mapping_NoLock(_RPB10, _OUTPUT, _NULL);
- PPS_Mapping_NoLock(_RPF1, _OUTPUT, _OC3);
  PPS_Mapping_NoLock(_RPD4, _OUTPUT, _OC5);
+ PPS_Mapping_NoLock(_RPD5, _OUTPUT, _OC2);
+ PPS_Mapping_NoLock(_RPF0, _OUTPUT, _OC7);
+ PPS_Mapping_NoLock(_RPF1, _OUTPUT, _OC3);
+ PPS_Mapping_NoLock(_RPG1, _OUTPUT, _OC6);
  PPS_Mapping_NoLock(_RPE3, _OUTPUT, _OC8);
- PPS_Mapping_NoLock(_RPG9, _OUTPUT, _OC9);
  Lock_IOLOCK();
 
 
@@ -460,35 +522,85 @@ unsigned long cp0;
 
 
 void OutPutPulseXYZ(){
-#line 183 "C:/Users/Git/Pic32mzCNC/Config.c"
- OC3CON = 0x0000;
+#line 191 "C:/Users/Git/Pic32mzCNC/Config.c"
  OC5CON = 0x0000;
+ OC2CON = 0x0000;
+ OC7CON = 0X0000;
+ OC3CON = 0x0000;
+ OC6CON = 0x0000;
  OC8CON = 0X0000;
 
+
  T2CON = 0x0000;
+ T3CON = 0x0000;
  T4CON = 0x0000;
+ T5CON = 0x0000;
  T6CON = 0x0000;
+ T7CON = 0x0000;
 
  T2CON = 0x0060;
+ T3CON = 0x0060;
  T4CON = 0x0060;
+ T5CON = 0x0060;
  T6CON = 0x0060;
+ T7CON = 0x0060;
 
 
  PR2 = 0xFFFF;
+ PR3 = 0xFFFF;
  PR4 = 0xFFFF;
+ PR5 = 0xFFFF;
  PR6 = 0xFFFF;
+ PR7 = 0xFFFF;
 
 
- OC3CON = 0x0004;
  OC5CON = 0x0004;
- OC8CON = 0x0004;
-#line 212 "C:/Users/Git/Pic32mzCNC/Config.c"
- OC3R = 0x5;
- OC3RS = 0x234;
+ OC2CON = 0x0004;
+ OC7CON = 0x0004;
+ OC3CON = 0x000C;
+ OC6CON = 0x000C;
+ OC8CON = 0x000C;
+#line 235 "C:/Users/Git/Pic32mzCNC/Config.c"
  OC5R = 0x5;
  OC5RS = 0x234;
+ OC2R = 0x5;
+ OC2RS = 0x234;
+ OC7R = 0x5;
+ OC7RS = 0x234;
+ OC3R = 0x5;
+ OC3RS = 0x234;
+ OC6R = 0x5;
+ OC6RS = 0x234;
  OC8R = 0x5;
  OC8RS = 0x234;
+
+
+
+ OC5IP0_bit = 1;
+ OC5IP1_bit = 1;
+ OC5IP2_bit = 0;
+ OC5IS0_bit = 1;
+ OC5IS1_bit = 0;
+ OC5IF_bit = 0;
+ OC5IE_bit = 0;
+
+
+ OC2IP0_bit = 1;
+ OC2IP1_bit = 1;
+ OC2IP2_bit = 0;
+ OC2IS0_bit = 0;
+ OC2IS1_bit = 0;
+ OC2IF_bit = 0;
+ OC2IE_bit = 0;
+
+
+ OC7IP0_bit = 1;
+ OC7IP1_bit = 1;
+ OC7IP2_bit = 0;
+ OC7IS0_bit = 1;
+ OC7IS1_bit = 0;
+ OC7IF_bit = 0;
+ OC7IE_bit = 0;
 
 
  OC3IP0_bit = 1;
@@ -499,13 +611,15 @@ void OutPutPulseXYZ(){
  OC3IF_bit = 0;
  OC3IE_bit = 0;
 
- OC5IP0_bit = 1;
- OC5IP1_bit = 1;
- OC5IP2_bit = 0;
- OC5IS0_bit = 1;
- OC5IS1_bit = 0;
- OC5IF_bit = 0;
- OC5IE_bit = 0;
+
+ OC6IP0_bit = 1;
+ OC6IP1_bit = 1;
+ OC6IP2_bit = 0;
+ OC6IS0_bit = 1;
+ OC6IS1_bit = 0;
+ OC6IF_bit = 0;
+ OC6IE_bit = 0;
+
 
  OC8IP0_bit = 1;
  OC8IP1_bit = 1;
@@ -519,6 +633,9 @@ void OutPutPulseXYZ(){
  T2CONSET = 0x8000;
  T4CONSET = 0x8000;
  T6CONSET = 0x8000;
+ T5CONSET = 0x8000;
+ T3CONSET = 0x8000;
+ T7CONSET = 0x8000;
 
 
 
