@@ -10,18 +10,12 @@
 //STRUCTS and ENUMS
 
 struct Timer{
-unsigned int uSec;
-unsigned int uMs;
-unsigned int uSSec;
-unsigned int OlduSSec;
-unsigned int mSec;
-unsigned short Sec;
-unsigned short OldSec;
+char clock;
 };
 extern struct Timer TMR;
 
 
 void InitTimer1();
 void InitTimer8();
-
+void ClockPulse();
 #endif

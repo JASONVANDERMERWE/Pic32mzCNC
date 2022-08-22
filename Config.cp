@@ -42,58 +42,98 @@ extern Cmd_Type Cmd;
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
 #line 1 "c:/users/git/pic32mzcnc/timers.h"
+#line 1 "c:/users/git/pic32mzcnc/kinematics.h"
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
+#line 7 "c:/users/git/pic32mzcnc/kinematics.h"
+extern void (*AxisPulse)();
+
+
+typedef struct{
+float deg;
+float degreeDeg;
+float degreeRadians;
+float deg_A;
+float deg_B;
+float divisor;
+float newdeg_;
+float I;
+float J;
+float N;
+float radius;
+int dir;
+int quadrant_start;
+float xRad;
+float yRad;
+float xStart;
+float yStart;
+float xFin;
+float yFin;
+}Circle;
+extern Circle Circ;
+
+
+
+
+
+void DualAxisStep(long newx,long newy,int axis_combo);
+void SingleAxisStep(long newxyz,int axis_No);
+
+void CalcRadius(Circle* cir);
+int QuadrantStart(float i,float j);
+void CircDir(Circle* cir);
+void Cir_Interpolation(float xPresent,float yPresent,Circle* cir);
 #line 14 "c:/users/git/pic32mzcnc/stepper.h"
-extern sfr EN_StepX;
-extern sfr EN_Step_PinDirX;
-extern sfr RST_StepX;
-extern sfr RST_Step_PinDirX;
-extern sfr SLP_FLT_StepX;
-extern sfr SLP_FLT_Step_PinDirX;
-extern sfr PLS_StepX;
-extern sfr PLS_Step_PinDirX;
-extern sfr DIR_StepX;
-extern sfr DIR_Step_PinDirX;
-extern sfr FLT_StepX;
-extern sfr FLT_Step_PinDirX;
+extern sfr sbit EN_StepX;
+extern sfr sbit EN_Step_PinDirX;
+extern sfr sbit DIR_StepX;
+extern sfr sbit DIR_Step_PinDirX;
+extern sfr sbit PLS_StepX;
+extern sfr sbit PLS_Step_PinDirX;
+extern sfr sbit RST_StepX;
+extern sfr sbit RST_Step_PinDirX;
+extern sfr sbit SLP_FLT_StepX;
+extern sfr sbit SLP_FLT_Step_PinDirX;
+extern sfr sbit FLT_StepX;
+extern sfr sbit FLT_Step_PinDirX;
 
-extern sfr EN_StepY;
-extern sfr EN_Step_PinDirY;
-extern sfr RST_StepY;
-extern sfr RST_Step_PinDirY;
-extern sfr SLP_FLT_StepY;
-extern sfr SLP_FLT_Step_PinDirY;
-extern sfr PLS_StepY;
-extern sfr PLS_Step_PinDirY;
-extern sfr DIR_StepY;
-extern sfr DIR_Step_PinDirY;
-extern sfr FLT_StepY;
-extern sfr FLT_Step_PinDirY;
+extern sfr sbit EN_StepY;
+extern sfr sbit EN_Step_PinDirY;
+extern sfr sbit RST_StepY;
+extern sfr sbit RST_Step_PinDirY;
+extern sfr sbit SLP_FLT_StepY;
+extern sfr sbit SLP_FLT_Step_PinDirY;
+extern sfr sbit PLS_StepY;
+extern sfr sbit PLS_Step_PinDirY;
+extern sfr sbit DIR_StepY;
+extern sfr sbit DIR_Step_PinDirY;
+extern sfr sbit FLT_StepY;
+extern sfr sbit FLT_Step_PinDirY;
 
-extern sfr EN_StepZ;
-extern sfr EN_Step_PinDirZ;
-extern sfr RST_StepZ;
-extern sfr RST_Step_PinDirZ;
-extern sfr SLP_FLT_StepZ;
-extern sfr SLP_FLT_Step_PinDirZ;
-extern sfr PLS_StepZ;
-extern sfr PLS_Step_PinDirZ;
-extern sfr DIR_StepZ;
-extern sfr DIR_Step_PinDirZ;
-extern sfr FLT_StepZ;
-extern sfr FLT_Step_PinDirZ;
+extern sfr sbit EN_StepZ;
+extern sfr sbit EN_Step_PinDirZ;
+extern sfr sbit RST_StepZ;
+extern sfr sbit RST_Step_PinDirZ;
+extern sfr sbit SLP_FLT_StepZ;
+extern sfr sbit SLP_FLT_Step_PinDirZ;
+extern sfr sbit PLS_StepZ;
+extern sfr sbit PLS_Step_PinDirZ;
+extern sfr sbit DIR_StepZ;
+extern sfr sbit DIR_Step_PinDirZ;
+extern sfr sbit FLT_StepZ;
+extern sfr sbit FLT_Step_PinDirZ;
 
-extern sfr EN_StepA;
-extern sfr EN_Step_PinDirA;
-extern sfr RST_StepA;
-extern sfr RST_Step_PinDirA;
-extern sfr SLP_FLT_StepA;
-extern sfr SLP_FLT_Step_PinDirA;
-extern sfr PLS_StepA;
-extern sfr PLS_Step_PinDirA;
-extern sfr DIR_StepA;
-extern sfr DIR_Step_PinDirA;
-extern sfr FLT_StepA;
-extern sfr FLT_Step_PinDirA;
+extern sfr sbit EN_StepA;
+extern sfr sbit EN_Step_PinDirA;
+extern sfr sbit RST_StepA;
+extern sfr sbit RST_Step_PinDirA;
+extern sfr sbit SLP_FLT_StepA;
+extern sfr sbit SLP_FLT_Step_PinDirA;
+extern sfr sbit PLS_StepA;
+extern sfr sbit PLS_Step_PinDirA;
+extern sfr sbit DIR_StepA;
+extern sfr sbit DIR_Step_PinDirA;
+extern sfr sbit FLT_StepA;
+extern sfr sbit FLT_Step_PinDirA;
 
 
 
@@ -191,35 +231,12 @@ extern STP STPS[ 6 ];
 
 
 
-typedef struct{
-float deg;
-float degreeDeg;
-float degreeRadians;
-float deg_A;
-float deg_B;
-float divisor;
-float newdeg_;
-float I;
-float J;
-float N;
-float radius;
-int dir;
-int quadrant_start;
-float xRad;
-float yRad;
-float xStart;
-float yStart;
-float xFin;
-float yFin;
-}Circle;
-extern Circle Circ;
-
-
-
-enum xyz{X,Y,Z,A,B,C};
+typedef enum xyz{X,Y,Z,A,B,C}_axis_;
 typedef enum {xy,xz,yz,xa,ya,za}axis_combination ;
 enum swt{FALSE,TRUE};
 
+extern _axis_ _axis;
+extern axis_combination axis_xyz;
 
 
 
@@ -246,8 +263,6 @@ void CalcDly(int axis_No);
 void StepperConstants(long accel,long decel);
 
 
-void DualAxisStep(long newx,long newy,int axis_combo);
-void SingleAxisStep(long newxyz,int axis_No);
 
 void SingleStepX();
 void SingleStepY();
@@ -267,31 +282,24 @@ void StopZ();
 void StopA();
 
 
-void CalcRadius(Circle* cir);
-int QuadrantStart(float i,float j);
-void CircDir(Circle* cir);
 
 
 int Pulse(int axis_No);
 void toggleOCx(int axis_No);
 void AccDec(int axis_No);
 void Step_Cycle(int axis_No);
-void Axis_Enable(axis_combination axis);
+void Multi_Axis_Enable(axis_combination axis);
+void Single_Axis_Enable(_axis_ axis_);
 #line 12 "c:/users/git/pic32mzcnc/timers.h"
 struct Timer{
-unsigned int uSec;
-unsigned int uMs;
-unsigned int uSSec;
-unsigned int OlduSSec;
-unsigned int mSec;
-unsigned short Sec;
-unsigned short OldSec;
+char clock;
 };
 extern struct Timer TMR;
 
 
 void InitTimer1();
 void InitTimer8();
+void ClockPulse();
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
@@ -303,17 +311,17 @@ const float Dia;
 #line 23 "c:/users/git/pic32mzcnc/steptodistance.h"
 signed long calcSteps( double mmsToMove, double Dia);
 #line 14 "c:/users/git/pic32mzcnc/config.h"
-extern sfr LED1;
-extern sfr LED1_Dir;
-extern sfr LED2;
-extern sfr LED2_Dir;
+extern sfr sbit LED1;
+extern sfr sbit LED1_Dir;
+extern sfr sbit LED2;
+extern sfr sbit LED2_Dir;
 
 
 
-extern sfr SW1;
-extern sfr SW1_Dir;
-extern sfr SW2;
-extern sfr SW2_Dir;
+extern sfr sbit SW1;
+extern sfr sbit SW1_Dir;
+extern sfr sbit SW2;
+extern sfr sbit SW2_Dir;
 
 
 
@@ -344,9 +352,9 @@ void LCD_Display();
  sbit LED1 at LATE7_bit;
  sbit LED1_Dir at TRISE7_bit;
 
- sbit SW1 at TRISC3_bit;
+ sbit SW1 at RC3_bit;
  sbit SW1_Dir at TRISC3_bit;
- sbit SW2 at TRISB0_bit;
+ sbit SW2 at RB0_bit;
  sbit SW2_Dir at TRISB0_bit;
 
 void PinMode(){
@@ -426,7 +434,7 @@ void PinMode(){
 
 
  OutPutPulseXYZ();
-
+ SetPinMode();
 }
 
 void UartConfig(){

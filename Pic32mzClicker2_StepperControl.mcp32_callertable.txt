@@ -19,8 +19,10 @@ main
 		initDMA0
 		initDMA1
 		OutPutPulseXYZ
-	SetPinMode
+		SetPinMode
 	StepperConstants
+	DisableStepper
+	disableOCx
 	EnStepperX
 	EnStepperY
 	EnStepperZ
@@ -31,17 +33,19 @@ main
 			abs
 			sqrt_
 		SingleAxisStep
+			Single_Axis_Enable
 			abs
 			Step_Cycle
 				toggleOCx
 				Pulse
 					AccDec
 		DualAxisStep
-			Axis_Enable
+			Multi_Axis_Enable
 			abs
 			I2C4_Stop
 				I2C4_Wait_For_Idle
 					I2C4_Is_Idle
+			ClockPulse
 			XY_Interpolate
 				StopX
 				StopY
@@ -71,6 +75,7 @@ StepA
 		StopA
 		Step_Cycle
 	I2C4_Stop
+	ClockPulse
 	XY_Interpolate
 	XZ_Interpolate
 	YZ_Interpolate
@@ -83,6 +88,7 @@ StepZ
 		StopZ
 		Step_Cycle
 	I2C4_Stop
+	ClockPulse
 	XY_Interpolate
 	XZ_Interpolate
 	YZ_Interpolate
@@ -92,11 +98,21 @@ StepZ
 	I2C5_Stop
 Timer8Interrupt
 Timer1Interrupt
+	I2C4_Stop
+	ClockPulse
+	XY_Interpolate
+	XZ_Interpolate
+	YZ_Interpolate
+	I2C1_Stop
+	I2C2_Stop
+	I2C3_Stop
+	I2C5_Stop
 StepY
 	SingleStepY
 		StopY
 		Step_Cycle
 	I2C4_Stop
+	ClockPulse
 	XY_Interpolate
 	XZ_Interpolate
 	YZ_Interpolate
@@ -109,6 +125,7 @@ StepX
 		StopX
 		Step_Cycle
 	I2C4_Stop
+	ClockPulse
 	XY_Interpolate
 	XZ_Interpolate
 	YZ_Interpolate

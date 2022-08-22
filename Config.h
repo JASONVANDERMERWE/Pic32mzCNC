@@ -11,17 +11,17 @@
 
 ////////////////////////////////////////////////////
 //LEDS
-extern sfr LED1;
-extern sfr LED1_Dir;
-extern sfr LED2;
-extern sfr LED2_Dir;
+extern sfr sbit LED1;
+extern sfr sbit LED1_Dir;
+extern sfr sbit LED2;
+extern sfr sbit LED2_Dir;
 
 ///////////////////////////////////////////////////
 //ON BOARD SWITRCHES
-extern sfr SW1;
-extern sfr SW1_Dir;
-extern sfr SW2;
-extern sfr SW2_Dir;
+extern sfr sbit SW1;
+extern sfr sbit SW1_Dir;
+extern sfr sbit SW2;
+extern sfr sbit SW2_Dir;
 
 ////////////////////////////////////////////////////
 //constants

@@ -5,9 +5,9 @@
  sbit LED1 at LATE7_bit;
  sbit LED1_Dir at TRISE7_bit;
 
- sbit SW1 at TRISC3_bit;
+ sbit SW1 at RC3_bit;
  sbit SW1_Dir at TRISC3_bit;
- sbit SW2 at TRISB0_bit;
+ sbit SW2 at RB0_bit;
  sbit SW2_Dir at TRISB0_bit;
 
 void PinMode(){
@@ -87,7 +87,7 @@ void PinMode(){
 ////////////////////////////////////////////////
 //set up output compare module for oc3 RF1 pin
   OutPutPulseXYZ();
-  
+  SetPinMode();
 }
 
 void UartConfig(){

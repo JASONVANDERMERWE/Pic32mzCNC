@@ -85,30 +85,36 @@ char ptrAdd[6];
 //main function
 void main() {
 unsigned char j;
+static unsigned int disable_steps = 0;
 int xyz_ = 0;
   PinMode();
-  SetPinMode();
+
   StepperConstants(15500,15500);
   EnableInterrupts();
   oneShotA = 0;
   //I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
   a=4;
   while(1){
-
+         LED1 = TMR.clock >> 4;
+         if(!Toggle)
+             disable_steps++;
+             
+         if(disable_steps > 10)
+              DisableStepper();
+            
          if(!SW2){
-               LED2 = 0;
-               Toggle            = 0;
-              // T8IE_bit        = 1;
-               EnStepperX();
-               EnStepperY();
-               EnStepperZ();
-               EnStepperA();
-               //a = 0;
-
+               Toggle  = 0;
+               LATB15_bit = 0;
+               disableOCx();
          }
 
          if((!SW1)&&(!Toggle)){
             Toggle = 1;
+            disable_steps = 0;
+            EnStepperX();
+            EnStepperY();
+            EnStepperZ();
+            EnStepperA();
            // LATE7_bit = 1;
         /*   STPS[X].mmToTravel = calcSteps(-125.25,8.06);
             speed_cntr_Move(STPS[X].mmToTravel, 20000,X);
@@ -132,13 +138,14 @@ int xyz_ = 0;
             if(a > 6)a=4;
          }
          //X Y Z
-         if(!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit){
-             Temp_Move(a);
-             a++;
-             LED2 != LED2;
+         if(Toggle){
+           if(!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit){
+               Temp_Move(a);
+               a++;
+               LED2 != LED2;
+           }
          }
             
-
   }
 }
 

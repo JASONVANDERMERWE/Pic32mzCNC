@@ -160,6 +160,9 @@ NOP
 ;Config.c,89 :: 		OutPutPulseXYZ();
 JAL	_OutPutPulseXYZ+0
 NOP	
+;Config.c,90 :: 		SetPinMode();
+JAL	_SetPinMode+0
+NOP	
 ;Config.c,91 :: 		}
 L_end_PinMode:
 LW	R27, 12(SP)

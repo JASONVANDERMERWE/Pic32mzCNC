@@ -18,6 +18,7 @@ __ld2ull_fm
 __offx_vals
 __ull2d_fm
 __ull2ld_fm
+_axis
 _c1out
 _c1rx
 _c1tx
@@ -5155,7 +5156,6 @@ autoset_usbe4csr0_bit
 autoset_usbe5csr0_bit
 autoset_usbe6csr0_bit
 autoset_usbe7csr0_bit
-axis_enable
 axis_xyz
 axisno
 axisno
@@ -14214,6 +14214,9 @@ clkstatinv
 clkstatinvbits
 clkstatset
 clkstatsetbits
+clock
+clock
+clockpulse
 clrdt
 clrdt
 clrdt
@@ -39421,7 +39424,6 @@ mrdd8_emacxmrdd_bit
 mrdd9
 mrdd9_bit
 mrdd9_emacxmrdd_bit
-msec
 msel0
 msel0
 msel0
@@ -40048,6 +40050,7 @@ multi
 multi
 multi
 multi
+multi_axis_enable
 multi_bit
 multi_sbt10elog1_bit
 multi_sbt11elog1_bit
@@ -43118,8 +43121,6 @@ off210
 off210bits
 off213
 off213bits
-oldsec
-oldussec
 on
 on
 on
@@ -56074,7 +56075,6 @@ sdrclkindly5_bit
 sdrcmd
 sdrcmd
 sdrcmd_bit
-sec
 sec01
 sec01
 sec01
@@ -58157,6 +58157,7 @@ simreset
 simreset_bit
 simreset_emacxcfg1_bit
 sin
+single_axis_enable
 single_dual
 singleaxisstep
 singlestepa
@@ -71042,7 +71043,6 @@ txstate2_bit
 txstate3
 txstate3_bit
 txt
-txt1
 txthrie
 txthrie
 txthrie_bit
@@ -72680,7 +72680,6 @@ ulmstaclr
 ulmstainv
 ulmstaset
 ulmtxreg
-ums
 underrun
 underrun
 underrun
@@ -73437,7 +73436,6 @@ usbwkupen
 usbwkupen
 usbwkupen_bit
 usec
-usec
 userid
 userid
 userid
@@ -73633,7 +73631,6 @@ usidl_uefmode_bit
 usidl_ughmode_bit
 usidl_ujkmode_bit
 usidl_ulmmode_bit
-ussec
 utmidwid
 utmidwid
 utmidwid_bit
