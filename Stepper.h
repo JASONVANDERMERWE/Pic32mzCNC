@@ -3,65 +3,12 @@
 
  #include "built_in.h"
  #include "Timers.h"
-/*#include "I2C_LCD.h" */
-#include "Kinematics.h"
+ #include "Pins.h"
+ #include "Kinematics.h"
 
 
 //extern bit PLS_Step_;sfr;
-///////////////////////////////////////////
-//sfr pin modes
-//Xaxis
-extern sfr sbit EN_StepX;
-extern sfr sbit EN_Step_PinDirX;
-extern sfr sbit DIR_StepX;
-extern sfr sbit DIR_Step_PinDirX;
-extern sfr sbit PLS_StepX;
-extern sfr sbit PLS_Step_PinDirX;
-extern sfr sbit RST_StepX;
-extern sfr sbit RST_Step_PinDirX;
-extern sfr sbit SLP_FLT_StepX;
-extern sfr sbit SLP_FLT_Step_PinDirX;
-extern sfr sbit FLT_StepX;
-extern sfr sbit FLT_Step_PinDirX;
-//Yaxis
-extern sfr sbit EN_StepY;
-extern sfr sbit EN_Step_PinDirY;
-extern sfr sbit RST_StepY;
-extern sfr sbit RST_Step_PinDirY;
-extern sfr sbit SLP_FLT_StepY;
-extern sfr sbit SLP_FLT_Step_PinDirY;
-extern sfr sbit PLS_StepY;
-extern sfr sbit PLS_Step_PinDirY;
-extern sfr sbit DIR_StepY;
-extern sfr sbit DIR_Step_PinDirY;
-extern sfr sbit FLT_StepY;
-extern sfr sbit FLT_Step_PinDirY;
-//Zaxis
-extern sfr sbit EN_StepZ;
-extern sfr sbit EN_Step_PinDirZ;
-extern sfr sbit RST_StepZ;
-extern sfr sbit RST_Step_PinDirZ;
-extern sfr sbit SLP_FLT_StepZ;
-extern sfr sbit SLP_FLT_Step_PinDirZ;
-extern sfr sbit PLS_StepZ;
-extern sfr sbit PLS_Step_PinDirZ;
-extern sfr sbit DIR_StepZ;
-extern sfr sbit DIR_Step_PinDirZ;
-extern sfr sbit FLT_StepZ;
-extern sfr sbit FLT_Step_PinDirZ;
-//Aaxis
-extern sfr sbit EN_StepA;
-extern sfr sbit EN_Step_PinDirA;
-extern sfr sbit RST_StepA;
-extern sfr sbit RST_Step_PinDirA;
-extern sfr sbit SLP_FLT_StepA;
-extern sfr sbit SLP_FLT_Step_PinDirA;
-extern sfr sbit PLS_StepA;
-extern sfr sbit PLS_Step_PinDirA;
-extern sfr sbit DIR_StepA;
-extern sfr sbit DIR_Step_PinDirA;
-extern sfr sbit FLT_StepA;
-extern sfr sbit FLT_Step_PinDirA;
+
 
 //////////////////////////////////////////////
 //defines

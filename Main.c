@@ -5,9 +5,7 @@ char txt[] = "Start......";
 char rxBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0}  absolute 0xA0002000 ; //resides in flash ??
 char txBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0}  absolute 0xA0002200 ;
 
-char DMA_Buff[200];
-short dma0int_flag;
-short dma1int_flag;
+
 bit testISR;
 bit oneShotA; sfr;
 bit oneShotB; sfr;
@@ -20,95 +18,46 @@ unsigned int ii;
 unsigned long testOcr;
 static unsigned int a;
 
-////////////////////////////////////////
-//UART 2 interrupts
-void uart2_Rx_interrupt() iv IVT_UART2_RX ilevel 7 ics ICS_AUTO {
-     uart_rd = UART2_Read();
-     UART2_Write( uart_rd );
-   //  IFS4.B18 = 0;
-     U2RXIF_bit = 0;            // Ensure interrupt is not pending
-}
-
-////////////////////////////////////////
-//DMA IRQ
-void DMA_CH0_ISR() iv IVT_DMA0 ilevel 5 ics ICS_AUTO {
- char A[6];
- int i,ptr;
-    if (CHBCIF_bit == 1) {         // Channel Block Transfer has Completed Interrupt Flag bit
-     i = 0;
-
-/* ECHO EXAMPLE */
-      i = strlen(rxBuf);
-      dma0int_flag = 1;          // user flag to inform this int was triggered. should be cleared in software
-      memcpy(txBuf, rxBuf, i);   // copy RxBuf -> TxBuf  BUFFER_LENGTH
-      CHEN_DCH1CON_bit = 1;     // Enable the DMA1 channel to transmit back what was received
-    }
-    DCH1SSIZ            = i ;
-   //  DCH1CSIZ            = i*2 ;
-/* Channel Address Error Interrupt Flag bit  */
-    if( CHERIF_bit == 1){                     // clear channel error int flag
-       CHERIF_bit = 0;
-       memcpy(txBuf,"CHERIF Error",13);
-    }
-    DCH0INTCLR          = 0x00FF;             // clear DMA 0 int flags
-/* re-enable DMA 0 int */
-
-    CHEN_bit            = 1 ;                 // Enable channel - may want to do this when you are ready to receive...
-
-    CFORCE_DCH1ECON_bit = 1 ;                 // force DMA1 interrupt trigger
-    DMA0IF_bit          = 0 ;                 // clear DMA0 int flag
-
-}
-
-
-void DMA_CH1_ISR() iv IVT_DMA1 ilevel 5 ics ICS_AUTO {
-int ptr = 0;
-char ptrAdd[6];
-/* Channel Block Transfer Complete Interrupt Flag bit */
-    if (CHBCIF_DCH1INT_bit == 1){
-       CHBCIF_DCH1INT_bit = 0;             // clear flag
-    }
-/* Channel Address Error Interrupt Flag bit */
-    if( CHERIF_DCH1INT_bit == 1){
-       CHERIF_DCH1INT_bit = 0;
-
-    }
-
-    dma1int_flag = 1;                          // user flag to inform this int was triggered. should be cleared in software
-    DCH1INTCLR   = 0x00FF;                     // clear event flags
-    DMA1IF_bit   = 0 ;
-
-}
-
-
 /////////////////////////////////////////
 //main function
 void main() {
+static char oneshot = 0;
 unsigned char j;
 static unsigned int disable_steps = 0;
 int xyz_ = 0;
   PinMode();
-
   StepperConstants(15500,15500);
   EnableInterrupts();
-  oneShotA = 0;
+  
   //I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
+  
+  oneShotA = 0;
   a=4;
+  disable_steps = 0;
+  
   while(1){
-         LED1 = TMR.clock >> 4;
-         if(!Toggle)
-             disable_steps++;
+
+         if(!Toggle){
+             LED1 = TMR.clock >> 4;
+             if(disable_steps <= SEC_TO_DISABLE_STEPPERS)
+                 disable_steps = TMR.Reset(SEC_TO_DISABLE_STEPPERS,disable_steps);
+             if(LED1 && (oneshot == 0)){
+               oneshot = 1;
+               sprintf(txBuf,"%d",disable_steps);
+               CHEN_DCH1CON_bit = 1;
+             }else if(!LED1 && (oneshot == 1))
+                oneshot = 0;
+         }
              
-         if(disable_steps > 10)
-              DisableStepper();
+
             
          if(!SW2){
                Toggle  = 0;
-               LATB15_bit = 0;
-               disableOCx();
+               //disableOCx();
          }
 
          if((!SW1)&&(!Toggle)){
+            LED1 = 0;
             Toggle = 1;
             disable_steps = 0;
             EnStepperX();

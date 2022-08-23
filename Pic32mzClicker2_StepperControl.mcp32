@@ -6,7 +6,7 @@ Value=0
 [BUILD_TYPE]
 Value=0
 [ACTIVE_TAB]
-Value=Main.c
+Value=Serial_Dma.h
 [USE_EEPROM]
 Value=0
 [USE_HEAP]
@@ -22,7 +22,9 @@ File2=Stepper.c
 File3=Steptodistance.c
 File4=Timers.c
 File5=Kinematics.c
-Count=6
+File6=Pins.c
+File7=Serial_Dma.c
+Count=8
 [BINARIES]
 Count=0
 [IMAGES]
@@ -36,7 +38,9 @@ File3=Main.c
 File4=Config.c
 File5=Timers.c
 File6=Timers.h
-Count=7
+File7=Steptodistance.c
+File8=Kinematics.c
+Count=9
 [EEPROM]
 Count=0
 [ACTIVE_COMMENTS_FILES]
@@ -55,9 +59,12 @@ File1=Stepper.h
 File2=Steptodistance.h
 File3=Timers.h
 File4=Kinematics.h
-Count=5
+File5=Pins.h
+File6=Serial_Dma.h
+Count=7
 [PLDS]
-Count=0
+File0=DEFINES.pld
+Count=1
 [Useses]
 File0=I2C_LCD
 File1=I2C
@@ -80,5 +87,5 @@ USE_SRS=7
 [EXPANDED_NODES]
 0=Pic32mzClicker2_StepperControl.mcp32
 1=Sources
-8=Header Files
+10=Header Files
 Count=3

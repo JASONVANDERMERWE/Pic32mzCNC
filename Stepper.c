@@ -17,58 +17,6 @@ unsigned int Toggle;
  sVars SV;
  StepTmr STmr;
  
-//////////////////////////////////
-//define pin modes as symbolic text
-//sfr bits
-//bit PLS_Step_;sfr;
-
-sbit EN_StepX at LATB15_bit;
-sbit EN_Step_PinDirX at TRISB15_bit;
-sbit DIR_StepX at LATB1_bit;
-sbit DIR_Step_PinDirX at TRISB1_bit;
-//sbit RST_StepX at LATA10_bit;
-//sbit RST_Step_PinDirX at TRISA10_bit;
-//sbit SLP_FLT_StepX at LATB15_bit;
-//sbit SLP_FLT_Step_PinDirX at TRISB15_bit;
-sbit PLS_StepX at LATD4_bit;
-sbit PLS_Step_PinDirX at TRISD4_bit;
-
-
-sbit EN_StepY at LATE1_bit;
-sbit EN_Step_PinDirY at TRISE1_bit;
-sbit DIR_StepY at LATE0_bit;
-sbit DIR_Step_PinDirY at TRISE0_bit;
-//sbit RST_StepX at LATA10_bit;
-//sbit RST_Step_PinDirX at TRISA10_bit;
-//sbit SLP_FLT_StepY at LATB10_bit;
-//sbit SLP_FLT_Step_PinDirY at TRISB10_bit;
-sbit PLS_StepY at LATD5_bit;
-sbit PLS_Step_PinDirY at TRISD5_bit;
-
-
-sbit EN_StepZ at LATA7_bit;
-sbit EN_Step_PinDirZ at TRISA7_bit;
-sbit DIR_StepZ at LATA6_bit;
-sbit DIR_Step_PinDirZ at TRISA6_bit;
-//sbit RST_StepX at LATA10_bit;
-//sbit RST_Step_PinDirX at TRISA10_bit;
-//sbit SLP_FLT_StepY at LATB10_bit;
-//sbit SLP_FLT_Step_PinDirY at TRISB10_bit;
-sbit PLS_StepZ at LATF0_bit;
-sbit PLS_Step_PinDirZ at TRISF0_bit;
-
-
-sbit EN_StepA at LATD13_bit;
-sbit EN_Step_PinDirA at TRISD13_bit;
-sbit DIR_StepA at LATD0_bit;
-sbit DIR_Step_PinDirA at TRISD0_bit;
-//sbit RST_StepX at LATA10_bit;
-//sbit RST_Step_PinDirX at TRISA10_bit;
-//sbit SLP_FLT_StepY at LATB10_bit;
-//sbit SLP_FLT_Step_PinDirY at TRISB10_bit;
-sbit PLS_StepA at LATF1_bit;
-sbit PLS_Step_PinDirA at TRISF1_bit;
-
 
 //////////////////////////////////
 //Set up pin outs
@@ -76,31 +24,35 @@ void SetPinMode(){
 
 //Xaxis
   EN_Step_PinDirX  = 0; //output
+  DIR_Step_PinDirX = 0;
 //  RST_Step_PinDirX = 0;
 //  SLP_FLT_Step_PinDirX = 0;
  // PLS_Step_PinDirX = 0;
-  DIR_Step_PinDirX = 0;
+
   
 //Yaxis
   EN_Step_PinDirY  = 0; //output
+  DIR_Step_PinDirY = 0;
 //  RST_Step_PinDirY = 0;
 //  SLP_FLT_Step_PinDirY = 0;
  // PLS_Step_PinDirY = 0;
-  DIR_Step_PinDirY = 0;
+
   
 //zaxis
   EN_Step_PinDirZ  = 0; //output
+  DIR_Step_PinDirZ = 0;
 //  RST_Step_PinDirZ = 0;
 //  SLP_FLT_Step_PinDirZ = 0;
 //  PLS_Step_PinDirZ = 0;
-  DIR_Step_PinDirZ = 0;
+
   
 //aaxis
   EN_Step_PinDirA  = 0; //output
+  DIR_Step_PinDirA = 0;
 //  RST_Step_PinDirA = 0;
 //  SLP_FLT_Step_PinDirA = 0;
 //  PLS_Step_PinDirA = 0;
-  DIR_Step_PinDirA = 0;
+
 }
 
 /////////////////////////////////

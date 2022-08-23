@@ -23497,6 +23497,7 @@ dirc
 dirx
 diry
 dirz
+disable_cnt
 disableocx
 disablestepper
 disablethreads
@@ -23626,8 +23627,8 @@ divswen_refo2con_bit
 divswen_refo3con_bit
 divswen_refo4con_bit
 dma_buff
-dma_ch0_isr
-dma_ch1_isr
+dma_global
+dma0
 dma0ie
 dma0ie
 dma0ie
@@ -23659,6 +23660,7 @@ dma0is0
 dma0is0_bit
 dma0is1
 dma0is1_bit
+dma1
 dma1ie
 dma1ie
 dma1ie
@@ -36671,7 +36673,6 @@ init2type0
 init2type0_bit
 init2type1
 init2type1_bit
-initdma_global
 initdma0
 initdma1
 initid
@@ -43762,6 +43763,8 @@ p_i2c2stat_bit
 p_i2c3stat_bit
 p_i2c4stat_bit
 p_i2c5stat_bit
+p1
+p2
 pa
 packet
 packet
@@ -47152,6 +47155,7 @@ rerrcnt7_c2trec_bit
 reset
 reset
 reset
+reset
 reset_
 reset_bit
 reset_usbcsr0_bit
@@ -47193,6 +47197,7 @@ resetrmii
 resetrmii
 resetrmii_bit
 resetrmii_emacxsupp_bit
+resetsteppers
 resettfun
 resettfun
 resettfun
@@ -72005,7 +72010,6 @@ uart2_init
 uart2_init_advanced
 uart2_read
 uart2_read_text
-uart2_rx_interrupt
 uart2_tx_idle
 uart2_write
 uart2_write_text

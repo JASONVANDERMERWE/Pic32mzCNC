@@ -42,47 +42,28 @@ extern Cmd_Type Cmd;
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
 #line 1 "c:/users/git/pic32mzcnc/timers.h"
-#line 1 "c:/users/git/pic32mzcnc/kinematics.h"
-#line 1 "c:/users/git/pic32mzcnc/stepper.h"
-#line 7 "c:/users/git/pic32mzcnc/kinematics.h"
-extern void (*AxisPulse)();
-
-
-typedef struct{
-float deg;
-float degreeDeg;
-float degreeRadians;
-float deg_A;
-float deg_B;
-float divisor;
-float newdeg_;
-float I;
-float J;
-float N;
-float radius;
-int dir;
-int quadrant_start;
-float xRad;
-float yRad;
-float xStart;
-float yStart;
-float xFin;
-float yFin;
-}Circle;
-extern Circle Circ;
+#line 1 "c:/users/git/pic32mzcnc/pins.h"
 
 
 
 
 
-void DualAxisStep(long newx,long newy,int axis_combo);
-void SingleAxisStep(long newxyz,int axis_No);
+extern sfr sbit LED1;
+extern sfr sbit LED1_Dir;
+extern sfr sbit LED2;
+extern sfr sbit LED2_Dir;
 
-void CalcRadius(Circle* cir);
-int QuadrantStart(float i,float j);
-void CircDir(Circle* cir);
-void Cir_Interpolation(float xPresent,float yPresent,Circle* cir);
-#line 14 "c:/users/git/pic32mzcnc/stepper.h"
+
+
+extern sfr sbit SW1;
+extern sfr sbit SW1_Dir;
+extern sfr sbit SW2;
+extern sfr sbit SW2_Dir;
+
+
+
+
+
 extern sfr sbit EN_StepX;
 extern sfr sbit EN_Step_PinDirX;
 extern sfr sbit DIR_StepX;
@@ -134,11 +115,49 @@ extern sfr sbit DIR_StepA;
 extern sfr sbit DIR_Step_PinDirA;
 extern sfr sbit FLT_StepA;
 extern sfr sbit FLT_Step_PinDirA;
+#line 1 "c:/users/git/pic32mzcnc/kinematics.h"
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
+#line 7 "c:/users/git/pic32mzcnc/kinematics.h"
+extern void (*AxisPulse)();
+
+
+typedef struct{
+float deg;
+float degreeDeg;
+float degreeRadians;
+float deg_A;
+float deg_B;
+float divisor;
+float newdeg_;
+float I;
+float J;
+float N;
+float radius;
+int dir;
+int quadrant_start;
+float xRad;
+float yRad;
+float xStart;
+float yStart;
+float xFin;
+float yFin;
+}Circle;
+extern Circle Circ;
 
 
 
+
+
+void DualAxisStep(long newx,long newy,int axis_combo);
+void SingleAxisStep(long newxyz,int axis_No);
+
+void CalcRadius(Circle* cir);
+int QuadrantStart(float i,float j);
+void CircDir(Circle* cir);
+void Cir_Interpolation(float xPresent,float yPresent,Circle* cir);
+#line 15 "c:/users/git/pic32mzcnc/stepper.h"
 typedef unsigned short UInt8_t;
-#line 116 "c:/users/git/pic32mzcnc/stepper.h"
+#line 63 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
@@ -293,6 +312,10 @@ void Single_Axis_Enable(_axis_ axis_);
 #line 12 "c:/users/git/pic32mzcnc/timers.h"
 struct Timer{
 char clock;
+char P1: 1;
+char P2: 1;
+unsigned int disable_cnt;
+unsigned int (*Reset)(unsigned int time,unsigned int last_sec);
 };
 extern struct Timer TMR;
 
@@ -300,8 +323,9 @@ extern struct Timer TMR;
 void InitTimer1();
 void InitTimer8();
 void ClockPulse();
+unsigned int ResetSteppers(unsigned int sec_to_disable,unsigned int last_sec_to_disable);
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
+#line 1 "c:/users/git/pic32mzcnc/pins.h"
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
 #line 1 "c:/users/git/pic32mzcnc/steptodistance.h"
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
@@ -310,21 +334,7 @@ void ClockPulse();
 const float Dia;
 #line 23 "c:/users/git/pic32mzcnc/steptodistance.h"
 signed long calcSteps( double mmsToMove, double Dia);
-#line 14 "c:/users/git/pic32mzcnc/config.h"
-extern sfr sbit LED1;
-extern sfr sbit LED1_Dir;
-extern sfr sbit LED2;
-extern sfr sbit LED2_Dir;
-
-
-
-extern sfr sbit SW1;
-extern sfr sbit SW1_Dir;
-extern sfr sbit SW2;
-extern sfr sbit SW2_Dir;
-
-
-
+#line 25 "c:/users/git/pic32mzcnc/config.h"
 extern unsigned char LCD_01_ADDRESS;
 extern bit oneShotA; sfr;
 extern bit oneShotB; sfr;
@@ -341,22 +351,9 @@ void set_performance_mode();
 void Uart2InterruptSetup();
 void LcdI2CConfig();
 void OutPutPulseXYZ();
-void initDMA_global();
-void initDMA0();
-void initDMA1();
 void Temp_Move(int a);
 void LCD_Display();
-#line 3 "C:/Users/Git/Pic32mzCNC/Config.c"
- sbit LED2 at LATA9_bit;
- sbit LED2_Dir at TRISA9_bit;
- sbit LED1 at LATE7_bit;
- sbit LED1_Dir at TRISE7_bit;
-
- sbit SW1 at RC3_bit;
- sbit SW1_Dir at TRISC3_bit;
- sbit SW2 at RB0_bit;
- sbit SW2_Dir at TRISB0_bit;
-
+#line 5 "C:/Users/Git/Pic32mzCNC/Config.c"
 void PinMode(){
 
  SYSKEY = 0xAA996655;
@@ -369,11 +366,17 @@ void PinMode(){
 
 
  ANSELA = 0X0000;
+ TRISA = 0X0000;
  ANSELB = 0X0000;
+ TRISB = 0X0000;
  ANSELC = 0X0000;
+ TRISC = 0X0000;
  ANSELD = 0X0000;
+ TRISD = 0X0000;
  ANSELE = 0X0000;
+ TRISE = 0X0000;
  ANSELG = 0X0000;
+ TRISG = 0X0000;
 
  CNPUB = 0x0000;
 
@@ -427,9 +430,7 @@ void PinMode(){
 
 
 
- initDMA_global();
- initDMA0();
- initDMA1();
+
 
 
 
@@ -530,7 +531,7 @@ unsigned long cp0;
 
 
 void OutPutPulseXYZ(){
-#line 191 "C:/Users/Git/Pic32mzCNC/Config.c"
+#line 187 "C:/Users/Git/Pic32mzCNC/Config.c"
  OC5CON = 0x0000;
  OC2CON = 0x0000;
  OC7CON = 0X0000;
@@ -568,7 +569,7 @@ void OutPutPulseXYZ(){
  OC3CON = 0x000C;
  OC6CON = 0x000C;
  OC8CON = 0x000C;
-#line 235 "C:/Users/Git/Pic32mzCNC/Config.c"
+#line 231 "C:/Users/Git/Pic32mzCNC/Config.c"
  OC5R = 0x5;
  OC5RS = 0x234;
  OC2R = 0x5;
@@ -651,8 +652,6 @@ void OutPutPulseXYZ(){
 
 }
 
-
-
 void LcdI2CConfig(){
 
  I2C4_Init_Advanced(50000, 100000);
@@ -664,76 +663,4 @@ void LcdI2CConfig(){
  I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_FIRST_ROW,1);
  I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_CURSOR_OFF,1);
  I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_CLEAR,1);
-}
-
-
-
-void initDMA_global(){
- DMACON = 1<<16;
- DCH0CON = 0x03;
-}
-
-
-void initDMA0(){
- DMACONbits.ON = 1;
- DCH0CONbits.CHAEN = 1;
- DCH0CONbits.CHPATLEN = 0;
- DMA0IE_bit = 0;
- DMA0IF_bit = 0;
-
- DCH0ECON =(146 << 8 ) | 0x30;
- DCH0DAT = 0x0D;
-
- DCH0SSA = KVA_TO_PA(0xBF822230);
- DCH0DSA = KVA_TO_PA(0xA0002000);
-
- DCH0SSIZ = 200 ;
- DCH0DSIZ = 200 ;
- DCH0CSIZ = 200 ;
-
- DCH0INTCLR = 0x00FF00FF ;
- CHBCIE_bit = 1 ;
- CHERIE_bit = 1 ;
-
-
-
- IPC33CLR = 0x0000001F ;
- DMA0IP2_bit = 1 ;
- DMA0IP1_bit = 0 ;
- DMA0IP0_bit = 1 ;
- DMA0IS1_bit = 1 ;
- DMA0IS0_bit = 1 ;
-
- DMA0IE_bit = 1 ;
- CHEN_bit = 1 ;
-
-}
-
-
-void initDMA1(){
-
- DMA1IE_bit = 0 ;
- DMA1IF_bit = 0 ;
- DCH1CONbits.CHPATLEN = 0;
- DCH1ECON=(147 << 8)| 0x30;
- DCH1SSA = KVA_TO_PA(0xA0002200) ;
- DCH1DSA = KVA_TO_PA(0xBF822220) ;
- DCH1DAT = 0x0D;
-
- DCH1SSIZ = 200 ;
-
- DCH1DSIZ = 1 ;
-
- DCH1CSIZ = 200 ;
-
- DCH1INTCLR = 0x00FF00FF ;
- CHBCIE_DCH1INT_bit = 1 ;
- CHERIE_DCH1INT_bit = 1 ;
-
- DMA1IP2_bit = 1 ;
- DMA1IP1_bit = 0 ;
- DMA1IP0_bit = 1 ;
- DMA1IS1_bit = 0 ;
- DMA1IS0_bit = 1 ;
- DMA1IE_bit = 1 ;
 }

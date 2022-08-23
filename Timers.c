@@ -9,7 +9,11 @@ static unsigned int ms100, ms300, ms500, ms800, sec1, sec1_5, sec2;
 //TMR 1 setup for 1us pusles as a dummy axis for single puls to
 //keep the seep equivilant to Bres algo dual axis.
 void InitTimer1(){
+//Clock pulses 100ms 500ms 800ms 1sec
   Clock = ClockPulse;
+//count 1sec pulses to a predefined value to reset steppers
+  TMR.Reset = ResetSteppers;
+//TMR1 setup to 100ms clock
   T1CON         = 0x8010;
   T1IP0_bit     = 1;
   T1IP1_bit     = 1;
@@ -24,7 +28,8 @@ void InitTimer1(){
 
 
 ///////////////////////////////////////////////////////////////////
-//TMR 8 initialized to interrupt at 1us
+//TMR 8  initialized to interrupt at 1us was used for early
+//interpolation no longer used to interpolate axis
 void InitTimer8(){
   T8CON            = 0x8000;
   T8IP0_bit        = 3;
@@ -81,4 +86,21 @@ void ClockPulse(){
       TMR.clock.B4 = !TMR.clock.B4;
    }
 
+}
+
+////////////////////////////////////////////
+//COUNT STEPPER RESET
+unsigned int ResetSteppers(unsigned int sec_to_disable,unsigned int last_sec_to_disable){
+   TMR.P1 = TMR. clock >> 4;  //1sec clock pulse
+   if(last_sec_to_disable == 0)
+      TMR.disable_cnt = 1;
+   if(TMR.P1 && !TMR.P2){
+      TMR.P2 = 1;
+      TMR.disable_cnt++;
+      if(TMR.disable_cnt > sec_to_disable)
+          DisableStepper();
+   }else if(!TMR.P1 && TMR.P2)
+      TMR.P2 = 0;
+      
+   return TMR.disable_cnt;
 }

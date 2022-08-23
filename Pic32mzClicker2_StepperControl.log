@@ -1,4 +1,4 @@
-0	1	mikroCPIC32.exe -MSF -DBG -pP32MZ2048EFH100 -RA -C -Y -DL -SSA -EBASE 0x9FC01000 -INTDEF MV_SRS7_IS32 -O11111115 -fo200 -N"C:\Users\Git\Pic32mzCNC\Pic32mzClicker2_StepperControl.mcp32" -SP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC32\Defs\" -SP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC32\Uses\" -SP"C:\Users\Git\Pic32mzCNC\" -SP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC32\Packages\I2C_Lcd\Uses\" -IP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC32\Uses\" -IP"C:\Users\Git\Pic32mzCNC\" -IP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC32\Packages\I2C_Lcd\Uses\" "Main.c" "Config.c" "Stepper.c" "Steptodistance.c" "Timers.c" "Kinematics.c" "__Lib_CP0.emcl" "__Lib_Math.emcl" "__Lib_MathDouble_MZ_EF.emcl" "__Lib_System_MZ_EF.emcl" "__Lib_SoftResetDma.emcl" "__Lib_Delays.emcl" "__Lib_CType.emcl" "__Lib_CString.emcl" "__Lib_CStdlib_EF.emcl" "__Lib_CMath_EF.emcl" "__Lib_Conversions_EF.emcl" "__Lib_Sprintf_EF.emcl" "__Lib_Sprinti.emcl" "__Lib_Sprintl.emcl" "__Lib_I2C_12345_MZ.emcl" "__Lib_UART_123456_MZ.emcl" "__Lib_PPS_P32MZ_100CAN.emcl" "I2C_Lcd.emcl"	 
+0	1	mikroCPIC32.exe -MSF -DBG -pP32MZ2048EFH100 -RA -C -Y -DL -SSA -EBASE 0x9FC01000 -INTDEF MV_SRS7_IS32 -O11111115 -fo200 -N"C:\Users\Git\Pic32mzCNC\Pic32mzClicker2_StepperControl.mcp32" -SP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC32\Defs\" -SP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC32\Uses\" -SP"C:\Users\Git\Pic32mzCNC\" -SP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC32\Packages\I2C_Lcd\Uses\" -IP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC32\Uses\" -IP"C:\Users\Git\Pic32mzCNC\" -IP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC32\Packages\I2C_Lcd\Uses\" "Main.c" "Config.c" "Stepper.c" "Steptodistance.c" "Timers.c" "Kinematics.c" "Pins.c" "Serial_Dma.c" "__Lib_CP0.emcl" "__Lib_Math.emcl" "__Lib_MathDouble_MZ_EF.emcl" "__Lib_System_MZ_EF.emcl" "__Lib_SoftResetDma.emcl" "__Lib_Delays.emcl" "__Lib_CType.emcl" "__Lib_CString.emcl" "__Lib_CStdlib_EF.emcl" "__Lib_CMath_EF.emcl" "__Lib_Conversions_EF.emcl" "__Lib_Sprintf_EF.emcl" "__Lib_Sprinti.emcl" "__Lib_Sprintl.emcl" "__Lib_I2C_12345_MZ.emcl" "__Lib_UART_123456_MZ.emcl" "__Lib_PPS_P32MZ_100CAN.emcl" "I2C_Lcd.emcl" "DEFINES.pld"	 
 diagnostics: 0	122	Compilation Started	P32MZ2048EFH100.c
 diagnostics: 65825	123	Compiled Successfully	P32MZ2048EFH100.c
 diagnostics: 0	122	Compilation Started	__Lib_Delays.c
@@ -8,54 +8,52 @@ hint: 7	1163	Variable 'dummy' has been declared, but not used	I2C_Lcd.c
 warning: 30	1503	Result is not defined in function: 'I2C_PCF8574_Write'	I2C_Lcd.c
 diagnostics: 162	123	Compiled Successfully	I2C_Lcd.c
 hint: 7	1164	Variable 'S' has been eliminated by optimizer	I2C_Lcd.c
-hint: 9	1354	 warning: The macro is redefined     #define Pi 3.142     from c:/users/git/pic32mzcnc/config.h: 8:    #include "Steptodistance.h"     from C:/Users/Git/Pic32mzCNC/Main.c: 1:    #include "Config.h"     previously macro "Pi" defined as: #define Pi  3.14159 	c:\users\git\pic32mzcnc\steptodistance.h
+hint: 9	1354	 warning: The macro is redefined     #define Pi 3.142     from c:/users/git/pic32mzcnc/config.h: 9:    #include "Steptodistance.h"     from C:/Users/Git/Pic32mzCNC/Main.c: 1:    #include "Config.h"     previously macro "Pi" defined as: #define Pi  3.14159 	c:\users\git\pic32mzcnc\steptodistance.h
 diagnostics: 0	122	Compilation Started	i2c_lcd.h
-hint: 0	1004	interrupt handler (uart2_Rx_interrupt at 0x0092)	Main.c
-hint: 0	1004	interrupt handler (DMA_CH0_ISR at 0x0086)	Main.c
-hint: 35	1163	Variable 'A' has been declared, but not used	Main.c
-hint: 36	1163	Variable 'ptr' has been declared, but not used	Main.c
-hint: 0	1004	interrupt handler (DMA_CH1_ISR at 0x0087)	Main.c
-hint: 66	1163	Variable 'ptrAdd' has been declared, but not used	Main.c
-hint: 87	1163	Variable 'j' has been declared, but not used	Main.c
-diagnostics: 232	123	Compiled Successfully	Main.c
-hint: 65	1164	Variable 'ptr' has been eliminated by optimizer	Main.c
-hint: 9	1354	 warning: The macro is redefined     #define Pi 3.142     from c:/users/git/pic32mzcnc/config.h: 8:    #include "Steptodistance.h"     from C:/Users/Git/Pic32mzCNC/Config.c: 1:    #include "Config.h"     previously macro "Pi" defined as: #define Pi  3.14159 	c:\users\git\pic32mzcnc\steptodistance.h
+hint: 25	1163	Variable 'j' has been declared, but not used	Main.c
+diagnostics: 181	123	Compiled Successfully	Main.c
+hint: 9	1354	 warning: The macro is redefined     #define Pi 3.142     from c:/users/git/pic32mzcnc/config.h: 9:    #include "Steptodistance.h"     from C:/Users/Git/Pic32mzCNC/Config.c: 1:    #include "Config.h"     previously macro "Pi" defined as: #define Pi  3.14159 	c:\users\git\pic32mzcnc\steptodistance.h
 diagnostics: 0	122	Compilation Started	i2c_lcd.h
-diagnostics: 402	123	Compiled Successfully	Config.c
-hint: 10	1354	 warning: The macro is redefined     #define Pi 3.14159     from C:/Users/Git/Pic32mzCNC/Stepper.c: 1:    #include "Stepper.h"     previously macro "Pi" defined as: #define Pi  3.142 	c:\users\git\pic32mzcnc\stepper.h
-diagnostics: 0	122	Compilation Started	i2c_lcd.h
-hint: 161	1163	Variable 'ii' has been declared, but not used	Stepper.c
+diagnostics: 324	123	Compiled Successfully	Config.c
+hint: 55	1354	 warning: The macro is redefined     #define Pi 3.14159     from C:/Users/Git/Pic32mzCNC/Stepper.c: 1:    #include "Stepper.h"     previously macro "Pi" defined as: #define Pi  3.142 	c:\users\git\pic32mzcnc\stepper.h
+diagnostics: 0	122	Compilation Started	pins.h
+hint: 113	1163	Variable 'ii' has been declared, but not used	Stepper.c
 hint: 0	1004	interrupt handler (StepX at 0x001B)	Stepper.c
 hint: 0	1004	interrupt handler (StepY at 0x000C)	Stepper.c
 hint: 0	1004	interrupt handler (StepZ at 0x0023)	Stepper.c
 hint: 0	1004	interrupt handler (StepA at 0x0011)	Stepper.c
-diagnostics: 649	123	Compiled Successfully	Stepper.c
-hint: 10	1354	 warning: The macro is redefined     #define Pi 3.14159     from c:/users/git/pic32mzcnc/steptodistance.h: 4:    #include "Stepper.h"     from C:/Users/Git/Pic32mzCNC/Steptodistance.c: 1:    #include "Steptodistance.h"     previously macro "Pi" defined as: #define Pi  3.142 	c:\users\git\pic32mzcnc\stepper.h
+diagnostics: 601	123	Compiled Successfully	Stepper.c
+hint: 55	1354	 warning: The macro is redefined     #define Pi 3.14159     from c:/users/git/pic32mzcnc/steptodistance.h: 4:    #include "Stepper.h"     from C:/Users/Git/Pic32mzCNC/Steptodistance.c: 1:    #include "Steptodistance.h"     previously macro "Pi" defined as: #define Pi  3.142 	c:\users\git\pic32mzcnc\stepper.h
 hint: 9	1354	 warning: The macro is redefined     #define Pi 3.142     from C:/Users/Git/Pic32mzCNC/Steptodistance.c: 1:    #include "Steptodistance.h"     previously macro "Pi" defined as: #define Pi  3.14159 	c:\users\git\pic32mzcnc\steptodistance.h
-diagnostics: 0	122	Compilation Started	i2c_lcd.h
+diagnostics: 0	122	Compilation Started	pins.h
 diagnostics: 21	123	Compiled Successfully	Steptodistance.c
 hint: 8	1164	Variable 'circ' has been eliminated by optimizer	Steptodistance.c
 hint: 8	1164	Variable 'cirDivision' has been eliminated by optimizer	Steptodistance.c
 hint: 8	1164	Variable 'stepsToMove' has been eliminated by optimizer	Steptodistance.c
-hint: 9	1354	 warning: The macro is redefined     #define Pi 3.142     from c:/users/git/pic32mzcnc/config.h: 8:    #include "Steptodistance.h"     from c:/users/git/pic32mzcnc/timers.h: 5:    #include "Config.h"     from C:/Users/Git/Pic32mzCNC/Timers.c: 1:    #include "Timers.h"     previously macro "Pi" defined as: #define Pi  3.14159 	c:\users\git\pic32mzcnc\steptodistance.h
-diagnostics: 0	122	Compilation Started	i2c_lcd.h
+hint: 9	1354	 warning: The macro is redefined     #define Pi 3.142     from c:/users/git/pic32mzcnc/config.h: 9:    #include "Steptodistance.h"     from c:/users/git/pic32mzcnc/timers.h: 5:    #include "Config.h"     from C:/Users/Git/Pic32mzCNC/Timers.c: 1:    #include "Timers.h"     previously macro "Pi" defined as: #define Pi  3.14159 	c:\users\git\pic32mzcnc\steptodistance.h
+diagnostics: 0	122	Compilation Started	pins.h
 hint: 0	1004	interrupt handler (Timer1Interrupt at 0x0004)	Timers.c
 hint: 0	1004	interrupt handler (Timer8Interrupt at 0x0024)	Timers.c
-diagnostics: 84	123	Compiled Successfully	Timers.c
-hint: 10	1354	 warning: The macro is redefined     #define Pi 3.14159     from c:/users/git/pic32mzcnc/kinematics.h: 4:    #include "Stepper.h"     from C:/Users/Git/Pic32mzCNC/Kinematics.c: 1:    #include "Kinematics.h"     previously macro "Pi" defined as: #define Pi  3.142 	c:\users\git\pic32mzcnc\stepper.h
-diagnostics: 0	122	Compilation Started	i2c_lcd.h
+diagnostics: 106	123	Compiled Successfully	Timers.c
+hint: 55	1354	 warning: The macro is redefined     #define Pi 3.14159     from c:/users/git/pic32mzcnc/kinematics.h: 4:    #include "Stepper.h"     from C:/Users/Git/Pic32mzCNC/Kinematics.c: 1:    #include "Kinematics.h"     previously macro "Pi" defined as: #define Pi  3.142 	c:\users\git\pic32mzcnc\stepper.h
+diagnostics: 0	122	Compilation Started	pins.h
 hint: 273	1163	Variable 'xRad' has been declared, but not used	Kinematics.c
 hint: 273	1163	Variable 'yRad' has been declared, but not used	Kinematics.c
 hint: 273	1163	Variable 'X' has been declared, but not used	Kinematics.c
 hint: 273	1163	Variable 'Y' has been declared, but not used	Kinematics.c
 diagnostics: 339	123	Compiled Successfully	Kinematics.c
 hint: 273	1164	Variable 'angA' has been eliminated by optimizer	Kinematics.c
-diagnostics: 0	127	All files Compiled in 641 ms	 
-hint: 0	1144	Used RX: 17 (53%)   Free RX: 15 (47%)	Used RX: 17 (53%)   Free RX: 15 (47%)
+diagnostics: 0	122	Compilation Started	pins.h
+diagnostics: 69	123	Compiled Successfully	Pins.c
+diagnostics: 0	122	Compilation Started	serial_dma.h
+diagnostics: 82	123	Compiled Successfully	Serial_Dma.c
+diagnostics: 0	127	All files Compiled in 843 ms	 
+hint: 5	1004	Variable rxBuf has been declared, but not used	Main.c
+hint: 0	1144	Used RX: 21 (66%)   Free RX: 11 (34%)	Used RX: 21 (66%)   Free RX: 11 (34%)
 hint: 0	1144	Static RAM (bytes): 596   Dynamic RAM (bytes): 515569	Static RAM (bytes): 596   Dynamic RAM (bytes): 515569
-hint: 0	1144	Used ROM (bytes): 23963 (1%)  Free ROM (bytes): 2073189 (99%)	Used ROM (bytes): 23963 (1%)  Free ROM (bytes): 2073189 (99%)
-hint: 0	1144	Used BOOTROM (bytes): 792 (1%)  Free BOOTROM (bytes): 146219 (99%)	Used BOOTROM (bytes): 792 (1%)  Free BOOTROM (bytes): 146219 (99%)
+hint: 0	1144	Used ROM (bytes): 32171 (2%)  Free ROM (bytes): 2064981 (98%)	Used ROM (bytes): 32171 (2%)  Free ROM (bytes): 2064981 (98%)
+hint: 0	1144	Used BOOTROM (bytes): 768 (1%)  Free BOOTROM (bytes): 146243 (99%)	Used BOOTROM (bytes): 768 (1%)  Free BOOTROM (bytes): 146243 (99%)
 diagnostics: 0	125	Project Linked Successfully	Pic32mzClicker2_StepperControl.mcp32
-diagnostics: 0	128	Linked in 594 ms	 
-diagnostics: 0	129	Project 'Pic32mzClicker2_StepperControl.mcp32' completed: 3047 ms	 
-diagnostics: 0	103	Finished successfully: 22 Aug 2022, 22:28:25	Pic32mzClicker2_StepperControl.mcp32
+diagnostics: 0	128	Linked in 688 ms	 
+diagnostics: 0	129	Project 'Pic32mzClicker2_StepperControl.mcp32' completed: 3156 ms	 
+diagnostics: 0	103	Finished successfully: 23 Aug 2022, 22:25:21	Pic32mzClicker2_StepperControl.mcp32
