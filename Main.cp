@@ -334,6 +334,22 @@ unsigned int ResetSteppers(unsigned int sec_to_disable,unsigned int last_sec_to_
 const float Dia;
 #line 23 "c:/users/git/pic32mzcnc/steptodistance.h"
 signed long calcSteps( double mmsToMove, double Dia);
+#line 1 "c:/users/git/pic32mzcnc/serial_dma.h"
+#line 1 "c:/users/git/pic32mzcnc/config.h"
+#line 7 "c:/users/git/pic32mzcnc/serial_dma.h"
+extern char txt[];
+extern char rxBuf[];
+extern char txBuf[];
+
+
+
+
+
+
+
+void DMA_global();
+void DMA0();
+void DMA1();
 #line 25 "c:/users/git/pic32mzcnc/config.h"
 extern unsigned char LCD_01_ADDRESS;
 extern bit oneShotA; sfr;
@@ -354,11 +370,6 @@ void OutPutPulseXYZ();
 void Temp_Move(int a);
 void LCD_Display();
 #line 4 "C:/Users/Git/Pic32mzCNC/Main.c"
-char txt[] = "Start......";
-char rxBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0} absolute 0xA0002000 ;
-char txBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0} absolute 0xA0002200 ;
-
-
 bit testISR;
 bit oneShotA; sfr;
 bit oneShotB; sfr;
@@ -373,21 +384,24 @@ static unsigned int a;
 
 
 
+
 void main() {
 static char oneshot = 0;
 unsigned char j;
 static unsigned int disable_steps = 0;
 int xyz_ = 0;
  PinMode();
+
  StepperConstants(15500,15500);
  EnableInterrupts();
-
-
-
  oneShotA = 0;
- a=4;
- disable_steps = 0;
 
+ a=4;
+ EnStepperX();
+ EnStepperY();
+ EnStepperZ();
+ EnStepperA();
+ disable_steps = 0;
  while(1){
 
  if(!Toggle){
@@ -417,10 +431,10 @@ int xyz_ = 0;
  EnStepperY();
  EnStepperZ();
  EnStepperA();
-#line 76 "C:/Users/Git/Pic32mzCNC/Main.c"
+#line 74 "C:/Users/Git/Pic32mzCNC/Main.c"
  xyz_++;
  if(xyz_ > 2)xyz_ = 0;
-#line 85 "C:/Users/Git/Pic32mzCNC/Main.c"
+#line 83 "C:/Users/Git/Pic32mzCNC/Main.c"
  Temp_Move(a);
  a++;
  if(a > 6)a=4;

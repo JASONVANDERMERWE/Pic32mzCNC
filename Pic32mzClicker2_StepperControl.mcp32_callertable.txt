@@ -13,18 +13,21 @@ main
 		set_performance_mode
 		InitTimer1
 		InitTimer8
+		DMA_global
+			DMA0
+			DMA1
 		OutPutPulseXYZ
 		SetPinMode
 	StepperConstants
+	EnStepperX
+	EnStepperY
+	EnStepperZ
+	EnStepperA
 	sprintf
 		_doprntf
 			isdigit
 			scale
 			fround
-	EnStepperX
-	EnStepperY
-	EnStepperZ
-	EnStepperA
 	Temp_Move
 		calcSteps
 		speed_cntr_Move
@@ -135,3 +138,8 @@ StepZ
 	I2C2_Stop
 	I2C3_Stop
 	I2C5_Stop
+DMA_CH1_ISR
+DMA_CH0_ISR
+	__CC2DW
+	strlen
+	memcpy

@@ -23627,6 +23627,8 @@ divswen_refo2con_bit
 divswen_refo3con_bit
 divswen_refo4con_bit
 dma_buff
+dma_ch0_isr
+dma_ch1_isr
 dma_global
 dma0
 dma0ie
@@ -36673,8 +36675,6 @@ init2type0
 init2type0_bit
 init2type1
 init2type1_bit
-initdma0
-initdma1
 initid
 initid
 initid

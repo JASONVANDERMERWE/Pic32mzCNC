@@ -1,11 +1,6 @@
 #include "Config.h"
 
 
-char txt[] = "Start......";
-char rxBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0}  absolute 0xA0002000 ; //resides in flash ??
-char txBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0}  absolute 0xA0002200 ;
-
-
 bit testISR;
 bit oneShotA; sfr;
 bit oneShotB; sfr;
@@ -18,6 +13,7 @@ unsigned int ii;
 unsigned long testOcr;
 static unsigned int a;
 
+
 /////////////////////////////////////////
 //main function
 void main() {
@@ -26,15 +22,17 @@ unsigned char j;
 static unsigned int disable_steps = 0;
 int xyz_ = 0;
   PinMode();
+
   StepperConstants(15500,15500);
   EnableInterrupts();
-  
-  //I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
-  
   oneShotA = 0;
+  //I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
   a=4;
+  EnStepperX();
+  EnStepperY();
+  EnStepperZ();
+  EnStepperA();
   disable_steps = 0;
-  
   while(1){
 
          if(!Toggle){

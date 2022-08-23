@@ -1,5 +1,10 @@
 #include "Serial_Dma.h"
 
+
+char txt[] = "Start......";
+char rxBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0}  absolute 0xA0002000 ; //resides in flash ??
+char txBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0}  absolute 0xA0002200 ;
+
 char DMA_Buff[200];
 short dma0int_flag;
 short dma1int_flag;
@@ -9,11 +14,11 @@ short dma1int_flag;
 ////////////////////////////////////////////////////////////////
 //DMA Config
 void DMA_global(){
-    DMACON = 1<<16;       //enable the DMA controller
+    DMACON = 1<<16;   //enable the DMA controller
     DCH0CON = 0x03;   //channel off on block trf complete ,no event detect, priority 3, no chaining
     
-   DMA0();
-   DMA1();
+    DMA0();
+    DMA1();
 }
 
 /* This is the DMA channel 0 setup for the receiver */
@@ -80,3 +85,57 @@ void DMA1(){
     DMA1IS0_bit = 1 ;
     DMA1IE_bit  = 1 ;           //' enable DMA1 interrupt
 }
+
+
+////////////////////////////////////////
+//DMA IRQ
+void DMA_CH0_ISR() iv IVT_DMA0 ilevel 5 ics ICS_AUTO {
+ char A[6];
+ int i,ptr;
+    if (CHBCIF_bit == 1) {         // Channel Block Transfer has Completed Interrupt Flag bit
+     i = 0;
+
+/* ECHO EXAMPLE */
+      i = strlen(rxBuf);
+      dma0int_flag = 1;          // user flag to inform this int was triggered. should be cleared in software
+      memcpy(txBuf, rxBuf, i);   // copy RxBuf -> TxBuf  BUFFER_LENGTH
+      CHEN_DCH1CON_bit = 1;     // Enable the DMA1 channel to transmit back what was received
+    }
+    DCH1SSIZ            = i ;
+   //  DCH1CSIZ            = i*2 ;
+/* Channel Address Error Interrupt Flag bit  */
+    if( CHERIF_bit == 1){                     // clear channel error int flag
+       CHERIF_bit = 0;
+       memcpy(txBuf,"CHERIF Error",13);
+    }
+    DCH0INTCLR          = 0x00FF;             // clear DMA 0 int flags
+/* re-enable DMA 0 int */
+
+    CHEN_bit            = 1 ;                 // Enable channel - may want to do this when you are ready to receive...
+
+    CFORCE_DCH1ECON_bit = 1 ;                 // force DMA1 interrupt trigger
+    DMA0IF_bit          = 0 ;                 // clear DMA0 int flag
+
+}
+
+
+void DMA_CH1_ISR() iv IVT_DMA1 ilevel 5 ics ICS_AUTO {
+int ptr = 0;
+char ptrAdd[6];
+/* Channel Block Transfer Complete Interrupt Flag bit */
+    if (CHBCIF_DCH1INT_bit == 1){
+       CHBCIF_DCH1INT_bit = 0;             // clear flag
+    }
+/* Channel Address Error Interrupt Flag bit */
+    if( CHERIF_DCH1INT_bit == 1){
+       CHERIF_DCH1INT_bit = 0;
+
+    }
+
+    dma1int_flag = 1;                          // user flag to inform this int was triggered. should be cleared in software
+    DCH1INTCLR   = 0x00FF;                     // clear event flags
+    DMA1IF_bit   = 0 ;
+
+}
+
+

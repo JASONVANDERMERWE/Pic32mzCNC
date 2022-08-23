@@ -78,8 +78,8 @@ void PinMode(){
 
 ////////////////////////////////////////////////
 //DMA CONFIG
- //  DMA_global();
-
+   DMA_global();
+   
 ////////////////////////////////////////////////
 //set up output compare module for oc3 RF1 pin
   OutPutPulseXYZ();
