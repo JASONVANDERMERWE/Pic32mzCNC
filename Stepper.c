@@ -6,6 +6,7 @@
 //enum varibles
 _axis_ _axis;
 axis_combination axis_xyz;
+InterPolate InterPol;
 
 unsigned char AxisNo;
 unsigned int Toggle;
@@ -201,22 +202,28 @@ int ii;
 /////////////////////////////////////////////////
 
 //Step cycle out of for loop
-void Step_Cycle(int axis_No){
-      toggleOCx(axis_No);
+void Step_Cycle(int axis_No,int InterPol){
+      toggleOCx(axis_No,InterPol);
       Pulse(axis_No);
 }
 
 
 //toggle the OCxCON regs
-void toggleOCx(int axis_No){
+void toggleOCx(int axis_No,int InterPol){
       switch(axis_No){
         case X: OC5R   = 0x5;
-                OC5RS  = STPS[X].step_delay & 0xFFFF;//0x234;
+                if(Lin)
+                   OC5RS  = STPS[X].step_delay & 0xFFFF;//0x234;
+                else if(Cir)
+                   OC5RS  = cirSpeed;
                 TMR2   =  0xFFFF;
                 OC5CON =  0x8004; //restart the output compare module
              break;
         case Y: OC2R   = 0x5;
-                OC2RS  = STPS[Y].step_delay & 0xFFFF;
+                if(Lin)
+                   OC2RS  = STPS[Y].step_delay & 0xFFFF;
+                else if(Cir)
+                   OC2RS  = cirSpeed;
                 TMR4   =  0xFFFF;
                 OC2CON =  0x8004; //restart the output compare module
              break;
@@ -399,8 +406,10 @@ void StepX() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
      OC5IF_bit = 0;
      if(SV.Single_Dual == 0)
         SingleStepX();
-     else
+     else if(SV.Single_Dual == 1)
         AxisPulse();
+     else if(SV.Single_Dual == 2)
+        return;
 }
 
 void SingleStepX(){
@@ -408,7 +417,7 @@ void SingleStepX(){
       StopX();
     }
     else{
-      Step_Cycle(X);
+      Step_Cycle(X,Lin);
     }
 }
 
@@ -427,8 +436,10 @@ void StepY() iv IVT_OUTPUT_COMPARE_2 ilevel 3 ics ICS_AUTO {
    OC2IF_bit = 0;
    if(SV.Single_Dual == 0)
         SingleStepY();
-   else
+   else if(SV.Single_Dual == 1)
         AxisPulse();
+   else if(SV.Single_Dual == 2)
+      return;
 }
 
 void SingleStepY(){
@@ -436,7 +447,7 @@ void SingleStepY(){
       StopY();
     }
     else{
-      Step_Cycle(Y);
+      Step_Cycle(Y,Lin);
     }
 }
 
@@ -454,9 +465,10 @@ void StepZ() iv IVT_OUTPUT_COMPARE_7 ilevel 3 ics ICS_AUTO {
    OC7IF_bit = 0;
    if(!SV.Single_Dual)
         SingleStepZ();
-   else
+   else if(SV.Single_Dual == 1)
         AxisPulse();
-
+   else if(SV.Single_Dual == 2)
+        return;
 }
 
 void SingleStepZ(){
@@ -464,7 +476,7 @@ void SingleStepZ(){
       StopZ();
    }
    else{
-      Step_Cycle(Z);
+      Step_Cycle(Z,Lin);
    }
 }
 
@@ -491,7 +503,7 @@ void SingleStepA(){
       StopA();
    }
    else{
-      Step_Cycle(A);
+      Step_Cycle(A,Lin);
    }
 }
 

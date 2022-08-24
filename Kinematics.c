@@ -1,6 +1,6 @@
 #include "Kinematics.h"
 
-
+Circle Circ;
 
 //////////////////////////////////
 //FUNCTION POINTERS
@@ -65,7 +65,7 @@ int dir;
 
           STPS[axis_No].step_count = 0;
           //Start output compare module
-          Step_Cycle(axis_No);
+          Step_Cycle(axis_No,Lin);
 
 }
 
@@ -193,20 +193,20 @@ void XY_Interpolate(){
    }
 
    if(SV.dx > SV.dy){
-      Step_Cycle(X);
+      Step_Cycle(X,Lin);
       if(SV.d2 < 0){
           SV.d2 += 2*SV.dy;
       }else{
           SV.d2 += 2 * (SV.dy - SV.dx);
-          Step_Cycle(Y);
+          Step_Cycle(Y,Lin);
       }
    }else{
-      Step_Cycle(Y);
+      Step_Cycle(Y,Lin);
       if(SV.d2 < 0){
          SV.d2 += 2 * SV.dx;
       }else{
          SV.d2 += 2 * (SV.dx - SV.dy);
-         Step_Cycle(X);
+         Step_Cycle(X,Lin);
        }
     }
 }
@@ -221,21 +221,21 @@ void XZ_Interpolate(){
     }
 
    if(SV.dx > SV.dz){
-      Step_Cycle(X);
+      Step_Cycle(X,Lin);
       if(d2 < 0)
         d2 += 2*SV.dz;
       else{
         d2 += 2 * (SV.dz - SV.dx);
-        Step_Cycle(Z);
+        Step_Cycle(Z,Lin);
       }
 
     }else{
-        Step_Cycle(Z);
+        Step_Cycle(Z,Lin);
         if(d2 < 0)
             d2 += 2 * SV.dx;
         else{
             d2 += 2 * (SV.dx - SV.dz);
-            Step_Cycle(X);
+            Step_Cycle(X,Lin);
         }
      }
 }
@@ -248,27 +248,80 @@ void YZ_Interpolate(){
     }
 
     if(SV.dy > SV.dz){
-      Step_Cycle(Y);
+      Step_Cycle(Y,Lin);
       if(d2 < 0)
         d2 += 2*SV.dz;
       else{
         d2 += 2 * (SV.dz - SV.dy);
-        Step_Cycle(Z);
+        Step_Cycle(Z,Lin);
       }
     }else{
-      Step_Cycle(Z);
+      Step_Cycle(Z,Lin);
       if(d2 < 0)
          d2 += 2 * SV.dy;
       else{
          d2 += 2 * (SV.dy - SV.dz);
-         Step_Cycle(Y);
+         Step_Cycle(Y,Lin);
       }
     }
 
 }
 
 /////////////////////////////////////////////////
-//Circular Interpolation
+//          Circular Interpolation             //
+/////////////////////////////////////////////////
+
+////////////////////////////////////////////////
+//Set Circ values
+void SetCircleVals(Circle* cir,float curX,float curY,float i,float j, float deg,int dir){
+
+ cir->I = i;
+ cir->J = j;
+ cir->xStart = curX;
+ cir->yStart = curY;
+ cir->degreeDeg = deg;
+ cir = CircDir(dir);
+ 
+}
+
+/////////////////////////////////////////////////
+//Check which Quadrand the Head is in
+int QuadrantStart(float i,float j){
+    if((i <= 0)&&(j >= 0))
+          return 1;
+    else if((i > 0)&&(j > 0))
+         return 2;
+    else if((i > 0)&&(j < 0))
+         return 3;
+    else if((i < 0)&&(j < 0))
+         return 4;
+    else
+        return 0;
+}
+
+
+/////////////////////////////////////////////////
+//Check which direction to travel in
+Circle* CircDir(int dir){
+Circle circ;
+float newDeg;
+   circ.dir = dir;
+   if(dir == CW){
+        newDeg = 360 / circ.deg;
+        circ.N = (2*Pi*circ.radius)/newDeg;
+        circ.divisor = circ.deg / newDeg;
+   }
+
+   if(circ.dir == CW)
+       circ.deg = 0.00;
+   if(circ.dir == CCW)
+       circ.deg = 360.00;
+       
+   return &circ;
+}
+
+////////////////////////////////////////////////
+//Radius Calculation
 void CalcRadius(Circle* cir){
  float xRad,yRad,X,Y,angA,angB;
 
@@ -290,52 +343,60 @@ void CalcRadius(Circle* cir){
    cir->degreeRadians = angB * deg2rad;
 }
 
-int QuadrantStart(float i,float j){
-    if((i <= 0)&&(j >= 0))
-          return 1;
-    else if((i > 0)&&(j > 0))
-         return 2;
-    else if((i > 0)&&(j < 0))
-         return 3;
-    else if((i < 0)&&(j < 0))
-         return 4;
-    else
-        return 0;
-}
-
-void CircDir(Circle* cir){
-float newDeg;
-   if(cir->dir == CW){
-        newDeg = 360 / cir->deg;
-        cir->N = (2*Pi*cir->radius)/newDeg;
-        cir->divisor = cir->deg / newDeg;
-   }
-
-   if(cir->dir == CW)
-       cir->deg = 0.00;
-   if(cir->dir == CCW)
-       cir->deg = 360.00;
-}
-
+///////////////////////////////////////////////////
+//Interpolate Arc
 void Cir_Interpolation(float xPresent,float yPresent,Circle* cir){
 static int quad = 1;
       cir->xStart = xPresent;
       cir->yStart = yPresent;
       CalcRadius(cir);
-    //  quad = QuadrantStart(cir);
+      quad = QuadrantStart(cir->I,cir->J);
 
     while(quad){
-       break;//!!!
+       //break;//!!!
        if(quad == 1 || quad == 4){
          cir->xFin = cir->xRad + (cir->radius * cos(cir->degreeRadians));
          cir->yFin = cir->yRad + (cir->radius * sin(cir->degreeRadians));
        }
        if(quad == 2 || quad == 3){
          cir->xFin = cir->xRad - (cir->radius * cos(cir->degreeRadians));
-        // cir->yFin = cir>-yRad - (cir->radius * sin(cir->degreeRadians));
+         cir->yFin = cir->yRad - (cir->radius * sin(cir->degreeRadians));
        }
-
+       Circ_Tick(cir);
+       CalcRadius(cir);
      }
 }
+
+
+
+
+void Circ_Tick(Circle* cir){
+static float lastX,lastY;
+        if (cir->dir == CW){
+           cir->deg += cir->divisor;
+           if (cir->deg >= cir->degreeDeg){
+               disableOCx();
+           }
+        }
+
+        if (cir->dir == CCW){
+           cir->deg -= cir->divisor;
+           if (cir->deg <= cir->degreeDeg){
+              disableOCx();
+           }
+
+        }
+
+        if(cir->xFin > lastX){
+           Step_Cycle(X,Cir);
+           lastX = cir->xFin;
+        }
+        if(cir->yFin > lastY){
+           Step_Cycle(Y,Cir);
+           lastY = cir->yFin;
+        }
+        
+}
+
 
 

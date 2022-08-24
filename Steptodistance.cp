@@ -103,7 +103,49 @@ extern char txBuf[];
 void DMA_global();
 void DMA0();
 void DMA1();
-#line 25 "c:/users/git/pic32mzcnc/config.h"
+#line 1 "c:/users/git/pic32mzcnc/kinematics.h"
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
+#line 12 "c:/users/git/pic32mzcnc/kinematics.h"
+extern void (*AxisPulse)();
+
+
+typedef struct{
+float deg;
+float degreeDeg;
+float degreeRadians;
+float deg_A;
+float deg_B;
+float divisor;
+float newdeg_;
+float I;
+float J;
+float N;
+float radius;
+int dir;
+int quadrant_start;
+float xRad;
+float yRad;
+float xStart;
+float yStart;
+float xFin;
+float yFin;
+}Circle;
+extern Circle Circ;
+
+
+
+
+
+void DualAxisStep(long newx,long newy,int axis_combo);
+void SingleAxisStep(long newxyz,int axis_No);
+
+void SetCircleVals(Circle* cir,float curX,float curY,float i,float j, float deg,int dir);
+void CalcRadius(Circle* cir);
+int QuadrantStart(float i,float j);
+Circle* CircDir(int dir);
+void Cir_Interpolation(float xPresent,float yPresent,Circle* cir);
+void Circ_Tick(Circle* cir);
+#line 28 "c:/users/git/pic32mzcnc/config.h"
 extern unsigned char LCD_01_ADDRESS;
 extern bit oneShotA; sfr;
 extern bit oneShotB; sfr;
@@ -177,54 +219,15 @@ void ClockPulse();
 unsigned int ResetSteppers(unsigned int sec_to_disable,unsigned int last_sec_to_disable);
 #line 1 "c:/users/git/pic32mzcnc/pins.h"
 #line 1 "c:/users/git/pic32mzcnc/kinematics.h"
-#line 1 "c:/users/git/pic32mzcnc/stepper.h"
-#line 7 "c:/users/git/pic32mzcnc/kinematics.h"
-extern void (*AxisPulse)();
-
-
-typedef struct{
-float deg;
-float degreeDeg;
-float degreeRadians;
-float deg_A;
-float deg_B;
-float divisor;
-float newdeg_;
-float I;
-float J;
-float N;
-float radius;
-int dir;
-int quadrant_start;
-float xRad;
-float yRad;
-float xStart;
-float yStart;
-float xFin;
-float yFin;
-}Circle;
-extern Circle Circ;
-
-
-
-
-
-void DualAxisStep(long newx,long newy,int axis_combo);
-void SingleAxisStep(long newxyz,int axis_No);
-
-void CalcRadius(Circle* cir);
-int QuadrantStart(float i,float j);
-void CircDir(Circle* cir);
-void Cir_Interpolation(float xPresent,float yPresent,Circle* cir);
 #line 15 "c:/users/git/pic32mzcnc/stepper.h"
 typedef unsigned short UInt8_t;
-#line 63 "c:/users/git/pic32mzcnc/stepper.h"
+#line 59 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
 
 typedef struct genVars{
- char Single_Dual: 1;
+ char Single_Dual;
  UInt8_t running: 1;
  UInt8_t startPulses: 1;
  int Tog;
@@ -313,10 +316,12 @@ extern STP STPS[ 6 ];
 
 typedef enum xyz{X,Y,Z,A,B,C}_axis_;
 typedef enum {xy,xz,yz,xa,ya,za}axis_combination ;
+typedef enum {Lin,Cir}InterPolate;
 enum swt{FALSE,TRUE};
 
 extern _axis_ _axis;
 extern axis_combination axis_xyz;
+extern InterPolate InterPol;
 
 
 
@@ -365,9 +370,9 @@ void StopA();
 
 
 int Pulse(int axis_No);
-void toggleOCx(int axis_No);
+void toggleOCx(int axis_No,int InterPol);
 void AccDec(int axis_No);
-void Step_Cycle(int axis_No);
+void Step_Cycle(int axis_No,int InterPol);
 void Multi_Axis_Enable(axis_combination axis);
 void Single_Axis_Enable(_axis_ axis_);
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"

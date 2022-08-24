@@ -32,6 +32,7 @@ typedef unsigned short UInt8_t;
 #define T1_FREQ   781250//781250=1.28us || 796150=1us   per tick
 #define minSpeed  30210
 #define maxSpeed  510
+#define cirSpeed  100
 
 //! Number of (full)steps per round on stepper motor in use.
 #define FSPR 200       // 200 Steps per rev
@@ -51,11 +52,6 @@ typedef unsigned short UInt8_t;
 #define RUN   3
 
 
-//Circle defines and consts
-#define  Pi         3.14159
-#define  rad2deg   (180.00/Pi)
-#define  deg2rad   (Pi/180.00)
-
 
 // Constants for accelleration
 
@@ -65,7 +61,7 @@ extern  unsigned int Toggle;
 //////////////////////////////////////////
 //structs enums and constants
 typedef struct genVars{
-  char Single_Dual: 1;
+  char Single_Dual;
   UInt8_t running: 1;       //running bit
   UInt8_t startPulses: 1;
   int   Tog;
@@ -154,10 +150,12 @@ extern STP STPS[NoOfAxis];
 //enums
 typedef enum xyz{X,Y,Z,A,B,C}_axis_;
 typedef enum {xy,xz,yz,xa,ya,za}axis_combination ;
+typedef enum {Lin,Cir}InterPolate;
 enum swt{FALSE,TRUE};
 
 extern _axis_ _axis;
 extern axis_combination axis_xyz;
+extern InterPolate InterPol;
 //enum StepState{STOP,ACCEL,RUN,DECEL};
 
 /////////////////////////////////////////
@@ -206,9 +204,9 @@ void StopA();
 
 //Step control using Output compare module
 int Pulse(int axis_No);
-void toggleOCx(int axis_No);
+void toggleOCx(int axis_No,int InterPol);
 void AccDec(int axis_No);
-void Step_Cycle(int axis_No);
+void Step_Cycle(int axis_No,int InterPol);
 void Multi_Axis_Enable(axis_combination axis);
 void Single_Axis_Enable(_axis_ axis_);
 #endif

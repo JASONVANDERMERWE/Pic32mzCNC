@@ -8,6 +8,9 @@
 #include "Stepper.h"
 #include "Steptodistance.h"
 #include "Serial_Dma.h"
+#include "Kinematics.h"
+
+
 
 
 

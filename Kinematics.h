@@ -3,6 +3,11 @@
 
 #include "Stepper.h"
 
+//Circle defines and consts
+#define  Pi         3.14159
+#define  rad2deg   (180.00/Pi)
+#define  deg2rad   (Pi/180.00)
+
 
 extern void (*AxisPulse)();
 
@@ -37,8 +42,10 @@ extern Circle Circ;
 void DualAxisStep(long newx,long newy,int axis_combo);
 void SingleAxisStep(long newxyz,int axis_No);
 //Circle move axis
+void SetCircleVals(Circle* cir,float curX,float curY,float i,float j, float deg,int dir);
 void CalcRadius(Circle* cir);
-int QuadrantStart(float i,float j);
-void CircDir(Circle* cir);
+int  QuadrantStart(float i,float j);
+Circle* CircDir(int dir);
 void Cir_Interpolation(float xPresent,float yPresent,Circle* cir);
+void Circ_Tick(Circle* cir);
 #endif
