@@ -212,17 +212,17 @@ void Step_Cycle(int axis_No,int InterPol){
 void toggleOCx(int axis_No,int InterPol){
       switch(axis_No){
         case X: OC5R   = 0x5;
-                if(Lin)
+                if(InterPol == Lin)
                    OC5RS  = STPS[X].step_delay & 0xFFFF;//0x234;
-                else if(Cir)
+                else if(InterPol == Cir)
                    OC5RS  = cirSpeed;
                 TMR2   =  0xFFFF;
                 OC5CON =  0x8004; //restart the output compare module
              break;
         case Y: OC2R   = 0x5;
-                if(Lin)
+                if(InterPol == Lin)
                    OC2RS  = STPS[Y].step_delay & 0xFFFF;
-                else if(Cir)
+                else if(InterPol == Cir)
                    OC2RS  = cirSpeed;
                 TMR4   =  0xFFFF;
                 OC2CON =  0x8004; //restart the output compare module
@@ -409,6 +409,8 @@ void StepX() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
      else if(SV.Single_Dual == 1)
         AxisPulse();
      else if(SV.Single_Dual == 2)
+        Cir_Interpolation(&Circ);
+     else
         return;
 }
 
@@ -439,7 +441,8 @@ void StepY() iv IVT_OUTPUT_COMPARE_2 ilevel 3 ics ICS_AUTO {
    else if(SV.Single_Dual == 1)
         AxisPulse();
    else if(SV.Single_Dual == 2)
-      return;
+        Cir_Interpolation(&Circ);
+   else return;
 }
 
 void SingleStepY(){
@@ -469,6 +472,7 @@ void StepZ() iv IVT_OUTPUT_COMPARE_7 ilevel 3 ics ICS_AUTO {
         AxisPulse();
    else if(SV.Single_Dual == 2)
         return;
+   else return;
 }
 
 void SingleStepZ(){

@@ -43661,6 +43661,7 @@ on_uefmode_bit
 on_ughmode_bit
 on_ujkmode_bit
 on_ulmmode_bit
+oneshot
 oneshota
 oneshotb
 opmod

@@ -27,8 +27,9 @@ int xyz_ = 0;
   EnableInterrupts();
   oneShotA = 0;
   //I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
-  a=4;
+  a=0;
   disable_steps = 0;
+  Toggle = 1;
   while(1){
 
          if(!Toggle){
@@ -78,16 +79,13 @@ int xyz_ = 0;
             speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
             DualAxisStep(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
            */
-            Temp_Move(a);
-            a++;
-            if(a > 6)a=7;
          }
          //X Y Z
          if(Toggle){
            if(!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit){
                Temp_Move(a);
                a=7;//++;
-               LED2 != LED2;
+              // if(a > 6)a=0;
            }
          }
             
@@ -140,7 +138,7 @@ void Temp_Move(int a){
                  SingleAxisStep(STPS[A].mmToTravel,A);
              break;
        case 7:
-               Cir_Interpolation(450.00,250.00,&Circ);
+               Cir_Interpolation(&Circ);
              break;
         default: a = 0;
               break;

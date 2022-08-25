@@ -108,7 +108,9 @@ void DMA1();
 extern void (*AxisPulse)();
 
 
+
 typedef struct{
+char oneshot: 1;
 float deg;
 float degreeDeg;
 float degreeRadians;
@@ -141,8 +143,8 @@ void SingleAxisStep(long newxyz,int axis_No);
 void SetCircleVals(Circle* cir,float curX,float curY,float i,float j, float deg,int dir);
 void CalcRadius(Circle* cir);
 int QuadrantStart(float i,float j);
-Circle* CircDir(int dir);
-void Cir_Interpolation(float xPresent,float yPresent,Circle* cir);
+Circle* CircDir(int dir,float xPresent,float yPresent);
+void Cir_Interpolation(Circle* cir);
 void Circ_Tick(Circle* cir);
 #line 28 "c:/users/git/pic32mzcnc/config.h"
 extern unsigned char LCD_01_ADDRESS;
@@ -567,17 +569,17 @@ void Step_Cycle(int axis_No,int InterPol){
 void toggleOCx(int axis_No,int InterPol){
  switch(axis_No){
  case X: OC5R = 0x5;
- if(Lin)
+ if(InterPol == Lin)
  OC5RS = STPS[X].step_delay & 0xFFFF;
- else if(Cir)
+ else if(InterPol == Cir)
  OC5RS =  100 ;
  TMR2 = 0xFFFF;
  OC5CON = 0x8004;
  break;
  case Y: OC2R = 0x5;
- if(Lin)
+ if(InterPol == Lin)
  OC2RS = STPS[Y].step_delay & 0xFFFF;
- else if(Cir)
+ else if(InterPol == Cir)
  OC2RS =  100 ;
  TMR4 = 0xFFFF;
  OC2CON = 0x8004;
@@ -754,6 +756,8 @@ void StepX() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
  else if(SV.Single_Dual == 1)
  AxisPulse();
  else if(SV.Single_Dual == 2)
+ Cir_Interpolation(&Circ);
+ else
  return;
 }
 
@@ -784,7 +788,8 @@ void StepY() iv IVT_OUTPUT_COMPARE_2 ilevel 3 ics ICS_AUTO {
  else if(SV.Single_Dual == 1)
  AxisPulse();
  else if(SV.Single_Dual == 2)
- return;
+ Cir_Interpolation(&Circ);
+ else return;
 }
 
 void SingleStepY(){
@@ -814,6 +819,7 @@ void StepZ() iv IVT_OUTPUT_COMPARE_7 ilevel 3 ics ICS_AUTO {
  AxisPulse();
  else if(SV.Single_Dual == 2)
  return;
+ else return;
 }
 
 void SingleStepZ(){
@@ -856,7 +862,7 @@ void StopA(){
  OC3IE_bit = 0;
  OC3CONbits.ON = 0;
 }
-#line 524 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 528 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 unsigned int min_(unsigned int x, unsigned int y){
  if(x < y){
  return x;
@@ -865,7 +871,7 @@ unsigned int min_(unsigned int x, unsigned int y){
  return y;
  }
 }
-#line 541 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 545 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 static unsigned long sqrt_(unsigned long x){
 
  register unsigned long xr;
@@ -896,7 +902,7 @@ static unsigned long sqrt_(unsigned long x){
  return xr;
  }
 }
-#line 595 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 599 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void CycleStop(){
 int ii;
  STmr.uSec = 0;

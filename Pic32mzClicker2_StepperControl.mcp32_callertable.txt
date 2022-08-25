@@ -126,6 +126,7 @@ StepX
 	SingleStepX
 		StopX
 		Step_Cycle
+	Cir_Interpolation
 	I2C4_Stop
 	ClockPulse
 	XY_Interpolate
@@ -139,6 +140,7 @@ StepY
 	SingleStepY
 		StopY
 		Step_Cycle
+	Cir_Interpolation
 	I2C4_Stop
 	ClockPulse
 	XY_Interpolate

@@ -338,7 +338,9 @@ void Single_Axis_Enable(_axis_ axis_);
 extern void (*AxisPulse)();
 
 
+
 typedef struct{
+char oneshot: 1;
 float deg;
 float degreeDeg;
 float degreeRadians;
@@ -371,8 +373,8 @@ void SingleAxisStep(long newxyz,int axis_No);
 void SetCircleVals(Circle* cir,float curX,float curY,float i,float j, float deg,int dir);
 void CalcRadius(Circle* cir);
 int QuadrantStart(float i,float j);
-Circle* CircDir(int dir);
-void Cir_Interpolation(float xPresent,float yPresent,Circle* cir);
+Circle* CircDir(int dir,float xPresent,float yPresent);
+void Cir_Interpolation(Circle* cir);
 void Circ_Tick(Circle* cir);
 #line 3 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 Circle Circ;
@@ -383,11 +385,12 @@ void (*AxisPulse)();
 
 
 
+
 static long d2;
-#line 19 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 20 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 void SingleAxisStep(long newxyz,int axis_No){
 int dir;
-#line 25 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 26 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
  SV.Single_Dual = 0;
  switch(axis_No){
  case X:
@@ -445,7 +448,7 @@ void DualAxisStep(long newx,long newy,int axis_combo){
  SV.px = 0;
  SV.py = 0;
  SV.pz = 0;
-#line 85 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 86 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
  SV.Single_Dual = 1;
  switch(axis_combo){
  case xy:
@@ -638,13 +641,13 @@ void YZ_Interpolate(){
 
 
 void SetCircleVals(Circle* cir,float curX,float curY,float i,float j, float deg,int dir){
-
+ cir->oneshot = 0;
  cir->I = i;
  cir->J = j;
  cir->xStart = curX;
  cir->yStart = curY;
  cir->degreeDeg = deg;
- cir = CircDir(dir);
+ cir = CircDir(dir,curX,curY);
 
 }
 
@@ -666,9 +669,10 @@ int QuadrantStart(float i,float j){
 
 
 
-Circle* CircDir(int dir){
+Circle* CircDir(int dir,float xPresent,float yPresent){
 Circle circ;
 float newDeg;
+
  circ.dir = dir;
  if(dir ==  0 ){
  newDeg = 360 / circ.deg;
@@ -709,14 +713,13 @@ void CalcRadius(Circle* cir){
 
 
 
-void Cir_Interpolation(float xPresent,float yPresent,Circle* cir){
+void Cir_Interpolation(Circle* cir){
 static int quad = 1;
- cir->xStart = xPresent;
- cir->yStart = yPresent;
+
+
  CalcRadius(cir);
  quad = QuadrantStart(cir->I,cir->J);
 
- while(quad){
 
  if(quad == 1 || quad == 4){
  cir->xFin = cir->xRad + (cir->radius * cos(cir->degreeRadians));
@@ -727,12 +730,7 @@ static int quad = 1;
  cir->yFin = cir->yRad - (cir->radius * sin(cir->degreeRadians));
  }
  Circ_Tick(cir);
- CalcRadius(cir);
- }
 }
-
-
-
 
 void Circ_Tick(Circle* cir){
 static float lastX,lastY;

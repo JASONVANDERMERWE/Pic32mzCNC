@@ -121,7 +121,9 @@ extern sfr sbit FLT_Step_PinDirA;
 extern void (*AxisPulse)();
 
 
+
 typedef struct{
+char oneshot: 1;
 float deg;
 float degreeDeg;
 float degreeRadians;
@@ -154,8 +156,8 @@ void SingleAxisStep(long newxyz,int axis_No);
 void SetCircleVals(Circle* cir,float curX,float curY,float i,float j, float deg,int dir);
 void CalcRadius(Circle* cir);
 int QuadrantStart(float i,float j);
-Circle* CircDir(int dir);
-void Cir_Interpolation(float xPresent,float yPresent,Circle* cir);
+Circle* CircDir(int dir,float xPresent,float yPresent);
+void Cir_Interpolation(Circle* cir);
 void Circ_Tick(Circle* cir);
 #line 15 "c:/users/git/pic32mzcnc/stepper.h"
 typedef unsigned short UInt8_t;
@@ -401,8 +403,9 @@ int xyz_ = 0;
  EnableInterrupts();
  oneShotA = 0;
 
- a=4;
+ a=0;
  disable_steps = 0;
+ Toggle = 1;
  while(1){
 
  if(!Toggle){
@@ -434,20 +437,17 @@ int xyz_ = 0;
  EnStepperY();
  EnStepperZ();
  EnStepperA();
-#line 72 "C:/Users/Git/Pic32mzCNC/Main.c"
+#line 73 "C:/Users/Git/Pic32mzCNC/Main.c"
  xyz_++;
  if(xyz_ > 2)xyz_ = 0;
-#line 81 "C:/Users/Git/Pic32mzCNC/Main.c"
- Temp_Move(a);
- a++;
- if(a > 6)a=7;
+#line 82 "C:/Users/Git/Pic32mzCNC/Main.c"
  }
 
  if(Toggle){
  if(!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit){
  Temp_Move(a);
  a=7;
- LED2 != LED2;
+
  }
  }
 
@@ -500,7 +500,7 @@ void Temp_Move(int a){
  SingleAxisStep(STPS[A].mmToTravel,A);
  break;
  case 7:
- Cir_Interpolation(450.00,250.00,&Circ);
+ Cir_Interpolation(&Circ);
  break;
  default: a = 0;
  break;

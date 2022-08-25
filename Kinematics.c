@@ -6,6 +6,7 @@ Circle Circ;
 //FUNCTION POINTERS
 void (*AxisPulse)();
 
+
 //////////////////////////////////
 //static file vars
 static long d2;
@@ -274,13 +275,13 @@ void YZ_Interpolate(){
 ////////////////////////////////////////////////
 //Set Circ values
 void SetCircleVals(Circle* cir,float curX,float curY,float i,float j, float deg,int dir){
-
+ cir->oneshot = 0;
  cir->I = i;
  cir->J = j;
  cir->xStart = curX;
  cir->yStart = curY;
  cir->degreeDeg = deg;
- cir = CircDir(dir);
+ cir = CircDir(dir,curX,curY);
  
 }
 
@@ -302,9 +303,10 @@ int QuadrantStart(float i,float j){
 
 /////////////////////////////////////////////////
 //Check which direction to travel in
-Circle* CircDir(int dir){
+Circle* CircDir(int dir,float xPresent,float yPresent){
 Circle circ;
 float newDeg;
+
    circ.dir = dir;
    if(dir == CW){
         newDeg = 360 / circ.deg;
@@ -345,14 +347,13 @@ void CalcRadius(Circle* cir){
 
 ///////////////////////////////////////////////////
 //Interpolate Arc
-void Cir_Interpolation(float xPresent,float yPresent,Circle* cir){
+void Cir_Interpolation(Circle* cir){
 static int quad = 1;
-      cir->xStart = xPresent;
-      cir->yStart = yPresent;
+
+
       CalcRadius(cir);
       quad = QuadrantStart(cir->I,cir->J);
 
-    while(quad){
        //break;//!!!
        if(quad == 1 || quad == 4){
          cir->xFin = cir->xRad + (cir->radius * cos(cir->degreeRadians));
@@ -363,12 +364,7 @@ static int quad = 1;
          cir->yFin = cir->yRad - (cir->radius * sin(cir->degreeRadians));
        }
        Circ_Tick(cir);
-       CalcRadius(cir);
-     }
 }
-
-
-
 
 void Circ_Tick(Circle* cir){
 static float lastX,lastY;
@@ -397,6 +393,3 @@ static float lastX,lastY;
         }
         
 }
-
-
-

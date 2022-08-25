@@ -121,7 +121,9 @@ extern sfr sbit FLT_Step_PinDirA;
 extern void (*AxisPulse)();
 
 
+
 typedef struct{
+char oneshot: 1;
 float deg;
 float degreeDeg;
 float degreeRadians;
@@ -154,8 +156,8 @@ void SingleAxisStep(long newxyz,int axis_No);
 void SetCircleVals(Circle* cir,float curX,float curY,float i,float j, float deg,int dir);
 void CalcRadius(Circle* cir);
 int QuadrantStart(float i,float j);
-Circle* CircDir(int dir);
-void Cir_Interpolation(float xPresent,float yPresent,Circle* cir);
+Circle* CircDir(int dir,float xPresent,float yPresent);
+void Cir_Interpolation(Circle* cir);
 void Circ_Tick(Circle* cir);
 #line 15 "c:/users/git/pic32mzcnc/stepper.h"
 typedef unsigned short UInt8_t;
