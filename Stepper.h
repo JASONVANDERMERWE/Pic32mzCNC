@@ -61,7 +61,7 @@ extern  unsigned int Toggle;
 //////////////////////////////////////////
 //structs enums and constants
 typedef struct genVars{
-  char Single_Dual;
+  int Single_Dual;
   UInt8_t running: 1;       //running bit
   UInt8_t startPulses: 1;
   int   Tog;
@@ -150,12 +150,10 @@ extern STP STPS[NoOfAxis];
 //enums
 typedef enum xyz{X,Y,Z,A,B,C}_axis_;
 typedef enum {xy,xz,yz,xa,ya,za}axis_combination ;
-typedef enum {Lin,Cir}InterPolate;
 enum swt{FALSE,TRUE};
 
 extern _axis_ _axis;
 extern axis_combination axis_xyz;
-extern InterPolate InterPol;
 //enum StepState{STOP,ACCEL,RUN,DECEL};
 
 /////////////////////////////////////////
@@ -204,9 +202,15 @@ void StopA();
 
 //Step control using Output compare module
 int Pulse(int axis_No);
-void toggleOCx(int axis_No,int InterPol);
+void toggleOCx(int axis_No);
 void AccDec(int axis_No);
-void Step_Cycle(int axis_No,int InterPol);
+void Step_Cycle(int axis_No);
 void Multi_Axis_Enable(axis_combination axis);
 void Single_Axis_Enable(_axis_ axis_);
+
+ void Test_CycleX();
+ void Test_CycleY();
+ void Test_CycleZ();
+ void Test_CycleA();
+ 
 #endif

@@ -157,9 +157,6 @@ NOP
 ;Config.c,73 :: 		InitTimer1();
 JAL	_InitTimer1+0
 NOP	
-;Config.c,74 :: 		InitTimer8();
-JAL	_InitTimer8+0
-NOP	
 ;Config.c,81 :: 		DMA_global();
 JAL	_DMA_global+0
 NOP	

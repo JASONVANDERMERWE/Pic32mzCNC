@@ -29033,6 +29033,7 @@ fethio_bf1devcfg3_bit
 fethio_bf2devcfg3_bit
 fethio_bit
 fethio_ubadevcfg3_bit
+fft
 fien
 fien
 fien_bit
@@ -29488,6 +29489,12 @@ filhit3_c2vec_bit
 filhit4
 filhit4_bit
 filhit4_c2vec_bit
+flash_erase_lowermemory
+flash_erase_page
+flash_erase_uppermemory
+flash_write_quadword
+flash_write_row
+flash_write_word
 floattostr
 floor
 flten0
@@ -37053,7 +37060,6 @@ intconinv
 intconinvbits
 intconset
 intconsetbits
-interpol
 intstat
 intstatbits
 intstatclr
@@ -43661,7 +43667,6 @@ on_uefmode_bit
 on_ughmode_bit
 on_ujkmode_bit
 on_ulmmode_bit
-oneshot
 oneshota
 oneshotb
 opmod
@@ -62891,6 +62896,10 @@ terrcnt6_c2trec_bit
 terrcnt7
 terrcnt7_bit
 terrcnt7_c2trec_bit
+test_cyclea
+test_cyclex
+test_cycley
+test_cyclez
 testbp
 testbp
 testbp
@@ -64607,6 +64616,10 @@ twdis
 twdis
 twdis
 twdis_bit
+twiddlecoeff_128
+twiddlecoeff_256
+twiddlecoeff_512
+twiddlecoeff_64
 twip
 twip
 twip

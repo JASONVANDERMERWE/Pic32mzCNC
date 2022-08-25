@@ -106,31 +106,30 @@ void DMA1();
 #line 1 "c:/users/git/pic32mzcnc/kinematics.h"
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
 #line 12 "c:/users/git/pic32mzcnc/kinematics.h"
-extern void (*AxisPulse)();
+extern void (*AxisPulse[3])();
 
 
 
 typedef struct{
-char oneshot: 1;
-float deg;
-float degreeDeg;
-float degreeRadians;
-float deg_A;
-float deg_B;
-float divisor;
-float newdeg_;
-float I;
-float J;
-float N;
-float radius;
+double deg;
+double degreeDeg;
+double degreeRadians;
+double deg_A;
+double deg_B;
+double divisor;
+double newdeg_;
+double I;
+double J;
+double N;
+double radius;
 int dir;
 int quadrant_start;
-float xRad;
-float yRad;
-float xStart;
-float yStart;
-float xFin;
-float yFin;
+double xRad;
+double yRad;
+double xStart;
+double yStart;
+double xFin;
+double yFin;
 }Circle;
 extern Circle Circ;
 
@@ -141,12 +140,13 @@ extern Circle Circ;
 void DualAxisStep(long newx,long newy,int axis_combo);
 void SingleAxisStep(long newxyz,int axis_No);
 
-void SetCircleVals(Circle* cir,float curX,float curY,float i,float j, float deg,int dir);
-void CalcRadius(Circle* cir);
-int QuadrantStart(float i,float j);
-Circle* CircDir(int dir,float xPresent,float yPresent);
-void Cir_Interpolation(Circle* cir);
-void Circ_Tick(Circle* cir);
+void SetCircleVals(double curX,double curY,double i,double j, double deg,int dir);
+void CalcRadius();
+int QuadrantStart(double i,double j);
+int CircDir(int dir);
+void CirInterpolation();
+void Cir_Interpolation();
+void Circ_Tick();
 #line 28 "c:/users/git/pic32mzcnc/config.h"
 extern unsigned char LCD_01_ADDRESS;
 extern bit oneShotA; sfr;
@@ -229,7 +229,7 @@ extern unsigned int Toggle;
 
 
 typedef struct genVars{
- char Single_Dual;
+ int Single_Dual;
  UInt8_t running: 1;
  UInt8_t startPulses: 1;
  int Tog;
@@ -318,12 +318,10 @@ extern STP STPS[ 6 ];
 
 typedef enum xyz{X,Y,Z,A,B,C}_axis_;
 typedef enum {xy,xz,yz,xa,ya,za}axis_combination ;
-typedef enum {Lin,Cir}InterPolate;
 enum swt{FALSE,TRUE};
 
 extern _axis_ _axis;
 extern axis_combination axis_xyz;
-extern InterPolate InterPol;
 
 
 
@@ -372,11 +370,16 @@ void StopA();
 
 
 int Pulse(int axis_No);
-void toggleOCx(int axis_No,int InterPol);
+void toggleOCx(int axis_No);
 void AccDec(int axis_No);
-void Step_Cycle(int axis_No,int InterPol);
+void Step_Cycle(int axis_No);
 void Multi_Axis_Enable(axis_combination axis);
 void Single_Axis_Enable(_axis_ axis_);
+
+ void Test_CycleX();
+ void Test_CycleY();
+ void Test_CycleZ();
+ void Test_CycleA();
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
 #line 11 "c:/users/git/pic32mzcnc/steptodistance.h"
 const float Dia;

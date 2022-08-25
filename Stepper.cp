@@ -105,31 +105,30 @@ void DMA1();
 #line 1 "c:/users/git/pic32mzcnc/kinematics.h"
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
 #line 12 "c:/users/git/pic32mzcnc/kinematics.h"
-extern void (*AxisPulse)();
+extern void (*AxisPulse[3])();
 
 
 
 typedef struct{
-char oneshot: 1;
-float deg;
-float degreeDeg;
-float degreeRadians;
-float deg_A;
-float deg_B;
-float divisor;
-float newdeg_;
-float I;
-float J;
-float N;
-float radius;
+double deg;
+double degreeDeg;
+double degreeRadians;
+double deg_A;
+double deg_B;
+double divisor;
+double newdeg_;
+double I;
+double J;
+double N;
+double radius;
 int dir;
 int quadrant_start;
-float xRad;
-float yRad;
-float xStart;
-float yStart;
-float xFin;
-float yFin;
+double xRad;
+double yRad;
+double xStart;
+double yStart;
+double xFin;
+double yFin;
 }Circle;
 extern Circle Circ;
 
@@ -140,12 +139,13 @@ extern Circle Circ;
 void DualAxisStep(long newx,long newy,int axis_combo);
 void SingleAxisStep(long newxyz,int axis_No);
 
-void SetCircleVals(Circle* cir,float curX,float curY,float i,float j, float deg,int dir);
-void CalcRadius(Circle* cir);
-int QuadrantStart(float i,float j);
-Circle* CircDir(int dir,float xPresent,float yPresent);
-void Cir_Interpolation(Circle* cir);
-void Circ_Tick(Circle* cir);
+void SetCircleVals(double curX,double curY,double i,double j, double deg,int dir);
+void CalcRadius();
+int QuadrantStart(double i,double j);
+int CircDir(int dir);
+void CirInterpolation();
+void Cir_Interpolation();
+void Circ_Tick();
 #line 28 "c:/users/git/pic32mzcnc/config.h"
 extern unsigned char LCD_01_ADDRESS;
 extern bit oneShotA; sfr;
@@ -228,7 +228,7 @@ extern unsigned int Toggle;
 
 
 typedef struct genVars{
- char Single_Dual;
+ int Single_Dual;
  UInt8_t running: 1;
  UInt8_t startPulses: 1;
  int Tog;
@@ -317,12 +317,10 @@ extern STP STPS[ 6 ];
 
 typedef enum xyz{X,Y,Z,A,B,C}_axis_;
 typedef enum {xy,xz,yz,xa,ya,za}axis_combination ;
-typedef enum {Lin,Cir}InterPolate;
 enum swt{FALSE,TRUE};
 
 extern _axis_ _axis;
 extern axis_combination axis_xyz;
-extern InterPolate InterPol;
 
 
 
@@ -371,15 +369,19 @@ void StopA();
 
 
 int Pulse(int axis_No);
-void toggleOCx(int axis_No,int InterPol);
+void toggleOCx(int axis_No);
 void AccDec(int axis_No);
-void Step_Cycle(int axis_No,int InterPol);
+void Step_Cycle(int axis_No);
 void Multi_Axis_Enable(axis_combination axis);
 void Single_Axis_Enable(_axis_ axis_);
+
+ void Test_CycleX();
+ void Test_CycleY();
+ void Test_CycleZ();
+ void Test_CycleA();
 #line 7 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 _axis_ _axis;
 axis_combination axis_xyz;
-InterPolate InterPol;
 
 unsigned char AxisNo;
 unsigned int Toggle;
@@ -466,7 +468,7 @@ void DisableStepper(){
  EN_StepZ = 1;
  EN_StepA = 1;
 }
-#line 113 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 112 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void speed_cntr_Move(signed long mmSteps, signed long speed, int axis_No){
 int ii;
 
@@ -559,28 +561,22 @@ int ii;
 
 
 
-void Step_Cycle(int axis_No,int InterPol){
- toggleOCx(axis_No,InterPol);
+void Step_Cycle(int axis_No){
+ toggleOCx(axis_No);
  Pulse(axis_No);
 }
 
 
 
-void toggleOCx(int axis_No,int InterPol){
+void toggleOCx(int axis_No){
  switch(axis_No){
  case X: OC5R = 0x5;
- if(InterPol == Lin)
  OC5RS = STPS[X].step_delay & 0xFFFF;
- else if(InterPol == Cir)
- OC5RS =  100 ;
  TMR2 = 0xFFFF;
  OC5CON = 0x8004;
  break;
  case Y: OC2R = 0x5;
- if(InterPol == Lin)
  OC2RS = STPS[Y].step_delay & 0xFFFF;
- else if(InterPol == Cir)
- OC2RS =  100 ;
  TMR4 = 0xFFFF;
  OC2CON = 0x8004;
  break;
@@ -613,14 +609,14 @@ void toggleOCx(int axis_No,int InterPol){
 
 
 int Pulse(int axis_No){
-#line 264 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 257 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  switch(STPS[axis_No].run_state) {
  case  0 :
  SV.Tog = 1;
  break;
 
  case  1 :
-#line 274 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 267 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  AccDec(axis_No);
  if(STPS[axis_No].step_delay <= STPS[axis_No].min_delay){
 
@@ -649,7 +645,7 @@ int Pulse(int axis_No){
  break;
 
  case  2 :
-#line 306 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 299 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  AccDec(axis_No);
 
 
@@ -751,14 +747,15 @@ void disableOCx(){
 void StepX() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
  STPS[X].step_count++;
  OC5IF_bit = 0;
+ Test_CycleX();
+}
+
+void Test_CycleX(){
  if(SV.Single_Dual == 0)
  SingleStepX();
- else if(SV.Single_Dual == 1)
- AxisPulse();
- else if(SV.Single_Dual == 2)
- Cir_Interpolation(&Circ);
  else
- return;
+ AxisPulse[SV.Single_Dual]();
+
 }
 
 void SingleStepX(){
@@ -766,7 +763,7 @@ void SingleStepX(){
  StopX();
  }
  else{
- Step_Cycle(X,Lin);
+ Step_Cycle(X);
  }
 }
 
@@ -783,13 +780,14 @@ void StopX(){
 void StepY() iv IVT_OUTPUT_COMPARE_2 ilevel 3 ics ICS_AUTO {
  STPS[Y].step_count++;
  OC2IF_bit = 0;
+ Test_CycleY();
+}
+
+void Test_CycleY(){
  if(SV.Single_Dual == 0)
  SingleStepY();
- else if(SV.Single_Dual == 1)
- AxisPulse();
- else if(SV.Single_Dual == 2)
- Cir_Interpolation(&Circ);
- else return;
+ else
+ AxisPulse[SV.Single_Dual]();
 }
 
 void SingleStepY(){
@@ -797,7 +795,7 @@ void SingleStepY(){
  StopY();
  }
  else{
- Step_Cycle(Y,Lin);
+ Step_Cycle(Y);
  }
 }
 
@@ -813,13 +811,15 @@ void StopY(){
 void StepZ() iv IVT_OUTPUT_COMPARE_7 ilevel 3 ics ICS_AUTO {
  STPS[Z].step_count++;
  OC7IF_bit = 0;
- if(!SV.Single_Dual)
+ Test_CycleZ();
+}
+
+void Test_CycleZ(){
+ if(SV.Single_Dual == 0)
  SingleStepZ();
- else if(SV.Single_Dual == 1)
- AxisPulse();
- else if(SV.Single_Dual == 2)
- return;
- else return;
+ else
+ AxisPulse[SV.Single_Dual]();
+
 }
 
 void SingleStepZ(){
@@ -827,7 +827,7 @@ void SingleStepZ(){
  StopZ();
  }
  else{
- Step_Cycle(Z,Lin);
+ Step_Cycle(Z);
  }
 }
 
@@ -842,10 +842,14 @@ void StopZ(){
 void StepA() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
  STPS[A].step_count++;
  OC3IF_bit = 0;
- if(!SV.Single_Dual)
+ Test_CycleA();
+}
+
+void Test_CycleA(){
+ if(SV.Single_Dual == 0)
  SingleStepA();
  else
- AxisPulse();
+ AxisPulse[SV.Single_Dual]();
 
 }
 
@@ -854,7 +858,7 @@ void SingleStepA(){
  StopA();
  }
  else{
- Step_Cycle(A,Lin);
+ Step_Cycle(A);
  }
 }
 
@@ -862,7 +866,7 @@ void StopA(){
  OC3IE_bit = 0;
  OC3CONbits.ON = 0;
 }
-#line 528 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 529 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 unsigned int min_(unsigned int x, unsigned int y){
  if(x < y){
  return x;
@@ -871,7 +875,7 @@ unsigned int min_(unsigned int x, unsigned int y){
  return y;
  }
 }
-#line 545 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 546 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 static unsigned long sqrt_(unsigned long x){
 
  register unsigned long xr;
@@ -902,7 +906,7 @@ static unsigned long sqrt_(unsigned long x){
  return xr;
  }
 }
-#line 599 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 600 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void CycleStop(){
 int ii;
  STmr.uSec = 0;

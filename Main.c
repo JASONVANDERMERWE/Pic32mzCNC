@@ -29,7 +29,7 @@ int xyz_ = 0;
   //I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
   a=0;
   disable_steps = 0;
-  Toggle = 1;
+
   while(1){
 
          if(!Toggle){
@@ -39,11 +39,11 @@ int xyz_ = 0;
              if(LED1 && (oneshot == 0)){
                oneshot = 1;
                sprintf(txBuf,"%d",disable_steps);
-               CHEN_DCH1CON_bit = 1;
+               //CHEN_DCH1CON_bit = 1;
              }else if(!LED1 && (oneshot == 1))
                 oneshot = 0;
                 
-             SetCircleVals(&Circ,450.00,250.00,-100.00,100.00,90,CW);
+             SetCircleVals(450.00,250.00,-100.00,100.00,90,CW);
          }
              
 
@@ -54,6 +54,7 @@ int xyz_ = 0;
          }
 
          if((!SW1)&&(!Toggle)){
+            a = 0;
             LED1 = 0;
             Toggle = 1;
             disable_steps = 0;
@@ -61,31 +62,13 @@ int xyz_ = 0;
             EnStepperY();
             EnStepperZ();
             EnStepperA();
-           // LATE7_bit = 1;
-        /*   STPS[X].mmToTravel = calcSteps(-125.25,8.06);
-            speed_cntr_Move(STPS[X].mmToTravel, 20000,X);
-            SingleAxisStep(STPS[X].mmToTravel,X);
-            
-            STPS[Y].mmToTravel = calcSteps(-125.25,8.06);
-            speed_cntr_Move(STPS[Y].mmToTravel, 20000,Y);
-            SingleAxisStep(STPS[Y].mmToTravel,Y);
-          */
-            xyz_++;
-            if(xyz_ > 2)xyz_ = 0;
-            
-          /*  STPS[X].mmToTravel = calcSteps(225.25,8.06);
-            speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
-            STPS[Z].mmToTravel = calcSteps(-25.25,8.06);
-            speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
-            DualAxisStep(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
-           */
          }
          //X Y Z
          if(Toggle){
            if(!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit){
                Temp_Move(a);
-               a=7;//++;
-              // if(a > 6)a=0;
+               a++;
+               if(a > 7)a=0;
            }
          }
             
@@ -138,7 +121,7 @@ void Temp_Move(int a){
                  SingleAxisStep(STPS[A].mmToTravel,A);
              break;
        case 7:
-               Cir_Interpolation(&Circ);
+               Cir_Interpolation();
              break;
         default: a = 0;
               break;

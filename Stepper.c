@@ -6,7 +6,6 @@
 //enum varibles
 _axis_ _axis;
 axis_combination axis_xyz;
-InterPolate InterPol;
 
 unsigned char AxisNo;
 unsigned int Toggle;
@@ -202,28 +201,22 @@ int ii;
 /////////////////////////////////////////////////
 
 //Step cycle out of for loop
-void Step_Cycle(int axis_No,int InterPol){
-      toggleOCx(axis_No,InterPol);
+void Step_Cycle(int axis_No){
+      toggleOCx(axis_No);
       Pulse(axis_No);
 }
 
 
 //toggle the OCxCON regs
-void toggleOCx(int axis_No,int InterPol){
+void toggleOCx(int axis_No){
       switch(axis_No){
         case X: OC5R   = 0x5;
-                if(InterPol == Lin)
-                   OC5RS  = STPS[X].step_delay & 0xFFFF;//0x234;
-                else if(InterPol == Cir)
-                   OC5RS  = cirSpeed;
+                OC5RS  = STPS[X].step_delay & 0xFFFF;//0x234;
                 TMR2   =  0xFFFF;
                 OC5CON =  0x8004; //restart the output compare module
              break;
         case Y: OC2R   = 0x5;
-                if(InterPol == Lin)
-                   OC2RS  = STPS[Y].step_delay & 0xFFFF;
-                else if(InterPol == Cir)
-                   OC2RS  = cirSpeed;
+                OC2RS  = STPS[Y].step_delay & 0xFFFF;
                 TMR4   =  0xFFFF;
                 OC2CON =  0x8004; //restart the output compare module
              break;
@@ -404,14 +397,15 @@ void disableOCx(){
 void StepX() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
      STPS[X].step_count++;
      OC5IF_bit = 0;
+    Test_CycleX();
+}
+
+void Test_CycleX(){
      if(SV.Single_Dual == 0)
         SingleStepX();
-     else if(SV.Single_Dual == 1)
-        AxisPulse();
-     else if(SV.Single_Dual == 2)
-        Cir_Interpolation(&Circ);
      else
-        return;
+        AxisPulse[SV.Single_Dual]();
+
 }
 
 void SingleStepX(){
@@ -419,7 +413,7 @@ void SingleStepX(){
       StopX();
     }
     else{
-      Step_Cycle(X,Lin);
+      Step_Cycle(X);
     }
 }
 
@@ -436,13 +430,14 @@ void StopX(){
 void StepY() iv IVT_OUTPUT_COMPARE_2 ilevel 3 ics ICS_AUTO {
    STPS[Y].step_count++;
    OC2IF_bit = 0;
+   Test_CycleY();
+}
+
+void Test_CycleY(){
    if(SV.Single_Dual == 0)
         SingleStepY();
-   else if(SV.Single_Dual == 1)
-        AxisPulse();
-   else if(SV.Single_Dual == 2)
-        Cir_Interpolation(&Circ);
-   else return;
+     else
+        AxisPulse[SV.Single_Dual]();
 }
 
 void SingleStepY(){
@@ -450,7 +445,7 @@ void SingleStepY(){
       StopY();
     }
     else{
-      Step_Cycle(Y,Lin);
+      Step_Cycle(Y);
     }
 }
 
@@ -466,13 +461,15 @@ void StopY(){
 void StepZ() iv IVT_OUTPUT_COMPARE_7 ilevel 3 ics ICS_AUTO {
    STPS[Z].step_count++;
    OC7IF_bit = 0;
-   if(!SV.Single_Dual)
+   Test_CycleZ();
+}
+
+void Test_CycleZ(){
+   if(SV.Single_Dual == 0)
         SingleStepZ();
-   else if(SV.Single_Dual == 1)
-        AxisPulse();
-   else if(SV.Single_Dual == 2)
-        return;
-   else return;
+     else
+        AxisPulse[SV.Single_Dual]();
+
 }
 
 void SingleStepZ(){
@@ -480,7 +477,7 @@ void SingleStepZ(){
       StopZ();
    }
    else{
-      Step_Cycle(Z,Lin);
+      Step_Cycle(Z);
    }
 }
 
@@ -495,10 +492,14 @@ void StopZ(){
 void StepA() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
    STPS[A].step_count++;
    OC3IF_bit = 0;
-   if(!SV.Single_Dual)
+   Test_CycleA();
+}
+
+void Test_CycleA(){
+   if(SV.Single_Dual == 0)
         SingleStepA();
-   else
-        AxisPulse();
+     else
+        AxisPulse[SV.Single_Dual]();
 
 }
 
@@ -507,7 +508,7 @@ void SingleStepA(){
       StopA();
    }
    else{
-      Step_Cycle(A,Lin);
+      Step_Cycle(A);
    }
 }
 

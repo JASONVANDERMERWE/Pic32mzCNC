@@ -9,31 +9,30 @@
 #define  deg2rad   (Pi/180.00)
 
 
-extern void (*AxisPulse)();
+extern void (*AxisPulse[3])();
 
 
 //circular data
 typedef struct{
-char  oneshot: 1;
-float deg;
-float degreeDeg;
-float degreeRadians;
-float deg_A;
-float deg_B;
-float divisor;
-float newdeg_;
-float I;
-float J;
-float N;
-float radius;
+double deg;
+double degreeDeg;
+double degreeRadians;
+double deg_A;
+double deg_B;
+double divisor;
+double newdeg_;
+double I;
+double J;
+double N;
+double radius;
 int   dir;
 int   quadrant_start;
-float xRad;
-float yRad;
-float xStart;
-float yStart;
-float xFin;
-float yFin;
+double xRad;
+double yRad;
+double xStart;
+double yStart;
+double xFin;
+double yFin;
 }Circle;
 extern Circle Circ;
 
@@ -44,10 +43,11 @@ extern Circle Circ;
 void DualAxisStep(long newx,long newy,int axis_combo);
 void SingleAxisStep(long newxyz,int axis_No);
 //Circle move axis
-void SetCircleVals(Circle* cir,float curX,float curY,float i,float j, float deg,int dir);
-void CalcRadius(Circle* cir);
-int  QuadrantStart(float i,float j);
-Circle* CircDir(int dir,float xPresent,float yPresent);
-void Cir_Interpolation(Circle* cir);
-void Circ_Tick(Circle* cir);
+void SetCircleVals(double curX,double curY,double i,double j, double deg,int dir);
+void CalcRadius();
+int  QuadrantStart(double i,double j);
+int CircDir(int dir);
+void CirInterpolation();
+void Cir_Interpolation();
+void Circ_Tick();
 #endif

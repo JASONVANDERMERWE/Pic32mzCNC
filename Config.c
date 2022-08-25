@@ -71,7 +71,7 @@ void PinMode(){
 //////////////////////////////////////////////////
 //TMR8 config
    InitTimer1();
-   InitTimer8();
+  // InitTimer8();
 /////////////////////////////////////////////////
 //setup i2c_lcd
   //  LcdI2CConfig();
@@ -322,4 +322,3 @@ void LcdI2CConfig(){
      I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_CURSOR_OFF,1); // Cursor off
      I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_CLEAR,1); // Clear display
 }
-
