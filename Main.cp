@@ -117,12 +117,31 @@ extern sfr sbit FLT_StepA;
 extern sfr sbit FLT_Step_PinDirA;
 #line 1 "c:/users/git/pic32mzcnc/kinematics.h"
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
-#line 12 "c:/users/git/pic32mzcnc/kinematics.h"
+#line 1 "c:/users/git/pic32mzcnc/serial_dma.h"
+#line 1 "c:/users/git/pic32mzcnc/config.h"
+#line 7 "c:/users/git/pic32mzcnc/serial_dma.h"
+extern char txt[];
+extern char rxBuf[];
+extern char txBuf[];
+
+
+
+
+
+
+
+void DMA_global();
+void DMA0();
+void DMA1();
+#line 13 "c:/users/git/pic32mzcnc/kinematics.h"
 extern void (*AxisPulse[3])();
 
 
 
 typedef struct{
+char cir_start: 1;
+char cir_end: 1;
+char cir_next: 1;
 double deg;
 double degreeDeg;
 double degreeRadians;
@@ -130,18 +149,22 @@ double deg_A;
 double deg_B;
 double divisor;
 double newdeg_;
+double steps;
 double I;
 double J;
 double N;
 double radius;
 int dir;
-int quadrant_start;
+int quadrant;
+
 double xRad;
 double yRad;
 double xStart;
 double yStart;
 double xFin;
 double yFin;
+double lastX;
+double lastY;
 }Circle;
 extern Circle Circ;
 
@@ -154,11 +177,12 @@ void SingleAxisStep(long newxyz,int axis_No);
 
 void SetCircleVals(double curX,double curY,double i,double j, double deg,int dir);
 void CalcRadius();
-int QuadrantStart(double i,double j);
+int Quadrant(double i,double j);
 int CircDir(int dir);
 void CirInterpolation();
 void Cir_Interpolation();
 void Circ_Tick();
+void Circ_Prep_Next();
 #line 15 "c:/users/git/pic32mzcnc/stepper.h"
 typedef unsigned short UInt8_t;
 #line 59 "c:/users/git/pic32mzcnc/stepper.h"
@@ -344,21 +368,6 @@ const float Dia;
 #line 23 "c:/users/git/pic32mzcnc/steptodistance.h"
 signed long calcSteps( double mmsToMove, double Dia);
 #line 1 "c:/users/git/pic32mzcnc/serial_dma.h"
-#line 1 "c:/users/git/pic32mzcnc/config.h"
-#line 7 "c:/users/git/pic32mzcnc/serial_dma.h"
-extern char txt[];
-extern char rxBuf[];
-extern char txBuf[];
-
-
-
-
-
-
-
-void DMA_global();
-void DMA0();
-void DMA1();
 #line 1 "c:/users/git/pic32mzcnc/kinematics.h"
 #line 28 "c:/users/git/pic32mzcnc/config.h"
 extern unsigned char LCD_01_ADDRESS;
@@ -402,7 +411,7 @@ static unsigned int disable_steps = 0;
 int xyz_ = 0;
  PinMode();
 
- StepperConstants(15500,15500);
+ StepperConstants(5000,15500);
  EnableInterrupts();
  oneShotA = 0;
 
@@ -417,37 +426,40 @@ int xyz_ = 0;
  disable_steps = TMR.Reset( 10 ,disable_steps);
  if(LED1 && (oneshot == 0)){
  oneshot = 1;
- sprintf(txBuf,"%d",disable_steps);
+
 
  }else if(!LED1 && (oneshot == 1))
  oneshot = 0;
 
- SetCircleVals(450.00,250.00,-100.00,100.00,90, 0 );
  }
 
 
 
  if(!SW2){
  Toggle = 0;
-
+ disableOCx();
+ Circ.cir_start = 0;
+ Circ.cir_end = 0;
+ Circ.cir_next = 0;
  }
 
  if((!SW1)&&(!Toggle)){
- a = 0;
+ a = 7;
  LED1 = 0;
  Toggle = 1;
  disable_steps = 0;
  EnStepperX();
  EnStepperY();
- EnStepperZ();
- EnStepperA();
+
+
+
  }
 
  if(Toggle){
- if(!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit){
+ if((!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit)||!Circ.cir_next){
  Temp_Move(a);
- a++;
- if(a > 7)a=0;
+ a=7;
+ if(a > 7)a=7;
  }
  }
 
@@ -500,7 +512,17 @@ void Temp_Move(int a){
  SingleAxisStep(STPS[A].mmToTravel,A);
  break;
  case 7:
+ if(!Circ.cir_start){
+ SetCircleVals(450.00,250.00,-100.00,100.00,180.00, 0 );
+ Circ.cir_start = 1;
+ }
+ if(Circ.cir_start){
+ LED1 = Circ.cir_next;
+ if(!Circ.cir_next){
+ Circ.cir_next = 1;
  Cir_Interpolation();
+ }
+ }
  break;
  default: a = 0;
  break;

@@ -310,7 +310,7 @@ void OutPutPulseXYZ(){
  // OC8CONSET = 0x8000; // Enable OC8
 }
 
-void LcdI2CConfig(){
+/*void LcdI2CConfig(){
 
      I2C4_Init_Advanced(50000, 100000);
      I2C_Set_Active(&I2C4_Start, &I2C4_Restart, &I2C4_Read, &I2C4_Write,
@@ -321,4 +321,4 @@ void LcdI2CConfig(){
      I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_FIRST_ROW,1);
      I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_CURSOR_OFF,1); // Cursor off
      I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_CLEAR,1); // Clear display
-}
+} */

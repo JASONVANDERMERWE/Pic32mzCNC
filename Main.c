@@ -23,7 +23,7 @@ static unsigned int disable_steps = 0;
 int xyz_ = 0;
   PinMode();
 
-  StepperConstants(15500,15500);
+  StepperConstants(5000,15500);
   EnableInterrupts();
   oneShotA = 0;
   //I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
@@ -38,37 +38,40 @@ int xyz_ = 0;
                  disable_steps = TMR.Reset(SEC_TO_DISABLE_STEPPERS,disable_steps);
              if(LED1 && (oneshot == 0)){
                oneshot = 1;
-               sprintf(txBuf,"%d",disable_steps);
-               //CHEN_DCH1CON_bit = 1;
+            //   sprintf(txBuf,"%d",disable_steps);
+            //   CHEN_DCH1CON_bit = 1;
              }else if(!LED1 && (oneshot == 1))
                 oneshot = 0;
                 
-             SetCircleVals(450.00,250.00,-100.00,100.00,90,CW);
          }
              
 
             
          if(!SW2){
                Toggle  = 0;
-               //disableOCx();
+               disableOCx();
+               Circ.cir_start = 0;
+               Circ.cir_end   = 0;
+               Circ.cir_next  = 0;
          }
 
          if((!SW1)&&(!Toggle)){
-            a = 0;
+            a = 7;
             LED1 = 0;
             Toggle = 1;
             disable_steps = 0;
             EnStepperX();
             EnStepperY();
-            EnStepperZ();
-            EnStepperA();
+          //  EnStepperZ();
+          //  EnStepperA();
+
          }
          //X Y Z
          if(Toggle){
-           if(!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit){
+           if((!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit)||!Circ.cir_next){
                Temp_Move(a);
-               a++;
-               if(a > 7)a=0;
+               a=7;//++;
+               if(a > 7)a=7;
            }
          }
             
@@ -121,7 +124,17 @@ void Temp_Move(int a){
                  SingleAxisStep(STPS[A].mmToTravel,A);
              break;
        case 7:
-               Cir_Interpolation();
+               if(!Circ.cir_start){
+                  SetCircleVals(450.00,250.00,-100.00,100.00,180.00,CW);
+                  Circ.cir_start = 1;
+               }
+               if(Circ.cir_start){
+                  LED1 = Circ.cir_next;
+                  if(!Circ.cir_next){
+                      Circ.cir_next = 1;
+                      Cir_Interpolation();
+                  }
+               }
              break;
         default: a = 0;
               break;

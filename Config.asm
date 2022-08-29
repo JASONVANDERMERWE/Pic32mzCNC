@@ -295,11 +295,11 @@ SWL	R2, Offset(PB2DIVbits+11)(GP)
 L_set_performance_mode4:
 LBU	R2, Offset(PB2DIVbits+1)(GP)
 EXT	R2, R2, 3, 1
-BEQ	R2, R0, L__set_performance_mode24
+BEQ	R2, R0, L__set_performance_mode20
 NOP	
 J	L_set_performance_mode5
 NOP	
-L__set_performance_mode24:
+L__set_performance_mode20:
 J	L_set_performance_mode4
 NOP	
 L_set_performance_mode5:
@@ -316,11 +316,11 @@ SWL	R2, Offset(PB3DIVbits+11)(GP)
 L_set_performance_mode6:
 LBU	R2, Offset(PB3DIVbits+1)(GP)
 EXT	R2, R2, 3, 1
-BEQ	R2, R0, L__set_performance_mode25
+BEQ	R2, R0, L__set_performance_mode21
 NOP	
 J	L_set_performance_mode7
 NOP	
-L__set_performance_mode25:
+L__set_performance_mode21:
 J	L_set_performance_mode6
 NOP	
 L_set_performance_mode7:
@@ -337,11 +337,11 @@ SWL	R2, Offset(PB4DIVbits+11)(GP)
 L_set_performance_mode8:
 LBU	R2, Offset(PB4DIVbits+1)(GP)
 EXT	R2, R2, 3, 1
-BEQ	R2, R0, L__set_performance_mode26
+BEQ	R2, R0, L__set_performance_mode22
 NOP	
 J	L_set_performance_mode9
 NOP	
-L__set_performance_mode26:
+L__set_performance_mode22:
 J	L_set_performance_mode8
 NOP	
 L_set_performance_mode9:
@@ -356,11 +356,11 @@ SWL	R2, Offset(PB5DIVbits+11)(GP)
 L_set_performance_mode10:
 LBU	R2, Offset(PB5DIVbits+1)(GP)
 EXT	R2, R2, 3, 1
-BEQ	R2, R0, L__set_performance_mode27
+BEQ	R2, R0, L__set_performance_mode23
 NOP	
 J	L_set_performance_mode11
 NOP	
-L__set_performance_mode27:
+L__set_performance_mode23:
 J	L_set_performance_mode10
 NOP	
 L_set_performance_mode11:
@@ -377,11 +377,11 @@ SWL	R2, Offset(PB7DIVbits+11)(GP)
 L_set_performance_mode12:
 LBU	R2, Offset(PB7DIVbits+1)(GP)
 EXT	R2, R2, 3, 1
-BEQ	R2, R0, L__set_performance_mode28
+BEQ	R2, R0, L__set_performance_mode24
 NOP	
 J	L_set_performance_mode13
 NOP	
-L__set_performance_mode28:
+L__set_performance_mode24:
 J	L_set_performance_mode12
 NOP	
 L_set_performance_mode13:
@@ -396,11 +396,11 @@ SWL	R2, Offset(PB8DIVbits+11)(GP)
 L_set_performance_mode14:
 LBU	R2, Offset(PB8DIVbits+1)(GP)
 EXT	R2, R2, 3, 1
-BEQ	R2, R0, L__set_performance_mode29
+BEQ	R2, R0, L__set_performance_mode25
 NOP	
 J	L_set_performance_mode15
 NOP	
-L__set_performance_mode29:
+L__set_performance_mode25:
 J	L_set_performance_mode14
 NOP	
 L_set_performance_mode15:
@@ -771,85 +771,3 @@ L_end_OutPutPulseXYZ:
 JR	RA
 NOP	
 ; end of _OutPutPulseXYZ
-_LcdI2CConfig:
-;Config.c,313 :: 		void LcdI2CConfig(){
-ADDIU	SP, SP, -20
-SW	RA, 0(SP)
-;Config.c,315 :: 		I2C4_Init_Advanced(50000, 100000);
-SW	R25, 4(SP)
-SW	R26, 8(SP)
-SW	R27, 12(SP)
-SW	R28, 16(SP)
-LUI	R26, 1
-ORI	R26, R26, 34464
-ORI	R25, R0, 50000
-JAL	_I2C4_Init_Advanced+0
-NOP	
-;Config.c,316 :: 		I2C_Set_Active(&I2C4_Start, &I2C4_Restart, &I2C4_Read, &I2C4_Write,
-LUI	R28, hi_addr(_I2C4_Write+0)
-ORI	R28, R28, lo_addr(_I2C4_Write+0)
-LUI	R27, hi_addr(_I2C4_Read+0)
-ORI	R27, R27, lo_addr(_I2C4_Read+0)
-LUI	R26, hi_addr(_I2C4_Restart+0)
-ORI	R26, R26, lo_addr(_I2C4_Restart+0)
-LUI	R25, hi_addr(_I2C4_Start+0)
-ORI	R25, R25, lo_addr(_I2C4_Start+0)
-;Config.c,317 :: 		&I2C4_Stop,&I2C4_Is_Idle); // Sets the I2C4 module active
-LUI	R2, hi_addr(_I2C4_Is_Idle+0)
-ORI	R2, R2, lo_addr(_I2C4_Is_Idle+0)
-ADDIU	SP, SP, -8
-SW	R2, 4(SP)
-LUI	R2, hi_addr(_I2C4_Stop+0)
-ORI	R2, R2, lo_addr(_I2C4_Stop+0)
-SW	R2, 0(SP)
-JAL	_I2C_Set_Active+0
-NOP	
-ADDIU	SP, SP, 8
-;Config.c,318 :: 		Delay_ms(100);
-LUI	R24, 101
-ORI	R24, R24, 47530
-L_LcdI2CConfig16:
-ADDIU	R24, R24, -1
-BNE	R24, R0, L_LcdI2CConfig16
-NOP	
-;Config.c,319 :: 		I2C_LCD_init(LCD_01_ADDRESS,4);
-ORI	R26, R0, 4
-LBU	R25, Offset(_LCD_01_ADDRESS+0)(GP)
-JAL	_I2C_LCD_init+0
-NOP	
-;Config.c,320 :: 		Delay_ms(100);
-LUI	R24, 101
-ORI	R24, R24, 47530
-L_LcdI2CConfig18:
-ADDIU	R24, R24, -1
-BNE	R24, R0, L_LcdI2CConfig18
-NOP	
-;Config.c,321 :: 		I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_FIRST_ROW,1);
-ORI	R27, R0, 1
-ORI	R26, R0, 1
-LBU	R25, Offset(_LCD_01_ADDRESS+0)(GP)
-JAL	_I2C_Lcd_Cmd+0
-NOP	
-;Config.c,322 :: 		I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_CURSOR_OFF,1); // Cursor off
-ORI	R27, R0, 1
-ORI	R26, R0, 7
-LBU	R25, Offset(_LCD_01_ADDRESS+0)(GP)
-JAL	_I2C_Lcd_Cmd+0
-NOP	
-;Config.c,323 :: 		I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_CLEAR,1); // Clear display
-ORI	R27, R0, 1
-ORI	R26, R0, 5
-LBU	R25, Offset(_LCD_01_ADDRESS+0)(GP)
-JAL	_I2C_Lcd_Cmd+0
-NOP	
-;Config.c,324 :: 		}
-L_end_LcdI2CConfig:
-LW	R28, 16(SP)
-LW	R27, 12(SP)
-LW	R26, 8(SP)
-LW	R25, 4(SP)
-LW	RA, 0(SP)
-ADDIU	SP, SP, 20
-JR	RA
-NOP	
-; end of _LcdI2CConfig

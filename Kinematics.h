@@ -2,6 +2,7 @@
 #define KINEMATICS_H
 
 #include "Stepper.h"
+#include  "SErial_Dma.h"
 
 //Circle defines and consts
 #define  Pi         3.14159
@@ -14,6 +15,9 @@ extern void (*AxisPulse[3])();
 
 //circular data
 typedef struct{
+char   cir_start: 1;
+char   cir_end:   1;
+char   cir_next:  1;
 double deg;
 double degreeDeg;
 double degreeRadians;
@@ -21,18 +25,22 @@ double deg_A;
 double deg_B;
 double divisor;
 double newdeg_;
+double steps;
 double I;
 double J;
 double N;
 double radius;
 int   dir;
-int   quadrant_start;
+int   quadrant;
+
 double xRad;
 double yRad;
 double xStart;
 double yStart;
 double xFin;
 double yFin;
+double lastX;
+double lastY;
 }Circle;
 extern Circle Circ;
 
@@ -45,9 +53,10 @@ void SingleAxisStep(long newxyz,int axis_No);
 //Circle move axis
 void SetCircleVals(double curX,double curY,double i,double j, double deg,int dir);
 void CalcRadius();
-int  QuadrantStart(double i,double j);
+int  Quadrant(double i,double j);
 int CircDir(int dir);
 void CirInterpolation();
 void Cir_Interpolation();
 void Circ_Tick();
+void Circ_Prep_Next();
 #endif

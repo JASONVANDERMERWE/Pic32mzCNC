@@ -118,12 +118,16 @@ extern sfr sbit FLT_StepA;
 extern sfr sbit FLT_Step_PinDirA;
 #line 1 "c:/users/git/pic32mzcnc/kinematics.h"
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
-#line 12 "c:/users/git/pic32mzcnc/kinematics.h"
+#line 1 "c:/users/git/pic32mzcnc/serial_dma.h"
+#line 13 "c:/users/git/pic32mzcnc/kinematics.h"
 extern void (*AxisPulse[3])();
 
 
 
 typedef struct{
+char cir_start: 1;
+char cir_end: 1;
+char cir_next: 1;
 double deg;
 double degreeDeg;
 double degreeRadians;
@@ -131,18 +135,22 @@ double deg_A;
 double deg_B;
 double divisor;
 double newdeg_;
+double steps;
 double I;
 double J;
 double N;
 double radius;
 int dir;
-int quadrant_start;
+int quadrant;
+
 double xRad;
 double yRad;
 double xStart;
 double yStart;
 double xFin;
 double yFin;
+double lastX;
+double lastY;
 }Circle;
 extern Circle Circ;
 
@@ -155,11 +163,12 @@ void SingleAxisStep(long newxyz,int axis_No);
 
 void SetCircleVals(double curX,double curY,double i,double j, double deg,int dir);
 void CalcRadius();
-int QuadrantStart(double i,double j);
+int Quadrant(double i,double j);
 int CircDir(int dir);
 void CirInterpolation();
 void Cir_Interpolation();
 void Circ_Tick();
+void Circ_Prep_Next();
 #line 15 "c:/users/git/pic32mzcnc/stepper.h"
 typedef unsigned short UInt8_t;
 #line 59 "c:/users/git/pic32mzcnc/stepper.h"
@@ -381,8 +390,8 @@ void DMA0();
 void DMA1();
 #line 4 "C:/Users/Git/Pic32mzCNC/Serial_Dma.c"
 char txt[] = "Start......";
-char rxBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0} absolute 0xA0002000 ;
-char txBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0} absolute 0xA0002200 ;
+char rxBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} absolute 0xA0002000 ;
+char txBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} absolute 0xA0002200 ;
 
 char DMA_Buff[200];
 short dma0int_flag;
@@ -445,15 +454,16 @@ void DMA1(){
  DCH1ECON=(147 << 8)| 0x30;
  DCH1SSA = KVA_TO_PA(0xA0002200) ;
  DCH1DSA = KVA_TO_PA(0xBF822220) ;
- DCH1DAT = 0x0D;
+ DCH1DAT = 0x00;
 
- DCH1SSIZ = 200 ;
+ DCH1SSIZ = 200;
 
- DCH1DSIZ = 1 ;
+ DCH1DSIZ = 1;
 
- DCH1CSIZ = 200 ;
+ DCH1CSIZ = 1;
 
  DCH1INTCLR = 0x00FF00FF ;
+ SIRQEN_DCH1ECON_bit = 1;
  CHBCIE_DCH1INT_bit = 1 ;
  CHERIE_DCH1INT_bit = 1 ;
 
@@ -462,7 +472,7 @@ void DMA1(){
  DMA1IP0_bit = 1 ;
  DMA1IS1_bit = 0 ;
  DMA1IS0_bit = 1 ;
- DMA1IE_bit = 1 ;
+ DMA1IE_bit = 0 ;
 }
 
 
@@ -489,7 +499,7 @@ void DMA_CH0_ISR() iv IVT_DMA0 ilevel 5 ics ICS_AUTO {
  }
  DCH0INTCLR = 0x00FF;
 
-
+ DMA1IE_bit = 1 ;
  CHEN_bit = 1 ;
 
  CFORCE_DCH1ECON_bit = 1 ;
