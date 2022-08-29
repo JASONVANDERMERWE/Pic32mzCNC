@@ -14,34 +14,31 @@ main
 			UART_Set_Active
 		set_performance_mode
 		InitTimer1
-		InitTimer8
-		initDMA_global
-		initDMA0
-		initDMA1
+		DMA_global
+			DMA0
+			DMA1
 		OutPutPulseXYZ
-	SetPinMode
+		SetPinMode
 	StepperConstants
+	disableOCx
 	EnStepperX
 	EnStepperY
-	EnStepperZ
-	EnStepperA
 	Temp_Move
 		calcSteps
 		speed_cntr_Move
 			abs
 			sqrt_
 		SingleAxisStep
+			Single_Axis_Enable
 			abs
 			Step_Cycle
 				toggleOCx
 				Pulse
 					AccDec
 		DualAxisStep
-			Axis_Enable
+			Multi_Axis_Enable
 			abs
-			I2C4_Stop
-				I2C4_Wait_For_Idle
-					I2C4_Is_Idle
+			ClockPulse
 			XY_Interpolate
 				StopX
 				StopY
@@ -54,73 +51,96 @@ main
 				StopY
 				StopZ
 				Step_Cycle
-			I2C1_Stop
-				I2C1_Wait_For_Idle
-					I2C1_Is_Idle
-			I2C2_Stop
-				I2C2_Wait_For_Idle
-					I2C2_Is_Idle
-			I2C3_Stop
-				I2C3_Wait_For_Idle
-					I2C3_Is_Idle
-			I2C5_Stop
-				I2C5_Wait_For_Idle
-					I2C5_Is_Idle
+			Circ_Prep_Next
+				toggleOCx
+		SetCircleVals
+			Multi_Axis_Enable
+			CalcRadius
+				abs
+				sqrt
+					frexp
+					ldexp
+				Quadrant
+			CalcAngle
+				atan2
+					fabs
+					atan
+						fabs
+						eval_poly
+			CircDir
+			CalcDivisor
+				ceil
+		Cir_Interpolation
+			CalcAngle
+			CalcRadius
+			Quadrant
+			NextCords
+				cos
+					sin
+						floor
+						eval_poly
+				sin
+			SerialPrint
+				strlen
+				memset
+				sprintf
+					_doprntf
+						isdigit
+						scale
+						fround
+				strncpy
+				strncat
+				UART2_Write_Text
+					UART2_Write
+			Circ_Tick
+				disableOCx
+	ResetSteppers
+		DisableStepper
 StepA
 	SingleStepA
 		StopA
 		Step_Cycle
-	I2C4_Stop
+	ClockPulse
 	XY_Interpolate
 	XZ_Interpolate
 	YZ_Interpolate
-	I2C1_Stop
-	I2C2_Stop
-	I2C3_Stop
-	I2C5_Stop
-StepZ
-	SingleStepZ
-		StopZ
-		Step_Cycle
-	I2C4_Stop
-	XY_Interpolate
-	XZ_Interpolate
-	YZ_Interpolate
-	I2C1_Stop
-	I2C2_Stop
-	I2C3_Stop
-	I2C5_Stop
-Timer8Interrupt
+	Circ_Prep_Next
 Timer1Interrupt
-StepY
-	SingleStepY
-		StopY
-		Step_Cycle
-	I2C4_Stop
+	ClockPulse
 	XY_Interpolate
 	XZ_Interpolate
 	YZ_Interpolate
-	I2C1_Stop
-	I2C2_Stop
-	I2C3_Stop
-	I2C5_Stop
+	Circ_Prep_Next
+Timer8Interrupt
 StepX
 	SingleStepX
 		StopX
 		Step_Cycle
-	I2C4_Stop
+	ClockPulse
 	XY_Interpolate
 	XZ_Interpolate
 	YZ_Interpolate
-	I2C1_Stop
-	I2C2_Stop
-	I2C3_Stop
-	I2C5_Stop
+	Circ_Prep_Next
+StepY
+	SingleStepY
+		StopY
+		Step_Cycle
+	ClockPulse
+	XY_Interpolate
+	XZ_Interpolate
+	YZ_Interpolate
+	Circ_Prep_Next
+StepZ
+	SingleStepZ
+		StopZ
+		Step_Cycle
+	ClockPulse
+	XY_Interpolate
+	XZ_Interpolate
+	YZ_Interpolate
+	Circ_Prep_Next
+DMA_CH1_ISR
 DMA_CH0_ISR
 	__CC2DW
 	strlen
 	memcpy
-DMA_CH1_ISR
-uart2_Rx_interrupt
-	UART2_Read
-	UART2_Write

@@ -1,13 +1,6 @@
 #include "Config.h"
 
 
-char txt[] = "Start......";
-char rxBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0}  absolute 0xA0002000 ; //resides in flash ??
-char txBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0}  absolute 0xA0002200 ;
-
-char DMA_Buff[200];
-short dma0int_flag;
-short dma1int_flag;
 bit testISR;
 bit oneShotA; sfr;
 bit oneShotB; sfr;
@@ -20,125 +13,68 @@ unsigned int ii;
 unsigned long testOcr;
 static unsigned int a;
 
-////////////////////////////////////////
-//UART 2 interrupts
-void uart2_Rx_interrupt() iv IVT_UART2_RX ilevel 7 ics ICS_AUTO {
-     uart_rd = UART2_Read();
-     UART2_Write( uart_rd );
-   //  IFS4.B18 = 0;
-     U2RXIF_bit = 0;            // Ensure interrupt is not pending
-}
-
-////////////////////////////////////////
-//DMA IRQ
-void DMA_CH0_ISR() iv IVT_DMA0 ilevel 5 ics ICS_AUTO {
- char A[6];
- int i,ptr;
-    if (CHBCIF_bit == 1) {         // Channel Block Transfer has Completed Interrupt Flag bit
-     i = 0;
-
-/* ECHO EXAMPLE */
-      i = strlen(rxBuf);
-      dma0int_flag = 1;          // user flag to inform this int was triggered. should be cleared in software
-      memcpy(txBuf, rxBuf, i);   // copy RxBuf -> TxBuf  BUFFER_LENGTH
-      CHEN_DCH1CON_bit = 1;     // Enable the DMA1 channel to transmit back what was received
-    }
-    DCH1SSIZ            = i ;
-   //  DCH1CSIZ            = i*2 ;
-/* Channel Address Error Interrupt Flag bit  */
-    if( CHERIF_bit == 1){                     // clear channel error int flag
-       CHERIF_bit = 0;
-       memcpy(txBuf,"CHERIF Error",13);
-    }
-    DCH0INTCLR          = 0x00FF;             // clear DMA 0 int flags
-/* re-enable DMA 0 int */
-
-    CHEN_bit            = 1 ;                 // Enable channel - may want to do this when you are ready to receive...
-
-    CFORCE_DCH1ECON_bit = 1 ;                 // force DMA1 interrupt trigger
-    DMA0IF_bit          = 0 ;                 // clear DMA0 int flag
-
-}
-
-
-void DMA_CH1_ISR() iv IVT_DMA1 ilevel 5 ics ICS_AUTO {
-int ptr = 0;
-char ptrAdd[6];
-/* Channel Block Transfer Complete Interrupt Flag bit */
-    if (CHBCIF_DCH1INT_bit == 1){
-       CHBCIF_DCH1INT_bit = 0;             // clear flag
-    }
-/* Channel Address Error Interrupt Flag bit */
-    if( CHERIF_DCH1INT_bit == 1){
-       CHERIF_DCH1INT_bit = 0;
-
-    }
-
-    dma1int_flag = 1;                          // user flag to inform this int was triggered. should be cleared in software
-    DCH1INTCLR   = 0x00FF;                     // clear event flags
-    DMA1IF_bit   = 0 ;
-
-}
-
 
 /////////////////////////////////////////
 //main function
 void main() {
+static char oneshot = 0;
 unsigned char j;
+static unsigned int disable_steps = 0;
 int xyz_ = 0;
   PinMode();
-  SetPinMode();
-  StepperConstants(15500,15500);
+
+  StepperConstants(5000,15500);
   EnableInterrupts();
   oneShotA = 0;
   //I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
-  a=4;
+  a=0;
+  disable_steps = 0;
+
   while(1){
 
-         if(!SW2){
-               LED2 = 0;
-               Toggle            = 0;
-              // T8IE_bit        = 1;
-               EnStepperX();
-               EnStepperY();
-               EnStepperZ();
-               EnStepperA();
-               //a = 0;
+         if(!Toggle){
+             LED1 = TMR.clock >> 4;
+             if(disable_steps <= SEC_TO_DISABLE_STEPPERS)
+                 disable_steps = TMR.Reset(SEC_TO_DISABLE_STEPPERS,disable_steps);
+             if(LED1 && (oneshot == 0)){
+               oneshot = 1;
+            //   sprintf(txBuf,"%d",disable_steps);
+            //   CHEN_DCH1CON_bit = 1;
+             }else if(!LED1 && (oneshot == 1))
+                oneshot = 0;
+                
+         }
+             
 
+            
+         if(!SW2){
+               Toggle  = 0;
+               disableOCx();
+               Circ.cir_start = 0;
+               Circ.cir_end   = 0;
+               Circ.cir_next  = 0;
          }
 
          if((!SW1)&&(!Toggle)){
+            a = 7;
+            LED1 = 0;
             Toggle = 1;
-           // LATE7_bit = 1;
-        /*   STPS[X].mmToTravel = calcSteps(-125.25,8.06);
-            speed_cntr_Move(STPS[X].mmToTravel, 20000,X);
-            SingleAxisStep(STPS[X].mmToTravel,X);
-            
-            STPS[Y].mmToTravel = calcSteps(-125.25,8.06);
-            speed_cntr_Move(STPS[Y].mmToTravel, 20000,Y);
-            SingleAxisStep(STPS[Y].mmToTravel,Y);
-          */
-            xyz_++;
-            if(xyz_ > 2)xyz_ = 0;
-            
-          /*  STPS[X].mmToTravel = calcSteps(225.25,8.06);
-            speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
-            STPS[Z].mmToTravel = calcSteps(-25.25,8.06);
-            speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
-            DualAxisStep(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
-           */
-            Temp_Move(a);
-            a++;
-            if(a > 6)a=4;
+            disable_steps = 0;
+            EnStepperX();
+            EnStepperY();
+          //  EnStepperZ();
+          //  EnStepperA();
+
          }
          //X Y Z
-         if(!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit){
-             Temp_Move(a);
-             a++;
-             LED2 != LED2;
+         if(Toggle){
+           if((!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit)||!Circ.cir_next){
+               Temp_Move(a);
+               a=7;//++;
+               if(a > 7)a=7;
+           }
          }
             
-
   }
 }
 
@@ -186,6 +122,19 @@ void Temp_Move(int a){
                  STPS[A].mmToTravel = calcSteps(-125.25,8.06);
                  speed_cntr_Move(STPS[A].mmToTravel, 25000,A);
                  SingleAxisStep(STPS[A].mmToTravel,A);
+             break;
+       case 7:
+               if(!Circ.cir_start){
+                  SetCircleVals(450.00,250.00,486.00,386.00,-100.00,100.00,60.00,CW);
+                  Circ.cir_start = 1;
+               }
+               if(Circ.cir_start){
+                  LED1 = Circ.cir_next;
+                  if(!Circ.cir_next){
+                      Circ.cir_next = 1;
+                      Cir_Interpolation();
+                  }
+               }
              break;
         default: a = 0;
               break;

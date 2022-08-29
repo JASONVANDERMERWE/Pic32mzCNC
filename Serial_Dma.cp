@@ -1,11 +1,48 @@
-#line 1 "C:/Users/Git/Pic32mzCNC/Steptodistance.c"
-#line 1 "c:/users/git/pic32mzcnc/steptodistance.h"
+#line 1 "C:/Users/Git/Pic32mzCNC/Serial_Dma.c"
+#line 1 "c:/users/git/pic32mzcnc/serial_dma.h"
+#line 1 "c:/users/git/pic32mzcnc/config.h"
+#line 1 "c:/users/git/pic32mzcnc/timers.h"
+#line 1 "c:/users/git/pic32mzcnc/config.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 62 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
+typedef enum{
+ _LCD_FIRST_ROW = 1,
+ _LCD_SECOND_ROW,
+ _LCD_THIRD_ROW,
+ _LCD_FOURTH_ROW,
+ _LCD_CLEAR,
+ _LCD_RETURN_HOME,
+ _LCD_CURSOR_OFF,
+ _LCD_UNDERLINE_ON,
+ _LCD_BLINK_CURSOR_ON,
+ _LCD_MOVE_CURSOR_LEFT,
+ _LCD_MOVE_CURSOR_RIGHT,
+ _LCD_TURN_ON,
+ _LCD_TURN_OFF,
+ _LCD_SHIFT_LEFT,
+ _LCD_SHIFT_RIGHT,
+ _LCD_INCREMENT_NO_SHIFT
+}Cmd_Type;
+
+extern Cmd_Type Cmd;
+
+
+
+  unsigned char  I2C_PCF8574_Write( unsigned char  addr, unsigned char  Data);
+ void I2C_LCD_putcmd( unsigned char  addr,  unsigned char  dta, unsigned char  cmdtype);
+ void I2C_LCD_goto( unsigned char  addr, unsigned char  row,  unsigned char  col);
+ void I2C_Lcd_Cmd( unsigned char  addr,Cmd_Type cmd, unsigned char  col);
+ void I2C_LCD_putch( unsigned char  addr,  unsigned char  dta);
+ void I2C_LCD_Out( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  *s);
+ void I2C_Lcd_Chr( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  out_char);
+ void I2C_LCD_init( unsigned char  addr);
+ void I2C_LCD_init4l( unsigned char  addr);
+ void I2C_Pins(char i2c_pins);
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
 #line 1 "c:/users/git/pic32mzcnc/timers.h"
-#line 1 "c:/users/git/pic32mzcnc/config.h"
-#line 1 "c:/users/git/pic32mzcnc/timers.h"
-#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
 #line 1 "c:/users/git/pic32mzcnc/pins.h"
 
 
@@ -79,30 +116,6 @@ extern sfr sbit DIR_StepA;
 extern sfr sbit DIR_Step_PinDirA;
 extern sfr sbit FLT_StepA;
 extern sfr sbit FLT_Step_PinDirA;
-#line 1 "c:/users/git/pic32mzcnc/stepper.h"
-#line 1 "c:/users/git/pic32mzcnc/steptodistance.h"
-#line 1 "c:/users/git/pic32mzcnc/stepper.h"
-#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 11 "c:/users/git/pic32mzcnc/steptodistance.h"
-const float Dia;
-#line 23 "c:/users/git/pic32mzcnc/steptodistance.h"
-signed long calcSteps( double mmsToMove, double Dia);
-#line 1 "c:/users/git/pic32mzcnc/serial_dma.h"
-#line 1 "c:/users/git/pic32mzcnc/config.h"
-#line 7 "c:/users/git/pic32mzcnc/serial_dma.h"
-extern char txt[];
-extern char rxBuf[];
-extern char txBuf[];
-
-
-
-
-
-
-
-void DMA_global();
-void DMA0();
-void DMA1();
 #line 1 "c:/users/git/pic32mzcnc/kinematics.h"
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
 #line 1 "c:/users/git/pic32mzcnc/serial_dma.h"
@@ -164,80 +177,6 @@ void Circ_Tick();
 void Circ_Prep_Next();
 
 void SerialPrint();
-#line 28 "c:/users/git/pic32mzcnc/config.h"
-extern unsigned char LCD_01_ADDRESS;
-extern bit oneShotA; sfr;
-extern bit oneShotB; sfr;
-
-
-
-
-
-
-
-void PinMode();
-void UartConfig();
-void set_performance_mode();
-void Uart2InterruptSetup();
-void LcdI2CConfig();
-void OutPutPulseXYZ();
-void Temp_Move(int a);
-void LCD_Display();
-#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
-#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 62 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
-typedef enum{
- _LCD_FIRST_ROW = 1,
- _LCD_SECOND_ROW,
- _LCD_THIRD_ROW,
- _LCD_FOURTH_ROW,
- _LCD_CLEAR,
- _LCD_RETURN_HOME,
- _LCD_CURSOR_OFF,
- _LCD_UNDERLINE_ON,
- _LCD_BLINK_CURSOR_ON,
- _LCD_MOVE_CURSOR_LEFT,
- _LCD_MOVE_CURSOR_RIGHT,
- _LCD_TURN_ON,
- _LCD_TURN_OFF,
- _LCD_SHIFT_LEFT,
- _LCD_SHIFT_RIGHT,
- _LCD_INCREMENT_NO_SHIFT
-}Cmd_Type;
-
-extern Cmd_Type Cmd;
-
-
-
-  unsigned char  I2C_PCF8574_Write( unsigned char  addr, unsigned char  Data);
- void I2C_LCD_putcmd( unsigned char  addr,  unsigned char  dta, unsigned char  cmdtype);
- void I2C_LCD_goto( unsigned char  addr, unsigned char  row,  unsigned char  col);
- void I2C_Lcd_Cmd( unsigned char  addr,Cmd_Type cmd, unsigned char  col);
- void I2C_LCD_putch( unsigned char  addr,  unsigned char  dta);
- void I2C_LCD_Out( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  *s);
- void I2C_Lcd_Chr( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  out_char);
- void I2C_LCD_init( unsigned char  addr);
- void I2C_LCD_init4l( unsigned char  addr);
- void I2C_Pins(char i2c_pins);
-#line 1 "c:/users/git/pic32mzcnc/stepper.h"
-#line 12 "c:/users/git/pic32mzcnc/timers.h"
-struct Timer{
-char clock;
-char P1: 1;
-char P2: 1;
-unsigned int disable_cnt;
-unsigned int (*Reset)(unsigned int time,unsigned int last_sec);
-};
-extern struct Timer TMR;
-
-
-void InitTimer1();
-void InitTimer8();
-void ClockPulse();
-unsigned int ResetSteppers(unsigned int sec_to_disable,unsigned int last_sec_to_disable);
-#line 1 "c:/users/git/pic32mzcnc/pins.h"
-#line 1 "c:/users/git/pic32mzcnc/kinematics.h"
 #line 15 "c:/users/git/pic32mzcnc/stepper.h"
 typedef unsigned short UInt8_t;
 #line 59 "c:/users/git/pic32mzcnc/stepper.h"
@@ -397,24 +336,201 @@ void Single_Axis_Enable(_axis_ axis_);
  void Test_CycleY();
  void Test_CycleZ();
  void Test_CycleA();
+#line 12 "c:/users/git/pic32mzcnc/timers.h"
+struct Timer{
+char clock;
+char P1: 1;
+char P2: 1;
+unsigned int disable_cnt;
+unsigned int (*Reset)(unsigned int time,unsigned int last_sec);
+};
+extern struct Timer TMR;
+
+
+void InitTimer1();
+void InitTimer8();
+void ClockPulse();
+unsigned int ResetSteppers(unsigned int sec_to_disable,unsigned int last_sec_to_disable);
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 1 "c:/users/git/pic32mzcnc/pins.h"
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
+#line 1 "c:/users/git/pic32mzcnc/steptodistance.h"
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
 #line 11 "c:/users/git/pic32mzcnc/steptodistance.h"
 const float Dia;
 #line 23 "c:/users/git/pic32mzcnc/steptodistance.h"
 signed long calcSteps( double mmsToMove, double Dia);
-#line 7 "C:/Users/Git/Pic32mzCNC/Steptodistance.c"
-signed long calcSteps(double mmsToMove, double Dia){
-double circ,cirDivision,stepsToMove;
+#line 1 "c:/users/git/pic32mzcnc/serial_dma.h"
+#line 1 "c:/users/git/pic32mzcnc/kinematics.h"
+#line 28 "c:/users/git/pic32mzcnc/config.h"
+extern unsigned char LCD_01_ADDRESS;
+extern bit oneShotA; sfr;
+extern bit oneShotB; sfr;
 
 
 
 
- circ = Dia* 3.142 ;
 
 
 
- cirDivision = mmsToMove / circ;
- stepsToMove = cirDivision *  ( 200 *16) ;
+void PinMode();
+void UartConfig();
+void set_performance_mode();
+void Uart2InterruptSetup();
+void LcdI2CConfig();
+void OutPutPulseXYZ();
+void Temp_Move(int a);
+void LCD_Display();
+#line 7 "c:/users/git/pic32mzcnc/serial_dma.h"
+extern char txt[];
+extern char rxBuf[];
+extern char txBuf[];
 
- return (signed long)stepsToMove;
+
+
+
+
+
+
+void DMA_global();
+void DMA0();
+void DMA1();
+#line 4 "C:/Users/Git/Pic32mzCNC/Serial_Dma.c"
+char txt[] = "Start......";
+char rxBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} absolute 0xA0002000 ;
+char txBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} absolute 0xA0002200 ;
+
+char DMA_Buff[200];
+short dma0int_flag;
+short dma1int_flag;
+
+
+
+
+
+void DMA_global(){
+ DMACON = 1<<16;
+ DCH0CON = 0x03;
+
+ DMA0();
+ DMA1();
+}
+
+
+void DMA0(){
+ DMACONbits.ON = 1;
+ DCH0CONbits.CHAEN = 1;
+ DCH0CONbits.CHPATLEN = 0;
+ DMA0IE_bit = 0;
+ DMA0IF_bit = 0;
+
+ DCH0ECON =(146 << 8 ) | 0x30;
+ DCH0DAT = 0x0D;
+
+ DCH0SSA = KVA_TO_PA(0xBF822230);
+ DCH0DSA = KVA_TO_PA(0xA0002000);
+
+ DCH0SSIZ = 200 ;
+ DCH0DSIZ = 200 ;
+ DCH0CSIZ = 200 ;
+
+ DCH0INTCLR = 0x00FF00FF ;
+ CHBCIE_bit = 1 ;
+ CHERIE_bit = 1 ;
+
+
+
+ IPC33CLR = 0x0000001F ;
+ DMA0IP2_bit = 1 ;
+ DMA0IP1_bit = 0 ;
+ DMA0IP0_bit = 1 ;
+ DMA0IS1_bit = 1 ;
+ DMA0IS0_bit = 1 ;
+
+ DMA0IE_bit = 1 ;
+ CHEN_bit = 1 ;
+
+}
+
+
+void DMA1(){
+
+ DMA1IE_bit = 0 ;
+ DMA1IF_bit = 0 ;
+ DCH1CONbits.CHPATLEN = 0;
+ DCH1ECON=(147 << 8)| 0x30;
+ DCH1SSA = KVA_TO_PA(0xA0002200) ;
+ DCH1DSA = KVA_TO_PA(0xBF822220) ;
+ DCH1DAT = 0x00;
+
+ DCH1SSIZ = 200;
+
+ DCH1DSIZ = 1;
+
+ DCH1CSIZ = 1;
+
+ DCH1INTCLR = 0x00FF00FF ;
+ SIRQEN_DCH1ECON_bit = 1;
+ CHBCIE_DCH1INT_bit = 1 ;
+ CHERIE_DCH1INT_bit = 1 ;
+
+ DMA1IP2_bit = 1 ;
+ DMA1IP1_bit = 0 ;
+ DMA1IP0_bit = 1 ;
+ DMA1IS1_bit = 0 ;
+ DMA1IS0_bit = 1 ;
+ DMA1IE_bit = 0 ;
+}
+
+
+
+
+void DMA_CH0_ISR() iv IVT_DMA0 ilevel 5 ics ICS_AUTO {
+ char A[6];
+ int i,ptr;
+ if (CHBCIF_bit == 1) {
+ i = 0;
+
+
+ i = strlen(rxBuf);
+ dma0int_flag = 1;
+ memcpy(txBuf, rxBuf, i);
+ CHEN_DCH1CON_bit = 1;
+ }
+ DCH1SSIZ = i ;
+
+
+ if( CHERIF_bit == 1){
+ CHERIF_bit = 0;
+ memcpy(txBuf,"CHERIF Error",13);
+ }
+ DCH0INTCLR = 0x00FF;
+
+ DMA1IE_bit = 1 ;
+ CHEN_bit = 1 ;
+
+ CFORCE_DCH1ECON_bit = 1 ;
+ DMA0IF_bit = 0 ;
+
+}
+
+
+void DMA_CH1_ISR() iv IVT_DMA1 ilevel 5 ics ICS_AUTO {
+int ptr = 0;
+char ptrAdd[6];
+
+ if (CHBCIF_DCH1INT_bit == 1){
+ CHBCIF_DCH1INT_bit = 0;
+ }
+
+ if( CHERIF_DCH1INT_bit == 1){
+ CHERIF_DCH1INT_bit = 0;
+
+ }
+
+ dma1int_flag = 1;
+ DCH1INTCLR = 0x00FF;
+ DMA1IF_bit = 0 ;
+
 }

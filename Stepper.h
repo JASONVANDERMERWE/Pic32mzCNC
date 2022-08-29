@@ -3,65 +3,12 @@
 
  #include "built_in.h"
  #include "Timers.h"
-/*#include "I2C_LCD.h"
-#include "Config.h"*/
+ #include "Pins.h"
+ #include "Kinematics.h"
 
 
 //extern bit PLS_Step_;sfr;
-///////////////////////////////////////////
-//sfr pin modes
-//Xaxis
-extern sfr EN_StepX;
-extern sfr EN_Step_PinDirX;
-extern sfr RST_StepX;
-extern sfr RST_Step_PinDirX;
-extern sfr SLP_FLT_StepX;
-extern sfr SLP_FLT_Step_PinDirX;
-extern sfr PLS_StepX;
-extern sfr PLS_Step_PinDirX;
-extern sfr DIR_StepX;
-extern sfr DIR_Step_PinDirX;
-extern sfr FLT_StepX;
-extern sfr FLT_Step_PinDirX;
-//Yaxis
-extern sfr EN_StepY;
-extern sfr EN_Step_PinDirY;
-extern sfr RST_StepY;
-extern sfr RST_Step_PinDirY;
-extern sfr SLP_FLT_StepY;
-extern sfr SLP_FLT_Step_PinDirY;
-extern sfr PLS_StepY;
-extern sfr PLS_Step_PinDirY;
-extern sfr DIR_StepY;
-extern sfr DIR_Step_PinDirY;
-extern sfr FLT_StepY;
-extern sfr FLT_Step_PinDirY;
-//Zaxis
-extern sfr EN_StepZ;
-extern sfr EN_Step_PinDirZ;
-extern sfr RST_StepZ;
-extern sfr RST_Step_PinDirZ;
-extern sfr SLP_FLT_StepZ;
-extern sfr SLP_FLT_Step_PinDirZ;
-extern sfr PLS_StepZ;
-extern sfr PLS_Step_PinDirZ;
-extern sfr DIR_StepZ;
-extern sfr DIR_Step_PinDirZ;
-extern sfr FLT_StepZ;
-extern sfr FLT_Step_PinDirZ;
-//Aaxis
-extern sfr EN_StepA;
-extern sfr EN_Step_PinDirA;
-extern sfr RST_StepA;
-extern sfr RST_Step_PinDirA;
-extern sfr SLP_FLT_StepA;
-extern sfr SLP_FLT_Step_PinDirA;
-extern sfr PLS_StepA;
-extern sfr PLS_Step_PinDirA;
-extern sfr DIR_StepA;
-extern sfr DIR_Step_PinDirA;
-extern sfr FLT_StepA;
-extern sfr FLT_Step_PinDirA;
+
 
 //////////////////////////////////////////////
 //defines
@@ -85,6 +32,7 @@ typedef unsigned short UInt8_t;
 #define T1_FREQ   781250//781250=1.28us || 796150=1us   per tick
 #define minSpeed  30210
 #define maxSpeed  510
+#define cirSpeed  100
 
 //! Number of (full)steps per round on stepper motor in use.
 #define FSPR 200       // 200 Steps per rev
@@ -104,11 +52,6 @@ typedef unsigned short UInt8_t;
 #define RUN   3
 
 
-//Circle defines and consts
-#define  Pi         3.14159
-#define  rad2deg   (180.00/Pi)
-#define  deg2rad   (Pi/180.00)
-
 
 // Constants for accelleration
 
@@ -118,7 +61,7 @@ extern  unsigned int Toggle;
 //////////////////////////////////////////
 //structs enums and constants
 typedef struct genVars{
-  char Single_Dual: 1;
+  int Single_Dual;
   UInt8_t running: 1;       //running bit
   UInt8_t startPulses: 1;
   int   Tog;
@@ -204,36 +147,13 @@ typedef struct Steps{
 extern STP STPS[NoOfAxis];
 
 
-//circular data
-typedef struct{
-float deg;
-float degreeDeg;
-float degreeRadians;
-float deg_A;
-float deg_B;
-float divisor;
-float newdeg_;
-float I;
-float J;
-float N;
-float radius;
-int   dir;
-int   quadrant_start;
-float xRad;
-float yRad;
-float xStart;
-float yStart;
-float xFin;
-float yFin;
-}Circle;
-extern Circle Circ;
-
-
 //enums
-enum xyz{X,Y,Z,A,B,C};
+typedef enum xyz{X,Y,Z,A,B,C}_axis_;
 typedef enum {xy,xz,yz,xa,ya,za}axis_combination ;
 enum swt{FALSE,TRUE};
 
+extern _axis_ _axis;
+extern axis_combination axis_xyz;
 //enum StepState{STOP,ACCEL,RUN,DECEL};
 
 /////////////////////////////////////////
@@ -259,9 +179,7 @@ unsigned int min_(unsigned long x, unsigned long y);
 void CalcDly(int axis_No);
 void StepperConstants(long accel,long decel);
 
-//Move inline
-void DualAxisStep(long newx,long newy,int axis_combo);
-void SingleAxisStep(long newxyz,int axis_No);
+
 
 void SingleStepX();
 void SingleStepY();
@@ -280,15 +198,19 @@ void StopY();
 void StopZ();
 void StopA();
 
-//Circle move axis
-void CalcRadius(Circle* cir);
-int QuadrantStart(float i,float j);
-void CircDir(Circle* cir);
+
 
 //Step control using Output compare module
 int Pulse(int axis_No);
 void toggleOCx(int axis_No);
 void AccDec(int axis_No);
 void Step_Cycle(int axis_No);
-void Axis_Enable(axis_combination axis);
+void Multi_Axis_Enable(axis_combination axis);
+void Single_Axis_Enable(_axis_ axis_);
+
+ void Test_CycleX();
+ void Test_CycleY();
+ void Test_CycleZ();
+ void Test_CycleA();
+ 
 #endif
