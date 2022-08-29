@@ -279,18 +279,21 @@ void YZ_Interpolate(){
 
 ////////////////////////////////////////////////
 //Set Circ values
-void SetCircleVals(double curX,double curY,double i,double j, double deg,int dir){
+void SetCircleVals(double curX,double curY,double finX,double finY,double i,double j, double deg,int dir){
  int str_len = 0;
  AxisPulse[2] = Circ_Prep_Next;
  Multi_Axis_Enable(xy);
  SV.Single_Dual = 2;
- Circ.I = i;
- Circ.J = j;
  Circ.xStart = curX;
  Circ.yStart = curY;
- Circ.deg = deg;
+ Circ.xFin   = finX;
+ Circ.yFin   = finY;
+ Circ.I = i;
+ Circ.J = j;
  CalcRadius();
+ CalcAngle();
  Circ.dir = CircDir(dir);
+ CalcDivisor();
  Circ.lastX = 0;
  Circ.lastY = 0;
 
@@ -299,13 +302,9 @@ void SetCircleVals(double curX,double curY,double i,double j, double deg,int dir
 /////////////////////////////////////////////////
 //Check which direction to travel in
 int CircDir(int dir){
-double newDeg;
-   Circ.dir = dir;
-   newDeg = 360.00 / Circ.deg;
-   Circ.N = (2*Pi*Circ.radius)/newDeg;
-   Circ.divisor = ceil( Circ.N/Circ.deg);
-   Circ.Idivisor = (unsigned int)Circ.N;//Circ.divisor;
 
+   Circ.dir = dir;
+   
    if(Circ.dir == CW)
        Circ.deg = 0.00;
    if(Circ.dir == CCW)
@@ -315,12 +314,21 @@ double newDeg;
 }
 
 ////////////////////////////////////////////////
+//Calculate divisor / pulse value before incrament
+void CalcDivisor(){
+double newDeg;
+
+   newDeg = 360.00 / Circ.degreeDeg;
+   Circ.N = (2*Pi*Circ.radius)*newDeg;
+   Circ.divisor = ceil( Circ.N);///Circ.deg);
+   Circ.Idivisor = (unsigned int)Circ.N;//Circ.divisor;
+}
+
+////////////////////////////////////////////////
 //Radius Calculation
 void CalcRadius(){
- double xRad,yRad,X,Y,angA,angB;
-   //find the quadrant that cir start pos is in
-   Circ.quadrant = Quadrant(Circ.I,Circ.J);
-   
+ double X,Y;
+
    //no negative nums for sqroot
    X = abs(Circ.I);
    Y = abs(Circ.J);
@@ -329,8 +337,17 @@ void CalcRadius(){
    Circ.xRad = (Circ.xStart + Circ.I);
    Circ.yRad = (Circ.yStart + Circ.J);
    Circ.radius = sqrt((X*X) + (Y*Y));
-   
-   //get the deg of radiuss from abs zero pos
+ 
+   //find the quadrant that cir start pos is in
+   Circ.quadrant = Quadrant(Circ.I,Circ.J);
+}
+
+////////////////////////////////////////////////
+//Cac angle of attack
+void CalcAngle(){
+ double angA,angB;
+
+  //get the deg of radiuss from abs zero pos
    //and convert  radans to degrees
    angA = atan2(Circ.yRad,Circ.xRad);
    Circ.degreeDeg = angA * rad2deg;
@@ -342,6 +359,22 @@ void CalcRadius(){
        angB = Circ.deg + Circ.degreeDeg;
 
    Circ.degreeRadians = angB * deg2rad;
+
+}
+
+/////////////////////////////////////////////////
+//Get the Final cordinates of X,Y || 0 = fin pos
+void NextCords(int fin_step){
+
+     if(Circ.quadrant == 1 || Circ.quadrant == 4){
+       Circ.xFin = Circ.xRad + (Circ.radius * cos(Circ.degreeRadians));
+       Circ.yFin = Circ.yRad + (Circ.radius * sin(Circ.degreeRadians));
+     }
+     if(Circ.quadrant == 2 || Circ.quadrant == 3){
+       Circ.xFin = Circ.xRad - (Circ.radius * cos(Circ.degreeRadians));
+       Circ.yFin = Circ.yRad - (Circ.radius * sin(Circ.degreeRadians));
+     }
+
 }
 
 /////////////////////////////////////////////////
@@ -362,75 +395,14 @@ int Quadrant(double i,double j){
 ///////////////////////////////////////////////////
 //Interpolate Arc
 void Cir_Interpolation(){
-int str_len = 0;
-int str_lenA = 0;
-static int quad = 1;
-    str_lenA = strlen(txtA);
+
+     CalcAngle();
      CalcRadius();
-     //QuadrantStart(Circ.I,Circ.J);
-     
-     //break;//!!!
-    if(Circ.quadrant == 1 || Circ.quadrant == 4){
-       Circ.xFin = Circ.xRad + (Circ.radius * cos(Circ.degreeRadians));
-       Circ.yFin = Circ.yRad + (Circ.radius * sin(Circ.degreeRadians));
-     }
-     if(Circ.quadrant == 2 || Circ.quadrant == 3){
-       Circ.xFin = Circ.xRad - (Circ.radius * cos(Circ.degreeRadians));
-       Circ.yFin = Circ.yRad - (Circ.radius * sin(Circ.degreeRadians));
-     }
-      memset(txtB,0,30);
-      //Radius
-     sprintf(txt,"%2f",Circ.radius);
-     strncpy(txtB, " ",strlen(txt));
-     strncat(txtB, txt,strlen(txt));
-     str_len += strlen(txt);
-     strncat(txtB,txtA,str_lenA);
-     str_len += str_lenA;
-      //xPos
-     sprintf(txt,"%2f",Circ.xFin);
-     strncat(txtB,txt,strlen(txt));
-     str_len += strlen(txt);
-     strncat(txtB,txtA,str_lenA);
-     str_len += str_lenA;
-     //Ypos
-     sprintf(txt,"%2f",Circ.yFin);
-     strncat(txtB,txt,strlen(txt));
-     str_len += strlen(txt);
-     strncat(txtB,txtA,str_lenA);
-     str_len += str_lenA;
-     //Deg
-     sprintf(txt,"%2f",Circ.deg);
-     strncat(txtB,txt,strlen(txt));
-     str_len += strlen(txt)+1;
-     strncat(txtB,txtA,str_lenA);
-     str_len += str_lenA;
-      //degreeDeg
-     sprintf(txt,"%2f",Circ.degreeDeg);
-     strncat(txtB,txt,strlen(txt));
-     str_len += strlen(txt)+1;
-     strncat(txtB,txtA,str_lenA);
-     str_len += str_lenA;
-     //rad
-     sprintf(txt,"%d",Circ.Idivisor);
-     strncat(txtB,txt,strlen(txt));
-     str_len += strlen(txt)+1;
-     strncat(txtB,"\n",1);
-     str_len += 2;
-     strncat(txtB,txtA,str_lenA);
-     str_len += str_lenA;
-
-     UART2_Write_Text(txtB);
-   /*  memcpy(txBuf, txtB, str_len+1);
-
-     CHEN_DCH1CON_bit    = 1;     // Enable the DMA1 channel to transmit back what was received
-
-     DCH1SSIZ            = str_len +1;
-     CHEN_bit            = 1 ;
-     CFORCE_DCH1ECON_bit = 1 ;                 // force DMA1 interrupt trigger
-   */
-     STPS[X].step_delay = 1000;
-     STPS[Y].step_delay = 1000;
-     
+     Circ.quadrant = Quadrant(Circ.xStep,Circ.yStep);
+     NextCords(0);
+     STPS[X].step_delay = 500;
+     STPS[Y].step_delay = 500;
+     SerialPrint();
      Circ_Tick();
 }
 
@@ -465,8 +437,65 @@ void Circ_Prep_Next(){
   toggleOCx(Y);
    
   if(Circ.steps >= Circ.Idivisor){
+    Circ.steps = 0;
     Circ.cir_next = 0;
     Circ.cir_start = 1;
   }
 
+}
+
+void SerialPrint(){
+int str_len = 0;
+int str_lenA = 0;
+     str_lenA = strlen(txtA);
+     memset(txtB,0,30);
+      //Radius
+     sprintf(txt,"%2f",Circ.radius);
+     strncpy(txtB, " ",strlen(txt));
+     strncat(txtB, txt,strlen(txt));
+     str_len += strlen(txt);
+     strncat(txtB,txtA,str_lenA);
+     str_len += str_lenA;
+      //xPos
+     sprintf(txt,"%2f",Circ.xFin);
+     strncat(txtB,txt,strlen(txt));
+     str_len += strlen(txt);
+     strncat(txtB,txtA,str_lenA);
+     str_len += str_lenA;
+     //Ypos
+     sprintf(txt,"%2f",Circ.yFin);
+     strncat(txtB,txt,strlen(txt));
+     str_len += strlen(txt);
+     strncat(txtB,txtA,str_lenA);
+     str_len += str_lenA;
+     //Deg
+     sprintf(txt,"%2f",Circ.deg);
+     strncat(txtB,txt,strlen(txt));
+     str_len += strlen(txt)+1;
+     strncat(txtB,txtA,str_lenA);
+     str_len += str_lenA;
+      //degreeDeg
+     sprintf(txt,"%2f",Circ.degreeDeg);
+     strncat(txtB,txt,strlen(txt));
+     str_len += strlen(txt)+1;
+     strncat(txtB,txtA,str_lenA);
+     str_len += str_lenA;
+     //rad
+     sprintf(txt,"%d",Circ.quadrant);
+     strncat(txtB,txt,strlen(txt));
+     str_len += strlen(txt)+1;
+     strncat(txtB,"\n",1);
+     str_len += 2;
+     strncat(txtB,txtA,str_lenA);
+     str_len += str_lenA;
+
+     UART2_Write_Text(txtB);
+   /*  memcpy(txBuf, txtB, str_len+1);
+
+     CHEN_DCH1CON_bit    = 1;     // Enable the DMA1 channel to transmit back what was received
+
+     DCH1SSIZ            = str_len +1;
+     CHEN_bit            = 1 ;
+     CFORCE_DCH1ECON_bit = 1 ;                 // force DMA1 interrupt trigger
+   */
 }

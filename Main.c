@@ -125,7 +125,7 @@ void Temp_Move(int a){
              break;
        case 7:
                if(!Circ.cir_start){
-                  SetCircleVals(450.00,250.00,-100.00,150.00,180.00,CW);
+                  SetCircleVals(450.00,250.00,486.00,386.00,-100.00,100.00,60.00,CW);
                   Circ.cir_start = 1;
                }
                if(Circ.cir_start){

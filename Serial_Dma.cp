@@ -148,6 +148,8 @@ double xRad;
 double yRad;
 double xStart;
 double yStart;
+double xStep;
+double yStep;
 double xFin;
 double yFin;
 double lastX;
@@ -162,14 +164,19 @@ extern Circle Circ;
 void DualAxisStep(long newx,long newy,int axis_combo);
 void SingleAxisStep(long newxyz,int axis_No);
 
-void SetCircleVals(double curX,double curY,double i,double j, double deg,int dir);
+void SetCircleVals(double curX,double curY,double finX,double finY,double i,double j, double deg,int dir);
 void CalcRadius();
+void CalcAngle();
 int Quadrant(double i,double j);
 int CircDir(int dir);
+void CalcDivisor();
+void NextCords(int fin_step);
 void CirInterpolation();
 void Cir_Interpolation();
 void Circ_Tick();
 void Circ_Prep_Next();
+
+void SerialPrint();
 #line 15 "c:/users/git/pic32mzcnc/stepper.h"
 typedef unsigned short UInt8_t;
 #line 59 "c:/users/git/pic32mzcnc/stepper.h"

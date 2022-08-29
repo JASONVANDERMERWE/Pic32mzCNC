@@ -56,36 +56,42 @@ main
 		SetCircleVals
 			Multi_Axis_Enable
 			CalcRadius
-				Quadrant
 				abs
 				sqrt
 					frexp
 					ldexp
+				Quadrant
+			CalcAngle
 				atan2
 					fabs
 					atan
 						fabs
 						eval_poly
 			CircDir
+			CalcDivisor
 				ceil
 		Cir_Interpolation
-			strlen
+			CalcAngle
 			CalcRadius
-			cos
+			Quadrant
+			NextCords
+				cos
+					sin
+						floor
+						eval_poly
 				sin
-					floor
-					eval_poly
-			sin
-			memset
-			sprintf
-				_doprntf
-					isdigit
-					scale
-					fround
-			strncpy
-			strncat
-			UART2_Write_Text
-				UART2_Write
+			SerialPrint
+				strlen
+				memset
+				sprintf
+					_doprntf
+						isdigit
+						scale
+						fround
+				strncpy
+				strncat
+				UART2_Write_Text
+					UART2_Write
 			Circ_Tick
 				disableOCx
 	ResetSteppers

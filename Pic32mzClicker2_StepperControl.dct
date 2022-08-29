@@ -9621,6 +9621,8 @@ cal8
 cal8_bit
 cal9
 cal9_bit
+calcangle
+calcdivisor
 calcradius
 calcsteps
 can1ie
@@ -40188,6 +40190,7 @@ nb2bipktgp26
 nb2bipktgp26_bit
 nb2bipktgp26_emacxipgr_bit
 newdeg_
+nextcords
 nmicnt
 nmicnt
 nmicnt
@@ -56334,6 +56337,7 @@ seq2
 seq2bits
 seq3
 seq3bits
+serialprint
 serrie
 serrie
 serrie
@@ -81343,6 +81347,7 @@ wtid3_bit
 xfin
 xrad
 xstart
+xstep
 xtoi
 xy_interpolate
 xz_interpolate
@@ -81373,4 +81378,5 @@ year103_bit
 yfin
 yrad
 ystart
+ystep
 yz_interpolate
