@@ -117,30 +117,57 @@ extern sfr sbit FLT_StepA;
 extern sfr sbit FLT_Step_PinDirA;
 #line 1 "c:/users/git/pic32mzcnc/kinematics.h"
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
-#line 7 "c:/users/git/pic32mzcnc/kinematics.h"
-extern void (*AxisPulse)();
+#line 1 "c:/users/git/pic32mzcnc/serial_dma.h"
+#line 1 "c:/users/git/pic32mzcnc/config.h"
+#line 7 "c:/users/git/pic32mzcnc/serial_dma.h"
+extern char txt[];
+extern char rxBuf[];
+extern char txBuf[];
+
+
+
+
+
+
+
+void DMA_global();
+void DMA0();
+void DMA1();
+#line 13 "c:/users/git/pic32mzcnc/kinematics.h"
+extern void (*AxisPulse[3])();
+
 
 
 typedef struct{
-float deg;
-float degreeDeg;
-float degreeRadians;
-float deg_A;
-float deg_B;
-float divisor;
-float newdeg_;
-float I;
-float J;
-float N;
-float radius;
+char cir_start: 1;
+char cir_end: 1;
+char cir_next: 1;
+double deg;
+double degreeDeg;
+double degreeRadians;
+double deg_A;
+double deg_B;
+double divisor;
+double newdeg_;
+
+double I;
+double J;
+double N;
+double radius;
 int dir;
-int quadrant_start;
-float xRad;
-float yRad;
-float xStart;
-float yStart;
-float xFin;
-float yFin;
+int quadrant;
+unsigned int steps;
+unsigned int Idivisor;
+double xRad;
+double yRad;
+double xStart;
+double yStart;
+double xStep;
+double yStep;
+double xFin;
+double yFin;
+double lastX;
+double lastY;
 }Circle;
 extern Circle Circ;
 
@@ -151,19 +178,28 @@ extern Circle Circ;
 void DualAxisStep(long newx,long newy,int axis_combo);
 void SingleAxisStep(long newxyz,int axis_No);
 
-void CalcRadius(Circle* cir);
-int QuadrantStart(float i,float j);
-void CircDir(Circle* cir);
-void Cir_Interpolation(float xPresent,float yPresent,Circle* cir);
+void SetCircleVals(double curX,double curY,double finX,double finY,double i,double j, double deg,int dir);
+void CalcRadius();
+void CalcAngle();
+int Quadrant(double i,double j);
+int CircDir(int dir);
+void CalcDivisor();
+void NextCords(int fin_step);
+void CirInterpolation();
+void Cir_Interpolation();
+void Circ_Tick();
+void Circ_Prep_Next();
+
+void SerialPrint();
 #line 15 "c:/users/git/pic32mzcnc/stepper.h"
 typedef unsigned short UInt8_t;
-#line 63 "c:/users/git/pic32mzcnc/stepper.h"
+#line 59 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
 
 typedef struct genVars{
- char Single_Dual: 1;
+ int Single_Dual;
  UInt8_t running: 1;
  UInt8_t startPulses: 1;
  int Tog;
@@ -309,6 +345,11 @@ void AccDec(int axis_No);
 void Step_Cycle(int axis_No);
 void Multi_Axis_Enable(axis_combination axis);
 void Single_Axis_Enable(_axis_ axis_);
+
+ void Test_CycleX();
+ void Test_CycleY();
+ void Test_CycleZ();
+ void Test_CycleA();
 #line 12 "c:/users/git/pic32mzcnc/timers.h"
 struct Timer{
 char clock;
@@ -335,22 +376,8 @@ const float Dia;
 #line 23 "c:/users/git/pic32mzcnc/steptodistance.h"
 signed long calcSteps( double mmsToMove, double Dia);
 #line 1 "c:/users/git/pic32mzcnc/serial_dma.h"
-#line 1 "c:/users/git/pic32mzcnc/config.h"
-#line 7 "c:/users/git/pic32mzcnc/serial_dma.h"
-extern char txt[];
-extern char rxBuf[];
-extern char txBuf[];
-
-
-
-
-
-
-
-void DMA_global();
-void DMA0();
-void DMA1();
-#line 25 "c:/users/git/pic32mzcnc/config.h"
+#line 1 "c:/users/git/pic32mzcnc/kinematics.h"
+#line 28 "c:/users/git/pic32mzcnc/config.h"
 extern unsigned char LCD_01_ADDRESS;
 extern bit oneShotA; sfr;
 extern bit oneShotB; sfr;
@@ -392,16 +419,13 @@ static unsigned int disable_steps = 0;
 int xyz_ = 0;
  PinMode();
 
- StepperConstants(15500,15500);
+ StepperConstants(5000,15500);
  EnableInterrupts();
  oneShotA = 0;
 
- a=4;
- EnStepperX();
- EnStepperY();
- EnStepperZ();
- EnStepperA();
+ a=0;
  disable_steps = 0;
+
  while(1){
 
  if(!Toggle){
@@ -410,41 +434,40 @@ int xyz_ = 0;
  disable_steps = TMR.Reset( 10 ,disable_steps);
  if(LED1 && (oneshot == 0)){
  oneshot = 1;
- sprintf(txBuf,"%d",disable_steps);
- CHEN_DCH1CON_bit = 1;
+
+
  }else if(!LED1 && (oneshot == 1))
  oneshot = 0;
+
  }
 
 
 
  if(!SW2){
  Toggle = 0;
-
+ disableOCx();
+ Circ.cir_start = 0;
+ Circ.cir_end = 0;
+ Circ.cir_next = 0;
  }
 
  if((!SW1)&&(!Toggle)){
+ a = 7;
  LED1 = 0;
  Toggle = 1;
  disable_steps = 0;
  EnStepperX();
  EnStepperY();
- EnStepperZ();
- EnStepperA();
-#line 74 "C:/Users/Git/Pic32mzCNC/Main.c"
- xyz_++;
- if(xyz_ > 2)xyz_ = 0;
-#line 83 "C:/Users/Git/Pic32mzCNC/Main.c"
- Temp_Move(a);
- a++;
- if(a > 6)a=4;
+
+
+
  }
 
  if(Toggle){
- if(!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit){
+ if((!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit)||!Circ.cir_next){
  Temp_Move(a);
- a++;
- LED2 != LED2;
+ a=7;
+ if(a > 7)a=7;
  }
  }
 
@@ -495,6 +518,19 @@ void Temp_Move(int a){
  STPS[A].mmToTravel = calcSteps(-125.25,8.06);
  speed_cntr_Move(STPS[A].mmToTravel, 25000,A);
  SingleAxisStep(STPS[A].mmToTravel,A);
+ break;
+ case 7:
+ if(!Circ.cir_start){
+ SetCircleVals(450.00,250.00,486.00,386.00,-100.00,100.00,60.00, 0 );
+ Circ.cir_start = 1;
+ }
+ if(Circ.cir_start){
+ LED1 = Circ.cir_next;
+ if(!Circ.cir_next){
+ Circ.cir_next = 1;
+ Cir_Interpolation();
+ }
+ }
  break;
  default: a = 0;
  break;

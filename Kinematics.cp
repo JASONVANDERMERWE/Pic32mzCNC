@@ -103,7 +103,8 @@ extern char txBuf[];
 void DMA_global();
 void DMA0();
 void DMA1();
-#line 25 "c:/users/git/pic32mzcnc/config.h"
+#line 1 "c:/users/git/pic32mzcnc/kinematics.h"
+#line 28 "c:/users/git/pic32mzcnc/config.h"
 extern unsigned char LCD_01_ADDRESS;
 extern bit oneShotA; sfr;
 extern bit oneShotB; sfr;
@@ -179,13 +180,13 @@ unsigned int ResetSteppers(unsigned int sec_to_disable,unsigned int last_sec_to_
 #line 1 "c:/users/git/pic32mzcnc/kinematics.h"
 #line 15 "c:/users/git/pic32mzcnc/stepper.h"
 typedef unsigned short UInt8_t;
-#line 63 "c:/users/git/pic32mzcnc/stepper.h"
+#line 59 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
 
 typedef struct genVars{
- char Single_Dual: 1;
+ int Single_Dual;
  UInt8_t running: 1;
  UInt8_t startPulses: 1;
  int Tog;
@@ -331,30 +332,47 @@ void AccDec(int axis_No);
 void Step_Cycle(int axis_No);
 void Multi_Axis_Enable(axis_combination axis);
 void Single_Axis_Enable(_axis_ axis_);
-#line 7 "c:/users/git/pic32mzcnc/kinematics.h"
-extern void (*AxisPulse)();
+
+ void Test_CycleX();
+ void Test_CycleY();
+ void Test_CycleZ();
+ void Test_CycleA();
+#line 1 "c:/users/git/pic32mzcnc/serial_dma.h"
+#line 13 "c:/users/git/pic32mzcnc/kinematics.h"
+extern void (*AxisPulse[3])();
+
 
 
 typedef struct{
-float deg;
-float degreeDeg;
-float degreeRadians;
-float deg_A;
-float deg_B;
-float divisor;
-float newdeg_;
-float I;
-float J;
-float N;
-float radius;
+char cir_start: 1;
+char cir_end: 1;
+char cir_next: 1;
+double deg;
+double degreeDeg;
+double degreeRadians;
+double deg_A;
+double deg_B;
+double divisor;
+double newdeg_;
+
+double I;
+double J;
+double N;
+double radius;
 int dir;
-int quadrant_start;
-float xRad;
-float yRad;
-float xStart;
-float yStart;
-float xFin;
-float yFin;
+int quadrant;
+unsigned int steps;
+unsigned int Idivisor;
+double xRad;
+double yRad;
+double xStart;
+double yStart;
+double xStep;
+double yStep;
+double xFin;
+double yFin;
+double lastX;
+double lastY;
 }Circle;
 extern Circle Circ;
 
@@ -365,21 +383,38 @@ extern Circle Circ;
 void DualAxisStep(long newx,long newy,int axis_combo);
 void SingleAxisStep(long newxyz,int axis_No);
 
-void CalcRadius(Circle* cir);
-int QuadrantStart(float i,float j);
-void CircDir(Circle* cir);
-void Cir_Interpolation(float xPresent,float yPresent,Circle* cir);
-#line 7 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
-void (*AxisPulse)();
+void SetCircleVals(double curX,double curY,double finX,double finY,double i,double j, double deg,int dir);
+void CalcRadius();
+void CalcAngle();
+int Quadrant(double i,double j);
+int CircDir(int dir);
+void CalcDivisor();
+void NextCords(int fin_step);
+void CirInterpolation();
+void Cir_Interpolation();
+void Circ_Tick();
+void Circ_Prep_Next();
 
+void SerialPrint();
+#line 3 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+Circle Circ;
+
+
+
+void (*AxisPulse[3])();
+
+char txtA[] = " : ";
+char txtC[] = "\r";
+char txtB[200];
 
 
 static long d2;
-#line 19 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 22 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 void SingleAxisStep(long newxyz,int axis_No){
 int dir;
-#line 25 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 28 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
  SV.Single_Dual = 0;
+
  switch(axis_No){
  case X:
  Single_Axis_Enable(X);
@@ -436,11 +471,12 @@ void DualAxisStep(long newx,long newy,int axis_combo){
  SV.px = 0;
  SV.py = 0;
  SV.pz = 0;
-#line 85 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 89 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
  SV.Single_Dual = 1;
+
  switch(axis_combo){
  case xy:
- AxisPulse = XY_Interpolate;
+ AxisPulse[1] = XY_Interpolate;
  axis_xyz = xy;
  Multi_Axis_Enable(axis_xyz);
 
@@ -472,11 +508,11 @@ void DualAxisStep(long newx,long newy,int axis_combo){
 
  STPS[X].step_count = 0;
  STPS[Y].step_count = 0;
- AxisPulse();
+ AxisPulse[1]();
 
  break;
  case xz:
- AxisPulse = XZ_Interpolate;
+ AxisPulse[1] = XZ_Interpolate;
  axis_xyz = xz;
  Multi_Axis_Enable(axis_xyz);
 
@@ -502,10 +538,10 @@ void DualAxisStep(long newx,long newy,int axis_combo){
 
  STPS[X].step_count = 0;
  STPS[Z].step_count = 0;
- AxisPulse();
+ AxisPulse[1]();
  break;
  case yz:
- AxisPulse = YZ_Interpolate;
+ AxisPulse[1] = YZ_Interpolate;
  axis_xyz = yz;
  Multi_Axis_Enable(axis_xyz);
 
@@ -531,12 +567,13 @@ void DualAxisStep(long newx,long newy,int axis_combo){
 
  STPS[Y].step_count = 0;
  STPS[Z].step_count = 0;
- AxisPulse();
+ AxisPulse[1]();
  break;
  default: break;
 
  }
 }
+
 
 
 
@@ -624,28 +661,111 @@ void YZ_Interpolate(){
 
 
 
-void CalcRadius(Circle* cir){
- float xRad,yRad,X,Y,angA,angB;
-
- cir->xRad = fabs(cir->xStart + cir->I);
- cir->yRad = fabs(cir->yStart + cir->J);
- cir->radius = sqrt((cir->xRad*cir->xRad) + (cir->yRad*cir->yRad));
- angA = atan2(cir->yRad,cir->xRad);
 
 
- cir->degreeDeg = angA *  (180.00/ 3.14159 ) ;
 
- cir->quadrant_start = QuadrantStart(cir->I,cir->J);
 
- if(cir->quadrant_start == 1 || cir->quadrant_start == 3)
- angB = cir->deg - cir->degreeDeg;
- if(cir->quadrant_start == 1 || cir->quadrant_start == 3)
- angB = cir->deg + cir->degreeDeg;
+void SetCircleVals(double curX,double curY,double finX,double finY,double i,double j, double deg,int dir){
+ int str_len = 0;
+ AxisPulse[2] = Circ_Prep_Next;
+ Multi_Axis_Enable(xy);
+ SV.Single_Dual = 2;
+ Circ.xStart = curX;
+ Circ.yStart = curY;
+ Circ.xFin = finX;
+ Circ.yFin = finY;
+ Circ.I = i;
+ Circ.J = j;
+ CalcRadius();
+ CalcAngle();
+ Circ.dir = CircDir(dir);
+ CalcDivisor();
+ Circ.lastX = 0;
+ Circ.lastY = 0;
 
- cir->degreeRadians = angB *  ( 3.14159 /180.00) ;
 }
 
-int QuadrantStart(float i,float j){
+
+
+int CircDir(int dir){
+
+ Circ.dir = dir;
+
+ if(Circ.dir ==  0 )
+ Circ.deg = 0.00;
+ if(Circ.dir ==  1 )
+ Circ.deg = 360.00;
+
+ return Circ.dir;
+}
+
+
+
+void CalcDivisor(){
+double newDeg;
+
+ newDeg = 360.00 / Circ.degreeDeg;
+ Circ.N = (2* 3.14159 *Circ.radius)*newDeg;
+ Circ.divisor = ceil( Circ.N);
+ Circ.Idivisor = (unsigned int)Circ.N;
+}
+
+
+
+void CalcRadius(){
+ double X,Y;
+
+
+ X = abs(Circ.I);
+ Y = abs(Circ.J);
+
+
+ Circ.xRad = (Circ.xStart + Circ.I);
+ Circ.yRad = (Circ.yStart + Circ.J);
+ Circ.radius = sqrt((X*X) + (Y*Y));
+
+
+ Circ.quadrant = Quadrant(Circ.I,Circ.J);
+}
+
+
+
+void CalcAngle(){
+ double angA,angB;
+
+
+
+ angA = atan2(Circ.yRad,Circ.xRad);
+ Circ.degreeDeg = angA *  (180.00/ 3.14159 ) ;
+
+
+ if(Circ.quadrant == 1 || Circ.quadrant == 3)
+ angB = Circ.deg - Circ.degreeDeg;
+ else if(Circ.quadrant == 2 || Circ.quadrant == 4)
+ angB = Circ.deg + Circ.degreeDeg;
+
+ Circ.degreeRadians = angB *  ( 3.14159 /180.00) ;
+
+}
+
+
+
+void NextCords(int fin_step){
+
+ if(Circ.quadrant == 1 || Circ.quadrant == 4){
+ Circ.xFin = Circ.xRad + (Circ.radius * cos(Circ.degreeRadians));
+ Circ.yFin = Circ.yRad + (Circ.radius * sin(Circ.degreeRadians));
+ }
+ if(Circ.quadrant == 2 || Circ.quadrant == 3){
+ Circ.xFin = Circ.xRad - (Circ.radius * cos(Circ.degreeRadians));
+ Circ.yFin = Circ.yRad - (Circ.radius * sin(Circ.degreeRadians));
+ }
+
+}
+
+
+
+int Quadrant(double i,double j){
  if((i <= 0)&&(j >= 0))
  return 1;
  else if((i > 0)&&(j > 0))
@@ -658,37 +778,98 @@ int QuadrantStart(float i,float j){
  return 0;
 }
 
-void CircDir(Circle* cir){
-float newDeg;
- if(cir->dir ==  0 ){
- newDeg = 360 / cir->deg;
- cir->N = (2* 3.14159 *cir->radius)/newDeg;
- cir->divisor = cir->deg / newDeg;
- }
 
- if(cir->dir ==  0 )
- cir->deg = 0.00;
- if(cir->dir ==  1 )
- cir->deg = 360.00;
+
+void Cir_Interpolation(){
+
+ CalcAngle();
+ CalcRadius();
+ Circ.quadrant = Quadrant(Circ.xStep,Circ.yStep);
+ NextCords(0);
+ STPS[X].step_delay = 500;
+ STPS[Y].step_delay = 500;
+ SerialPrint();
+ Circ_Tick();
 }
 
-void Cir_Interpolation(float xPresent,float yPresent,Circle* cir){
-static int quad = 1;
- cir->xStart = xPresent;
- cir->yStart = yPresent;
- CalcRadius(cir);
+void Circ_Tick(){
 
-
- while(quad){
- break;
- if(quad == 1 || quad == 4){
- cir->xFin = cir->xRad + (cir->radius * cos(cir->degreeRadians));
- cir->yFin = cir->yRad + (cir->radius * sin(cir->degreeRadians));
+ if (Circ.dir ==  0 ){
+ Circ.deg += 1.0;
+ if (Circ.deg >= Circ.degreeDeg){
+ disableOCx();
  }
- if(quad == 2 || quad == 3){
- cir->xFin = cir->xRad - (cir->radius * cos(cir->degreeRadians));
+ }
 
+ if (Circ.dir ==  1 ){
+ Circ.deg -= 1.0;
+ if (Circ.deg <= Circ.degreeDeg){
+ disableOCx();
  }
 
  }
+ SV.Single_Dual = 2;
+}
+#line 433 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+void Circ_Prep_Next(){
+ Circ.steps++;
+
+ toggleOCx(X);
+ toggleOCx(Y);
+
+ if(Circ.steps >= Circ.Idivisor){
+ Circ.steps = 0;
+ Circ.cir_next = 0;
+ Circ.cir_start = 1;
+ }
+
+}
+
+void SerialPrint(){
+int str_len = 0;
+int str_lenA = 0;
+ str_lenA = strlen(txtA);
+ memset(txtB,0,30);
+
+ sprintf(txt,"%2f",Circ.radius);
+ strncpy(txtB, " ",strlen(txt));
+ strncat(txtB, txt,strlen(txt));
+ str_len += strlen(txt);
+ strncat(txtB,txtA,str_lenA);
+ str_len += str_lenA;
+
+ sprintf(txt,"%2f",Circ.xFin);
+ strncat(txtB,txt,strlen(txt));
+ str_len += strlen(txt);
+ strncat(txtB,txtA,str_lenA);
+ str_len += str_lenA;
+
+ sprintf(txt,"%2f",Circ.yFin);
+ strncat(txtB,txt,strlen(txt));
+ str_len += strlen(txt);
+ strncat(txtB,txtA,str_lenA);
+ str_len += str_lenA;
+
+ sprintf(txt,"%2f",Circ.deg);
+ strncat(txtB,txt,strlen(txt));
+ str_len += strlen(txt)+1;
+ strncat(txtB,txtA,str_lenA);
+ str_len += str_lenA;
+
+ sprintf(txt,"%2f",Circ.degreeDeg);
+ strncat(txtB,txt,strlen(txt));
+ str_len += strlen(txt)+1;
+ strncat(txtB,txtA,str_lenA);
+ str_len += str_lenA;
+
+ sprintf(txt,"%d",Circ.quadrant);
+ strncat(txtB,txt,strlen(txt));
+ str_len += strlen(txt)+1;
+ strncat(txtB,"\n",1);
+ str_len += 2;
+ strncat(txtB,txtA,str_lenA);
+ str_len += str_lenA;
+
+ UART2_Write_Text(txtB);
+#line 501 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 }

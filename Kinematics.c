@@ -1,11 +1,14 @@
 #include "Kinematics.h"
 
-
+Circle Circ;
 
 //////////////////////////////////
 //FUNCTION POINTERS
-void (*AxisPulse)();
+void (*AxisPulse[3])();
 
+char txtA[] = " : ";
+char txtC[] =  "\r";
+char txtB[200];
 //////////////////////////////////
 //static file vars
 static long d2;
@@ -23,6 +26,7 @@ int dir;
           SV.psingle = newxyz;
        else*/
      SV.Single_Dual = 0;
+
      switch(axis_No){
        case X:
               Single_Axis_Enable(X);
@@ -83,9 +87,10 @@ void DualAxisStep(long newx,long newy,int axis_combo){
  *use Bressenhams algorithm here
  */
   SV.Single_Dual = 1;
+
   switch(axis_combo){
     case xy:
-          AxisPulse = XY_Interpolate;
+          AxisPulse[1] = XY_Interpolate;
           axis_xyz = xy;
           Multi_Axis_Enable(axis_xyz);
 
@@ -117,11 +122,11 @@ void DualAxisStep(long newx,long newy,int axis_combo){
 
              STPS[X].step_count = 0;
              STPS[Y].step_count = 0;
-             AxisPulse();
+             AxisPulse[1]();
 
          break;
     case xz:
-          AxisPulse = XZ_Interpolate;
+          AxisPulse[1] = XZ_Interpolate;
           axis_xyz = xz;
           Multi_Axis_Enable(axis_xyz);
 
@@ -147,10 +152,10 @@ void DualAxisStep(long newx,long newy,int axis_combo){
 
           STPS[X].step_count = 0;
           STPS[Z].step_count = 0;
-          AxisPulse();
+          AxisPulse[1]();
          break;
     case yz:
-          AxisPulse = YZ_Interpolate;
+          AxisPulse[1] = YZ_Interpolate;
           axis_xyz = yz;
           Multi_Axis_Enable(axis_xyz);
 
@@ -176,12 +181,13 @@ void DualAxisStep(long newx,long newy,int axis_combo){
 
          STPS[Y].step_count = 0;
          STPS[Z].step_count = 0;
-         AxisPulse();
+         AxisPulse[1]();
          break;
     default: break;
 
   }
 }
+
 
 //////////////////////////////////////////////////////////
 // X AXIS COMBOS
@@ -268,29 +274,112 @@ void YZ_Interpolate(){
 }
 
 /////////////////////////////////////////////////
-//Circular Interpolation
-void CalcRadius(Circle* cir){
- float xRad,yRad,X,Y,angA,angB;
+//          Circular Interpolation             //
+/////////////////////////////////////////////////
 
-   cir->xRad = fabs(cir->xStart + cir->I);
-   cir->yRad = fabs(cir->yStart + cir->J);
-   cir->radius = sqrt((cir->xRad*cir->xRad) + (cir->yRad*cir->yRad));
-   angA = atan2(cir->yRad,cir->xRad);
+////////////////////////////////////////////////
+//Set Circ values
+void SetCircleVals(double curX,double curY,double finX,double finY,double i,double j, double deg,int dir){
+ int str_len = 0;
+ AxisPulse[2] = Circ_Prep_Next;
+ Multi_Axis_Enable(xy);
+ SV.Single_Dual = 2;
+ Circ.xStart = curX;
+ Circ.yStart = curY;
+ Circ.xFin   = finX;
+ Circ.yFin   = finY;
+ Circ.I = i;
+ Circ.J = j;
+ CalcRadius();
+ CalcAngle();
+ Circ.dir = CircDir(dir);
+ CalcDivisor();
+ Circ.lastX = 0;
+ Circ.lastY = 0;
 
-
-   cir->degreeDeg = angA * rad2deg;
-
-   cir->quadrant_start = QuadrantStart(cir->I,cir->J);
-    //deg is 360 or 0 and subtract the actual from deg
-   if(cir->quadrant_start == 1 || cir->quadrant_start == 3)
-       angB = cir->deg - cir->degreeDeg;
-   if(cir->quadrant_start == 1 || cir->quadrant_start == 3)
-       angB = cir->deg + cir->degreeDeg;
-
-   cir->degreeRadians = angB * deg2rad;
 }
 
-int QuadrantStart(float i,float j){
+/////////////////////////////////////////////////
+//Check which direction to travel in
+int CircDir(int dir){
+
+   Circ.dir = dir;
+   
+   if(Circ.dir == CW)
+       Circ.deg = 0.00;
+   if(Circ.dir == CCW)
+       Circ.deg = 360.00;
+
+   return Circ.dir;
+}
+
+////////////////////////////////////////////////
+//Calculate divisor / pulse value before incrament
+void CalcDivisor(){
+double newDeg;
+
+   newDeg = 360.00 / Circ.degreeDeg;
+   Circ.N = (2*Pi*Circ.radius)*newDeg;
+   Circ.divisor = ceil( Circ.N);///Circ.deg);
+   Circ.Idivisor = (unsigned int)Circ.N;//Circ.divisor;
+}
+
+////////////////////////////////////////////////
+//Radius Calculation
+void CalcRadius(){
+ double X,Y;
+
+   //no negative nums for sqroot
+   X = abs(Circ.I);
+   Y = abs(Circ.J);
+   
+   //radius position of Xrad and Yrad
+   Circ.xRad = (Circ.xStart + Circ.I);
+   Circ.yRad = (Circ.yStart + Circ.J);
+   Circ.radius = sqrt((X*X) + (Y*Y));
+ 
+   //find the quadrant that cir start pos is in
+   Circ.quadrant = Quadrant(Circ.I,Circ.J);
+}
+
+////////////////////////////////////////////////
+//Cac angle of attack
+void CalcAngle(){
+ double angA,angB;
+
+  //get the deg of radiuss from abs zero pos
+   //and convert  radans to degrees
+   angA = atan2(Circ.yRad,Circ.xRad);
+   Circ.degreeDeg = angA * rad2deg;
+
+   //deg is 360 or 0 and subtract the actual from deg
+   if(Circ.quadrant == 1 || Circ.quadrant == 3)
+       angB = Circ.deg - Circ.degreeDeg;
+   else if(Circ.quadrant == 2 || Circ.quadrant == 4)
+       angB = Circ.deg + Circ.degreeDeg;
+
+   Circ.degreeRadians = angB * deg2rad;
+
+}
+
+/////////////////////////////////////////////////
+//Get the Final cordinates of X,Y || 0 = fin pos
+void NextCords(int fin_step){
+
+     if(Circ.quadrant == 1 || Circ.quadrant == 4){
+       Circ.xFin = Circ.xRad + (Circ.radius * cos(Circ.degreeRadians));
+       Circ.yFin = Circ.yRad + (Circ.radius * sin(Circ.degreeRadians));
+     }
+     if(Circ.quadrant == 2 || Circ.quadrant == 3){
+       Circ.xFin = Circ.xRad - (Circ.radius * cos(Circ.degreeRadians));
+       Circ.yFin = Circ.yRad - (Circ.radius * sin(Circ.degreeRadians));
+     }
+
+}
+
+/////////////////////////////////////////////////
+//Check which Quadrand the Head is in
+int Quadrant(double i,double j){
     if((i <= 0)&&(j >= 0))
           return 1;
     else if((i > 0)&&(j > 0))
@@ -303,39 +392,110 @@ int QuadrantStart(float i,float j){
         return 0;
 }
 
-void CircDir(Circle* cir){
-float newDeg;
-   if(cir->dir == CW){
-        newDeg = 360 / cir->deg;
-        cir->N = (2*Pi*cir->radius)/newDeg;
-        cir->divisor = cir->deg / newDeg;
-   }
+///////////////////////////////////////////////////
+//Interpolate Arc
+void Cir_Interpolation(){
 
-   if(cir->dir == CW)
-       cir->deg = 0.00;
-   if(cir->dir == CCW)
-       cir->deg = 360.00;
+     CalcAngle();
+     CalcRadius();
+     Circ.quadrant = Quadrant(Circ.xStep,Circ.yStep);
+     NextCords(0);
+     STPS[X].step_delay = 500;
+     STPS[Y].step_delay = 500;
+     SerialPrint();
+     Circ_Tick();
 }
 
-void Cir_Interpolation(float xPresent,float yPresent,Circle* cir){
-static int quad = 1;
-      cir->xStart = xPresent;
-      cir->yStart = yPresent;
-      CalcRadius(cir);
-    //  quad = QuadrantStart(cir);
+void Circ_Tick(){
 
-    while(quad){
-       break;//!!!
-       if(quad == 1 || quad == 4){
-         cir->xFin = cir->xRad + (cir->radius * cos(cir->degreeRadians));
-         cir->yFin = cir->yRad + (cir->radius * sin(cir->degreeRadians));
-       }
-       if(quad == 2 || quad == 3){
-         cir->xFin = cir->xRad - (cir->radius * cos(cir->degreeRadians));
-        // cir->yFin = cir>-yRad - (cir->radius * sin(cir->degreeRadians));
-       }
+        if (Circ.dir == CW){
+           Circ.deg += 1.0;//Circ.divisor;
+           if (Circ.deg >= Circ.degreeDeg){
+               disableOCx();
+           }
+        }
 
-     }
+        if (Circ.dir == CCW){
+           Circ.deg -= 1.0;//Circ.divisor;
+           if (Circ.deg <= Circ.degreeDeg){
+              disableOCx();
+           }
+
+        }
+        SV.Single_Dual = 2;
 }
 
+/*
+ * Pulse for the count of divisor before recalculating
+ * the next x & y cords, this way we get a smother
+ * transition and many straight lines to make to a circle.
+ */
+void Circ_Prep_Next(){
+  Circ.steps++;
 
+  toggleOCx(X);
+  toggleOCx(Y);
+   
+  if(Circ.steps >= Circ.Idivisor){
+    Circ.steps = 0;
+    Circ.cir_next = 0;
+    Circ.cir_start = 1;
+  }
+
+}
+
+void SerialPrint(){
+int str_len = 0;
+int str_lenA = 0;
+     str_lenA = strlen(txtA);
+     memset(txtB,0,30);
+      //Radius
+     sprintf(txt,"%2f",Circ.radius);
+     strncpy(txtB, " ",strlen(txt));
+     strncat(txtB, txt,strlen(txt));
+     str_len += strlen(txt);
+     strncat(txtB,txtA,str_lenA);
+     str_len += str_lenA;
+      //xPos
+     sprintf(txt,"%2f",Circ.xFin);
+     strncat(txtB,txt,strlen(txt));
+     str_len += strlen(txt);
+     strncat(txtB,txtA,str_lenA);
+     str_len += str_lenA;
+     //Ypos
+     sprintf(txt,"%2f",Circ.yFin);
+     strncat(txtB,txt,strlen(txt));
+     str_len += strlen(txt);
+     strncat(txtB,txtA,str_lenA);
+     str_len += str_lenA;
+     //Deg
+     sprintf(txt,"%2f",Circ.deg);
+     strncat(txtB,txt,strlen(txt));
+     str_len += strlen(txt)+1;
+     strncat(txtB,txtA,str_lenA);
+     str_len += str_lenA;
+      //degreeDeg
+     sprintf(txt,"%2f",Circ.degreeDeg);
+     strncat(txtB,txt,strlen(txt));
+     str_len += strlen(txt)+1;
+     strncat(txtB,txtA,str_lenA);
+     str_len += str_lenA;
+     //rad
+     sprintf(txt,"%d",Circ.quadrant);
+     strncat(txtB,txt,strlen(txt));
+     str_len += strlen(txt)+1;
+     strncat(txtB,"\n",1);
+     str_len += 2;
+     strncat(txtB,txtA,str_lenA);
+     str_len += str_lenA;
+
+     UART2_Write_Text(txtB);
+   /*  memcpy(txBuf, txtB, str_len+1);
+
+     CHEN_DCH1CON_bit    = 1;     // Enable the DMA1 channel to transmit back what was received
+
+     DCH1SSIZ            = str_len +1;
+     CHEN_bit            = 1 ;
+     CFORCE_DCH1ECON_bit = 1 ;                 // force DMA1 interrupt trigger
+   */
+}

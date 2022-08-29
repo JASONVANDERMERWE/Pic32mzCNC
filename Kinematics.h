@@ -2,31 +2,48 @@
 #define KINEMATICS_H
 
 #include "Stepper.h"
+#include  "SErial_Dma.h"
+
+//Circle defines and consts
+#define  Pi         3.14159
+#define  rad2deg   (180.00/Pi)
+#define  deg2rad   (Pi/180.00)
 
 
-extern void (*AxisPulse)();
+extern void (*AxisPulse[3])();
+
 
 //circular data
 typedef struct{
-float deg;
-float degreeDeg;
-float degreeRadians;
-float deg_A;
-float deg_B;
-float divisor;
-float newdeg_;
-float I;
-float J;
-float N;
-float radius;
+char   cir_start: 1;
+char   cir_end:   1;
+char   cir_next:  1;
+double deg;
+double degreeDeg;
+double degreeRadians;
+double deg_A;
+double deg_B;
+double divisor;
+double newdeg_;
+
+double I;
+double J;
+double N;
+double radius;
 int   dir;
-int   quadrant_start;
-float xRad;
-float yRad;
-float xStart;
-float yStart;
-float xFin;
-float yFin;
+int   quadrant;
+unsigned int steps;
+unsigned int Idivisor;
+double xRad;
+double yRad;
+double xStart;
+double yStart;
+double xStep;
+double yStep;
+double xFin;
+double yFin;
+double lastX;
+double lastY;
 }Circle;
 extern Circle Circ;
 
@@ -37,8 +54,18 @@ extern Circle Circ;
 void DualAxisStep(long newx,long newy,int axis_combo);
 void SingleAxisStep(long newxyz,int axis_No);
 //Circle move axis
-void CalcRadius(Circle* cir);
-int QuadrantStart(float i,float j);
-void CircDir(Circle* cir);
-void Cir_Interpolation(float xPresent,float yPresent,Circle* cir);
+void SetCircleVals(double curX,double curY,double finX,double finY,double i,double j, double deg,int dir);
+void CalcRadius();
+void CalcAngle();
+int  Quadrant(double i,double j);
+int CircDir(int dir);
+void CalcDivisor();
+void NextCords(int fin_step);
+void CirInterpolation();
+void Cir_Interpolation();
+void Circ_Tick();
+void Circ_Prep_Next();
+
+void SerialPrint();
+
 #endif

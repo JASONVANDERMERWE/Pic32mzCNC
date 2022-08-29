@@ -2,8 +2,8 @@
 
 
 char txt[] = "Start......";
-char rxBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0}  absolute 0xA0002000 ; //resides in flash ??
-char txBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0}  absolute 0xA0002200 ;
+char rxBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}  absolute 0xA0002000 ; //resides in flash ??
+char txBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}  absolute 0xA0002200 ;
 
 char DMA_Buff[200];
 short dma0int_flag;
@@ -62,19 +62,20 @@ void DMA1(){
 
     DMA1IE_bit = 0 ;                   //' disable DMA1 interrupt
     DMA1IF_bit = 0 ;                   //' clear DMA1 interrupt flag
-    DCH1CONbits.CHPATLEN = 0;
+    DCH1CONbits.CHPATLEN = 0;          //' Pattern length = 1 byte
     DCH1ECON=(147 << 8)| 0x30;         //' Specific INTERRUPT IRQ NUMBER for UART 2 TX (147)
     DCH1SSA = KVA_TO_PA(0xA0002200) ;  //0xA0002200 virtual address of txBuf
     DCH1DSA = KVA_TO_PA(0xBF822220) ;  //U1TX2REG for reply  [0xBF822220 = U1TXREG]
-    DCH1DAT       = 0x0D;
+    DCH1DAT       = 0x00;
 /* Source Size */
-    DCH1SSIZ = 200  ;  //' This is how many bytes you want to send out in a block transfer for UART transmitter
+    DCH1SSIZ = 200;  //' This is how many bytes you want to send out in a block transfer for UART transmitter
 /* Destination Size */
-    DCH1DSIZ = 1  ;    //' This is how many bytes come from the destination - i.e. rxBuf recieved can change dynamicall as its send buffer
+    DCH1DSIZ = 1;    //' This is how many bytes come from the destination - i.e. rxBuf recieved can change dynamicall as its send buffer
 /* Cell Size */
-    DCH1CSIZ = 200  ;  //' x bytes from txBuf in a cell waiting to send out 1 byte at a time to U1TXREG / DCH1DSIZ
+    DCH1CSIZ = 1;  //' x bytes from txBuf in a cell waiting to send out 1 byte at a time to U1TXREG / DCH1DSIZ
 
     DCH1INTCLR  =  0x00FF00FF ; //'clear all interrupts and clear all interrupt flags
+    SIRQEN_DCH1ECON_bit = 1;
     CHBCIE_DCH1INT_bit = 1    ; //'Enable Channel Block transfer interrupt
     CHERIE_DCH1INT_bit = 1    ; //'Enable Channel Address Error interrupt
 /* Interrupt Setup */
@@ -83,7 +84,7 @@ void DMA1(){
     DMA1IP0_bit = 1 ;
     DMA1IS1_bit = 0 ;           //' sub-priority 1
     DMA1IS0_bit = 1 ;
-    DMA1IE_bit  = 1 ;           //' enable DMA1 interrupt
+    DMA1IE_bit  = 0 ;           //' enable DMA1 interrupt
 }
 
 
@@ -110,7 +111,7 @@ void DMA_CH0_ISR() iv IVT_DMA0 ilevel 5 ics ICS_AUTO {
     }
     DCH0INTCLR          = 0x00FF;             // clear DMA 0 int flags
 /* re-enable DMA 0 int */
-
+    DMA1IE_bit  = 1 ;
     CHEN_bit            = 1 ;                 // Enable channel - may want to do this when you are ready to receive...
 
     CFORCE_DCH1ECON_bit = 1 ;                 // force DMA1 interrupt trigger
@@ -137,5 +138,3 @@ char ptrAdd[6];
     DMA1IF_bit   = 0 ;
 
 }
-
-

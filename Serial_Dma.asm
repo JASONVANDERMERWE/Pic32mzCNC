@@ -121,7 +121,7 @@ _SX
 LUI	R2, BitMask(DMA1IF_bit+0)
 ORI	R2, R2, BitMask(DMA1IF_bit+0)
 _SX	
-;Serial_Dma.c,65 :: 		DCH1CONbits.CHPATLEN = 0;
+;Serial_Dma.c,65 :: 		DCH1CONbits.CHPATLEN = 0;          //' Pattern length = 1 byte
 ORI	R2, R0, 2048
 SW	R2, Offset(DCH1CONbits+4)(GP)
 ;Serial_Dma.c,66 :: 		DCH1ECON=(147 << 8)| 0x30;         //' Specific INTERRUPT IRQ NUMBER for UART 2 TX (147)
@@ -134,61 +134,64 @@ SW	R2, Offset(DCH1SSA+0)(GP)
 LUI	R2, 8066
 ORI	R2, R2, 8736
 SW	R2, Offset(DCH1DSA+0)(GP)
-;Serial_Dma.c,69 :: 		DCH1DAT       = 0x0D;
-ORI	R2, R0, 13
-SW	R2, Offset(DCH1DAT+0)(GP)
-;Serial_Dma.c,71 :: 		DCH1SSIZ = 200  ;  //' This is how many bytes you want to send out in a block transfer for UART transmitter
+;Serial_Dma.c,69 :: 		DCH1DAT       = 0x00;
+SW	R0, Offset(DCH1DAT+0)(GP)
+;Serial_Dma.c,71 :: 		DCH1SSIZ = 200;  //' This is how many bytes you want to send out in a block transfer for UART transmitter
 ORI	R2, R0, 200
 SW	R2, Offset(DCH1SSIZ+0)(GP)
-;Serial_Dma.c,73 :: 		DCH1DSIZ = 1  ;    //' This is how many bytes come from the destination - i.e. rxBuf recieved can change dynamicall as its send buffer
+;Serial_Dma.c,73 :: 		DCH1DSIZ = 1;    //' This is how many bytes come from the destination - i.e. rxBuf recieved can change dynamicall as its send buffer
 ORI	R2, R0, 1
 SW	R2, Offset(DCH1DSIZ+0)(GP)
-;Serial_Dma.c,75 :: 		DCH1CSIZ = 200  ;  //' x bytes from txBuf in a cell waiting to send out 1 byte at a time to U1TXREG / DCH1DSIZ
-ORI	R2, R0, 200
+;Serial_Dma.c,75 :: 		DCH1CSIZ = 1;  //' x bytes from txBuf in a cell waiting to send out 1 byte at a time to U1TXREG / DCH1DSIZ
+ORI	R2, R0, 1
 SW	R2, Offset(DCH1CSIZ+0)(GP)
 ;Serial_Dma.c,77 :: 		DCH1INTCLR  =  0x00FF00FF ; //'clear all interrupts and clear all interrupt flags
 LUI	R2, 255
 ORI	R2, R2, 255
 SW	R2, Offset(DCH1INTCLR+0)(GP)
-;Serial_Dma.c,78 :: 		CHBCIE_DCH1INT_bit = 1    ; //'Enable Channel Block transfer interrupt
+;Serial_Dma.c,78 :: 		SIRQEN_DCH1ECON_bit = 1;
+LUI	R2, BitMask(SIRQEN_DCH1ECON_bit+0)
+ORI	R2, R2, BitMask(SIRQEN_DCH1ECON_bit+0)
+_SX	
+;Serial_Dma.c,79 :: 		CHBCIE_DCH1INT_bit = 1    ; //'Enable Channel Block transfer interrupt
 LUI	R2, BitMask(CHBCIE_DCH1INT_bit+0)
 ORI	R2, R2, BitMask(CHBCIE_DCH1INT_bit+0)
 _SX	
-;Serial_Dma.c,79 :: 		CHERIE_DCH1INT_bit = 1    ; //'Enable Channel Address Error interrupt
+;Serial_Dma.c,80 :: 		CHERIE_DCH1INT_bit = 1    ; //'Enable Channel Address Error interrupt
 LUI	R2, BitMask(CHERIE_DCH1INT_bit+0)
 ORI	R2, R2, BitMask(CHERIE_DCH1INT_bit+0)
 _SX	
-;Serial_Dma.c,81 :: 		DMA1IP2_bit = 1 ;           //' DMA1 interrupt priority 5
+;Serial_Dma.c,82 :: 		DMA1IP2_bit = 1 ;           //' DMA1 interrupt priority 5
 LUI	R2, BitMask(DMA1IP2_bit+0)
 ORI	R2, R2, BitMask(DMA1IP2_bit+0)
 _SX	
-;Serial_Dma.c,82 :: 		DMA1IP1_bit = 0 ;
+;Serial_Dma.c,83 :: 		DMA1IP1_bit = 0 ;
 LUI	R2, BitMask(DMA1IP1_bit+0)
 ORI	R2, R2, BitMask(DMA1IP1_bit+0)
 _SX	
-;Serial_Dma.c,83 :: 		DMA1IP0_bit = 1 ;
+;Serial_Dma.c,84 :: 		DMA1IP0_bit = 1 ;
 LUI	R2, BitMask(DMA1IP0_bit+0)
 ORI	R2, R2, BitMask(DMA1IP0_bit+0)
 _SX	
-;Serial_Dma.c,84 :: 		DMA1IS1_bit = 0 ;           //' sub-priority 1
+;Serial_Dma.c,85 :: 		DMA1IS1_bit = 0 ;           //' sub-priority 1
 LUI	R2, BitMask(DMA1IS1_bit+0)
 ORI	R2, R2, BitMask(DMA1IS1_bit+0)
 _SX	
-;Serial_Dma.c,85 :: 		DMA1IS0_bit = 1 ;
+;Serial_Dma.c,86 :: 		DMA1IS0_bit = 1 ;
 LUI	R2, BitMask(DMA1IS0_bit+0)
 ORI	R2, R2, BitMask(DMA1IS0_bit+0)
 _SX	
-;Serial_Dma.c,86 :: 		DMA1IE_bit  = 1 ;           //' enable DMA1 interrupt
+;Serial_Dma.c,87 :: 		DMA1IE_bit  = 0 ;           //' enable DMA1 interrupt
 LUI	R2, BitMask(DMA1IE_bit+0)
 ORI	R2, R2, BitMask(DMA1IE_bit+0)
 _SX	
-;Serial_Dma.c,87 :: 		}
+;Serial_Dma.c,88 :: 		}
 L_end_DMA1:
 JR	RA
 NOP	
 ; end of _DMA1
 _DMA_CH0_ISR:
-;Serial_Dma.c,92 :: 		void DMA_CH0_ISR() iv IVT_DMA0 ilevel 5 ics ICS_AUTO {
+;Serial_Dma.c,93 :: 		void DMA_CH0_ISR() iv IVT_DMA0 ilevel 5 ics ICS_AUTO {
 RDPGPR	SP, SP
 ADDIU	SP, SP, -16
 SW	R30, 12(SP)
@@ -203,7 +206,7 @@ ORI	R30, R0, 5120
 MTC0	R30, 12, 0
 ADDIU	SP, SP, -20
 SW	RA, 0(SP)
-;Serial_Dma.c,95 :: 		if (CHBCIF_bit == 1) {         // Channel Block Transfer has Completed Interrupt Flag bit
+;Serial_Dma.c,96 :: 		if (CHBCIF_bit == 1) {         // Channel Block Transfer has Completed Interrupt Flag bit
 _LX	
 EXT	R2, R2, BitPos(CHBCIF_bit+0), 1
 BNE	R2, 1, L__DMA_CH0_ISR9
@@ -211,16 +214,16 @@ NOP
 J	L_DMA_CH0_ISR0
 NOP	
 L__DMA_CH0_ISR9:
-;Serial_Dma.c,99 :: 		i = strlen(rxBuf);
+;Serial_Dma.c,100 :: 		i = strlen(rxBuf);
 LUI	R25, 40960
 ORI	R25, R25, 8192
 JAL	_strlen+0
 NOP	
 SH	R2, 4(SP)
-;Serial_Dma.c,100 :: 		dma0int_flag = 1;          // user flag to inform this int was triggered. should be cleared in software
+;Serial_Dma.c,101 :: 		dma0int_flag = 1;          // user flag to inform this int was triggered. should be cleared in software
 ORI	R3, R0, 1
 SB	R3, Offset(_dma0int_flag+0)(GP)
-;Serial_Dma.c,101 :: 		memcpy(txBuf, rxBuf, i);   // copy RxBuf -> TxBuf  BUFFER_LENGTH
+;Serial_Dma.c,102 :: 		memcpy(txBuf, rxBuf, i);   // copy RxBuf -> TxBuf  BUFFER_LENGTH
 SEH	R27, R2
 LUI	R26, 40960
 ORI	R26, R26, 8192
@@ -228,16 +231,16 @@ LUI	R25, 40960
 ORI	R25, R25, 8704
 JAL	_memcpy+0
 NOP	
-;Serial_Dma.c,102 :: 		CHEN_DCH1CON_bit = 1;     // Enable the DMA1 channel to transmit back what was received
+;Serial_Dma.c,103 :: 		CHEN_DCH1CON_bit = 1;     // Enable the DMA1 channel to transmit back what was received
 LUI	R2, BitMask(CHEN_DCH1CON_bit+0)
 ORI	R2, R2, BitMask(CHEN_DCH1CON_bit+0)
 _SX	
-;Serial_Dma.c,103 :: 		}
+;Serial_Dma.c,104 :: 		}
 L_DMA_CH0_ISR0:
-;Serial_Dma.c,104 :: 		DCH1SSIZ            = i ;
+;Serial_Dma.c,105 :: 		DCH1SSIZ            = i ;
 LH	R2, 4(SP)
 SW	R2, Offset(DCH1SSIZ+0)(GP)
-;Serial_Dma.c,107 :: 		if( CHERIF_bit == 1){                     // clear channel error int flag
+;Serial_Dma.c,108 :: 		if( CHERIF_bit == 1){                     // clear channel error int flag
 _LX	
 EXT	R2, R2, BitPos(CHERIF_bit+0), 1
 BNE	R2, 1, L__DMA_CH0_ISR11
@@ -245,11 +248,11 @@ NOP
 J	L_DMA_CH0_ISR1
 NOP	
 L__DMA_CH0_ISR11:
-;Serial_Dma.c,108 :: 		CHERIF_bit = 0;
+;Serial_Dma.c,109 :: 		CHERIF_bit = 0;
 LUI	R2, BitMask(CHERIF_bit+0)
 ORI	R2, R2, BitMask(CHERIF_bit+0)
 _SX	
-;Serial_Dma.c,109 :: 		memcpy(txBuf,"CHERIF Error",13);
+;Serial_Dma.c,110 :: 		memcpy(txBuf,"CHERIF Error",13);
 ADDIU	R23, SP, 6
 ADDIU	R22, R23, 13
 LUI	R24, hi_addr(?ICS?lstr1_Serial_Dma+0)
@@ -263,24 +266,28 @@ LUI	R25, 40960
 ORI	R25, R25, 8704
 JAL	_memcpy+0
 NOP	
-;Serial_Dma.c,110 :: 		}
+;Serial_Dma.c,111 :: 		}
 L_DMA_CH0_ISR1:
-;Serial_Dma.c,111 :: 		DCH0INTCLR          = 0x00FF;             // clear DMA 0 int flags
+;Serial_Dma.c,112 :: 		DCH0INTCLR          = 0x00FF;             // clear DMA 0 int flags
 ORI	R2, R0, 255
 SW	R2, Offset(DCH0INTCLR+0)(GP)
-;Serial_Dma.c,114 :: 		CHEN_bit            = 1 ;                 // Enable channel - may want to do this when you are ready to receive...
+;Serial_Dma.c,114 :: 		DMA1IE_bit  = 1 ;
+LUI	R2, BitMask(DMA1IE_bit+0)
+ORI	R2, R2, BitMask(DMA1IE_bit+0)
+_SX	
+;Serial_Dma.c,115 :: 		CHEN_bit            = 1 ;                 // Enable channel - may want to do this when you are ready to receive...
 LUI	R2, BitMask(CHEN_bit+0)
 ORI	R2, R2, BitMask(CHEN_bit+0)
 _SX	
-;Serial_Dma.c,116 :: 		CFORCE_DCH1ECON_bit = 1 ;                 // force DMA1 interrupt trigger
+;Serial_Dma.c,117 :: 		CFORCE_DCH1ECON_bit = 1 ;                 // force DMA1 interrupt trigger
 LUI	R2, BitMask(CFORCE_DCH1ECON_bit+0)
 ORI	R2, R2, BitMask(CFORCE_DCH1ECON_bit+0)
 _SX	
-;Serial_Dma.c,117 :: 		DMA0IF_bit          = 0 ;                 // clear DMA0 int flag
+;Serial_Dma.c,118 :: 		DMA0IF_bit          = 0 ;                 // clear DMA0 int flag
 LUI	R2, BitMask(DMA0IF_bit+0)
 ORI	R2, R2, BitMask(DMA0IF_bit+0)
 _SX	
-;Serial_Dma.c,119 :: 		}
+;Serial_Dma.c,120 :: 		}
 L_end_DMA_CH0_ISR:
 LW	RA, 0(SP)
 ADDIU	SP, SP, 20
@@ -298,7 +305,7 @@ WRPGPR	SP, SP
 ERET	
 ; end of _DMA_CH0_ISR
 _DMA_CH1_ISR:
-;Serial_Dma.c,122 :: 		void DMA_CH1_ISR() iv IVT_DMA1 ilevel 5 ics ICS_AUTO {
+;Serial_Dma.c,123 :: 		void DMA_CH1_ISR() iv IVT_DMA1 ilevel 5 ics ICS_AUTO {
 RDPGPR	SP, SP
 ADDIU	SP, SP, -16
 SW	R30, 12(SP)
@@ -311,8 +318,8 @@ SW	R30, 0(SP)
 INS	R30, R0, 1, 15
 ORI	R30, R0, 5120
 MTC0	R30, 12, 0
-;Serial_Dma.c,123 :: 		int ptr = 0;
-;Serial_Dma.c,126 :: 		if (CHBCIF_DCH1INT_bit == 1){
+;Serial_Dma.c,124 :: 		int ptr = 0;
+;Serial_Dma.c,127 :: 		if (CHBCIF_DCH1INT_bit == 1){
 _LX	
 EXT	R2, R2, BitPos(CHBCIF_DCH1INT_bit+0), 1
 BNE	R2, 1, L__DMA_CH1_ISR14
@@ -320,13 +327,13 @@ NOP
 J	L_DMA_CH1_ISR2
 NOP	
 L__DMA_CH1_ISR14:
-;Serial_Dma.c,127 :: 		CHBCIF_DCH1INT_bit = 0;             // clear flag
+;Serial_Dma.c,128 :: 		CHBCIF_DCH1INT_bit = 0;             // clear flag
 LUI	R2, BitMask(CHBCIF_DCH1INT_bit+0)
 ORI	R2, R2, BitMask(CHBCIF_DCH1INT_bit+0)
 _SX	
-;Serial_Dma.c,128 :: 		}
+;Serial_Dma.c,129 :: 		}
 L_DMA_CH1_ISR2:
-;Serial_Dma.c,130 :: 		if( CHERIF_DCH1INT_bit == 1){
+;Serial_Dma.c,131 :: 		if( CHERIF_DCH1INT_bit == 1){
 _LX	
 EXT	R2, R2, BitPos(CHERIF_DCH1INT_bit+0), 1
 BNE	R2, 1, L__DMA_CH1_ISR16
@@ -334,23 +341,23 @@ NOP
 J	L_DMA_CH1_ISR3
 NOP	
 L__DMA_CH1_ISR16:
-;Serial_Dma.c,131 :: 		CHERIF_DCH1INT_bit = 0;
+;Serial_Dma.c,132 :: 		CHERIF_DCH1INT_bit = 0;
 LUI	R2, BitMask(CHERIF_DCH1INT_bit+0)
 ORI	R2, R2, BitMask(CHERIF_DCH1INT_bit+0)
 _SX	
-;Serial_Dma.c,133 :: 		}
+;Serial_Dma.c,134 :: 		}
 L_DMA_CH1_ISR3:
-;Serial_Dma.c,135 :: 		dma1int_flag = 1;                          // user flag to inform this int was triggered. should be cleared in software
+;Serial_Dma.c,136 :: 		dma1int_flag = 1;                          // user flag to inform this int was triggered. should be cleared in software
 ORI	R2, R0, 1
 SB	R2, Offset(_dma1int_flag+0)(GP)
-;Serial_Dma.c,136 :: 		DCH1INTCLR   = 0x00FF;                     // clear event flags
+;Serial_Dma.c,137 :: 		DCH1INTCLR   = 0x00FF;                     // clear event flags
 ORI	R2, R0, 255
 SW	R2, Offset(DCH1INTCLR+0)(GP)
-;Serial_Dma.c,137 :: 		DMA1IF_bit   = 0 ;
+;Serial_Dma.c,138 :: 		DMA1IF_bit   = 0 ;
 LUI	R2, BitMask(DMA1IF_bit+0)
 ORI	R2, R2, BitMask(DMA1IF_bit+0)
 _SX	
-;Serial_Dma.c,139 :: 		}
+;Serial_Dma.c,140 :: 		}
 L_end_DMA_CH1_ISR:
 DI	
 EHB	
