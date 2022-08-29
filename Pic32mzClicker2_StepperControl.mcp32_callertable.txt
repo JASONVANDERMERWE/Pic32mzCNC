@@ -56,6 +56,7 @@ main
 		SetCircleVals
 			Multi_Axis_Enable
 			CalcRadius
+				Quadrant
 				abs
 				sqrt
 					frexp
@@ -65,7 +66,6 @@ main
 					atan
 						fabs
 						eval_poly
-				Quadrant
 			CircDir
 				ceil
 		Cir_Interpolation

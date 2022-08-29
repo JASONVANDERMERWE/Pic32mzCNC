@@ -490,8 +490,8 @@ NOP
 J	L_Temp_Move32
 NOP	
 L__Temp_Move73:
-;Main.c,128 :: 		SetCircleVals(450.00,250.00,-100.00,100.00,180.00,CW);
-LUI	R5, 17096
+;Main.c,128 :: 		SetCircleVals(450.00,250.00,-100.00,150.00,180.00,CW);
+LUI	R5, 17174
 ORI	R5, R5, 0
 LUI	R4, 49864
 ORI	R4, R4, 0

@@ -114,14 +114,15 @@ double deg_A;
 double deg_B;
 double divisor;
 double newdeg_;
-double steps;
+
 double I;
 double J;
 double N;
 double radius;
 int dir;
 int quadrant;
-
+unsigned int steps;
+unsigned int Idivisor;
 double xRad;
 double yRad;
 double xStart;

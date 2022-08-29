@@ -354,14 +354,15 @@ double deg_A;
 double deg_B;
 double divisor;
 double newdeg_;
-double steps;
+
 double I;
 double J;
 double N;
 double radius;
 int dir;
 int quadrant;
-
+unsigned int steps;
+unsigned int Idivisor;
 double xRad;
 double yRad;
 double xStart;
@@ -682,7 +683,7 @@ double newDeg;
  newDeg = 360.00 / Circ.deg;
  Circ.N = (2* 3.14159 *Circ.radius)/newDeg;
  Circ.divisor = ceil( Circ.N/Circ.deg);
-
+ Circ.Idivisor = (unsigned int)Circ.N;
 
  if(Circ.dir ==  0 )
  Circ.deg = 0.00;
@@ -696,21 +697,27 @@ double newDeg;
 
 void CalcRadius(){
  double xRad,yRad,X,Y,angA,angB;
- X = abs(Circ.I);
- Y = abs(Circ.J);
- Circ.xRad = (Circ.xStart + Circ.I);
- Circ.yRad = (Circ.yStart + Circ.J);
- Circ.radius = sqrt((X*X) + (Y*Y));
- angA = atan2(Circ.yRad,Circ.xRad);
-
- Circ.degreeDeg = angA *  (180.00/ 3.14159 ) ;
 
  Circ.quadrant = Quadrant(Circ.I,Circ.J);
 
 
+ X = abs(Circ.I);
+ Y = abs(Circ.J);
+
+
+ Circ.xRad = (Circ.xStart + Circ.I);
+ Circ.yRad = (Circ.yStart + Circ.J);
+ Circ.radius = sqrt((X*X) + (Y*Y));
+
+
+
+ angA = atan2(Circ.yRad,Circ.xRad);
+ Circ.degreeDeg = angA *  (180.00/ 3.14159 ) ;
+
+
  if(Circ.quadrant == 1 || Circ.quadrant == 3)
  angB = Circ.deg - Circ.degreeDeg;
- if(Circ.quadrant == 1 || Circ.quadrant == 3)
+ else if(Circ.quadrant == 2 || Circ.quadrant == 4)
  angB = Circ.deg + Circ.degreeDeg;
 
  Circ.degreeRadians = angB *  ( 3.14159 /180.00) ;
@@ -783,18 +790,18 @@ static int quad = 1;
  strncat(txtB,txtA,str_lenA);
  str_len += str_lenA;
 
- sprintf(txt,"%2f",Circ.divisor);
+ sprintf(txt,"%d",Circ.Idivisor);
  strncat(txtB,txt,strlen(txt));
  str_len += strlen(txt)+1;
  strncat(txtB,"\n",1);
- str_len += 1;
+ str_len += 2;
  strncat(txtB,txtA,str_lenA);
  str_len += str_lenA;
 
  UART2_Write_Text(txtB);
-#line 425 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
- STPS[X].step_delay = 30000;
- STPS[Y].step_delay = 30000;
+#line 431 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+ STPS[X].step_delay = 1000;
+ STPS[Y].step_delay = 1000;
 
  Circ_Tick();
 }
@@ -802,14 +809,14 @@ static int quad = 1;
 void Circ_Tick(){
 
  if (Circ.dir ==  0 ){
- Circ.deg += Circ.divisor;
+ Circ.deg += 1.0;
  if (Circ.deg >= Circ.degreeDeg){
  disableOCx();
  }
  }
 
  if (Circ.dir ==  1 ){
- Circ.deg -= Circ.divisor;
+ Circ.deg -= 1.0;
  if (Circ.deg <= Circ.degreeDeg){
  disableOCx();
  }
@@ -817,18 +824,16 @@ void Circ_Tick(){
  }
  SV.Single_Dual = 2;
 }
-#line 454 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 461 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 void Circ_Prep_Next(){
- Circ.steps += 1.0;
-
- if(Circ.steps >= Circ.divisor){
- Circ.cir_next = 0;
- Circ.cir_start = 1;
- return;
- }
+ Circ.steps++;
 
  toggleOCx(X);
  toggleOCx(Y);
 
+ if(Circ.steps >= Circ.Idivisor){
+ Circ.cir_next = 0;
+ Circ.cir_start = 1;
+ }
 
 }

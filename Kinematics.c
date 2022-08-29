@@ -304,7 +304,7 @@ double newDeg;
    newDeg = 360.00 / Circ.deg;
    Circ.N = (2*Pi*Circ.radius)/newDeg;
    Circ.divisor = ceil( Circ.N/Circ.deg);
-
+   Circ.Idivisor = (unsigned int)Circ.N;//Circ.divisor;
 
    if(Circ.dir == CW)
        Circ.deg = 0.00;
@@ -318,21 +318,27 @@ double newDeg;
 //Radius Calculation
 void CalcRadius(){
  double xRad,yRad,X,Y,angA,angB;
+   //find the quadrant that cir start pos is in
+   Circ.quadrant = Quadrant(Circ.I,Circ.J);
+   
+   //no negative nums for sqroot
    X = abs(Circ.I);
    Y = abs(Circ.J);
+   
+   //radius position of Xrad and Yrad
    Circ.xRad = (Circ.xStart + Circ.I);
    Circ.yRad = (Circ.yStart + Circ.J);
    Circ.radius = sqrt((X*X) + (Y*Y));
+   
+   //get the deg of radiuss from abs zero pos
+   //and convert  radans to degrees
    angA = atan2(Circ.yRad,Circ.xRad);
-
    Circ.degreeDeg = angA * rad2deg;
 
-   Circ.quadrant = Quadrant(Circ.I,Circ.J);
-
-    //deg is 360 or 0 and subtract the actual from deg
+   //deg is 360 or 0 and subtract the actual from deg
    if(Circ.quadrant == 1 || Circ.quadrant == 3)
        angB = Circ.deg - Circ.degreeDeg;
-   if(Circ.quadrant == 1 || Circ.quadrant == 3)
+   else if(Circ.quadrant == 2 || Circ.quadrant == 4)
        angB = Circ.deg + Circ.degreeDeg;
 
    Circ.degreeRadians = angB * deg2rad;
@@ -405,11 +411,11 @@ static int quad = 1;
      strncat(txtB,txtA,str_lenA);
      str_len += str_lenA;
      //rad
-     sprintf(txt,"%2f",Circ.divisor);
+     sprintf(txt,"%d",Circ.Idivisor);
      strncat(txtB,txt,strlen(txt));
      str_len += strlen(txt)+1;
      strncat(txtB,"\n",1);
-     str_len += 1;
+     str_len += 2;
      strncat(txtB,txtA,str_lenA);
      str_len += str_lenA;
 
@@ -422,8 +428,8 @@ static int quad = 1;
      CHEN_bit            = 1 ;
      CFORCE_DCH1ECON_bit = 1 ;                 // force DMA1 interrupt trigger
    */
-     STPS[X].step_delay = 30000;
-     STPS[Y].step_delay = 30000;
+     STPS[X].step_delay = 1000;
+     STPS[Y].step_delay = 1000;
      
      Circ_Tick();
 }
@@ -431,37 +437,36 @@ static int quad = 1;
 void Circ_Tick(){
 
         if (Circ.dir == CW){
-           Circ.deg += Circ.divisor;
+           Circ.deg += 1.0;//Circ.divisor;
            if (Circ.deg >= Circ.degreeDeg){
                disableOCx();
            }
         }
 
         if (Circ.dir == CCW){
-           Circ.deg -= Circ.divisor;
+           Circ.deg -= 1.0;//Circ.divisor;
            if (Circ.deg <= Circ.degreeDeg){
               disableOCx();
            }
 
         }
-           SV.Single_Dual = 2;
+        SV.Single_Dual = 2;
 }
+
 /*
  * Pulse for the count of divisor before recalculating
  * the next x & y cords, this way we get a smother
  * transition and many straight lines to make to a circle.
  */
 void Circ_Prep_Next(){
-      Circ.steps += 1.0;
+  Circ.steps++;
 
-       if(Circ.steps >= Circ.divisor){
-           Circ.cir_next = 0;
-           Circ.cir_start = 1;
-           return;
-       }
-
-       toggleOCx(X);
-       toggleOCx(Y);
-
+  toggleOCx(X);
+  toggleOCx(Y);
+   
+  if(Circ.steps >= Circ.Idivisor){
+    Circ.cir_next = 0;
+    Circ.cir_start = 1;
+  }
 
 }

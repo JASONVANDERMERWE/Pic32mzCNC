@@ -149,14 +149,15 @@ double deg_A;
 double deg_B;
 double divisor;
 double newdeg_;
-double steps;
+
 double I;
 double J;
 double N;
 double radius;
 int dir;
 int quadrant;
-
+unsigned int steps;
+unsigned int Idivisor;
 double xRad;
 double yRad;
 double xStart;
@@ -513,7 +514,7 @@ void Temp_Move(int a){
  break;
  case 7:
  if(!Circ.cir_start){
- SetCircleVals(450.00,250.00,-100.00,100.00,180.00, 0 );
+ SetCircleVals(450.00,250.00,-100.00,150.00,180.00, 0 );
  Circ.cir_start = 1;
  }
  if(Circ.cir_start){
