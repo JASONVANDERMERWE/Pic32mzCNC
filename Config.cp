@@ -136,25 +136,30 @@ void DMA1();
 #line 13 "c:/users/git/pic32mzcnc/kinematics.h"
 extern void (*AxisPulse[3])();
 
+struct degs{
+ double deg;
+double degreeDeg;
+double degreeRadians;
+double newdeg;
+};
+
+struct X_Y{
+ double X;
+ double Y;
+};
 
 
 typedef struct{
 char cir_start: 1;
 char cir_end: 1;
 char cir_next: 1;
-double deg;
-double degreeDeg;
-double degreeRadians;
-double deg_A;
-double deg_B;
 double divisor;
-double newdeg_;
-
 double I;
 double J;
 double N;
 double radius;
 int dir;
+int quadrantS;
 int quadrant;
 unsigned int steps;
 unsigned int Idivisor;
@@ -168,6 +173,8 @@ double xFin;
 double yFin;
 double lastX;
 double lastY;
+struct degs Deg;
+struct X_Y XY;
 }Circle;
 extern Circle Circ;
 
@@ -180,11 +187,12 @@ void SingleAxisStep(long newxyz,int axis_No);
 
 void SetCircleVals(double curX,double curY,double finX,double finY,double i,double j, double deg,int dir);
 void CalcRadius();
+void InitAngle();
 void CalcAngle();
 int Quadrant(double i,double j);
 int CircDir(int dir);
 void CalcDivisor();
-void NextCords(int fin_step);
+void NextCords();
 void CirInterpolation();
 void Cir_Interpolation();
 void Circ_Tick();

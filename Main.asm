@@ -490,7 +490,7 @@ NOP
 J	L_Temp_Move32
 NOP	
 L__Temp_Move73:
-;Main.c,128 :: 		SetCircleVals(450.00,250.00,486.00,386.00,-100.00,100.00,60.00,CW);
+;Main.c,128 :: 		SetCircleVals(450.00,250.00,486.00,386.00,-100.00,100.00,280.00,CW);
 LUI	R5, 17345
 ORI	R5, R5, 0
 LUI	R4, 17395
@@ -504,7 +504,7 @@ MTC1	R5, S15
 MTC1	R4, S14
 MTC1	R3, S13
 MTC1	R2, S12
-LUI	R2, 17008
+LUI	R2, 17292
 ORI	R2, R2, 0
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
@@ -531,12 +531,6 @@ NOP
 J	L_Temp_Move33
 NOP	
 L__Temp_Move75:
-;Main.c,132 :: 		LED1 = Circ.cir_next;
-LBU	R2, Offset(_Circ+0)(GP)
-EXT	R3, R2, 2, 1
-_LX	
-INS	R2, R3, BitPos(LED1+0), 1
-_SX	
 ;Main.c,133 :: 		if(!Circ.cir_next){
 LBU	R2, Offset(_Circ+0)(GP)
 EXT	R2, R2, 2, 1

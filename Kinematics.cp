@@ -341,25 +341,30 @@ void Single_Axis_Enable(_axis_ axis_);
 #line 13 "c:/users/git/pic32mzcnc/kinematics.h"
 extern void (*AxisPulse[3])();
 
+struct degs{
+ double deg;
+double degreeDeg;
+double degreeRadians;
+double newdeg;
+};
+
+struct X_Y{
+ double X;
+ double Y;
+};
 
 
 typedef struct{
 char cir_start: 1;
 char cir_end: 1;
 char cir_next: 1;
-double deg;
-double degreeDeg;
-double degreeRadians;
-double deg_A;
-double deg_B;
 double divisor;
-double newdeg_;
-
 double I;
 double J;
 double N;
 double radius;
 int dir;
+int quadrantS;
 int quadrant;
 unsigned int steps;
 unsigned int Idivisor;
@@ -373,6 +378,8 @@ double xFin;
 double yFin;
 double lastX;
 double lastY;
+struct degs Deg;
+struct X_Y XY;
 }Circle;
 extern Circle Circ;
 
@@ -385,11 +392,12 @@ void SingleAxisStep(long newxyz,int axis_No);
 
 void SetCircleVals(double curX,double curY,double finX,double finY,double i,double j, double deg,int dir);
 void CalcRadius();
+void InitAngle();
 void CalcAngle();
 int Quadrant(double i,double j);
 int CircDir(int dir);
 void CalcDivisor();
-void NextCords(int fin_step);
+void NextCords();
 void CirInterpolation();
 void Cir_Interpolation();
 void Circ_Tick();
@@ -677,8 +685,13 @@ void SetCircleVals(double curX,double curY,double finX,double finY,double i,doub
  Circ.I = i;
  Circ.J = j;
  CalcRadius();
- CalcAngle();
+ InitAngle();
+
+ Circ.quadrant = Quadrant(Circ.xRad,Circ.yRad);
  Circ.dir = CircDir(dir);
+ CalcAngle();
+ Circ.Deg.newdeg = deg;
+
  CalcDivisor();
  Circ.lastX = 0;
  Circ.lastY = 0;
@@ -692,9 +705,9 @@ int CircDir(int dir){
  Circ.dir = dir;
 
  if(Circ.dir ==  0 )
- Circ.deg = 0.00;
+ Circ.Deg.deg = 0.00;
  if(Circ.dir ==  1 )
- Circ.deg = 360.00;
+ Circ.Deg.deg = 360.00;
 
  return Circ.dir;
 }
@@ -704,61 +717,61 @@ int CircDir(int dir){
 void CalcDivisor(){
 double newDeg;
 
- newDeg = 360.00 / Circ.degreeDeg;
+ newDeg = 360.00 / Circ.Deg.degreeDeg;
  Circ.N = (2* 3.14159 *Circ.radius)*newDeg;
- Circ.divisor = ceil( Circ.N);
- Circ.Idivisor = (unsigned int)Circ.N;
+ Circ.divisor = 1000.00;
+ Circ.Idivisor = (unsigned int)Circ.divisor;
 }
 
 
 
 void CalcRadius(){
- double X,Y;
 
-
- X = abs(Circ.I);
- Y = abs(Circ.J);
+ Circ.XY.X = abs(Circ.I);
+ Circ.XY.Y = abs(Circ.J);
 
 
  Circ.xRad = (Circ.xStart + Circ.I);
  Circ.yRad = (Circ.yStart + Circ.J);
- Circ.radius = sqrt((X*X) + (Y*Y));
+ Circ.radius = sqrt((Circ.XY.X*Circ.XY.X) + (Circ.XY.Y*Circ.XY.Y ));
 
-
- Circ.quadrant = Quadrant(Circ.I,Circ.J);
 }
 
+
+
+void InitAngle(){
+ double angA;
+
+
+
+ angA = atan2(Circ.XY.X,Circ.XY.Y);
+ Circ.Deg.degreeDeg = angA *  (180.00/ 3.14159 ) ;
+}
 
 
 void CalcAngle(){
- double angA,angB;
-
-
-
- angA = atan2(Circ.yRad,Circ.xRad);
- Circ.degreeDeg = angA *  (180.00/ 3.14159 ) ;
+ double angB;
 
 
  if(Circ.quadrant == 1 || Circ.quadrant == 3)
- angB = Circ.deg - Circ.degreeDeg;
+ angB = Circ.Deg.deg - Circ.Deg.degreeDeg;
  else if(Circ.quadrant == 2 || Circ.quadrant == 4)
- angB = Circ.deg + Circ.degreeDeg;
+ angB = Circ.Deg.deg + Circ.Deg.degreeDeg;
 
- Circ.degreeRadians = angB *  ( 3.14159 /180.00) ;
-
+ Circ.Deg.degreeRadians = angB *  ( 3.14159 /180.00) ;
 }
 
 
 
-void NextCords(int fin_step){
+void NextCords(){
 
  if(Circ.quadrant == 1 || Circ.quadrant == 4){
- Circ.xFin = Circ.xRad + (Circ.radius * cos(Circ.degreeRadians));
- Circ.yFin = Circ.yRad + (Circ.radius * sin(Circ.degreeRadians));
+ Circ.xStep = Circ.xRad + (Circ.radius * cos(Circ.Deg.degreeRadians));
+ Circ.yStep = Circ.yRad + (Circ.radius * sin(Circ.Deg.degreeRadians));
  }
  if(Circ.quadrant == 2 || Circ.quadrant == 3){
- Circ.xFin = Circ.xRad - (Circ.radius * cos(Circ.degreeRadians));
- Circ.yFin = Circ.yRad - (Circ.radius * sin(Circ.degreeRadians));
+ Circ.xStep = Circ.xRad - (Circ.radius * cos(Circ.Deg.degreeRadians));
+ Circ.yStep = Circ.yRad - (Circ.radius * sin(Circ.Deg.degreeRadians));
  }
 
 }
@@ -781,36 +794,49 @@ int Quadrant(double i,double j){
 
 
 void Cir_Interpolation(){
-
+ Circ.lastX = Circ.xStep;
+ Circ.lastY = Circ.yStep;
  CalcAngle();
- CalcRadius();
- Circ.quadrant = Quadrant(Circ.xStep,Circ.yStep);
- NextCords(0);
- STPS[X].step_delay = 500;
- STPS[Y].step_delay = 500;
+ NextCords();
+
+ STPS[X].step_delay = 100;
+ STPS[Y].step_delay = 100;
  SerialPrint();
+ if(Circ.lastX >= Circ.xStep){
+ DIR_StepX = 0;
+ }else{
+ DIR_StepX = 1;
+ }
+
+ if(Circ.lastY >= Circ.yStep){
+ DIR_StepY = 0;
+ }else{
+ DIR_StepY = 1;
+ }
+
+ LED1 = DIR_StepY;
  Circ_Tick();
 }
 
 void Circ_Tick(){
 
  if (Circ.dir ==  0 ){
- Circ.deg += 1.0;
- if (Circ.deg >= Circ.degreeDeg){
+ Circ.Deg.deg += 1.0;
+ if (Circ.Deg.deg == Circ.Deg.newdeg){
  disableOCx();
  }
  }
 
  if (Circ.dir ==  1 ){
- Circ.deg -= 1.0;
- if (Circ.deg <= Circ.degreeDeg){
+ Circ.Deg.deg -= 1.0;
+ if (Circ.Deg.deg == Circ.Deg.newdeg){
  disableOCx();
  }
 
  }
  SV.Single_Dual = 2;
 }
-#line 433 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 451 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 void Circ_Prep_Next(){
  Circ.steps++;
 
@@ -831,32 +857,44 @@ int str_lenA = 0;
  str_lenA = strlen(txtA);
  memset(txtB,0,30);
 
- sprintf(txt,"%2f",Circ.radius);
+ sprintf(txt,"%0.2f",Circ.radius);
  strncpy(txtB, " ",strlen(txt));
  strncat(txtB, txt,strlen(txt));
  str_len += strlen(txt);
  strncat(txtB,txtA,str_lenA);
  str_len += str_lenA;
 
- sprintf(txt,"%2f",Circ.xFin);
+ sprintf(txt,"%0.2f",Circ.xStep);
  strncat(txtB,txt,strlen(txt));
  str_len += strlen(txt);
  strncat(txtB,txtA,str_lenA);
  str_len += str_lenA;
 
- sprintf(txt,"%2f",Circ.yFin);
+ sprintf(txt,"%0.2f",Circ.yStep);
  strncat(txtB,txt,strlen(txt));
  str_len += strlen(txt);
  strncat(txtB,txtA,str_lenA);
  str_len += str_lenA;
 
- sprintf(txt,"%2f",Circ.deg);
+ sprintf(txt,"%0.2f",Circ.xFin);
  strncat(txtB,txt,strlen(txt));
  str_len += strlen(txt)+1;
  strncat(txtB,txtA,str_lenA);
  str_len += str_lenA;
 
- sprintf(txt,"%2f",Circ.degreeDeg);
+ sprintf(txt,"%0.2f",Circ.yFin);
+ strncat(txtB,txt,strlen(txt));
+ str_len += strlen(txt)+1;
+ strncat(txtB,txtA,str_lenA);
+ str_len += str_lenA;
+
+ sprintf(txt,"%0.2f",Circ.Deg.newdeg);
+ strncat(txtB,txt,strlen(txt));
+ str_len += strlen(txt)+1;
+ strncat(txtB,txtA,str_lenA);
+ str_len += str_lenA;
+
+ sprintf(txt,"%0.2f",Circ.Deg.deg);
  strncat(txtB,txt,strlen(txt));
  str_len += strlen(txt)+1;
  strncat(txtB,txtA,str_lenA);
@@ -871,5 +909,5 @@ int str_lenA = 0;
  str_len += str_lenA;
 
  UART2_Write_Text(txtB);
-#line 501 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 531 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 }

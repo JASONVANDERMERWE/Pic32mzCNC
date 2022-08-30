@@ -23144,8 +23144,7 @@ dec
 dec2bcd
 dec2bcd16
 deg
-deg_a
-deg_b
+deg
 degreedeg
 degreeradians
 delay_100ms
@@ -36619,6 +36618,7 @@ init2type0
 init2type0_bit
 init2type1
 init2type1_bit
+initangle
 initid
 initid
 initid
@@ -40189,7 +40189,7 @@ nb2bipktgp25_emacxipgr_bit
 nb2bipktgp26
 nb2bipktgp26_bit
 nb2bipktgp26_emacxipgr_bit
-newdeg_
+newdeg
 nextcords
 nmicnt
 nmicnt
@@ -46080,6 +46080,7 @@ py
 pz
 quadrant
 quadrant
+quadrants
 r_w
 r_w
 r_w
@@ -81344,13 +81345,16 @@ wtid2
 wtid2_bit
 wtid3
 wtid3_bit
+x
 xfin
 xrad
 xstart
 xstep
 xtoi
+xy
 xy_interpolate
 xz_interpolate
+y
 year01
 year01
 year01
