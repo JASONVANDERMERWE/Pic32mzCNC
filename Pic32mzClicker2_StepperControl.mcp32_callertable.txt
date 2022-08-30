@@ -60,20 +60,18 @@ main
 				sqrt
 					frexp
 					ldexp
-				Quadrant
-			CalcAngle
+			InitAngle
 				atan2
 					fabs
 					atan
 						fabs
 						eval_poly
+			Quadrant
 			CircDir
+			CalcAngle
 			CalcDivisor
-				ceil
 		Cir_Interpolation
 			CalcAngle
-			CalcRadius
-			Quadrant
 			NextCords
 				cos
 					sin
