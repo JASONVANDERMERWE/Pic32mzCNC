@@ -81355,8 +81355,10 @@ wtid2_bit
 wtid3
 wtid3_bit
 x
+x_next
 xcenter
 xfin
+xlaststep
 xstart
 xstep
 xtoi
@@ -81364,6 +81366,7 @@ xy
 xy_interpolate
 xz_interpolate
 y
+y_next
 ycenter
 year01
 year01
@@ -81390,6 +81393,7 @@ year102_bit
 year103
 year103_bit
 yfin
+ylaststep
 ystart
 ystep
 yz_interpolate

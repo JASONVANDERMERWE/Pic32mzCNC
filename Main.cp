@@ -156,6 +156,8 @@ typedef struct{
 char cir_start: 1;
 char cir_end: 1;
 char cir_next: 1;
+char x_next: 1;
+char y_next: 1;
 double divisor;
 double I;
 double J;
@@ -176,6 +178,8 @@ double xStep;
 double yStep;
 double xFin;
 double yFin;
+double xLastStep;
+double yLastStep;
 double lastX;
 double lastY;
 struct degs Deg;
@@ -201,7 +205,6 @@ int CircDir(int dir);
 void CalcDivisor();
 void CalcStep();
 void NextCords();
-void Run_SetUp();
 void CirInterpolation();
 void Cir_Interpolation();
 void Circ_Tick();
@@ -442,7 +445,7 @@ int xyz_ = 0;
 
  a=0;
  disable_steps = 0;
-
+ DisableStepper();
  while(1){
 
  if(!Toggle){
@@ -483,8 +486,8 @@ int xyz_ = 0;
  if(Toggle){
  if((!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit)||!Circ.cir_next){
  Temp_Move(a);
- a++;
- if(a > 6)a=0;
+ a=7;
+ if(a > 7)a=0;
  }
  }
 

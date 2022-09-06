@@ -361,6 +361,8 @@ typedef struct{
 char cir_start: 1;
 char cir_end: 1;
 char cir_next: 1;
+char x_next: 1;
+char y_next: 1;
 double divisor;
 double I;
 double J;
@@ -381,6 +383,8 @@ double xStep;
 double yStep;
 double xFin;
 double yFin;
+double xLastStep;
+double yLastStep;
 double lastX;
 double lastY;
 struct degs Deg;
@@ -406,7 +410,6 @@ int CircDir(int dir);
 void CalcDivisor();
 void CalcStep();
 void NextCords();
-void Run_SetUp();
 void CirInterpolation();
 void Cir_Interpolation();
 void Circ_Tick();
@@ -734,19 +737,19 @@ void CalcDivisor(){
 double newDeg;
 
  newDeg = 360.00 / Circ.Deg.degreeDeg;
- Circ.N = (2* 3.14159 *Circ.radius)*newDeg;
- Circ.divisor = 1000.00;
- Circ.Idivisor = (unsigned int)Circ.divisor;
+ Circ.N = (2* 3.14159 *Circ.radius)/newDeg;
+ Circ.divisor = Circ.Deg.deg/Circ.N;
+ Circ.Idivisor = 1000;
 }
 
 
 
 void CalcRadius(){
+double i,j;
+ i = abs(Circ.I);
+ j = abs(Circ.J);
 
- Circ.XY.X = abs(Circ.I);
- Circ.XY.Y = abs(Circ.J);
-
- Circ.radius = sqrt((Circ.XY.X*Circ.XY.X) + (Circ.XY.Y*Circ.XY.Y ));
+ Circ.radius = sqrt((i*i) + (j*j));
 }
 
 
@@ -825,7 +828,7 @@ double totalDeg = 0.00;
 
 
 double CalcStep(){
-double angleA,angleB;
+double angleA;
  if (Circ.quadrantS == 1 || Circ.quadrantS == 3)
  angleA = Circ.Deg.deg - Circ.Deg.degS;
 
@@ -833,7 +836,6 @@ double angleA,angleB;
  angleA = Circ.Deg.deg + Circ.Deg.degS;
 
  return angleA *  ( 3.14159 /180.00) ;
-
 }
 
 
@@ -855,12 +857,25 @@ void NextCords(){
 void Cir_Interpolation(){
  Circ.lastX = Circ.xStep;
  Circ.lastY = Circ.yStep;
- CalcAngle();
+ Circ.Deg.degreeRadians = CalcStep();
  NextCords();
 
  STPS[X].step_delay = 100;
  STPS[Y].step_delay = 100;
  SerialPrint();
+
+
+ if(Circ.lastX != Circ.xStep){
+ Circ.x_next = 1;
+ }else
+ Circ.x_next = 0;
+
+ if(Circ.lastY != Circ.yStep){
+ Circ.y_next = 1;
+ }else
+ Circ.y_next = 0;
+
+
  if(Circ.lastX >= Circ.xStep){
  DIR_StepX = 0;
  }else{
@@ -873,21 +888,20 @@ void Cir_Interpolation(){
  DIR_StepY = 1;
  }
 
- LED1 = DIR_StepY;
  Circ_Tick();
 }
 
 void Circ_Tick(){
 
  if (Circ.dir ==  0 ){
- Circ.Deg.deg += 1.0;
+ Circ.Deg.deg += 0.25;
  if (Circ.Deg.deg == Circ.Deg.newdeg){
  disableOCx();
  }
  }
 
  if (Circ.dir ==  1 ){
- Circ.Deg.deg -= 1.0;
+ Circ.Deg.deg -= 0.25;
  if (Circ.Deg.deg == Circ.Deg.newdeg){
  disableOCx();
  }
@@ -895,13 +909,13 @@ void Circ_Tick(){
  }
  SV.Single_Dual = 2;
 }
-#line 501 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 512 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 void Circ_Prep_Next(){
  Circ.steps++;
 
- if(Circ.xStep !=Circ.lastX)
+ if(Circ.x_next)
  toggleOCx(X);
- if(Circ.yStep != Circ.lastY)
+ if(Circ.y_next)
  toggleOCx(Y);
 
  if(Circ.steps >= Circ.Idivisor){
@@ -970,5 +984,5 @@ int str_lenA = 0;
  str_len += str_lenA;
 
  UART2_Write_Text(txtB);
-#line 583 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 594 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 }

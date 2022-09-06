@@ -20,6 +20,7 @@ main
 		OutPutPulseXYZ
 		SetPinMode
 	StepperConstants
+	DisableStepper
 	disableOCx
 	EnStepperX
 	EnStepperY
@@ -80,7 +81,7 @@ main
 			CircDir
 			CalcDivisor
 		Cir_Interpolation
-			CalcAngle
+			CalcStep
 			NextCords
 			SerialPrint
 				strlen
