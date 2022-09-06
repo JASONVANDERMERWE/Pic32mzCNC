@@ -29,7 +29,7 @@ int xyz_ = 0;
   //I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
   a=0;
   disable_steps = 0;
-
+  DisableStepper();
   while(1){
 
          if(!Toggle){
@@ -70,8 +70,8 @@ int xyz_ = 0;
          if(Toggle){
            if((!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit)||!Circ.cir_next){
                Temp_Move(a);
-               a=7;//++;
-               if(a > 7)a=7;
+               a=7;
+               if(a > 7)a=0;
            }
          }
             

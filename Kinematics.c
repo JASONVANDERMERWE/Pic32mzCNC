@@ -290,12 +290,19 @@ void SetCircleVals(double curX,double curY,double finX,double finY,double i,doub
  Circ.yFin   = finY;
  Circ.I = i;
  Circ.J = j;
+ 
+ //Start calculating the Initial values to use
  CalcRadius();
- InitAngle();
-  //find the quadrant that cir start pos is in
- Circ.quadrant = Quadrant(Circ.xRad,Circ.yRad);
+ CalcCircCenter();
+ Circ.Deg.degS = Calc_Angle(Circ.I,Circ.J);
+ Circ.quadrantS = Quadrant(Circ.I,Circ.J);
+ NextCords();
+ CalcI_J_FromEndPos();
+ Circ.quadrant = Quadrant(Circ.I_end, Circ.J_end);
+ Circ.Deg.degF = Calc_Angle(Circ.I_end, Circ.J_end);
+ Circ.Deg.degT = TestQuadrnt();
  Circ.dir = CircDir(dir);
- CalcAngle();
+ Calc_Angle(Circ.xStart,Circ.yStart);
  Circ.Deg.newdeg = deg;
 
  CalcDivisor();
@@ -324,35 +331,46 @@ void CalcDivisor(){
 double newDeg;
 
    newDeg = 360.00 / Circ.Deg.degreeDeg;
-   Circ.N = (2*Pi*Circ.radius)*newDeg;
-   Circ.divisor = 1000.00;//ceil( Circ.N);//Circ.Deg.deg);
-   Circ.Idivisor = (unsigned int)Circ.divisor;
+   Circ.N = (2*Pi*Circ.radius)/newDeg;
+   Circ.divisor = Circ.Deg.deg/Circ.N;
+   Circ.Idivisor = 1000;
 }
 
 ////////////////////////////////////////////////
 //Radius Calculation
 void CalcRadius(){
-   //no negative nums for sqroot
-   Circ.XY.X = abs(Circ.I);
-   Circ.XY.Y = abs(Circ.J);
+double i,j;   //no negative nums for sqroot
+   i = abs(Circ.I);
+   j = abs(Circ.J);
    
-   //radius position of Xrad and Yrad
-   Circ.xRad = (Circ.xStart + Circ.I);
-   Circ.yRad = (Circ.yStart + Circ.J);
-   Circ.radius = sqrt((Circ.XY.X*Circ.XY.X) + (Circ.XY.Y*Circ.XY.Y ));
- 
+   Circ.radius = sqrt((i*i) + (j*j));
 }
 
 ////////////////////////////////////////////////
-//Get initial angle for calc
-void InitAngle(){
- double angA;
- 
-  //get the deg of radiuss from abs zero pos
-   //and convert  radans to degrees
-   angA = atan2(Circ.XY.X,Circ.XY.Y);
-   Circ.Deg.degreeDeg = angA * rad2deg;
+//Calculate Circle center position X.Y
+void CalcCircCenter(){
+    //radius position of Xrad and Yrad
+   Circ.xCenter = (Circ.xStart + Circ.I);
+   Circ.yCenter = (Circ.yStart + Circ.J);
 }
+
+////////////////////////////////////////////////
+//Calc the I and J from end Position
+void CalcI_J_FromEndPos(){
+   Circ.I_end = Circ.xFin - Circ.xCenter;
+   Circ.J_end = Circ.yFin - Circ.yCenter;
+}
+
+////////////////////////////////////////////////
+//return the angle of start and end pos
+double Calc_Angle(double i, double j){
+double angA;
+   //get the deg of radiuss from abs zero pos
+   //and convert  radans to degrees
+   return atan2(j,i);//(Circ.XY.X,Circ.XY.Y);
+   //Circ.Deg.degreeDeg = angA * rad2deg;
+}
+
 ////////////////////////////////////////////////
 //Cac angle of attack to work out new x,y pos
 void CalcAngle(){
@@ -365,21 +383,6 @@ void CalcAngle(){
        angB = Circ.Deg.deg + Circ.Deg.degreeDeg;
 
    Circ.Deg.degreeRadians = angB * deg2rad;
-}
-
-/////////////////////////////////////////////////
-//Get the Final cordinates of X,Y || 0 = fin pos
-void NextCords(){
-
-     if(Circ.quadrant == 1 || Circ.quadrant == 4){
-       Circ.xStep = Circ.xRad + (Circ.radius * cos(Circ.Deg.degreeRadians));
-       Circ.yStep = Circ.yRad + (Circ.radius * sin(Circ.Deg.degreeRadians));
-     }
-     if(Circ.quadrant == 2 || Circ.quadrant == 3){
-       Circ.xStep = Circ.xRad - (Circ.radius * cos(Circ.Deg.degreeRadians));
-       Circ.yStep = Circ.yRad - (Circ.radius * sin(Circ.Deg.degreeRadians));
-     }
-
 }
 
 /////////////////////////////////////////////////
@@ -397,50 +400,108 @@ int Quadrant(double i,double j){
         return 0;
 }
 
+double TestQuadrnt(){
+double totalDeg = 0.00;
+
+    if (Circ.I_end < 0)
+    {
+        Circ.Deg.degF = 180.0 - Circ.Deg.degF;
+        totalDeg = abs(Circ.Deg.degS) + abs(Circ.Deg.degS);
+    }
+    else if (Circ.I_end > 0)
+    {
+        Circ.Deg.degF = 180.0 - Circ.Deg.degF;
+        totalDeg = abs(Circ.Deg.degS) + 180.0 + abs(Circ.Deg.degS);
+    }
+    else
+        totalDeg = abs(Circ.Deg.degS) + 180.0 + abs(Circ.Deg.degS);
+
+    return totalDeg;
+}
+
+/////////////////////////////////////////////////
+//Get the Final cordinates of X,Y || 0 = fin pos
+double CalcStep(){
+double angleA;
+      if (Circ.quadrantS == 1 || Circ.quadrantS == 3)
+          angleA = Circ.Deg.deg - Circ.Deg.degS;
+
+      if (Circ.quadrantS == 2 || Circ.quadrantS == 4)
+          angleA = Circ.Deg.deg + Circ.Deg.degS;
+
+      return angleA * deg2rad;
+}
+
+
+void NextCords(){
+
+     if(Circ.quadrant == 1 || Circ.quadrant == 4){
+       Circ.xStep = Circ.xCenter + (Circ.radius * cos(Circ.Deg.degreeRadians));
+       Circ.yStep = Circ.yCenter + (Circ.radius * sin(Circ.Deg.degreeRadians));
+     }
+     if(Circ.quadrant == 2 || Circ.quadrant == 3){
+       Circ.xStep = Circ.xCenter - (Circ.radius * cos(Circ.Deg.degreeRadians));
+       Circ.yStep = Circ.yCenter - (Circ.radius * sin(Circ.Deg.degreeRadians));
+     }
+
+}
+
 ///////////////////////////////////////////////////
 //Interpolate Arc
 void Cir_Interpolation(){
      Circ.lastX = Circ.xStep;
      Circ.lastY = Circ.yStep;
-     CalcAngle();
+     Circ.Deg.degreeRadians = CalcStep();
      NextCords();
 
      STPS[X].step_delay = 100;
      STPS[Y].step_delay = 100;
      SerialPrint();
+
+   //test if x must move
+    if(Circ.lastX != Circ.xStep){
+        Circ.x_next = 1;
+    }else
+        Circ.x_next = 0;
+    //test if y must move
+    if(Circ.lastY != Circ.yStep){
+        Circ.y_next = 1;
+    }else
+        Circ.y_next = 0;
+
+     //test for direction change x
      if(Circ.lastX >= Circ.xStep){
          DIR_StepX = 0;
      }else{
          DIR_StepX = 1;
      }
-
+     //test for direction change y
      if(Circ.lastY >= Circ.yStep){
          DIR_StepY = 0;
       }else{
          DIR_StepY = 1;
       }
 
-     LED1 = DIR_StepY;
      Circ_Tick();
 }
 
 void Circ_Tick(){
 
-        if (Circ.dir == CW){
-           Circ.Deg.deg += 1.0;
-           if (Circ.Deg.deg == Circ.Deg.newdeg){
-               disableOCx();
-           }
-        }
+     if (Circ.dir == CW){
+         Circ.Deg.deg += 0.25;//Circ.divisor;
+         if (Circ.Deg.deg == Circ.Deg.newdeg){
+             disableOCx();
+         }
+     }
 
-        if (Circ.dir == CCW){
-           Circ.Deg.deg -= 1.0;
-           if (Circ.Deg.deg == Circ.Deg.newdeg){
-              disableOCx();
-           }
+    if (Circ.dir == CCW){
+       Circ.Deg.deg -= 0.25;//Circ.divisor;
+       if (Circ.Deg.deg == Circ.Deg.newdeg){
+          disableOCx();
+       }
 
-        }
-        SV.Single_Dual = 2;
+    }
+    SV.Single_Dual = 2;
 }
 
 /*
@@ -448,12 +509,14 @@ void Circ_Tick(){
  * the next x & y cords, this way we get a smother
  * transition and many straight lines to make to a circle.
  */
-void Circ_Prep_Next(){
+void  Circ_Prep_Next(){
   Circ.steps++;
+  
+  if(Circ.x_next)
+      toggleOCx(X);
+  if(Circ.y_next)
+      toggleOCx(Y);
 
-  toggleOCx(X);
-  toggleOCx(Y);
-   
   if(Circ.steps >= Circ.Idivisor){
     Circ.steps = 0;
     Circ.cir_next = 0;

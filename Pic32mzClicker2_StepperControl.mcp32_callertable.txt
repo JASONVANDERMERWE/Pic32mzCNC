@@ -20,6 +20,7 @@ main
 		OutPutPulseXYZ
 		SetPinMode
 	StepperConstants
+	DisableStepper
 	disableOCx
 	EnStepperX
 	EnStepperY
@@ -60,24 +61,28 @@ main
 				sqrt
 					frexp
 					ldexp
-			InitAngle
+			CalcCircCenter
+			Calc_Angle
 				atan2
 					fabs
 					atan
 						fabs
 						eval_poly
 			Quadrant
-			CircDir
-			CalcAngle
-			CalcDivisor
-		Cir_Interpolation
-			CalcAngle
 			NextCords
 				cos
 					sin
 						floor
 						eval_poly
 				sin
+			CalcI_J_FromEndPos
+			TestQuadrnt
+				abs
+			CircDir
+			CalcDivisor
+		Cir_Interpolation
+			CalcStep
+			NextCords
 			SerialPrint
 				strlen
 				memset

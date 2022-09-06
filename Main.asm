@@ -19,6 +19,9 @@ SB	R2, Offset(_oneShotA+0)(GP)
 SH	R0, Offset(Main_a+0)(GP)
 ;Main.c,31 :: 		disable_steps = 0;
 SH	R0, Offset(main_disable_steps_L0+0)(GP)
+;Main.c,32 :: 		DisableStepper();
+JAL	_DisableStepper+0
+NOP	
 ;Main.c,33 :: 		while(1){
 L_main0:
 ;Main.c,35 :: 		if(!Toggle){
@@ -219,10 +222,10 @@ L__main51:
 LHU	R25, Offset(Main_a+0)(GP)
 JAL	_Temp_Move+0
 NOP	
-;Main.c,73 :: 		a=7;//++;
+;Main.c,73 :: 		a=7;
 ORI	R2, R0, 7
 SH	R2, Offset(Main_a+0)(GP)
-;Main.c,74 :: 		if(a > 7)a=7;
+;Main.c,74 :: 		if(a > 7)a=0;
 L_main21:
 ;Main.c,75 :: 		}
 L_main20:
