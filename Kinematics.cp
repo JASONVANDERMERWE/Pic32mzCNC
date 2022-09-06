@@ -342,7 +342,10 @@ void Single_Axis_Enable(_axis_ axis_);
 extern void (*AxisPulse[3])();
 
 struct degs{
- double deg;
+double degS;
+double degF;
+double degT;
+double deg;
 double degreeDeg;
 double degreeRadians;
 double newdeg;
@@ -361,6 +364,8 @@ char cir_next: 1;
 double divisor;
 double I;
 double J;
+double I_end;
+double J_end;
 double N;
 double radius;
 int dir;
@@ -368,8 +373,8 @@ int quadrantS;
 int quadrant;
 unsigned int steps;
 unsigned int Idivisor;
-double xRad;
-double yRad;
+double xCenter;
+double yCenter;
 double xStart;
 double yStart;
 double xStep;
@@ -392,12 +397,16 @@ void SingleAxisStep(long newxyz,int axis_No);
 
 void SetCircleVals(double curX,double curY,double finX,double finY,double i,double j, double deg,int dir);
 void CalcRadius();
-void InitAngle();
-void CalcAngle();
+void CalcCircCenter();
+void CalcI_J_FromEndPos();
+double Calc_Angle(double i, double j);
 int Quadrant(double i,double j);
+double TestQuadrnt();
 int CircDir(int dir);
 void CalcDivisor();
+void CalcStep();
 void NextCords();
+void Run_SetUp();
 void CirInterpolation();
 void Cir_Interpolation();
 void Circ_Tick();
@@ -684,12 +693,19 @@ void SetCircleVals(double curX,double curY,double finX,double finY,double i,doub
  Circ.yFin = finY;
  Circ.I = i;
  Circ.J = j;
- CalcRadius();
- InitAngle();
 
- Circ.quadrant = Quadrant(Circ.xRad,Circ.yRad);
+
+ CalcRadius();
+ CalcCircCenter();
+ Circ.Deg.degS = Calc_Angle(Circ.I,Circ.J);
+ Circ.quadrantS = Quadrant(Circ.I,Circ.J);
+ NextCords();
+ CalcI_J_FromEndPos();
+ Circ.quadrant = Quadrant(Circ.I_end, Circ.J_end);
+ Circ.Deg.degF = Calc_Angle(Circ.I_end, Circ.J_end);
+ Circ.Deg.degT = TestQuadrnt();
  Circ.dir = CircDir(dir);
- CalcAngle();
+ Calc_Angle(Circ.xStart,Circ.yStart);
  Circ.Deg.newdeg = deg;
 
  CalcDivisor();
@@ -730,23 +746,34 @@ void CalcRadius(){
  Circ.XY.X = abs(Circ.I);
  Circ.XY.Y = abs(Circ.J);
 
-
- Circ.xRad = (Circ.xStart + Circ.I);
- Circ.yRad = (Circ.yStart + Circ.J);
  Circ.radius = sqrt((Circ.XY.X*Circ.XY.X) + (Circ.XY.Y*Circ.XY.Y ));
-
 }
 
 
 
-void InitAngle(){
- double angA;
+void CalcCircCenter(){
 
-
-
- angA = atan2(Circ.XY.X,Circ.XY.Y);
- Circ.Deg.degreeDeg = angA *  (180.00/ 3.14159 ) ;
+ Circ.xCenter = (Circ.xStart + Circ.I);
+ Circ.yCenter = (Circ.yStart + Circ.J);
 }
+
+
+
+void CalcI_J_FromEndPos(){
+ Circ.I_end = Circ.xFin - Circ.xCenter;
+ Circ.J_end = Circ.yFin - Circ.yCenter;
+}
+
+
+
+double Calc_Angle(double i, double j){
+double angA;
+
+
+ return atan2(j,i);
+
+}
+
 
 
 void CalcAngle(){
@@ -763,21 +790,6 @@ void CalcAngle(){
 
 
 
-void NextCords(){
-
- if(Circ.quadrant == 1 || Circ.quadrant == 4){
- Circ.xStep = Circ.xRad + (Circ.radius * cos(Circ.Deg.degreeRadians));
- Circ.yStep = Circ.yRad + (Circ.radius * sin(Circ.Deg.degreeRadians));
- }
- if(Circ.quadrant == 2 || Circ.quadrant == 3){
- Circ.xStep = Circ.xRad - (Circ.radius * cos(Circ.Deg.degreeRadians));
- Circ.yStep = Circ.yRad - (Circ.radius * sin(Circ.Deg.degreeRadians));
- }
-
-}
-
-
-
 int Quadrant(double i,double j){
  if((i <= 0)&&(j >= 0))
  return 1;
@@ -789,6 +801,53 @@ int Quadrant(double i,double j){
  return 4;
  else
  return 0;
+}
+
+double TestQuadrnt(){
+double totalDeg = 0.00;
+
+ if (Circ.I_end < 0)
+ {
+ Circ.Deg.degF = 180.0 - Circ.Deg.degF;
+ totalDeg = abs(Circ.Deg.degS) + abs(Circ.Deg.degS);
+ }
+ else if (Circ.I_end > 0)
+ {
+ Circ.Deg.degF = 180.0 - Circ.Deg.degF;
+ totalDeg = abs(Circ.Deg.degS) + 180.0 + abs(Circ.Deg.degS);
+ }
+ else
+ totalDeg = abs(Circ.Deg.degS) + 180.0 + abs(Circ.Deg.degS);
+
+ return totalDeg;
+}
+
+
+
+double CalcStep(){
+double angleA,angleB;
+ if (Circ.quadrantS == 1 || Circ.quadrantS == 3)
+ angleA = Circ.Deg.deg - Circ.Deg.degS;
+
+ if (Circ.quadrantS == 2 || Circ.quadrantS == 4)
+ angleA = Circ.Deg.deg + Circ.Deg.degS;
+
+ return angleA *  ( 3.14159 /180.00) ;
+
+}
+
+
+void NextCords(){
+
+ if(Circ.quadrant == 1 || Circ.quadrant == 4){
+ Circ.xStep = Circ.xCenter + (Circ.radius * cos(Circ.Deg.degreeRadians));
+ Circ.yStep = Circ.yCenter + (Circ.radius * sin(Circ.Deg.degreeRadians));
+ }
+ if(Circ.quadrant == 2 || Circ.quadrant == 3){
+ Circ.xStep = Circ.xCenter - (Circ.radius * cos(Circ.Deg.degreeRadians));
+ Circ.yStep = Circ.yCenter - (Circ.radius * sin(Circ.Deg.degreeRadians));
+ }
+
 }
 
 
@@ -836,11 +895,13 @@ void Circ_Tick(){
  }
  SV.Single_Dual = 2;
 }
-#line 451 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 501 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 void Circ_Prep_Next(){
  Circ.steps++;
 
+ if(Circ.xStep !=Circ.lastX)
  toggleOCx(X);
+ if(Circ.yStep != Circ.lastY)
  toggleOCx(Y);
 
  if(Circ.steps >= Circ.Idivisor){
@@ -909,5 +970,5 @@ int str_lenA = 0;
  str_len += str_lenA;
 
  UART2_Write_Text(txtB);
-#line 531 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 583 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 }

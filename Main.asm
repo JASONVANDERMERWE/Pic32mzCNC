@@ -219,10 +219,19 @@ L__main51:
 LHU	R25, Offset(Main_a+0)(GP)
 JAL	_Temp_Move+0
 NOP	
-;Main.c,73 :: 		a=7;//++;
-ORI	R2, R0, 7
+;Main.c,73 :: 		a++;
+LHU	R2, Offset(Main_a+0)(GP)
+ADDIU	R2, R2, 1
 SH	R2, Offset(Main_a+0)(GP)
-;Main.c,74 :: 		if(a > 7)a=7;
+;Main.c,74 :: 		if(a > 6)a=0;
+ANDI	R2, R2, 65535
+SLTIU	R2, R2, 7
+BEQ	R2, R0, L__main71
+NOP	
+J	L_main21
+NOP	
+L__main71:
+SH	R0, Offset(Main_a+0)(GP)
 L_main21:
 ;Main.c,75 :: 		}
 L_main20:
@@ -485,11 +494,11 @@ L_Temp_Move31:
 ;Main.c,127 :: 		if(!Circ.cir_start){
 LBU	R2, Offset(_Circ+0)(GP)
 EXT	R2, R2, 0, 1
-BEQ	R2, R0, L__Temp_Move73
+BEQ	R2, R0, L__Temp_Move74
 NOP	
 J	L_Temp_Move32
 NOP	
-L__Temp_Move73:
+L__Temp_Move74:
 ;Main.c,128 :: 		SetCircleVals(450.00,250.00,486.00,386.00,-100.00,100.00,280.00,CW);
 LUI	R5, 17345
 ORI	R5, R5, 0
@@ -526,19 +535,19 @@ L_Temp_Move32:
 ;Main.c,131 :: 		if(Circ.cir_start){
 LBU	R2, Offset(_Circ+0)(GP)
 EXT	R2, R2, 0, 1
-BNE	R2, R0, L__Temp_Move75
+BNE	R2, R0, L__Temp_Move76
 NOP	
 J	L_Temp_Move33
 NOP	
-L__Temp_Move75:
+L__Temp_Move76:
 ;Main.c,133 :: 		if(!Circ.cir_next){
 LBU	R2, Offset(_Circ+0)(GP)
 EXT	R2, R2, 2, 1
-BEQ	R2, R0, L__Temp_Move76
+BEQ	R2, R0, L__Temp_Move77
 NOP	
 J	L_Temp_Move34
 NOP	
-L__Temp_Move76:
+L__Temp_Move77:
 ;Main.c,134 :: 		Circ.cir_next = 1;
 LBU	R2, Offset(_Circ+0)(GP)
 ORI	R2, R2, 4
@@ -562,60 +571,60 @@ NOP
 ;Main.c,141 :: 		}
 L_Temp_Move22:
 SEH	R2, R25
-BNE	R2, R0, L__Temp_Move78
+BNE	R2, R0, L__Temp_Move79
 NOP	
 J	L_Temp_Move24
 NOP	
-L__Temp_Move78:
+L__Temp_Move79:
 SEH	R3, R25
 ORI	R2, R0, 1
-BNE	R3, R2, L__Temp_Move80
+BNE	R3, R2, L__Temp_Move81
 NOP	
 J	L_Temp_Move25
 NOP	
-L__Temp_Move80:
+L__Temp_Move81:
 SEH	R3, R25
 ORI	R2, R0, 2
-BNE	R3, R2, L__Temp_Move82
+BNE	R3, R2, L__Temp_Move83
 NOP	
 J	L_Temp_Move26
 NOP	
-L__Temp_Move82:
+L__Temp_Move83:
 SEH	R3, R25
 ORI	R2, R0, 3
-BNE	R3, R2, L__Temp_Move84
+BNE	R3, R2, L__Temp_Move85
 NOP	
 J	L_Temp_Move27
 NOP	
-L__Temp_Move84:
+L__Temp_Move85:
 SEH	R3, R25
 ORI	R2, R0, 4
-BNE	R3, R2, L__Temp_Move86
+BNE	R3, R2, L__Temp_Move87
 NOP	
 J	L_Temp_Move28
 NOP	
-L__Temp_Move86:
+L__Temp_Move87:
 SEH	R3, R25
 ORI	R2, R0, 5
-BNE	R3, R2, L__Temp_Move88
+BNE	R3, R2, L__Temp_Move89
 NOP	
 J	L_Temp_Move29
 NOP	
-L__Temp_Move88:
+L__Temp_Move89:
 SEH	R3, R25
 ORI	R2, R0, 6
-BNE	R3, R2, L__Temp_Move90
+BNE	R3, R2, L__Temp_Move91
 NOP	
 J	L_Temp_Move30
 NOP	
-L__Temp_Move90:
+L__Temp_Move91:
 SEH	R3, R25
 ORI	R2, R0, 7
-BNE	R3, R2, L__Temp_Move92
+BNE	R3, R2, L__Temp_Move93
 NOP	
 J	L_Temp_Move31
 NOP	
-L__Temp_Move92:
+L__Temp_Move93:
 J	L_Temp_Move35
 NOP	
 L_Temp_Move23:

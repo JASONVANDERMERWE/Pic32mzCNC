@@ -70,8 +70,8 @@ int xyz_ = 0;
          if(Toggle){
            if((!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit)||!Circ.cir_next){
                Temp_Move(a);
-               a=7;//++;
-               if(a > 7)a=7;
+               a++;
+               if(a > 6)a=0;
            }
          }
             

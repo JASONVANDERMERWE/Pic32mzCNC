@@ -290,12 +290,19 @@ void SetCircleVals(double curX,double curY,double finX,double finY,double i,doub
  Circ.yFin   = finY;
  Circ.I = i;
  Circ.J = j;
+ 
+ //Start calculating the Initial values to use
  CalcRadius();
- InitAngle();
-  //find the quadrant that cir start pos is in
- Circ.quadrant = Quadrant(Circ.xRad,Circ.yRad);
+ CalcCircCenter();
+ Circ.Deg.degS = Calc_Angle(Circ.I,Circ.J);
+ Circ.quadrantS = Quadrant(Circ.I,Circ.J);
+ NextCords();
+ CalcI_J_FromEndPos();
+ Circ.quadrant = Quadrant(Circ.I_end, Circ.J_end);
+ Circ.Deg.degF = Calc_Angle(Circ.I_end, Circ.J_end);
+ Circ.Deg.degT = TestQuadrnt();
  Circ.dir = CircDir(dir);
- CalcAngle();
+ Calc_Angle(Circ.xStart,Circ.yStart);
  Circ.Deg.newdeg = deg;
 
  CalcDivisor();
@@ -336,23 +343,34 @@ void CalcRadius(){
    Circ.XY.X = abs(Circ.I);
    Circ.XY.Y = abs(Circ.J);
    
-   //radius position of Xrad and Yrad
-   Circ.xRad = (Circ.xStart + Circ.I);
-   Circ.yRad = (Circ.yStart + Circ.J);
    Circ.radius = sqrt((Circ.XY.X*Circ.XY.X) + (Circ.XY.Y*Circ.XY.Y ));
- 
 }
 
 ////////////////////////////////////////////////
-//Get initial angle for calc
-void InitAngle(){
- double angA;
- 
-  //get the deg of radiuss from abs zero pos
-   //and convert  radans to degrees
-   angA = atan2(Circ.XY.X,Circ.XY.Y);
-   Circ.Deg.degreeDeg = angA * rad2deg;
+//Calculate Circle center position X.Y
+void CalcCircCenter(){
+    //radius position of Xrad and Yrad
+   Circ.xCenter = (Circ.xStart + Circ.I);
+   Circ.yCenter = (Circ.yStart + Circ.J);
 }
+
+////////////////////////////////////////////////
+//Calc the I and J from end Position
+void CalcI_J_FromEndPos(){
+   Circ.I_end = Circ.xFin - Circ.xCenter;
+   Circ.J_end = Circ.yFin - Circ.yCenter;
+}
+
+////////////////////////////////////////////////
+//return the angle of start and end pos
+double Calc_Angle(double i, double j){
+double angA;
+   //get the deg of radiuss from abs zero pos
+   //and convert  radans to degrees
+   return atan2(j,i);//(Circ.XY.X,Circ.XY.Y);
+   //Circ.Deg.degreeDeg = angA * rad2deg;
+}
+
 ////////////////////////////////////////////////
 //Cac angle of attack to work out new x,y pos
 void CalcAngle(){
@@ -368,21 +386,6 @@ void CalcAngle(){
 }
 
 /////////////////////////////////////////////////
-//Get the Final cordinates of X,Y || 0 = fin pos
-void NextCords(){
-
-     if(Circ.quadrant == 1 || Circ.quadrant == 4){
-       Circ.xStep = Circ.xRad + (Circ.radius * cos(Circ.Deg.degreeRadians));
-       Circ.yStep = Circ.yRad + (Circ.radius * sin(Circ.Deg.degreeRadians));
-     }
-     if(Circ.quadrant == 2 || Circ.quadrant == 3){
-       Circ.xStep = Circ.xRad - (Circ.radius * cos(Circ.Deg.degreeRadians));
-       Circ.yStep = Circ.yRad - (Circ.radius * sin(Circ.Deg.degreeRadians));
-     }
-
-}
-
-/////////////////////////////////////////////////
 //Check which Quadrand the Head is in
 int Quadrant(double i,double j){
     if((i <= 0)&&(j >= 0))
@@ -395,6 +398,53 @@ int Quadrant(double i,double j){
          return 4;
     else
         return 0;
+}
+
+double TestQuadrnt(){
+double totalDeg = 0.00;
+
+    if (Circ.I_end < 0)
+    {
+        Circ.Deg.degF = 180.0 - Circ.Deg.degF;
+        totalDeg = abs(Circ.Deg.degS) + abs(Circ.Deg.degS);
+    }
+    else if (Circ.I_end > 0)
+    {
+        Circ.Deg.degF = 180.0 - Circ.Deg.degF;
+        totalDeg = abs(Circ.Deg.degS) + 180.0 + abs(Circ.Deg.degS);
+    }
+    else
+        totalDeg = abs(Circ.Deg.degS) + 180.0 + abs(Circ.Deg.degS);
+
+    return totalDeg;
+}
+
+/////////////////////////////////////////////////
+//Get the Final cordinates of X,Y || 0 = fin pos
+double CalcStep(){
+double angleA,angleB;
+      if (Circ.quadrantS == 1 || Circ.quadrantS == 3)
+          angleA = Circ.Deg.deg - Circ.Deg.degS;
+
+      if (Circ.quadrantS == 2 || Circ.quadrantS == 4)
+          angleA = Circ.Deg.deg + Circ.Deg.degS;
+
+      return angleA * deg2rad;
+
+}
+
+
+void NextCords(){
+
+     if(Circ.quadrant == 1 || Circ.quadrant == 4){
+       Circ.xStep = Circ.xCenter + (Circ.radius * cos(Circ.Deg.degreeRadians));
+       Circ.yStep = Circ.yCenter + (Circ.radius * sin(Circ.Deg.degreeRadians));
+     }
+     if(Circ.quadrant == 2 || Circ.quadrant == 3){
+       Circ.xStep = Circ.xCenter - (Circ.radius * cos(Circ.Deg.degreeRadians));
+       Circ.yStep = Circ.yCenter - (Circ.radius * sin(Circ.Deg.degreeRadians));
+     }
+
 }
 
 ///////////////////////////////////////////////////
@@ -451,8 +501,10 @@ void Circ_Tick(){
 void Circ_Prep_Next(){
   Circ.steps++;
 
-  toggleOCx(X);
-  toggleOCx(Y);
+  if(Circ.xStep !=Circ.lastX)
+      toggleOCx(X);
+  if(Circ.yStep != Circ.lastY)
+      toggleOCx(Y);
    
   if(Circ.steps >= Circ.Idivisor){
     Circ.steps = 0;

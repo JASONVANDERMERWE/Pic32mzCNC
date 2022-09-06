@@ -137,7 +137,10 @@ void DMA1();
 extern void (*AxisPulse[3])();
 
 struct degs{
- double deg;
+double degS;
+double degF;
+double degT;
+double deg;
 double degreeDeg;
 double degreeRadians;
 double newdeg;
@@ -156,6 +159,8 @@ char cir_next: 1;
 double divisor;
 double I;
 double J;
+double I_end;
+double J_end;
 double N;
 double radius;
 int dir;
@@ -163,8 +168,8 @@ int quadrantS;
 int quadrant;
 unsigned int steps;
 unsigned int Idivisor;
-double xRad;
-double yRad;
+double xCenter;
+double yCenter;
 double xStart;
 double yStart;
 double xStep;
@@ -187,12 +192,16 @@ void SingleAxisStep(long newxyz,int axis_No);
 
 void SetCircleVals(double curX,double curY,double finX,double finY,double i,double j, double deg,int dir);
 void CalcRadius();
-void InitAngle();
-void CalcAngle();
+void CalcCircCenter();
+void CalcI_J_FromEndPos();
+double Calc_Angle(double i, double j);
 int Quadrant(double i,double j);
+double TestQuadrnt();
 int CircDir(int dir);
 void CalcDivisor();
+void CalcStep();
 void NextCords();
+void Run_SetUp();
 void CirInterpolation();
 void Cir_Interpolation();
 void Circ_Tick();
@@ -474,8 +483,8 @@ int xyz_ = 0;
  if(Toggle){
  if((!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit)||!Circ.cir_next){
  Temp_Move(a);
- a=7;
- if(a > 7)a=7;
+ a++;
+ if(a > 6)a=0;
  }
  }
 
