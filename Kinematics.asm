@@ -2090,7 +2090,7 @@ ORI	R25, R0, 1
 JAL	_toggleOCx+0
 NOP	
 L_Circ_Prep_Next126:
-;Kinematics.c,515 :: 		if(Circ.steps >= Circ.Idivisor){
+;Kinematics.c,516 :: 		if(Circ.steps >= Circ.Idivisor){
 LHU	R3, Offset(_Circ+40)(GP)
 LHU	R2, Offset(_Circ+38)(GP)
 SLTU	R2, R2, R3
@@ -2099,19 +2099,19 @@ NOP
 J	L_Circ_Prep_Next127
 NOP	
 L__Circ_Prep_Next275:
-;Kinematics.c,516 :: 		Circ.steps = 0;
+;Kinematics.c,517 :: 		Circ.steps = 0;
 SH	R0, Offset(_Circ+38)(GP)
-;Kinematics.c,517 :: 		Circ.cir_next = 0;
+;Kinematics.c,518 :: 		Circ.cir_next = 0;
 LBU	R2, Offset(_Circ+0)(GP)
 INS	R2, R0, 2, 1
 SB	R2, Offset(_Circ+0)(GP)
-;Kinematics.c,518 :: 		Circ.cir_start = 1;
+;Kinematics.c,519 :: 		Circ.cir_start = 1;
 LBU	R2, Offset(_Circ+0)(GP)
 ORI	R2, R2, 1
 SB	R2, Offset(_Circ+0)(GP)
-;Kinematics.c,519 :: 		}
+;Kinematics.c,520 :: 		}
 L_Circ_Prep_Next127:
-;Kinematics.c,521 :: 		}
+;Kinematics.c,522 :: 		}
 L_end_Circ_Prep_Next:
 LW	R25, 4(SP)
 LW	RA, 0(SP)
@@ -2120,29 +2120,29 @@ JR	RA
 NOP	
 ; end of _Circ_Prep_Next
 _SerialPrint:
-;Kinematics.c,523 :: 		void SerialPrint(){
+;Kinematics.c,524 :: 		void SerialPrint(){
 ADDIU	SP, SP, -20
 SW	RA, 0(SP)
-;Kinematics.c,524 :: 		int str_len = 0;
+;Kinematics.c,525 :: 		int str_len = 0;
 SW	R25, 4(SP)
 SW	R26, 8(SP)
 SW	R27, 12(SP)
-;Kinematics.c,525 :: 		int str_lenA = 0;
-;Kinematics.c,526 :: 		str_lenA = strlen(txtA);
+;Kinematics.c,526 :: 		int str_lenA = 0;
+;Kinematics.c,527 :: 		str_lenA = strlen(txtA);
 LUI	R25, hi_addr(_txtA+0)
 ORI	R25, R25, lo_addr(_txtA+0)
 JAL	_strlen+0
 NOP	
 ; str_lenA start address is: 44 (R11)
 SEH	R11, R2
-;Kinematics.c,527 :: 		memset(txtB,0,30);
+;Kinematics.c,528 :: 		memset(txtB,0,30);
 ORI	R27, R0, 30
 MOVZ	R26, R0, R0
 LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_memset+0
 NOP	
-;Kinematics.c,529 :: 		sprintf(txt,"%0.2f",Circ.radius);
+;Kinematics.c,530 :: 		sprintf(txt,"%0.2f",Circ.radius);
 LW	R2, Offset(_Circ+28)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
@@ -2155,7 +2155,7 @@ SW	R2, 0(SP)
 JAL	_sprintf+0
 NOP	
 ADDIU	SP, SP, 12
-;Kinematics.c,530 :: 		strncpy(txtB, " ",strlen(txt));
+;Kinematics.c,531 :: 		strncpy(txtB, " ",strlen(txt));
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
@@ -2171,7 +2171,7 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncpy+0
 NOP	
-;Kinematics.c,531 :: 		strncat(txtB, txt,strlen(txt));
+;Kinematics.c,532 :: 		strncat(txtB, txt,strlen(txt));
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
@@ -2183,12 +2183,12 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,532 :: 		str_len += strlen(txt);
+;Kinematics.c,533 :: 		str_len += strlen(txt);
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
 NOP	
-;Kinematics.c,533 :: 		strncat(txtB,txtA,str_lenA);
+;Kinematics.c,534 :: 		strncat(txtB,txtA,str_lenA);
 SEH	R27, R11
 LUI	R26, hi_addr(_txtA+0)
 ORI	R26, R26, lo_addr(_txtA+0)
@@ -2196,7 +2196,7 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,536 :: 		sprintf(txt,"%0.2f",Circ.xStep);
+;Kinematics.c,537 :: 		sprintf(txt,"%0.2f",Circ.xStep);
 LW	R2, Offset(_Circ+60)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
@@ -2209,7 +2209,7 @@ SW	R2, 0(SP)
 JAL	_sprintf+0
 NOP	
 ADDIU	SP, SP, 12
-;Kinematics.c,537 :: 		strncat(txtB,txt,strlen(txt));
+;Kinematics.c,538 :: 		strncat(txtB,txt,strlen(txt));
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
@@ -2221,12 +2221,12 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,538 :: 		str_len += strlen(txt);
+;Kinematics.c,539 :: 		str_len += strlen(txt);
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
 NOP	
-;Kinematics.c,539 :: 		strncat(txtB,txtA,str_lenA);
+;Kinematics.c,540 :: 		strncat(txtB,txtA,str_lenA);
 SEH	R27, R11
 LUI	R26, hi_addr(_txtA+0)
 ORI	R26, R26, lo_addr(_txtA+0)
@@ -2234,7 +2234,7 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,542 :: 		sprintf(txt,"%0.2f",Circ.yStep);
+;Kinematics.c,543 :: 		sprintf(txt,"%0.2f",Circ.yStep);
 LW	R2, Offset(_Circ+64)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
@@ -2247,7 +2247,7 @@ SW	R2, 0(SP)
 JAL	_sprintf+0
 NOP	
 ADDIU	SP, SP, 12
-;Kinematics.c,543 :: 		strncat(txtB,txt,strlen(txt));
+;Kinematics.c,544 :: 		strncat(txtB,txt,strlen(txt));
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
@@ -2259,12 +2259,12 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,544 :: 		str_len += strlen(txt);
+;Kinematics.c,545 :: 		str_len += strlen(txt);
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
 NOP	
-;Kinematics.c,545 :: 		strncat(txtB,txtA,str_lenA);
+;Kinematics.c,546 :: 		strncat(txtB,txtA,str_lenA);
 SEH	R27, R11
 LUI	R26, hi_addr(_txtA+0)
 ORI	R26, R26, lo_addr(_txtA+0)
@@ -2272,7 +2272,7 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,548 :: 		sprintf(txt,"%0.2f",Circ.xFin);
+;Kinematics.c,549 :: 		sprintf(txt,"%0.2f",Circ.xFin);
 LW	R2, Offset(_Circ+68)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
@@ -2285,7 +2285,7 @@ SW	R2, 0(SP)
 JAL	_sprintf+0
 NOP	
 ADDIU	SP, SP, 12
-;Kinematics.c,549 :: 		strncat(txtB,txt,strlen(txt));
+;Kinematics.c,550 :: 		strncat(txtB,txt,strlen(txt));
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
@@ -2297,12 +2297,12 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,550 :: 		str_len += strlen(txt)+1;
+;Kinematics.c,551 :: 		str_len += strlen(txt)+1;
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
 NOP	
-;Kinematics.c,551 :: 		strncat(txtB,txtA,str_lenA);
+;Kinematics.c,552 :: 		strncat(txtB,txtA,str_lenA);
 SEH	R27, R11
 LUI	R26, hi_addr(_txtA+0)
 ORI	R26, R26, lo_addr(_txtA+0)
@@ -2310,7 +2310,7 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,554 :: 		sprintf(txt,"%0.2f",Circ.yFin);
+;Kinematics.c,555 :: 		sprintf(txt,"%0.2f",Circ.yFin);
 LW	R2, Offset(_Circ+72)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
@@ -2323,7 +2323,7 @@ SW	R2, 0(SP)
 JAL	_sprintf+0
 NOP	
 ADDIU	SP, SP, 12
-;Kinematics.c,555 :: 		strncat(txtB,txt,strlen(txt));
+;Kinematics.c,556 :: 		strncat(txtB,txt,strlen(txt));
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
@@ -2335,12 +2335,12 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,556 :: 		str_len += strlen(txt)+1;
+;Kinematics.c,557 :: 		str_len += strlen(txt)+1;
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
 NOP	
-;Kinematics.c,557 :: 		strncat(txtB,txtA,str_lenA);
+;Kinematics.c,558 :: 		strncat(txtB,txtA,str_lenA);
 SEH	R27, R11
 LUI	R26, hi_addr(_txtA+0)
 ORI	R26, R26, lo_addr(_txtA+0)
@@ -2348,7 +2348,7 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,560 :: 		sprintf(txt,"%0.2f",Circ.Deg.newdeg);
+;Kinematics.c,561 :: 		sprintf(txt,"%0.2f",Circ.Deg.newdeg);
 LW	R2, Offset(_Circ+116)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
@@ -2361,7 +2361,7 @@ SW	R2, 0(SP)
 JAL	_sprintf+0
 NOP	
 ADDIU	SP, SP, 12
-;Kinematics.c,561 :: 		strncat(txtB,txt,strlen(txt));
+;Kinematics.c,562 :: 		strncat(txtB,txt,strlen(txt));
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
@@ -2373,12 +2373,12 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,562 :: 		str_len += strlen(txt)+1;
+;Kinematics.c,563 :: 		str_len += strlen(txt)+1;
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
 NOP	
-;Kinematics.c,563 :: 		strncat(txtB,txtA,str_lenA);
+;Kinematics.c,564 :: 		strncat(txtB,txtA,str_lenA);
 SEH	R27, R11
 LUI	R26, hi_addr(_txtA+0)
 ORI	R26, R26, lo_addr(_txtA+0)
@@ -2386,7 +2386,7 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,566 :: 		sprintf(txt,"%0.2f",Circ.Deg.deg);
+;Kinematics.c,567 :: 		sprintf(txt,"%0.2f",Circ.Deg.deg);
 LW	R2, Offset(_Circ+104)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
@@ -2399,7 +2399,7 @@ SW	R2, 0(SP)
 JAL	_sprintf+0
 NOP	
 ADDIU	SP, SP, 12
-;Kinematics.c,567 :: 		strncat(txtB,txt,strlen(txt));
+;Kinematics.c,568 :: 		strncat(txtB,txt,strlen(txt));
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
@@ -2411,12 +2411,12 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,568 :: 		str_len += strlen(txt)+1;
+;Kinematics.c,569 :: 		str_len += strlen(txt)+1;
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
 NOP	
-;Kinematics.c,569 :: 		strncat(txtB,txtA,str_lenA);
+;Kinematics.c,570 :: 		strncat(txtB,txtA,str_lenA);
 SEH	R27, R11
 LUI	R26, hi_addr(_txtA+0)
 ORI	R26, R26, lo_addr(_txtA+0)
@@ -2424,7 +2424,7 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,572 :: 		sprintf(txt,"%d",Circ.quadrant);
+;Kinematics.c,573 :: 		sprintf(txt,"%d",Circ.quadrant);
 LH	R2, Offset(_Circ+36)(GP)
 ADDIU	SP, SP, -12
 SH	R2, 8(SP)
@@ -2437,7 +2437,7 @@ SW	R2, 0(SP)
 JAL	_sprintf+0
 NOP	
 ADDIU	SP, SP, 12
-;Kinematics.c,573 :: 		strncat(txtB,txt,strlen(txt));
+;Kinematics.c,574 :: 		strncat(txtB,txt,strlen(txt));
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
@@ -2449,12 +2449,12 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,574 :: 		str_len += strlen(txt)+1;
+;Kinematics.c,575 :: 		str_len += strlen(txt)+1;
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
 NOP	
-;Kinematics.c,575 :: 		strncat(txtB,"\n",1);
+;Kinematics.c,576 :: 		strncat(txtB,"\n",1);
 ORI	R30, R0, 10
 SB	R30, 18(SP)
 MOVZ	R30, R0, R0
@@ -2466,7 +2466,7 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,577 :: 		strncat(txtB,txtA,str_lenA);
+;Kinematics.c,578 :: 		strncat(txtB,txtA,str_lenA);
 SEH	R27, R11
 ; str_lenA end address is: 44 (R11)
 LUI	R26, hi_addr(_txtA+0)
@@ -2475,12 +2475,12 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,580 :: 		UART2_Write_Text(txtB);
+;Kinematics.c,581 :: 		UART2_Write_Text(txtB);
 LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_UART2_Write_Text+0
 NOP	
-;Kinematics.c,589 :: 		}
+;Kinematics.c,590 :: 		}
 L_end_SerialPrint:
 LW	R27, 12(SP)
 LW	R26, 8(SP)

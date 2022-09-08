@@ -913,6 +913,7 @@ void Circ_Prep_Next(){
  if(Circ.y_next)
  toggleOCx(Y);
 
+
  if(Circ.steps >= Circ.Idivisor){
  Circ.steps = 0;
  Circ.cir_next = 0;
@@ -979,5 +980,5 @@ int str_lenA = 0;
  str_len += str_lenA;
 
  UART2_Write_Text(txtB);
-#line 589 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 590 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 }
