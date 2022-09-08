@@ -781,16 +781,14 @@ void disableOCx(){
 
 
 
-void StepX() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
+void StepX() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_SRS {
  STPS[X].step_count++;
  OC5IF_bit = 0;
 
  if(SV.Single_Dual == 0)
  SingleStepX();
  else
- AxisPulse[SV.Single_Dual]();
-
-
+ Circ_Prep_Next();
 }
 
 void SingleStepX(){
@@ -812,14 +810,14 @@ void StopX(){
 
 
 
-void StepY() iv IVT_OUTPUT_COMPARE_2 ilevel 3 ics ICS_AUTO {
+void StepY() iv IVT_OUTPUT_COMPARE_2 ilevel 3 ics ICS_SRS {
  STPS[Y].step_count++;
  OC2IF_bit = 0;
 
  if(SV.Single_Dual == 0)
  SingleStepY();
  else
- AxisPulse[SV.Single_Dual]();
+ Circ_Prep_Next();
 }
 
 void SingleStepY(){
@@ -840,7 +838,7 @@ void StopY(){
 
 
 
-void StepZ() iv IVT_OUTPUT_COMPARE_7 ilevel 3 ics ICS_AUTO {
+void StepZ() iv IVT_OUTPUT_COMPARE_7 ilevel 3 ics ICS_SRS {
  STPS[Z].step_count++;
  OC7IF_bit = 0;
 
@@ -868,7 +866,7 @@ void StopZ(){
 
 
 
-void StepA() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
+void StepA() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_SRS {
  STPS[A].step_count++;
  OC3IF_bit = 0;
 
@@ -892,7 +890,7 @@ void StopA(){
  OC3IE_bit = 0;
  OC3CONbits.ON = 0;
 }
-#line 518 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 516 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 unsigned int min_(unsigned int x, unsigned int y){
  if(x < y){
  return x;
@@ -901,7 +899,7 @@ unsigned int min_(unsigned int x, unsigned int y){
  return y;
  }
 }
-#line 535 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 533 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 static unsigned long sqrt_(unsigned long x){
 
  register unsigned long xr;
@@ -932,7 +930,7 @@ static unsigned long sqrt_(unsigned long x){
  return xr;
  }
 }
-#line 589 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 587 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void CycleStop(){
 int ii;
  STmr.uSec = 0;

@@ -1604,10 +1604,9 @@ JR	RA
 NOP	
 ; end of _disableOCx
 _StepX:
-;Stepper.c,397 :: 		void StepX() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
+;Stepper.c,397 :: 		void StepX() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_SRS {
 RDPGPR	SP, SP
-ADDIU	SP, SP, -16
-SW	R30, 12(SP)
+ADDIU	SP, SP, -12
 MFC0	R30, 12, 2
 SW	R30, 8(SP)
 MFC0	R30, 14, 0
@@ -1640,38 +1639,31 @@ NOP
 J	L_StepX60
 NOP	
 L_StepX59:
-;Stepper.c,404 :: 		AxisPulse[SV.Single_Dual]();
-LH	R2, Offset(_SV+0)(GP)
-SLL	R3, R2, 2
-LUI	R2, hi_addr(_AxisPulse+0)
-ORI	R2, R2, lo_addr(_AxisPulse+0)
-ADDU	R2, R2, R3
-LW	R2, 0(R2)
-JALR	RA, R2
+;Stepper.c,404 :: 		Circ_Prep_Next();//AxisPulse[SV.Single_Dual]();
+JAL	_Circ_Prep_Next+0
 NOP	
 L_StepX60:
-;Stepper.c,407 :: 		}
+;Stepper.c,405 :: 		}
 L_end_StepX:
 LW	RA, 0(SP)
 ADDIU	SP, SP, 4
 DI	
 EHB	
+LW	R30, 8(SP)
+MTC0	R30, 12, 2
 LW	R30, 4(SP)
 MTC0	R30, 14, 0
 LW	R30, 0(SP)
 MTC0	R30, 12, 0
-LW	R30, 8(SP)
-MTC0	R30, 12, 2
-LW	R30, 12(SP)
-ADDIU	SP, SP, 16
+ADDIU	SP, SP, 12
 WRPGPR	SP, SP
 ERET	
 ; end of _StepX
 _SingleStepX:
-;Stepper.c,409 :: 		void SingleStepX(){
+;Stepper.c,407 :: 		void SingleStepX(){
 ADDIU	SP, SP, -8
 SW	RA, 0(SP)
-;Stepper.c,410 :: 		if(STPS[X].step_count >= STPS[X].dist){  //i think this is where the problem lies
+;Stepper.c,408 :: 		if(STPS[X].step_count >= STPS[X].dist){  //i think this is where the problem lies
 SW	R25, 4(SP)
 LW	R3, Offset(_STPS+36)(GP)
 LW	R2, Offset(_STPS+32)(GP)
@@ -1681,20 +1673,20 @@ NOP
 J	L_SingleStepX61
 NOP	
 L__SingleStepX180:
-;Stepper.c,411 :: 		StopX();
+;Stepper.c,409 :: 		StopX();
 JAL	_StopX+0
 NOP	
-;Stepper.c,412 :: 		}
+;Stepper.c,410 :: 		}
 J	L_SingleStepX62
 NOP	
 L_SingleStepX61:
-;Stepper.c,414 :: 		Step_Cycle(X);
+;Stepper.c,412 :: 		Step_Cycle(X);
 MOVZ	R25, R0, R0
 JAL	_Step_Cycle+0
 NOP	
-;Stepper.c,415 :: 		}
+;Stepper.c,413 :: 		}
 L_SingleStepX62:
-;Stepper.c,416 :: 		}
+;Stepper.c,414 :: 		}
 L_end_SingleStepX:
 LW	R25, 4(SP)
 LW	RA, 0(SP)
@@ -1703,24 +1695,23 @@ JR	RA
 NOP	
 ; end of _SingleStepX
 _StopX:
-;Stepper.c,419 :: 		void StopX(){
-;Stepper.c,420 :: 		OC5IE_bit = 0;
+;Stepper.c,417 :: 		void StopX(){
+;Stepper.c,418 :: 		OC5IE_bit = 0;
 LUI	R2, BitMask(OC5IE_bit+0)
 ORI	R2, R2, BitMask(OC5IE_bit+0)
 _SX	
-;Stepper.c,421 :: 		OC5CONbits.ON = 0;
+;Stepper.c,419 :: 		OC5CONbits.ON = 0;
 ORI	R2, R0, 32768
 SW	R2, Offset(OC5CONbits+4)(GP)
-;Stepper.c,422 :: 		}
+;Stepper.c,420 :: 		}
 L_end_StopX:
 JR	RA
 NOP	
 ; end of _StopX
 _StepY:
-;Stepper.c,428 :: 		void StepY() iv IVT_OUTPUT_COMPARE_2 ilevel 3 ics ICS_AUTO {
+;Stepper.c,426 :: 		void StepY() iv IVT_OUTPUT_COMPARE_2 ilevel 3 ics ICS_SRS {
 RDPGPR	SP, SP
-ADDIU	SP, SP, -16
-SW	R30, 12(SP)
+ADDIU	SP, SP, -12
 MFC0	R30, 12, 2
 SW	R30, 8(SP)
 MFC0	R30, 14, 0
@@ -1732,59 +1723,52 @@ ORI	R30, R0, 3072
 MTC0	R30, 12, 0
 ADDIU	SP, SP, -4
 SW	RA, 0(SP)
-;Stepper.c,429 :: 		STPS[Y].step_count++;
+;Stepper.c,427 :: 		STPS[Y].step_count++;
 LW	R2, Offset(_STPS+100)(GP)
 ADDIU	R2, R2, 1
 SW	R2, Offset(_STPS+100)(GP)
-;Stepper.c,430 :: 		OC2IF_bit = 0;
+;Stepper.c,428 :: 		OC2IF_bit = 0;
 LUI	R2, BitMask(OC2IF_bit+0)
 ORI	R2, R2, BitMask(OC2IF_bit+0)
 _SX	
-;Stepper.c,432 :: 		if(SV.Single_Dual == 0)
+;Stepper.c,430 :: 		if(SV.Single_Dual == 0)
 LH	R2, Offset(_SV+0)(GP)
 BEQ	R2, R0, L__StepY183
 NOP	
 J	L_StepY63
 NOP	
 L__StepY183:
-;Stepper.c,433 :: 		SingleStepY();
+;Stepper.c,431 :: 		SingleStepY();
 JAL	_SingleStepY+0
 NOP	
 J	L_StepY64
 NOP	
 L_StepY63:
-;Stepper.c,435 :: 		AxisPulse[SV.Single_Dual]();
-LH	R2, Offset(_SV+0)(GP)
-SLL	R3, R2, 2
-LUI	R2, hi_addr(_AxisPulse+0)
-ORI	R2, R2, lo_addr(_AxisPulse+0)
-ADDU	R2, R2, R3
-LW	R2, 0(R2)
-JALR	RA, R2
+;Stepper.c,433 :: 		Circ_Prep_Next();//AxisPulse[SV.Single_Dual]();
+JAL	_Circ_Prep_Next+0
 NOP	
 L_StepY64:
-;Stepper.c,436 :: 		}
+;Stepper.c,434 :: 		}
 L_end_StepY:
 LW	RA, 0(SP)
 ADDIU	SP, SP, 4
 DI	
 EHB	
+LW	R30, 8(SP)
+MTC0	R30, 12, 2
 LW	R30, 4(SP)
 MTC0	R30, 14, 0
 LW	R30, 0(SP)
 MTC0	R30, 12, 0
-LW	R30, 8(SP)
-MTC0	R30, 12, 2
-LW	R30, 12(SP)
-ADDIU	SP, SP, 16
+ADDIU	SP, SP, 12
 WRPGPR	SP, SP
 ERET	
 ; end of _StepY
 _SingleStepY:
-;Stepper.c,438 :: 		void SingleStepY(){
+;Stepper.c,436 :: 		void SingleStepY(){
 ADDIU	SP, SP, -8
 SW	RA, 0(SP)
-;Stepper.c,439 :: 		if(STPS[Y].step_count >= STPS[Y].dist){  //i think this is where the problem lies
+;Stepper.c,437 :: 		if(STPS[Y].step_count >= STPS[Y].dist){  //i think this is where the problem lies
 SW	R25, 4(SP)
 LW	R3, Offset(_STPS+104)(GP)
 LW	R2, Offset(_STPS+100)(GP)
@@ -1794,20 +1778,20 @@ NOP
 J	L_SingleStepY65
 NOP	
 L__SingleStepY185:
-;Stepper.c,440 :: 		StopY();
+;Stepper.c,438 :: 		StopY();
 JAL	_StopY+0
 NOP	
-;Stepper.c,441 :: 		}
+;Stepper.c,439 :: 		}
 J	L_SingleStepY66
 NOP	
 L_SingleStepY65:
-;Stepper.c,443 :: 		Step_Cycle(Y);
+;Stepper.c,441 :: 		Step_Cycle(Y);
 ORI	R25, R0, 1
 JAL	_Step_Cycle+0
 NOP	
-;Stepper.c,444 :: 		}
+;Stepper.c,442 :: 		}
 L_SingleStepY66:
-;Stepper.c,445 :: 		}
+;Stepper.c,443 :: 		}
 L_end_SingleStepY:
 LW	R25, 4(SP)
 LW	RA, 0(SP)
@@ -1816,24 +1800,23 @@ JR	RA
 NOP	
 ; end of _SingleStepY
 _StopY:
-;Stepper.c,447 :: 		void StopY(){
-;Stepper.c,448 :: 		OC2IE_bit = 0;
+;Stepper.c,445 :: 		void StopY(){
+;Stepper.c,446 :: 		OC2IE_bit = 0;
 LUI	R2, BitMask(OC2IE_bit+0)
 ORI	R2, R2, BitMask(OC2IE_bit+0)
 _SX	
-;Stepper.c,449 :: 		OC2CONbits.ON = 0;
+;Stepper.c,447 :: 		OC2CONbits.ON = 0;
 ORI	R2, R0, 32768
 SW	R2, Offset(OC2CONbits+4)(GP)
-;Stepper.c,450 :: 		}
+;Stepper.c,448 :: 		}
 L_end_StopY:
 JR	RA
 NOP	
 ; end of _StopY
 _StepZ:
-;Stepper.c,456 :: 		void StepZ() iv IVT_OUTPUT_COMPARE_7 ilevel 3 ics ICS_AUTO {
+;Stepper.c,454 :: 		void StepZ() iv IVT_OUTPUT_COMPARE_7 ilevel 3 ics ICS_SRS {
 RDPGPR	SP, SP
-ADDIU	SP, SP, -16
-SW	R30, 12(SP)
+ADDIU	SP, SP, -12
 MFC0	R30, 12, 2
 SW	R30, 8(SP)
 MFC0	R30, 14, 0
@@ -1845,28 +1828,28 @@ ORI	R30, R0, 3072
 MTC0	R30, 12, 0
 ADDIU	SP, SP, -4
 SW	RA, 0(SP)
-;Stepper.c,457 :: 		STPS[Z].step_count++;
+;Stepper.c,455 :: 		STPS[Z].step_count++;
 LW	R2, Offset(_STPS+168)(GP)
 ADDIU	R2, R2, 1
 SW	R2, Offset(_STPS+168)(GP)
-;Stepper.c,458 :: 		OC7IF_bit = 0;
+;Stepper.c,456 :: 		OC7IF_bit = 0;
 LUI	R2, BitMask(OC7IF_bit+0)
 ORI	R2, R2, BitMask(OC7IF_bit+0)
 _SX	
-;Stepper.c,460 :: 		if(SV.Single_Dual == 0)
+;Stepper.c,458 :: 		if(SV.Single_Dual == 0)
 LH	R2, Offset(_SV+0)(GP)
 BEQ	R2, R0, L__StepZ188
 NOP	
 J	L_StepZ67
 NOP	
 L__StepZ188:
-;Stepper.c,461 :: 		SingleStepZ();
+;Stepper.c,459 :: 		SingleStepZ();
 JAL	_SingleStepZ+0
 NOP	
 J	L_StepZ68
 NOP	
 L_StepZ67:
-;Stepper.c,463 :: 		AxisPulse[SV.Single_Dual]();
+;Stepper.c,461 :: 		AxisPulse[SV.Single_Dual]();
 LH	R2, Offset(_SV+0)(GP)
 SLL	R3, R2, 2
 LUI	R2, hi_addr(_AxisPulse+0)
@@ -1876,28 +1859,27 @@ LW	R2, 0(R2)
 JALR	RA, R2
 NOP	
 L_StepZ68:
-;Stepper.c,465 :: 		}
+;Stepper.c,463 :: 		}
 L_end_StepZ:
 LW	RA, 0(SP)
 ADDIU	SP, SP, 4
 DI	
 EHB	
+LW	R30, 8(SP)
+MTC0	R30, 12, 2
 LW	R30, 4(SP)
 MTC0	R30, 14, 0
 LW	R30, 0(SP)
 MTC0	R30, 12, 0
-LW	R30, 8(SP)
-MTC0	R30, 12, 2
-LW	R30, 12(SP)
-ADDIU	SP, SP, 16
+ADDIU	SP, SP, 12
 WRPGPR	SP, SP
 ERET	
 ; end of _StepZ
 _SingleStepZ:
-;Stepper.c,467 :: 		void SingleStepZ(){
+;Stepper.c,465 :: 		void SingleStepZ(){
 ADDIU	SP, SP, -8
 SW	RA, 0(SP)
-;Stepper.c,468 :: 		if(STPS[Z].step_count >= STPS[Z].dist){
+;Stepper.c,466 :: 		if(STPS[Z].step_count >= STPS[Z].dist){
 SW	R25, 4(SP)
 LW	R3, Offset(_STPS+172)(GP)
 LW	R2, Offset(_STPS+168)(GP)
@@ -1907,20 +1889,20 @@ NOP
 J	L_SingleStepZ69
 NOP	
 L__SingleStepZ190:
-;Stepper.c,469 :: 		StopZ();
+;Stepper.c,467 :: 		StopZ();
 JAL	_StopZ+0
 NOP	
-;Stepper.c,470 :: 		}
+;Stepper.c,468 :: 		}
 J	L_SingleStepZ70
 NOP	
 L_SingleStepZ69:
-;Stepper.c,472 :: 		Step_Cycle(Z);
+;Stepper.c,470 :: 		Step_Cycle(Z);
 ORI	R25, R0, 2
 JAL	_Step_Cycle+0
 NOP	
-;Stepper.c,473 :: 		}
+;Stepper.c,471 :: 		}
 L_SingleStepZ70:
-;Stepper.c,474 :: 		}
+;Stepper.c,472 :: 		}
 L_end_SingleStepZ:
 LW	R25, 4(SP)
 LW	RA, 0(SP)
@@ -1929,24 +1911,23 @@ JR	RA
 NOP	
 ; end of _SingleStepZ
 _StopZ:
-;Stepper.c,476 :: 		void StopZ(){
-;Stepper.c,477 :: 		OC7IE_bit = 0;
+;Stepper.c,474 :: 		void StopZ(){
+;Stepper.c,475 :: 		OC7IE_bit = 0;
 LUI	R2, BitMask(OC7IE_bit+0)
 ORI	R2, R2, BitMask(OC7IE_bit+0)
 _SX	
-;Stepper.c,478 :: 		OC7CONbits.ON = 0;
+;Stepper.c,476 :: 		OC7CONbits.ON = 0;
 ORI	R2, R0, 32768
 SW	R2, Offset(OC7CONbits+4)(GP)
-;Stepper.c,479 :: 		}
+;Stepper.c,477 :: 		}
 L_end_StopZ:
 JR	RA
 NOP	
 ; end of _StopZ
 _StepA:
-;Stepper.c,484 :: 		void StepA() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
+;Stepper.c,482 :: 		void StepA() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_SRS {
 RDPGPR	SP, SP
-ADDIU	SP, SP, -16
-SW	R30, 12(SP)
+ADDIU	SP, SP, -12
 MFC0	R30, 12, 2
 SW	R30, 8(SP)
 MFC0	R30, 14, 0
@@ -1958,28 +1939,28 @@ ORI	R30, R0, 3072
 MTC0	R30, 12, 0
 ADDIU	SP, SP, -4
 SW	RA, 0(SP)
-;Stepper.c,485 :: 		STPS[A].step_count++;
+;Stepper.c,483 :: 		STPS[A].step_count++;
 LW	R2, Offset(_STPS+236)(GP)
 ADDIU	R2, R2, 1
 SW	R2, Offset(_STPS+236)(GP)
-;Stepper.c,486 :: 		OC3IF_bit = 0;
+;Stepper.c,484 :: 		OC3IF_bit = 0;
 LUI	R2, BitMask(OC3IF_bit+0)
 ORI	R2, R2, BitMask(OC3IF_bit+0)
 _SX	
-;Stepper.c,488 :: 		if(SV.Single_Dual == 0)
+;Stepper.c,486 :: 		if(SV.Single_Dual == 0)
 LH	R2, Offset(_SV+0)(GP)
 BEQ	R2, R0, L__StepA193
 NOP	
 J	L_StepA71
 NOP	
 L__StepA193:
-;Stepper.c,489 :: 		SingleStepA();
+;Stepper.c,487 :: 		SingleStepA();
 JAL	_SingleStepA+0
 NOP	
 J	L_StepA72
 NOP	
 L_StepA71:
-;Stepper.c,491 :: 		AxisPulse[SV.Single_Dual]();
+;Stepper.c,489 :: 		AxisPulse[SV.Single_Dual]();
 LH	R2, Offset(_SV+0)(GP)
 SLL	R3, R2, 2
 LUI	R2, hi_addr(_AxisPulse+0)
@@ -1989,28 +1970,27 @@ LW	R2, 0(R2)
 JALR	RA, R2
 NOP	
 L_StepA72:
-;Stepper.c,493 :: 		}
+;Stepper.c,491 :: 		}
 L_end_StepA:
 LW	RA, 0(SP)
 ADDIU	SP, SP, 4
 DI	
 EHB	
+LW	R30, 8(SP)
+MTC0	R30, 12, 2
 LW	R30, 4(SP)
 MTC0	R30, 14, 0
 LW	R30, 0(SP)
 MTC0	R30, 12, 0
-LW	R30, 8(SP)
-MTC0	R30, 12, 2
-LW	R30, 12(SP)
-ADDIU	SP, SP, 16
+ADDIU	SP, SP, 12
 WRPGPR	SP, SP
 ERET	
 ; end of _StepA
 _SingleStepA:
-;Stepper.c,495 :: 		void SingleStepA(){
+;Stepper.c,493 :: 		void SingleStepA(){
 ADDIU	SP, SP, -8
 SW	RA, 0(SP)
-;Stepper.c,496 :: 		if(STPS[A].step_count >= STPS[A].dist){
+;Stepper.c,494 :: 		if(STPS[A].step_count >= STPS[A].dist){
 SW	R25, 4(SP)
 LW	R3, Offset(_STPS+240)(GP)
 LW	R2, Offset(_STPS+236)(GP)
@@ -2020,20 +2000,20 @@ NOP
 J	L_SingleStepA73
 NOP	
 L__SingleStepA195:
-;Stepper.c,497 :: 		StopA();
+;Stepper.c,495 :: 		StopA();
 JAL	_StopA+0
 NOP	
-;Stepper.c,498 :: 		}
+;Stepper.c,496 :: 		}
 J	L_SingleStepA74
 NOP	
 L_SingleStepA73:
-;Stepper.c,500 :: 		Step_Cycle(A);
+;Stepper.c,498 :: 		Step_Cycle(A);
 ORI	R25, R0, 3
 JAL	_Step_Cycle+0
 NOP	
-;Stepper.c,501 :: 		}
+;Stepper.c,499 :: 		}
 L_SingleStepA74:
-;Stepper.c,502 :: 		}
+;Stepper.c,500 :: 		}
 L_end_SingleStepA:
 LW	R25, 4(SP)
 LW	RA, 0(SP)
@@ -2042,22 +2022,22 @@ JR	RA
 NOP	
 ; end of _SingleStepA
 _StopA:
-;Stepper.c,504 :: 		void StopA(){
-;Stepper.c,505 :: 		OC3IE_bit = 0;
+;Stepper.c,502 :: 		void StopA(){
+;Stepper.c,503 :: 		OC3IE_bit = 0;
 LUI	R2, BitMask(OC3IE_bit+0)
 ORI	R2, R2, BitMask(OC3IE_bit+0)
 _SX	
-;Stepper.c,506 :: 		OC3CONbits.ON = 0;
+;Stepper.c,504 :: 		OC3CONbits.ON = 0;
 ORI	R2, R0, 32768
 SW	R2, Offset(OC3CONbits+4)(GP)
-;Stepper.c,507 :: 		}
+;Stepper.c,505 :: 		}
 L_end_StopA:
 JR	RA
 NOP	
 ; end of _StopA
 _min_:
-;Stepper.c,518 :: 		unsigned int min_(unsigned int x, unsigned int y){
-;Stepper.c,519 :: 		if(x < y){
+;Stepper.c,516 :: 		unsigned int min_(unsigned int x, unsigned int y){
+;Stepper.c,517 :: 		if(x < y){
 ANDI	R3, R25, 65535
 ANDI	R2, R26, 65535
 SLTU	R2, R3, R2
@@ -2066,38 +2046,38 @@ NOP
 J	L_min_75
 NOP	
 L__min_198:
-;Stepper.c,520 :: 		return x;
+;Stepper.c,518 :: 		return x;
 ANDI	R2, R25, 65535
 J	L_end_min_
 NOP	
-;Stepper.c,521 :: 		}
+;Stepper.c,519 :: 		}
 L_min_75:
-;Stepper.c,523 :: 		return y;
+;Stepper.c,521 :: 		return y;
 ANDI	R2, R26, 65535
-;Stepper.c,525 :: 		}
+;Stepper.c,523 :: 		}
 L_end_min_:
 JR	RA
 NOP	
 ; end of _min_
 Stepper_sqrt_:
-;Stepper.c,535 :: 		static unsigned long sqrt_(unsigned long x){
-;Stepper.c,541 :: 		xr = 0;                     // clear result
+;Stepper.c,533 :: 		static unsigned long sqrt_(unsigned long x){
+;Stepper.c,539 :: 		xr = 0;                     // clear result
 ; xr start address is: 20 (R5)
 MOVZ	R5, R0, R0
-;Stepper.c,542 :: 		q2 = 0x40000000L;           // higest possible result bit
+;Stepper.c,540 :: 		q2 = 0x40000000L;           // higest possible result bit
 ; q2 start address is: 12 (R3)
 LUI	R3, 16384
 ; xr end address is: 20 (R5)
 ; q2 end address is: 12 (R3)
-;Stepper.c,543 :: 		do
+;Stepper.c,541 :: 		do
 J	L_Stepper_sqrt_77
 NOP	
 L_Stepper_sqrt_94:
-;Stepper.c,557 :: 		} while(q2 >>= 2);          // shift twice
+;Stepper.c,555 :: 		} while(q2 >>= 2);          // shift twice
 MOVZ	R5, R4, R0
-;Stepper.c,543 :: 		do
+;Stepper.c,541 :: 		do
 L_Stepper_sqrt_77:
-;Stepper.c,545 :: 		if((xr + q2) <= x)
+;Stepper.c,543 :: 		if((xr + q2) <= x)
 ; q2 start address is: 12 (R3)
 ; xr start address is: 20 (R5)
 ADDU	R2, R5, R3
@@ -2107,50 +2087,50 @@ NOP
 J	L_Stepper_sqrt_80
 NOP	
 L_Stepper_sqrt_200:
-;Stepper.c,547 :: 		x -= xr + q2;
+;Stepper.c,545 :: 		x -= xr + q2;
 ADDU	R2, R5, R3
 SUBU	R2, R25, R2
 MOVZ	R25, R2, R0
-;Stepper.c,548 :: 		f = 1;                  // set flag
+;Stepper.c,546 :: 		f = 1;                  // set flag
 ; f start address is: 16 (R4)
 ORI	R4, R0, 1
-;Stepper.c,549 :: 		}
+;Stepper.c,547 :: 		}
 ; f end address is: 16 (R4)
 J	L_Stepper_sqrt_81
 NOP	
 L_Stepper_sqrt_80:
-;Stepper.c,551 :: 		f = 0;                  // clear flag
+;Stepper.c,549 :: 		f = 0;                  // clear flag
 ; f start address is: 16 (R4)
 MOVZ	R4, R0, R0
 ; f end address is: 16 (R4)
-;Stepper.c,552 :: 		}
+;Stepper.c,550 :: 		}
 L_Stepper_sqrt_81:
-;Stepper.c,553 :: 		xr >>= 1;
+;Stepper.c,551 :: 		xr >>= 1;
 ; f start address is: 16 (R4)
 SRL	R2, R5, 1
 MOVZ	R5, R2, R0
-;Stepper.c,554 :: 		if(f){
+;Stepper.c,552 :: 		if(f){
 BNE	R4, R0, L_Stepper_sqrt_202
 NOP	
 J	L_Stepper_sqrt_95
 NOP	
 L_Stepper_sqrt_202:
 ; f end address is: 16 (R4)
-;Stepper.c,555 :: 		xr += q2;               // test flag
+;Stepper.c,553 :: 		xr += q2;               // test flag
 ADDU	R2, R5, R3
 ; xr end address is: 20 (R5)
 ; xr start address is: 16 (R4)
 MOVZ	R4, R2, R0
 ; xr end address is: 16 (R4)
-;Stepper.c,556 :: 		}
+;Stepper.c,554 :: 		}
 J	L_Stepper_sqrt_82
 NOP	
 L_Stepper_sqrt_95:
-;Stepper.c,554 :: 		if(f){
+;Stepper.c,552 :: 		if(f){
 MOVZ	R4, R5, R0
-;Stepper.c,556 :: 		}
+;Stepper.c,554 :: 		}
 L_Stepper_sqrt_82:
-;Stepper.c,557 :: 		} while(q2 >>= 2);          // shift twice
+;Stepper.c,555 :: 		} while(q2 >>= 2);          // shift twice
 ; xr start address is: 16 (R4)
 SRL	R2, R3, 2
 MOVZ	R3, R2, R0
@@ -2160,34 +2140,34 @@ J	L_Stepper_sqrt_94
 NOP	
 L_Stepper_sqrt_203:
 ; q2 end address is: 12 (R3)
-;Stepper.c,558 :: 		if(xr < x){
+;Stepper.c,556 :: 		if(xr < x){
 SLTU	R2, R4, R25
 BNE	R2, R0, L_Stepper_sqrt_204
 NOP	
 J	L_Stepper_sqrt_83
 NOP	
 L_Stepper_sqrt_204:
-;Stepper.c,559 :: 		return xr +1;             // add for rounding
+;Stepper.c,557 :: 		return xr +1;             // add for rounding
 ADDIU	R2, R4, 1
 ; xr end address is: 16 (R4)
 J	L_end_sqrt_
 NOP	
-;Stepper.c,560 :: 		}
+;Stepper.c,558 :: 		}
 L_Stepper_sqrt_83:
-;Stepper.c,562 :: 		return xr;
+;Stepper.c,560 :: 		return xr;
 ; xr start address is: 16 (R4)
 MOVZ	R2, R4, R0
 ; xr end address is: 16 (R4)
-;Stepper.c,564 :: 		}
+;Stepper.c,562 :: 		}
 L_end_sqrt_:
 JR	RA
 NOP	
 ; end of Stepper_sqrt_
 _CycleStop:
-;Stepper.c,589 :: 		void CycleStop(){
-;Stepper.c,591 :: 		STmr.uSec = 0;
+;Stepper.c,587 :: 		void CycleStop(){
+;Stepper.c,589 :: 		STmr.uSec = 0;
 SW	R0, Offset(_STmr+0)(GP)
-;Stepper.c,592 :: 		for(ii = 0;ii<NoOfAxis;ii++){
+;Stepper.c,590 :: 		for(ii = 0;ii<NoOfAxis;ii++){
 ; ii start address is: 16 (R4)
 MOVZ	R4, R0, R0
 ; ii end address is: 16 (R4)
@@ -2200,7 +2180,7 @@ NOP
 J	L_CycleStop86
 NOP	
 L__CycleStop206:
-;Stepper.c,593 :: 		STPS[ii].microSec = 0;
+;Stepper.c,591 :: 		STPS[ii].microSec = 0;
 SEH	R3, R4
 ORI	R2, R0, 68
 MULTU	R2, R3
@@ -2209,7 +2189,7 @@ LUI	R2, hi_addr(_STPS+0)
 ORI	R2, R2, lo_addr(_STPS+0)
 ADDU	R2, R2, R3
 SW	R0, 0(R2)
-;Stepper.c,594 :: 		if(ii > NoOfAxis)break;
+;Stepper.c,592 :: 		if(ii > NoOfAxis)break;
 SEH	R2, R4
 SLTI	R2, R2, 7
 BEQ	R2, R0, L__CycleStop207
@@ -2221,30 +2201,30 @@ L__CycleStop207:
 J	L_CycleStop86
 NOP	
 L_CycleStop88:
-;Stepper.c,592 :: 		for(ii = 0;ii<NoOfAxis;ii++){
+;Stepper.c,590 :: 		for(ii = 0;ii<NoOfAxis;ii++){
 ; ii start address is: 16 (R4)
 ADDIU	R2, R4, 1
 SEH	R4, R2
-;Stepper.c,595 :: 		}
+;Stepper.c,593 :: 		}
 ; ii end address is: 16 (R4)
 J	L_CycleStop85
 NOP	
 L_CycleStop86:
-;Stepper.c,596 :: 		}
+;Stepper.c,594 :: 		}
 L_end_CycleStop:
 JR	RA
 NOP	
 ; end of _CycleStop
 _CycleStart:
-;Stepper.c,598 :: 		void CycleStart(){
-;Stepper.c,601 :: 		if(SV.Tog == 0){
+;Stepper.c,596 :: 		void CycleStart(){
+;Stepper.c,599 :: 		if(SV.Tog == 0){
 LH	R2, Offset(_SV+4)(GP)
 BEQ	R2, R0, L__CycleStart209
 NOP	
 J	L_CycleStart89
 NOP	
 L__CycleStart209:
-;Stepper.c,602 :: 		for(ii = 0; ii < NoOfAxis;ii++){
+;Stepper.c,600 :: 		for(ii = 0; ii < NoOfAxis;ii++){
 ; ii start address is: 16 (R4)
 MOVZ	R4, R0, R0
 ; ii end address is: 16 (R4)
@@ -2257,7 +2237,7 @@ NOP
 J	L_CycleStart91
 NOP	
 L__CycleStart210:
-;Stepper.c,603 :: 		if(ii > NoOfAxis)break;
+;Stepper.c,601 :: 		if(ii > NoOfAxis)break;
 SEH	R2, R4
 SLTI	R2, R2, 7
 BEQ	R2, R0, L__CycleStart211
@@ -2269,7 +2249,7 @@ L__CycleStart211:
 J	L_CycleStart91
 NOP	
 L_CycleStart93:
-;Stepper.c,604 :: 		STPS[ii].microSec++;
+;Stepper.c,602 :: 		STPS[ii].microSec++;
 ; ii start address is: 16 (R4)
 SEH	R3, R4
 ORI	R2, R0, 68
@@ -2281,17 +2261,17 @@ ADDU	R3, R2, R3
 LW	R2, 0(R3)
 ADDIU	R2, R2, 1
 SW	R2, 0(R3)
-;Stepper.c,602 :: 		for(ii = 0; ii < NoOfAxis;ii++){
+;Stepper.c,600 :: 		for(ii = 0; ii < NoOfAxis;ii++){
 ADDIU	R2, R4, 1
 SEH	R4, R2
-;Stepper.c,605 :: 		}
+;Stepper.c,603 :: 		}
 ; ii end address is: 16 (R4)
 J	L_CycleStart90
 NOP	
 L_CycleStart91:
-;Stepper.c,606 :: 		}
+;Stepper.c,604 :: 		}
 L_CycleStart89:
-;Stepper.c,607 :: 		}
+;Stepper.c,605 :: 		}
 L_end_CycleStart:
 JR	RA
 NOP	

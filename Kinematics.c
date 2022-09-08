@@ -333,7 +333,7 @@ double newDeg;
    newDeg = 360.00 / Circ.Deg.degreeDeg;
    Circ.N = (2*Pi*Circ.radius)/newDeg;
    Circ.divisor = Circ.Deg.deg/Circ.N;
-   Circ.Idivisor = 1000;
+   Circ.Idivisor = 14;
 }
 
 ////////////////////////////////////////////////
@@ -369,20 +369,6 @@ double angA;
    //and convert  radans to degrees
    return atan2(j,i);//(Circ.XY.X,Circ.XY.Y);
    //Circ.Deg.degreeDeg = angA * rad2deg;
-}
-
-////////////////////////////////////////////////
-//Cac angle of attack to work out new x,y pos
-void CalcAngle(){
- double angB;
-
-   //deg is 360 or 0 and subtract the actual from deg
-   if(Circ.quadrant == 1 || Circ.quadrant == 3)
-       angB = Circ.Deg.deg - Circ.Deg.degreeDeg;
-   else if(Circ.quadrant == 2 || Circ.quadrant == 4)
-       angB = Circ.Deg.deg + Circ.Deg.degreeDeg;
-
-   Circ.Deg.degreeRadians = angB * deg2rad;
 }
 
 /////////////////////////////////////////////////
@@ -458,16 +444,7 @@ void Cir_Interpolation(){
      STPS[Y].step_delay = 100;
      SerialPrint();
 
-   //test if x must move
-    if(Circ.lastX != Circ.xStep){
-        Circ.x_next = 1;
-    }else
-        Circ.x_next = 0;
-    //test if y must move
-    if(Circ.lastY != Circ.yStep){
-        Circ.y_next = 1;
-    }else
-        Circ.y_next = 0;
+
 
      //test for direction change x
      if(Circ.lastX >= Circ.xStep){
@@ -486,13 +463,17 @@ void Cir_Interpolation(){
 }
 
 void Circ_Tick(){
+int x,y,xL,yL;
 
-     if (Circ.dir == CW){
-         Circ.Deg.deg += 0.25;//Circ.divisor;
-         if (Circ.Deg.deg == Circ.Deg.newdeg){
-             disableOCx();
-         }
-     }
+   x = (int)Circ.xStep;
+   y = (int)Circ.yStep;
+   
+   if (Circ.dir == CW){
+       Circ.Deg.deg += 0.25;//Circ.divisor;
+       if (Circ.Deg.deg == Circ.Deg.newdeg){
+           disableOCx();
+       }
+   }
 
     if (Circ.dir == CCW){
        Circ.Deg.deg -= 0.25;//Circ.divisor;
@@ -501,6 +482,20 @@ void Circ_Tick(){
        }
 
     }
+
+    //test if x must move
+    if(xL != x){
+        Circ.x_next = 1;
+    }else
+        Circ.x_next = 0;
+    //test if y must move
+    if(yL != y){
+        Circ.y_next = 1;
+    }else
+        Circ.y_next = 0;
+        
+    xL = x;
+    yL = y;
     SV.Single_Dual = 2;
 }
 
@@ -511,12 +506,13 @@ void Circ_Tick(){
  */
 void  Circ_Prep_Next(){
   Circ.steps++;
-  
+
   if(Circ.x_next)
       toggleOCx(X);
   if(Circ.y_next)
       toggleOCx(Y);
-
+      
+  //Todo async deg calc
   if(Circ.steps >= Circ.Idivisor){
     Circ.steps = 0;
     Circ.cir_next = 0;

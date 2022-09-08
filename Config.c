@@ -4,6 +4,7 @@
 
 void PinMode(){
 
+
      SYSKEY = 0xAA996655;
      SYSKEY = 0x556699AA;
      CFGCONbits.OCACLK = 1;
@@ -168,7 +169,7 @@ unsigned long cp0;
 
     // Lock Sequence
     SYSKEY = 0x33333333;
-
+    PRISS = 0x76543210;   //SRS all priorities
     // SETTING UP PREFETCH MODULE
     PREFEN0_bit = 1;
     PREFEN1_bit = 1;
@@ -246,7 +247,7 @@ void OutPutPulseXYZ(){
   OC5IP0_bit = 1;  // Set OC5 interrupt priority to 3
   OC5IP1_bit = 1;
   OC5IP2_bit = 0;
-  OC5IS0_bit = 1;  // Set OC5 sub priority 2
+  OC5IS0_bit = 0;  // Set OC5 sub priority 2
   OC5IS1_bit = 0;
   OC5IF_bit  = 0;  // reset interrupt flag
   OC5IE_bit  = 0;  // enable interrupt
@@ -255,7 +256,7 @@ void OutPutPulseXYZ(){
   OC2IP0_bit = 1;  // Set OC3 interrupt priority to 3
   OC2IP1_bit = 1;
   OC2IP2_bit = 0;
-  OC2IS0_bit = 0;  // Set OC3 sub priority 1
+  OC2IS0_bit = 1;  // Set OC3 sub priority 1
   OC2IS1_bit = 0;
   OC2IF_bit  = 0;   // reset interrupt flag
   OC2IE_bit  = 0;   // enable interrupt
@@ -263,9 +264,9 @@ void OutPutPulseXYZ(){
 //interrupt priority and enable set Z_Axis
   OC7IP0_bit = 1;  // Set OC8 interrupt priority to 3
   OC7IP1_bit = 1;
-  OC7IP2_bit = 0;
-  OC7IS0_bit = 1;  // Set OC8 sub priority 2
-  OC7IS1_bit = 0;
+  OC7IP2_bit = 1;
+  OC7IS0_bit = 0;  // Set OC8 sub priority 2
+  OC7IS1_bit = 1;
   OC7IF_bit  = 0;  // reset interrupt flag
   OC7IE_bit  = 0;  // enable interrupt
   
@@ -273,8 +274,8 @@ void OutPutPulseXYZ(){
   OC3IP0_bit = 1;  // Set OC3 interrupt priority to 3
   OC3IP1_bit = 1;
   OC3IP2_bit = 0;
-  OC3IS0_bit = 0;  // Set OC3 sub priority 1
-  OC3IS1_bit = 0;
+  OC3IS0_bit = 1;  // Set OC3 sub priority 1
+  OC3IS1_bit = 1;
   OC3IF_bit  = 0;   // reset interrupt flag
   OC3IE_bit  = 0;   // enable interrupt
   
@@ -283,7 +284,7 @@ void OutPutPulseXYZ(){
   OC6IP1_bit = 1;
   OC6IP2_bit = 0;
   OC6IS0_bit = 1;  // Set OC5 sub priority 2
-  OC6IS1_bit = 0;
+  OC6IS1_bit = 1;
   OC6IF_bit  = 0;  // reset interrupt flag
   OC6IE_bit  = 0;  // enable interrupt
   
@@ -292,7 +293,7 @@ void OutPutPulseXYZ(){
   OC8IP1_bit = 1;
   OC8IP2_bit = 0;
   OC8IS0_bit = 1;  // Set OC8 sub priority 2
-  OC8IS1_bit = 0;
+  OC8IS1_bit = 1;
   OC8IF_bit  = 0;  // reset interrupt flag
   OC8IE_bit  = 0;  // enable interrupt
   

@@ -119,19 +119,11 @@ StepX
 	SingleStepX
 		StopX
 		Step_Cycle
-	ClockPulse
-	XY_Interpolate
-	XZ_Interpolate
-	YZ_Interpolate
 	Circ_Prep_Next
 StepY
 	SingleStepY
 		StopY
 		Step_Cycle
-	ClockPulse
-	XY_Interpolate
-	XZ_Interpolate
-	YZ_Interpolate
 	Circ_Prep_Next
 StepZ
 	SingleStepZ

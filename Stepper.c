@@ -394,16 +394,14 @@ void disableOCx(){
 //////////////////////////////////////////////////////////
 //            X AXIS PULSE CONTROL                      //
 //////////////////////////////////////////////////////////
-void StepX() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
+void StepX() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_SRS {
      STPS[X].step_count++;
      OC5IF_bit = 0;
 
      if(SV.Single_Dual == 0)
         SingleStepX();
      else
-        AxisPulse[SV.Single_Dual]();
-
-
+        Circ_Prep_Next();//AxisPulse[SV.Single_Dual]();
 }
 
 void SingleStepX(){
@@ -425,14 +423,14 @@ void StopX(){
 //////////////////////////////////////////////////////////
 //            Y AXIS PULSE CONTROL                      //
 //////////////////////////////////////////////////////////
-void StepY() iv IVT_OUTPUT_COMPARE_2 ilevel 3 ics ICS_AUTO {
+void StepY() iv IVT_OUTPUT_COMPARE_2 ilevel 3 ics ICS_SRS {
    STPS[Y].step_count++;
    OC2IF_bit = 0;
 
    if(SV.Single_Dual == 0)
         SingleStepY();
      else
-        AxisPulse[SV.Single_Dual]();
+        Circ_Prep_Next();//AxisPulse[SV.Single_Dual]();
 }
 
 void SingleStepY(){
@@ -453,7 +451,7 @@ void StopY(){
 //////////////////////////////////////////////////////////
 //            Z AXIS PULSE CONTROL                      //
 //////////////////////////////////////////////////////////
-void StepZ() iv IVT_OUTPUT_COMPARE_7 ilevel 3 ics ICS_AUTO {
+void StepZ() iv IVT_OUTPUT_COMPARE_7 ilevel 3 ics ICS_SRS {
    STPS[Z].step_count++;
    OC7IF_bit = 0;
 
@@ -481,7 +479,7 @@ void StopZ(){
 //////////////////////////////////////////////////////////
 //            A AXIS PULSE CONTROL                      //
 //////////////////////////////////////////////////////////
-void StepA() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
+void StepA() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_SRS {
    STPS[A].step_count++;
    OC3IF_bit = 0;
 

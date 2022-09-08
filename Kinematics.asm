@@ -67,32 +67,32 @@ NOP
 ;Kinematics.c,44 :: 		}
 L_SingleAxisStep0:
 SEH	R2, R26
-BNE	R2, R0, L__SingleAxisStep176
+BNE	R2, R0, L__SingleAxisStep163
 NOP	
 J	L_SingleAxisStep2
 NOP	
-L__SingleAxisStep176:
+L__SingleAxisStep163:
 SEH	R3, R26
 ORI	R2, R0, 1
-BNE	R3, R2, L__SingleAxisStep178
+BNE	R3, R2, L__SingleAxisStep165
 NOP	
 J	L_SingleAxisStep3
 NOP	
-L__SingleAxisStep178:
+L__SingleAxisStep165:
 SEH	R3, R26
 ORI	R2, R0, 2
-BNE	R3, R2, L__SingleAxisStep180
+BNE	R3, R2, L__SingleAxisStep167
 NOP	
 J	L_SingleAxisStep4
 NOP	
-L__SingleAxisStep180:
+L__SingleAxisStep167:
 SEH	R3, R26
 ORI	R2, R0, 3
-BNE	R3, R2, L__SingleAxisStep182
+BNE	R3, R2, L__SingleAxisStep169
 NOP	
 J	L_SingleAxisStep5
 NOP	
-L__SingleAxisStep182:
+L__SingleAxisStep169:
 J	L_SingleAxisStep6
 NOP	
 L_SingleAxisStep1:
@@ -128,11 +128,11 @@ LW	R2, 16(SP)
 SW	R3, 0(R2)
 ;Kinematics.c,49 :: 		if(newxyz < 0)
 SLTI	R2, R25, 0
-BNE	R2, R0, L__SingleAxisStep183
+BNE	R2, R0, L__SingleAxisStep170
 NOP	
 J	L_SingleAxisStep7
 NOP	
-L__SingleAxisStep183:
+L__SingleAxisStep170:
 ;Kinematics.c,50 :: 		dir = CCW;
 ; dir start address is: 16 (R4)
 ORI	R4, R0, 1
@@ -200,32 +200,32 @@ NOP
 L_SingleAxisStep9:
 ; dir start address is: 16 (R4)
 SEH	R2, R26
-BNE	R2, R0, L__SingleAxisStep185
+BNE	R2, R0, L__SingleAxisStep172
 NOP	
 J	L_SingleAxisStep11
 NOP	
-L__SingleAxisStep185:
+L__SingleAxisStep172:
 SEH	R3, R26
 ORI	R2, R0, 1
-BNE	R3, R2, L__SingleAxisStep187
+BNE	R3, R2, L__SingleAxisStep174
 NOP	
 J	L_SingleAxisStep12
 NOP	
-L__SingleAxisStep187:
+L__SingleAxisStep174:
 SEH	R3, R26
 ORI	R2, R0, 2
-BNE	R3, R2, L__SingleAxisStep189
+BNE	R3, R2, L__SingleAxisStep176
 NOP	
 J	L_SingleAxisStep13
 NOP	
-L__SingleAxisStep189:
+L__SingleAxisStep176:
 SEH	R3, R26
 ORI	R2, R0, 3
-BNE	R3, R2, L__SingleAxisStep191
+BNE	R3, R2, L__SingleAxisStep178
 NOP	
 J	L_SingleAxisStep14
 NOP	
-L__SingleAxisStep191:
+L__SingleAxisStep178:
 ; dir end address is: 16 (R4)
 J	L_SingleAxisStep15
 NOP	
@@ -298,11 +298,11 @@ SW	R2, Offset(_SV+20)(GP)
 ;Kinematics.c,101 :: 		SV.dirx = SV.dx > 0?1:-1;
 LW	R2, Offset(_SV+16)(GP)
 SLTI	R2, R2, 1
-BEQ	R2, R0, L__DualAxisStep193
+BEQ	R2, R0, L__DualAxisStep180
 NOP	
 J	L_DualAxisStep19
 NOP	
-L__DualAxisStep193:
+L__DualAxisStep180:
 ; ?FLOC___DualAxisStep?T40 start address is: 12 (R3)
 ORI	R3, R0, 1
 ; ?FLOC___DualAxisStep?T40 end address is: 12 (R3)
@@ -320,11 +320,11 @@ SH	R2, Offset(_SV+64)(GP)
 ;Kinematics.c,102 :: 		SV.diry = SV.dy > 0?1:-1;
 LW	R2, Offset(_SV+20)(GP)
 SLTI	R2, R2, 1
-BEQ	R2, R0, L__DualAxisStep194
+BEQ	R2, R0, L__DualAxisStep181
 NOP	
 J	L_DualAxisStep21
 NOP	
-L__DualAxisStep194:
+L__DualAxisStep181:
 ; ?FLOC___DualAxisStep?T42 start address is: 12 (R3)
 ORI	R3, R0, 1
 ; ?FLOC___DualAxisStep?T42 end address is: 12 (R3)
@@ -342,11 +342,11 @@ SH	R2, Offset(_SV+66)(GP)
 ;Kinematics.c,105 :: 		if(SV.dirx < 0)
 LH	R2, Offset(_SV+64)(GP)
 SLTI	R2, R2, 0
-BNE	R2, R0, L__DualAxisStep195
+BNE	R2, R0, L__DualAxisStep182
 NOP	
 J	L_DualAxisStep23
 NOP	
-L__DualAxisStep195:
+L__DualAxisStep182:
 ;Kinematics.c,106 :: 		DIR_StepX = CCW;
 _LX	
 ORI	R2, R2, BitMask(DIR_StepX+0)
@@ -362,11 +362,11 @@ L_DualAxisStep24:
 ;Kinematics.c,110 :: 		if(SV.diry < 0)
 LH	R2, Offset(_SV+66)(GP)
 SLTI	R2, R2, 0
-BNE	R2, R0, L__DualAxisStep196
+BNE	R2, R0, L__DualAxisStep183
 NOP	
 J	L_DualAxisStep25
 NOP	
-L__DualAxisStep196:
+L__DualAxisStep183:
 ;Kinematics.c,111 :: 		DIR_StepY = CCW;
 _LX	
 ORI	R2, R2, BitMask(DIR_StepY+0)
@@ -395,11 +395,11 @@ SW	R2, Offset(_SV+20)(GP)
 LW	R3, Offset(_SV+20)(GP)
 LW	R2, Offset(_SV+16)(GP)
 SLT	R2, R3, R2
-BNE	R2, R0, L__DualAxisStep197
+BNE	R2, R0, L__DualAxisStep184
 NOP	
 J	L_DualAxisStep27
 NOP	
-L__DualAxisStep197:
+L__DualAxisStep184:
 ;Kinematics.c,119 :: 		SV.d2 = 2*(SV.dy - SV.dx);
 LW	R3, Offset(_SV+16)(GP)
 LW	R2, Offset(_SV+20)(GP)
@@ -455,11 +455,11 @@ SW	R2, Offset(_SV+24)(GP)
 ;Kinematics.c,137 :: 		SV.dirx = SV.dx > 0?1:-1;
 LW	R2, Offset(_SV+16)(GP)
 SLTI	R2, R2, 1
-BEQ	R2, R0, L__DualAxisStep198
+BEQ	R2, R0, L__DualAxisStep185
 NOP	
 J	L_DualAxisStep30
 NOP	
-L__DualAxisStep198:
+L__DualAxisStep185:
 ; ?FLOC___DualAxisStep?T58 start address is: 12 (R3)
 ORI	R3, R0, 1
 ; ?FLOC___DualAxisStep?T58 end address is: 12 (R3)
@@ -477,11 +477,11 @@ SH	R2, Offset(_SV+64)(GP)
 ;Kinematics.c,138 :: 		SV.dirz = SV.dz > 0?1:-1;
 LW	R2, Offset(_SV+24)(GP)
 SLTI	R2, R2, 1
-BEQ	R2, R0, L__DualAxisStep199
+BEQ	R2, R0, L__DualAxisStep186
 NOP	
 J	L_DualAxisStep32
 NOP	
-L__DualAxisStep199:
+L__DualAxisStep186:
 ; ?FLOC___DualAxisStep?T60 start address is: 12 (R3)
 ORI	R3, R0, 1
 ; ?FLOC___DualAxisStep?T60 end address is: 12 (R3)
@@ -499,11 +499,11 @@ SH	R2, Offset(_SV+68)(GP)
 ;Kinematics.c,141 :: 		if(SV.dirx < 0)DIR_StepX = CCW;
 LH	R2, Offset(_SV+64)(GP)
 SLTI	R2, R2, 0
-BNE	R2, R0, L__DualAxisStep200
+BNE	R2, R0, L__DualAxisStep187
 NOP	
 J	L_DualAxisStep34
 NOP	
-L__DualAxisStep200:
+L__DualAxisStep187:
 _LX	
 ORI	R2, R2, BitMask(DIR_StepX+0)
 _SX	
@@ -518,11 +518,11 @@ L_DualAxisStep35:
 ;Kinematics.c,144 :: 		if(SV.dirz < 0) DIR_StepZ = CCW;
 LH	R2, Offset(_SV+68)(GP)
 SLTI	R2, R2, 0
-BNE	R2, R0, L__DualAxisStep201
+BNE	R2, R0, L__DualAxisStep188
 NOP	
 J	L_DualAxisStep36
 NOP	
-L__DualAxisStep201:
+L__DualAxisStep188:
 _LX	
 ORI	R2, R2, BitMask(DIR_StepZ+0)
 _SX	
@@ -550,11 +550,11 @@ SW	R2, Offset(_SV+24)(GP)
 LW	R3, Offset(_SV+24)(GP)
 LW	R2, Offset(_SV+16)(GP)
 SLT	R2, R3, R2
-BNE	R2, R0, L__DualAxisStep202
+BNE	R2, R0, L__DualAxisStep189
 NOP	
 J	L_DualAxisStep38
 NOP	
-L__DualAxisStep202:
+L__DualAxisStep189:
 LW	R3, Offset(_SV+16)(GP)
 LW	R2, Offset(_SV+24)(GP)
 SUBU	R2, R2, R3
@@ -609,11 +609,11 @@ SW	R2, Offset(_SV+24)(GP)
 ;Kinematics.c,167 :: 		SV.diry = SV.dy > 0?1:-1;
 LW	R2, Offset(_SV+20)(GP)
 SLTI	R2, R2, 1
-BEQ	R2, R0, L__DualAxisStep203
+BEQ	R2, R0, L__DualAxisStep190
 NOP	
 J	L_DualAxisStep41
 NOP	
-L__DualAxisStep203:
+L__DualAxisStep190:
 ; ?FLOC___DualAxisStep?T76 start address is: 12 (R3)
 ORI	R3, R0, 1
 ; ?FLOC___DualAxisStep?T76 end address is: 12 (R3)
@@ -631,11 +631,11 @@ SH	R2, Offset(_SV+66)(GP)
 ;Kinematics.c,168 :: 		SV.dirz = SV.dz > 0?1:-1;
 LW	R2, Offset(_SV+24)(GP)
 SLTI	R2, R2, 1
-BEQ	R2, R0, L__DualAxisStep204
+BEQ	R2, R0, L__DualAxisStep191
 NOP	
 J	L_DualAxisStep43
 NOP	
-L__DualAxisStep204:
+L__DualAxisStep191:
 ; ?FLOC___DualAxisStep?T78 start address is: 12 (R3)
 ORI	R3, R0, 1
 ; ?FLOC___DualAxisStep?T78 end address is: 12 (R3)
@@ -653,11 +653,11 @@ SH	R2, Offset(_SV+68)(GP)
 ;Kinematics.c,171 :: 		if(SV.diry < 0)DIR_StepY = CCW;
 LH	R2, Offset(_SV+66)(GP)
 SLTI	R2, R2, 0
-BNE	R2, R0, L__DualAxisStep205
+BNE	R2, R0, L__DualAxisStep192
 NOP	
 J	L_DualAxisStep45
 NOP	
-L__DualAxisStep205:
+L__DualAxisStep192:
 _LX	
 ORI	R2, R2, BitMask(DIR_StepY+0)
 _SX	
@@ -672,11 +672,11 @@ L_DualAxisStep46:
 ;Kinematics.c,173 :: 		if(SV.dirz < 0) DIR_StepZ = CCW;
 LH	R2, Offset(_SV+68)(GP)
 SLTI	R2, R2, 0
-BNE	R2, R0, L__DualAxisStep206
+BNE	R2, R0, L__DualAxisStep193
 NOP	
 J	L_DualAxisStep47
 NOP	
-L__DualAxisStep206:
+L__DualAxisStep193:
 _LX	
 ORI	R2, R2, BitMask(DIR_StepZ+0)
 _SX	
@@ -704,11 +704,11 @@ SW	R2, Offset(_SV+24)(GP)
 LW	R3, Offset(_SV+24)(GP)
 LW	R2, Offset(_SV+20)(GP)
 SLT	R2, R3, R2
-BNE	R2, R0, L__DualAxisStep207
+BNE	R2, R0, L__DualAxisStep194
 NOP	
 J	L_DualAxisStep49
 NOP	
-L__DualAxisStep207:
+L__DualAxisStep194:
 LW	R3, Offset(_SV+20)(GP)
 LW	R2, Offset(_SV+24)(GP)
 SUBU	R2, R2, R3
@@ -742,25 +742,25 @@ NOP
 ;Kinematics.c,188 :: 		}
 L_DualAxisStep16:
 SEH	R2, R27
-BNE	R2, R0, L__DualAxisStep209
+BNE	R2, R0, L__DualAxisStep196
 NOP	
 J	L_DualAxisStep18
 NOP	
-L__DualAxisStep209:
+L__DualAxisStep196:
 SEH	R3, R27
 ORI	R2, R0, 1
-BNE	R3, R2, L__DualAxisStep211
+BNE	R3, R2, L__DualAxisStep198
 NOP	
 J	L_DualAxisStep29
 NOP	
-L__DualAxisStep211:
+L__DualAxisStep198:
 SEH	R3, R27
 ORI	R2, R0, 2
-BNE	R3, R2, L__DualAxisStep213
+BNE	R3, R2, L__DualAxisStep200
 NOP	
 J	L_DualAxisStep40
 NOP	
-L__DualAxisStep213:
+L__DualAxisStep200:
 J	L_DualAxisStep51
 NOP	
 L_DualAxisStep17:
@@ -781,23 +781,23 @@ SW	R25, 4(SP)
 LW	R3, Offset(_SV+16)(GP)
 LW	R2, Offset(_STPS+32)(GP)
 SLT	R2, R3, R2
-BEQ	R2, R0, L__XY_Interpolate215
+BEQ	R2, R0, L__XY_Interpolate202
 NOP	
-J	L__XY_Interpolate137
+J	L__XY_Interpolate130
 NOP	
-L__XY_Interpolate215:
+L__XY_Interpolate202:
 LW	R3, Offset(_SV+20)(GP)
 LW	R2, Offset(_STPS+100)(GP)
 SLT	R2, R3, R2
-BEQ	R2, R0, L__XY_Interpolate216
+BEQ	R2, R0, L__XY_Interpolate203
 NOP	
-J	L__XY_Interpolate136
+J	L__XY_Interpolate129
 NOP	
-L__XY_Interpolate216:
+L__XY_Interpolate203:
 J	L_XY_Interpolate54
 NOP	
-L__XY_Interpolate137:
-L__XY_Interpolate136:
+L__XY_Interpolate130:
+L__XY_Interpolate129:
 ;Kinematics.c,196 :: 		StopX();
 JAL	_StopX+0
 NOP	
@@ -813,11 +813,11 @@ L_XY_Interpolate54:
 LW	R3, Offset(_SV+20)(GP)
 LW	R2, Offset(_SV+16)(GP)
 SLT	R2, R3, R2
-BNE	R2, R0, L__XY_Interpolate217
+BNE	R2, R0, L__XY_Interpolate204
 NOP	
 J	L_XY_Interpolate55
 NOP	
-L__XY_Interpolate217:
+L__XY_Interpolate204:
 ;Kinematics.c,202 :: 		Step_Cycle(X);
 MOVZ	R25, R0, R0
 JAL	_Step_Cycle+0
@@ -825,11 +825,11 @@ NOP
 ;Kinematics.c,203 :: 		if(SV.d2 < 0){
 LW	R2, Offset(_SV+12)(GP)
 SLTI	R2, R2, 0
-BNE	R2, R0, L__XY_Interpolate218
+BNE	R2, R0, L__XY_Interpolate205
 NOP	
 J	L_XY_Interpolate56
 NOP	
-L__XY_Interpolate218:
+L__XY_Interpolate205:
 ;Kinematics.c,204 :: 		SV.d2 += 2*SV.dy;
 LW	R2, Offset(_SV+20)(GP)
 SLL	R3, R2, 1
@@ -865,11 +865,11 @@ NOP
 ;Kinematics.c,211 :: 		if(SV.d2 < 0){
 LW	R2, Offset(_SV+12)(GP)
 SLTI	R2, R2, 0
-BNE	R2, R0, L__XY_Interpolate219
+BNE	R2, R0, L__XY_Interpolate206
 NOP	
 J	L_XY_Interpolate59
 NOP	
-L__XY_Interpolate219:
+L__XY_Interpolate206:
 ;Kinematics.c,212 :: 		SV.d2 += 2 * SV.dx;
 LW	R2, Offset(_SV+16)(GP)
 SLL	R3, R2, 1
@@ -913,23 +913,23 @@ SW	R25, 4(SP)
 LW	R3, Offset(_SV+16)(GP)
 LW	R2, Offset(_STPS+32)(GP)
 SLT	R2, R3, R2
-BEQ	R2, R0, L__XZ_Interpolate221
+BEQ	R2, R0, L__XZ_Interpolate208
 NOP	
-J	L__XZ_Interpolate140
+J	L__XZ_Interpolate133
 NOP	
-L__XZ_Interpolate221:
+L__XZ_Interpolate208:
 LW	R3, Offset(_SV+24)(GP)
 LW	R2, Offset(_STPS+168)(GP)
 SLT	R2, R3, R2
-BEQ	R2, R0, L__XZ_Interpolate222
+BEQ	R2, R0, L__XZ_Interpolate209
 NOP	
-J	L__XZ_Interpolate139
+J	L__XZ_Interpolate132
 NOP	
-L__XZ_Interpolate222:
+L__XZ_Interpolate209:
 J	L_XZ_Interpolate63
 NOP	
-L__XZ_Interpolate140:
-L__XZ_Interpolate139:
+L__XZ_Interpolate133:
+L__XZ_Interpolate132:
 ;Kinematics.c,223 :: 		StopX();
 JAL	_StopX+0
 NOP	
@@ -945,11 +945,11 @@ L_XZ_Interpolate63:
 LW	R3, Offset(_SV+24)(GP)
 LW	R2, Offset(_SV+16)(GP)
 SLT	R2, R3, R2
-BNE	R2, R0, L__XZ_Interpolate223
+BNE	R2, R0, L__XZ_Interpolate210
 NOP	
 J	L_XZ_Interpolate64
 NOP	
-L__XZ_Interpolate223:
+L__XZ_Interpolate210:
 ;Kinematics.c,230 :: 		Step_Cycle(X);
 MOVZ	R25, R0, R0
 JAL	_Step_Cycle+0
@@ -957,11 +957,11 @@ NOP
 ;Kinematics.c,231 :: 		if(d2 < 0)
 LW	R2, Offset(Kinematics_d2+0)(GP)
 SLTI	R2, R2, 0
-BNE	R2, R0, L__XZ_Interpolate224
+BNE	R2, R0, L__XZ_Interpolate211
 NOP	
 J	L_XZ_Interpolate65
 NOP	
-L__XZ_Interpolate224:
+L__XZ_Interpolate211:
 ;Kinematics.c,232 :: 		d2 += 2*SV.dz;
 LW	R2, Offset(_SV+24)(GP)
 SLL	R3, R2, 1
@@ -996,11 +996,11 @@ NOP
 ;Kinematics.c,240 :: 		if(d2 < 0)
 LW	R2, Offset(Kinematics_d2+0)(GP)
 SLTI	R2, R2, 0
-BNE	R2, R0, L__XZ_Interpolate225
+BNE	R2, R0, L__XZ_Interpolate212
 NOP	
 J	L_XZ_Interpolate68
 NOP	
-L__XZ_Interpolate225:
+L__XZ_Interpolate212:
 ;Kinematics.c,241 :: 		d2 += 2 * SV.dx;
 LW	R2, Offset(_SV+16)(GP)
 SLL	R3, R2, 1
@@ -1043,23 +1043,23 @@ SW	R25, 4(SP)
 LW	R3, Offset(_SV+20)(GP)
 LW	R2, Offset(_STPS+100)(GP)
 SLT	R2, R3, R2
-BEQ	R2, R0, L__YZ_Interpolate227
+BEQ	R2, R0, L__YZ_Interpolate214
 NOP	
-J	L__YZ_Interpolate143
+J	L__YZ_Interpolate136
 NOP	
-L__YZ_Interpolate227:
+L__YZ_Interpolate214:
 LW	R3, Offset(_SV+24)(GP)
 LW	R2, Offset(_STPS+168)(GP)
 SLT	R2, R3, R2
-BEQ	R2, R0, L__YZ_Interpolate228
+BEQ	R2, R0, L__YZ_Interpolate215
 NOP	
-J	L__YZ_Interpolate142
+J	L__YZ_Interpolate135
 NOP	
-L__YZ_Interpolate228:
+L__YZ_Interpolate215:
 J	L_YZ_Interpolate72
 NOP	
-L__YZ_Interpolate143:
-L__YZ_Interpolate142:
+L__YZ_Interpolate136:
+L__YZ_Interpolate135:
 ;Kinematics.c,251 :: 		StopY();
 JAL	_StopY+0
 NOP	
@@ -1075,11 +1075,11 @@ L_YZ_Interpolate72:
 LW	R3, Offset(_SV+24)(GP)
 LW	R2, Offset(_SV+20)(GP)
 SLT	R2, R3, R2
-BNE	R2, R0, L__YZ_Interpolate229
+BNE	R2, R0, L__YZ_Interpolate216
 NOP	
 J	L_YZ_Interpolate73
 NOP	
-L__YZ_Interpolate229:
+L__YZ_Interpolate216:
 ;Kinematics.c,257 :: 		Step_Cycle(Y);
 ORI	R25, R0, 1
 JAL	_Step_Cycle+0
@@ -1087,11 +1087,11 @@ NOP
 ;Kinematics.c,258 :: 		if(d2 < 0)
 LW	R2, Offset(Kinematics_d2+0)(GP)
 SLTI	R2, R2, 0
-BNE	R2, R0, L__YZ_Interpolate230
+BNE	R2, R0, L__YZ_Interpolate217
 NOP	
 J	L_YZ_Interpolate74
 NOP	
-L__YZ_Interpolate230:
+L__YZ_Interpolate217:
 ;Kinematics.c,259 :: 		d2 += 2*SV.dz;
 LW	R2, Offset(_SV+24)(GP)
 SLL	R3, R2, 1
@@ -1126,11 +1126,11 @@ NOP
 ;Kinematics.c,266 :: 		if(d2 < 0)
 LW	R2, Offset(Kinematics_d2+0)(GP)
 SLTI	R2, R2, 0
-BNE	R2, R0, L__YZ_Interpolate231
+BNE	R2, R0, L__YZ_Interpolate218
 NOP	
 J	L_YZ_Interpolate77
 NOP	
-L__YZ_Interpolate231:
+L__YZ_Interpolate218:
 ;Kinematics.c,267 :: 		d2 += 2 * SV.dy;
 LW	R2, Offset(_SV+20)(GP)
 SLL	R3, R2, 1
@@ -1284,11 +1284,11 @@ _CircDir:
 SH	R25, Offset(_Circ+32)(GP)
 ;Kinematics.c,320 :: 		if(Circ.dir == CW)
 SEH	R2, R25
-BEQ	R2, R0, L__CircDir234
+BEQ	R2, R0, L__CircDir221
 NOP	
 J	L_CircDir79
 NOP	
-L__CircDir234:
+L__CircDir221:
 ;Kinematics.c,321 :: 		Circ.Deg.deg = 0.00;
 MOVZ	R2, R0, R0
 SW	R2, Offset(_Circ+104)(GP)
@@ -1296,11 +1296,11 @@ L_CircDir79:
 ;Kinematics.c,322 :: 		if(Circ.dir == CCW)
 LH	R3, Offset(_Circ+32)(GP)
 ORI	R2, R0, 1
-BEQ	R3, R2, L__CircDir235
+BEQ	R3, R2, L__CircDir222
 NOP	
 J	L_CircDir80
 NOP	
-L__CircDir235:
+L__CircDir222:
 ;Kinematics.c,323 :: 		Circ.Deg.deg = 360.00;
 LUI	R2, 17332
 ORI	R2, R2, 0
@@ -1333,8 +1333,8 @@ SWC1	S1, Offset(_Circ+24)(GP)
 LWC1	S0, Offset(_Circ+104)(GP)
 DIV.S 	S0, S0, S1
 SWC1	S0, Offset(_Circ+4)(GP)
-;Kinematics.c,336 :: 		Circ.Idivisor = 1000;
-ORI	R2, R0, 1000
+;Kinematics.c,336 :: 		Circ.Idivisor = 14;
+ORI	R2, R0, 14
 SH	R2, Offset(_Circ+40)(GP)
 ;Kinematics.c,337 :: 		}
 L_end_CalcDivisor:
@@ -1435,208 +1435,139 @@ ADDIU	SP, SP, 4
 JR	RA
 NOP	
 ; end of _Calc_Angle
-_CalcAngle:
-;Kinematics.c,376 :: 		void CalcAngle(){
-ADDIU	SP, SP, -4
-;Kinematics.c,380 :: 		if(Circ.quadrant == 1 || Circ.quadrant == 3)
-LH	R3, Offset(_Circ+36)(GP)
-ORI	R2, R0, 1
-BNE	R3, R2, L__CalcAngle243
-NOP	
-J	L__CalcAngle165
-NOP	
-L__CalcAngle243:
-LH	R3, Offset(_Circ+36)(GP)
-ORI	R2, R0, 3
-BNE	R3, R2, L__CalcAngle245
-NOP	
-J	L__CalcAngle164
-NOP	
-L__CalcAngle245:
-J	L_CalcAngle83
-NOP	
-L__CalcAngle165:
-L__CalcAngle164:
-;Kinematics.c,381 :: 		angB = Circ.Deg.deg - Circ.Deg.degreeDeg;
-LWC1	S1, Offset(_Circ+108)(GP)
-LWC1	S0, Offset(_Circ+104)(GP)
-SUB.S 	S0, S0, S1
-SWC1	S0, 0(SP)
-J	L_CalcAngle84
-NOP	
-L_CalcAngle83:
-;Kinematics.c,382 :: 		else if(Circ.quadrant == 2 || Circ.quadrant == 4)
-LH	R3, Offset(_Circ+36)(GP)
-ORI	R2, R0, 2
-BNE	R3, R2, L__CalcAngle247
-NOP	
-J	L__CalcAngle167
-NOP	
-L__CalcAngle247:
-LH	R3, Offset(_Circ+36)(GP)
-ORI	R2, R0, 4
-BNE	R3, R2, L__CalcAngle249
-NOP	
-J	L__CalcAngle166
-NOP	
-L__CalcAngle249:
-J	L_CalcAngle87
-NOP	
-L__CalcAngle167:
-L__CalcAngle166:
-;Kinematics.c,383 :: 		angB = Circ.Deg.deg + Circ.Deg.degreeDeg;
-LWC1	S1, Offset(_Circ+108)(GP)
-LWC1	S0, Offset(_Circ+104)(GP)
-ADD.S 	S0, S0, S1
-SWC1	S0, 0(SP)
-L_CalcAngle87:
-L_CalcAngle84:
-;Kinematics.c,385 :: 		Circ.Deg.degreeRadians = angB * deg2rad;
-LWC1	S1, 0(SP)
-LUI	R2, 15502
-ORI	R2, R2, 64046
-MTC1	R2, S0
-MUL.S 	S0, S1, S0
-SWC1	S0, Offset(_Circ+112)(GP)
-;Kinematics.c,386 :: 		}
-L_end_CalcAngle:
-ADDIU	SP, SP, 4
-JR	RA
-NOP	
-; end of _CalcAngle
 _Quadrant:
-;Kinematics.c,390 :: 		int Quadrant(double i,double j){
-;Kinematics.c,391 :: 		if((i <= 0)&&(j >= 0))
+;Kinematics.c,376 :: 		int Quadrant(double i,double j){
+;Kinematics.c,377 :: 		if((i <= 0)&&(j >= 0))
 MOVZ	R2, R0, R0
 MTC1	R2, S0
 C.LT.S 	0, S0, S12
-BC1F	0, L__Quadrant251
+BC1F	0, L__Quadrant229
 NOP	
-J	L__Quadrant149
+J	L__Quadrant142
 NOP	
-L__Quadrant251:
+L__Quadrant229:
 MOVZ	R2, R0, R0
 MTC1	R2, S0
 C.LT.S 	0, S13, S0
-BC1F	0, L__Quadrant252
+BC1F	0, L__Quadrant230
 NOP	
-J	L__Quadrant148
+J	L__Quadrant141
 NOP	
-L__Quadrant252:
-L__Quadrant147:
-;Kinematics.c,392 :: 		return 1;
+L__Quadrant230:
+L__Quadrant140:
+;Kinematics.c,378 :: 		return 1;
 ORI	R2, R0, 1
 J	L_end_Quadrant
 NOP	
-;Kinematics.c,391 :: 		if((i <= 0)&&(j >= 0))
-L__Quadrant149:
-L__Quadrant148:
-;Kinematics.c,393 :: 		else if((i > 0)&&(j > 0))
+;Kinematics.c,377 :: 		if((i <= 0)&&(j >= 0))
+L__Quadrant142:
+L__Quadrant141:
+;Kinematics.c,379 :: 		else if((i > 0)&&(j > 0))
 MOVZ	R2, R0, R0
 MTC1	R2, S0
 C.LE.S 	0, S12, S0
-BC1F	0, L__Quadrant253
+BC1F	0, L__Quadrant231
 NOP	
-J	L__Quadrant151
+J	L__Quadrant144
 NOP	
-L__Quadrant253:
+L__Quadrant231:
 MOVZ	R2, R0, R0
 MTC1	R2, S0
 C.LE.S 	0, S13, S0
-BC1F	0, L__Quadrant254
+BC1F	0, L__Quadrant232
 NOP	
-J	L__Quadrant150
+J	L__Quadrant143
 NOP	
-L__Quadrant254:
-L__Quadrant146:
-;Kinematics.c,394 :: 		return 2;
+L__Quadrant232:
+L__Quadrant139:
+;Kinematics.c,380 :: 		return 2;
 ORI	R2, R0, 2
 J	L_end_Quadrant
 NOP	
-;Kinematics.c,393 :: 		else if((i > 0)&&(j > 0))
-L__Quadrant151:
-L__Quadrant150:
-;Kinematics.c,395 :: 		else if((i > 0)&&(j < 0))
+;Kinematics.c,379 :: 		else if((i > 0)&&(j > 0))
+L__Quadrant144:
+L__Quadrant143:
+;Kinematics.c,381 :: 		else if((i > 0)&&(j < 0))
 MOVZ	R2, R0, R0
 MTC1	R2, S0
 C.LE.S 	0, S12, S0
-BC1F	0, L__Quadrant255
+BC1F	0, L__Quadrant233
 NOP	
-J	L__Quadrant153
+J	L__Quadrant146
 NOP	
-L__Quadrant255:
+L__Quadrant233:
 MOVZ	R2, R0, R0
 MTC1	R2, S0
 C.LE.S 	0, S0, S13
-BC1F	0, L__Quadrant256
+BC1F	0, L__Quadrant234
 NOP	
-J	L__Quadrant152
+J	L__Quadrant145
 NOP	
-L__Quadrant256:
-L__Quadrant145:
-;Kinematics.c,396 :: 		return 3;
+L__Quadrant234:
+L__Quadrant138:
+;Kinematics.c,382 :: 		return 3;
 ORI	R2, R0, 3
 J	L_end_Quadrant
 NOP	
-;Kinematics.c,395 :: 		else if((i > 0)&&(j < 0))
-L__Quadrant153:
-L__Quadrant152:
-;Kinematics.c,397 :: 		else if((i < 0)&&(j < 0))
+;Kinematics.c,381 :: 		else if((i > 0)&&(j < 0))
+L__Quadrant146:
+L__Quadrant145:
+;Kinematics.c,383 :: 		else if((i < 0)&&(j < 0))
 MOVZ	R2, R0, R0
 MTC1	R2, S0
 C.LE.S 	0, S0, S12
-BC1F	0, L__Quadrant257
+BC1F	0, L__Quadrant235
 NOP	
-J	L__Quadrant155
+J	L__Quadrant148
 NOP	
-L__Quadrant257:
+L__Quadrant235:
 MOVZ	R2, R0, R0
 MTC1	R2, S0
 C.LE.S 	0, S0, S13
-BC1F	0, L__Quadrant258
+BC1F	0, L__Quadrant236
 NOP	
-J	L__Quadrant154
+J	L__Quadrant147
 NOP	
-L__Quadrant258:
-L__Quadrant144:
-;Kinematics.c,398 :: 		return 4;
+L__Quadrant236:
+L__Quadrant137:
+;Kinematics.c,384 :: 		return 4;
 ORI	R2, R0, 4
 J	L_end_Quadrant
 NOP	
-;Kinematics.c,397 :: 		else if((i < 0)&&(j < 0))
-L__Quadrant155:
-L__Quadrant154:
-;Kinematics.c,400 :: 		return 0;
+;Kinematics.c,383 :: 		else if((i < 0)&&(j < 0))
+L__Quadrant148:
+L__Quadrant147:
+;Kinematics.c,386 :: 		return 0;
 MOVZ	R2, R0, R0
-;Kinematics.c,401 :: 		}
+;Kinematics.c,387 :: 		}
 L_end_Quadrant:
 JR	RA
 NOP	
 ; end of _Quadrant
 _TestQuadrnt:
-;Kinematics.c,403 :: 		double TestQuadrnt(){
+;Kinematics.c,389 :: 		double TestQuadrnt(){
 ADDIU	SP, SP, -12
 SW	RA, 0(SP)
-;Kinematics.c,404 :: 		double totalDeg = 0.00;
+;Kinematics.c,390 :: 		double totalDeg = 0.00;
 SW	R25, 4(SP)
-;Kinematics.c,406 :: 		if (Circ.I_end < 0)
+;Kinematics.c,392 :: 		if (Circ.I_end < 0)
 LWC1	S1, Offset(_Circ+16)(GP)
 MOVZ	R2, R0, R0
 MTC1	R2, S0
 C.LE.S 	0, S0, S1
-BC1F	0, L__TestQuadrnt260
+BC1F	0, L__TestQuadrnt238
 NOP	
-J	L_TestQuadrnt104
+J	L_TestQuadrnt97
 NOP	
-L__TestQuadrnt260:
-;Kinematics.c,408 :: 		Circ.Deg.degF = 180.0 - Circ.Deg.degF;
+L__TestQuadrnt238:
+;Kinematics.c,394 :: 		Circ.Deg.degF = 180.0 - Circ.Deg.degF;
 LWC1	S1, Offset(_Circ+96)(GP)
 LUI	R2, 17204
 ORI	R2, R2, 0
 MTC1	R2, S0
 SUB.S 	S0, S0, S1
 SWC1	S0, Offset(_Circ+96)(GP)
-;Kinematics.c,409 :: 		totalDeg = abs(Circ.Deg.degS) + abs(Circ.Deg.degS);
+;Kinematics.c,395 :: 		totalDeg = abs(Circ.Deg.degS) + abs(Circ.Deg.degS);
 LWC1	S0, Offset(_Circ+92)(GP)
 CVT36.S 	S0, S0
 MFC1	R2, S0
@@ -1656,29 +1587,29 @@ SEH	R2, R2
 MTC1	R2, S0
 CVT32.W 	S0, S0
 ; totalDeg start address is: 0 (R0)
-;Kinematics.c,410 :: 		}
+;Kinematics.c,396 :: 		}
 ; totalDeg end address is: 0 (R0)
-J	L_TestQuadrnt105
+J	L_TestQuadrnt98
 NOP	
-L_TestQuadrnt104:
-;Kinematics.c,411 :: 		else if (Circ.I_end > 0)
+L_TestQuadrnt97:
+;Kinematics.c,397 :: 		else if (Circ.I_end > 0)
 LWC1	S1, Offset(_Circ+16)(GP)
 MOVZ	R2, R0, R0
 MTC1	R2, S0
 C.LE.S 	0, S1, S0
-BC1F	0, L__TestQuadrnt261
+BC1F	0, L__TestQuadrnt239
 NOP	
-J	L_TestQuadrnt106
+J	L_TestQuadrnt99
 NOP	
-L__TestQuadrnt261:
-;Kinematics.c,413 :: 		Circ.Deg.degF = 180.0 - Circ.Deg.degF;
+L__TestQuadrnt239:
+;Kinematics.c,399 :: 		Circ.Deg.degF = 180.0 - Circ.Deg.degF;
 LWC1	S1, Offset(_Circ+96)(GP)
 LUI	R2, 17204
 ORI	R2, R2, 0
 MTC1	R2, S0
 SUB.S 	S0, S0, S1
 SWC1	S0, Offset(_Circ+96)(GP)
-;Kinematics.c,414 :: 		totalDeg = abs(Circ.Deg.degS) + 180.0 + abs(Circ.Deg.degS);
+;Kinematics.c,400 :: 		totalDeg = abs(Circ.Deg.degS) + 180.0 + abs(Circ.Deg.degS);
 LWC1	S0, Offset(_Circ+92)(GP)
 CVT36.S 	S0, S0
 MFC1	R2, S0
@@ -1705,12 +1636,12 @@ CVT32.W 	S1, S0
 MOV.S 	S0, S2
 ADD.S 	S0, S0, S1
 ; totalDeg start address is: 0 (R0)
-;Kinematics.c,415 :: 		}
+;Kinematics.c,401 :: 		}
 ; totalDeg end address is: 0 (R0)
-J	L_TestQuadrnt107
+J	L_TestQuadrnt100
 NOP	
-L_TestQuadrnt106:
-;Kinematics.c,417 :: 		totalDeg = abs(Circ.Deg.degS) + 180.0 + abs(Circ.Deg.degS);
+L_TestQuadrnt99:
+;Kinematics.c,403 :: 		totalDeg = abs(Circ.Deg.degS) + 180.0 + abs(Circ.Deg.degS);
 LWC1	S0, Offset(_Circ+92)(GP)
 CVT36.S 	S0, S0
 MFC1	R2, S0
@@ -1740,16 +1671,16 @@ ADD.S 	S0, S0, S1
 MOV.S 	S1, S0
 ; totalDeg end address is: 8 (R2)
 MOV.S 	S0, S1
-L_TestQuadrnt107:
+L_TestQuadrnt100:
 ; totalDeg start address is: 0 (R0)
 ; totalDeg end address is: 0 (R0)
-L_TestQuadrnt105:
-;Kinematics.c,419 :: 		return totalDeg;
+L_TestQuadrnt98:
+;Kinematics.c,405 :: 		return totalDeg;
 ; totalDeg start address is: 0 (R0)
 ; totalDeg end address is: 0 (R0)
-;Kinematics.c,420 :: 		}
-;Kinematics.c,419 :: 		return totalDeg;
-;Kinematics.c,420 :: 		}
+;Kinematics.c,406 :: 		}
+;Kinematics.c,405 :: 		return totalDeg;
+;Kinematics.c,406 :: 		}
 L_end_TestQuadrnt:
 LW	R25, 4(SP)
 LW	RA, 0(SP)
@@ -1758,94 +1689,94 @@ JR	RA
 NOP	
 ; end of _TestQuadrnt
 _CalcStep:
-;Kinematics.c,424 :: 		double CalcStep(){
+;Kinematics.c,410 :: 		double CalcStep(){
 ADDIU	SP, SP, -4
-;Kinematics.c,426 :: 		if (Circ.quadrantS == 1 || Circ.quadrantS == 3)
+;Kinematics.c,412 :: 		if (Circ.quadrantS == 1 || Circ.quadrantS == 3)
 LH	R3, Offset(_Circ+34)(GP)
 ORI	R2, R0, 1
-BNE	R3, R2, L__CalcStep264
+BNE	R3, R2, L__CalcStep242
 NOP	
-J	L__CalcStep171
+J	L__CalcStep158
 NOP	
-L__CalcStep264:
+L__CalcStep242:
 LH	R3, Offset(_Circ+34)(GP)
 ORI	R2, R0, 3
-BNE	R3, R2, L__CalcStep266
+BNE	R3, R2, L__CalcStep244
 NOP	
-J	L__CalcStep170
+J	L__CalcStep157
 NOP	
-L__CalcStep266:
-J	L_CalcStep110
+L__CalcStep244:
+J	L_CalcStep103
 NOP	
-L__CalcStep171:
-L__CalcStep170:
-;Kinematics.c,427 :: 		angleA = Circ.Deg.deg - Circ.Deg.degS;
+L__CalcStep158:
+L__CalcStep157:
+;Kinematics.c,413 :: 		angleA = Circ.Deg.deg - Circ.Deg.degS;
 LWC1	S1, Offset(_Circ+92)(GP)
 LWC1	S0, Offset(_Circ+104)(GP)
 SUB.S 	S0, S0, S1
 SWC1	S0, 0(SP)
-L_CalcStep110:
-;Kinematics.c,429 :: 		if (Circ.quadrantS == 2 || Circ.quadrantS == 4)
+L_CalcStep103:
+;Kinematics.c,415 :: 		if (Circ.quadrantS == 2 || Circ.quadrantS == 4)
 LH	R3, Offset(_Circ+34)(GP)
 ORI	R2, R0, 2
-BNE	R3, R2, L__CalcStep268
+BNE	R3, R2, L__CalcStep246
 NOP	
-J	L__CalcStep173
+J	L__CalcStep160
 NOP	
-L__CalcStep268:
+L__CalcStep246:
 LH	R3, Offset(_Circ+34)(GP)
 ORI	R2, R0, 4
-BNE	R3, R2, L__CalcStep270
+BNE	R3, R2, L__CalcStep248
 NOP	
-J	L__CalcStep172
+J	L__CalcStep159
 NOP	
-L__CalcStep270:
-J	L_CalcStep113
+L__CalcStep248:
+J	L_CalcStep106
 NOP	
-L__CalcStep173:
-L__CalcStep172:
-;Kinematics.c,430 :: 		angleA = Circ.Deg.deg + Circ.Deg.degS;
+L__CalcStep160:
+L__CalcStep159:
+;Kinematics.c,416 :: 		angleA = Circ.Deg.deg + Circ.Deg.degS;
 LWC1	S1, Offset(_Circ+92)(GP)
 LWC1	S0, Offset(_Circ+104)(GP)
 ADD.S 	S0, S0, S1
 SWC1	S0, 0(SP)
-L_CalcStep113:
-;Kinematics.c,432 :: 		return angleA * deg2rad;
+L_CalcStep106:
+;Kinematics.c,418 :: 		return angleA * deg2rad;
 LWC1	S1, 0(SP)
 LUI	R2, 15502
 ORI	R2, R2, 64046
 MTC1	R2, S0
 MUL.S 	S0, S1, S0
-;Kinematics.c,433 :: 		}
+;Kinematics.c,419 :: 		}
 L_end_CalcStep:
 ADDIU	SP, SP, 4
 JR	RA
 NOP	
 ; end of _CalcStep
 _NextCords:
-;Kinematics.c,436 :: 		void NextCords(){
+;Kinematics.c,422 :: 		void NextCords(){
 ADDIU	SP, SP, -4
 SW	RA, 0(SP)
-;Kinematics.c,438 :: 		if(Circ.quadrant == 1 || Circ.quadrant == 4){
+;Kinematics.c,424 :: 		if(Circ.quadrant == 1 || Circ.quadrant == 4){
 LH	R3, Offset(_Circ+36)(GP)
 ORI	R2, R0, 1
-BNE	R3, R2, L__NextCords273
+BNE	R3, R2, L__NextCords251
 NOP	
-J	L__NextCords159
+J	L__NextCords152
 NOP	
-L__NextCords273:
+L__NextCords251:
 LH	R3, Offset(_Circ+36)(GP)
 ORI	R2, R0, 4
-BNE	R3, R2, L__NextCords275
+BNE	R3, R2, L__NextCords253
 NOP	
-J	L__NextCords158
+J	L__NextCords151
 NOP	
-L__NextCords275:
-J	L_NextCords116
+L__NextCords253:
+J	L_NextCords109
 NOP	
-L__NextCords159:
-L__NextCords158:
-;Kinematics.c,439 :: 		Circ.xStep = Circ.xCenter + (Circ.radius * cos(Circ.Deg.degreeRadians));
+L__NextCords152:
+L__NextCords151:
+;Kinematics.c,425 :: 		Circ.xStep = Circ.xCenter + (Circ.radius * cos(Circ.Deg.degreeRadians));
 LWC1	S12, Offset(_Circ+112)(GP)
 JAL	_cos+0
 NOP	
@@ -1854,7 +1785,7 @@ MUL.S 	S1, S1, S0
 LWC1	S0, Offset(_Circ+44)(GP)
 ADD.S 	S0, S0, S1
 SWC1	S0, Offset(_Circ+60)(GP)
-;Kinematics.c,440 :: 		Circ.yStep = Circ.yCenter + (Circ.radius * sin(Circ.Deg.degreeRadians));
+;Kinematics.c,426 :: 		Circ.yStep = Circ.yCenter + (Circ.radius * sin(Circ.Deg.degreeRadians));
 LWC1	S12, Offset(_Circ+112)(GP)
 JAL	_sin+0
 NOP	
@@ -1863,28 +1794,28 @@ MUL.S 	S1, S1, S0
 LWC1	S0, Offset(_Circ+48)(GP)
 ADD.S 	S0, S0, S1
 SWC1	S0, Offset(_Circ+64)(GP)
-;Kinematics.c,441 :: 		}
-L_NextCords116:
-;Kinematics.c,442 :: 		if(Circ.quadrant == 2 || Circ.quadrant == 3){
+;Kinematics.c,427 :: 		}
+L_NextCords109:
+;Kinematics.c,428 :: 		if(Circ.quadrant == 2 || Circ.quadrant == 3){
 LH	R3, Offset(_Circ+36)(GP)
 ORI	R2, R0, 2
-BNE	R3, R2, L__NextCords277
+BNE	R3, R2, L__NextCords255
 NOP	
-J	L__NextCords161
+J	L__NextCords154
 NOP	
-L__NextCords277:
+L__NextCords255:
 LH	R3, Offset(_Circ+36)(GP)
 ORI	R2, R0, 3
-BNE	R3, R2, L__NextCords279
+BNE	R3, R2, L__NextCords257
 NOP	
-J	L__NextCords160
+J	L__NextCords153
 NOP	
-L__NextCords279:
-J	L_NextCords119
+L__NextCords257:
+J	L_NextCords112
 NOP	
-L__NextCords161:
-L__NextCords160:
-;Kinematics.c,443 :: 		Circ.xStep = Circ.xCenter - (Circ.radius * cos(Circ.Deg.degreeRadians));
+L__NextCords154:
+L__NextCords153:
+;Kinematics.c,429 :: 		Circ.xStep = Circ.xCenter - (Circ.radius * cos(Circ.Deg.degreeRadians));
 LWC1	S12, Offset(_Circ+112)(GP)
 JAL	_cos+0
 NOP	
@@ -1893,7 +1824,7 @@ MUL.S 	S1, S1, S0
 LWC1	S0, Offset(_Circ+44)(GP)
 SUB.S 	S0, S0, S1
 SWC1	S0, Offset(_Circ+60)(GP)
-;Kinematics.c,444 :: 		Circ.yStep = Circ.yCenter - (Circ.radius * sin(Circ.Deg.degreeRadians));
+;Kinematics.c,430 :: 		Circ.yStep = Circ.yCenter - (Circ.radius * sin(Circ.Deg.degreeRadians));
 LWC1	S12, Offset(_Circ+112)(GP)
 JAL	_sin+0
 NOP	
@@ -1902,9 +1833,9 @@ MUL.S 	S1, S1, S0
 LWC1	S0, Offset(_Circ+48)(GP)
 SUB.S 	S0, S0, S1
 SWC1	S0, Offset(_Circ+64)(GP)
-;Kinematics.c,445 :: 		}
-L_NextCords119:
-;Kinematics.c,447 :: 		}
+;Kinematics.c,431 :: 		}
+L_NextCords112:
+;Kinematics.c,433 :: 		}
 L_end_NextCords:
 LW	RA, 0(SP)
 ADDIU	SP, SP, 4
@@ -1912,125 +1843,81 @@ JR	RA
 NOP	
 ; end of _NextCords
 _Cir_Interpolation:
-;Kinematics.c,451 :: 		void Cir_Interpolation(){
+;Kinematics.c,437 :: 		void Cir_Interpolation(){
 ADDIU	SP, SP, -4
 SW	RA, 0(SP)
-;Kinematics.c,452 :: 		Circ.lastX = Circ.xStep;
+;Kinematics.c,438 :: 		Circ.lastX = Circ.xStep;
 LWC1	S0, Offset(_Circ+60)(GP)
 SWC1	S0, Offset(_Circ+84)(GP)
-;Kinematics.c,453 :: 		Circ.lastY = Circ.yStep;
+;Kinematics.c,439 :: 		Circ.lastY = Circ.yStep;
 LWC1	S0, Offset(_Circ+64)(GP)
 SWC1	S0, Offset(_Circ+88)(GP)
-;Kinematics.c,454 :: 		Circ.Deg.degreeRadians = CalcStep();
+;Kinematics.c,440 :: 		Circ.Deg.degreeRadians = CalcStep();
 JAL	_CalcStep+0
 NOP	
 SWC1	S0, Offset(_Circ+112)(GP)
-;Kinematics.c,455 :: 		NextCords();
+;Kinematics.c,441 :: 		NextCords();
 JAL	_NextCords+0
 NOP	
-;Kinematics.c,457 :: 		STPS[X].step_delay = 100;
+;Kinematics.c,443 :: 		STPS[X].step_delay = 100;
 ORI	R2, R0, 100
 SW	R2, Offset(_STPS+8)(GP)
-;Kinematics.c,458 :: 		STPS[Y].step_delay = 100;
+;Kinematics.c,444 :: 		STPS[Y].step_delay = 100;
 ORI	R2, R0, 100
 SW	R2, Offset(_STPS+76)(GP)
-;Kinematics.c,459 :: 		SerialPrint();
+;Kinematics.c,445 :: 		SerialPrint();
 JAL	_SerialPrint+0
 NOP	
-;Kinematics.c,462 :: 		if(Circ.lastX != Circ.xStep){
-LWC1	S1, Offset(_Circ+60)(GP)
-LWC1	S0, Offset(_Circ+84)(GP)
-C.EQ.S 	0, S0, S1
-BC1F	0, L__Cir_Interpolation281
-NOP	
-J	L_Cir_Interpolation120
-NOP	
-L__Cir_Interpolation281:
-;Kinematics.c,463 :: 		Circ.x_next = 1;
-LBU	R2, Offset(_Circ+0)(GP)
-ORI	R2, R2, 8
-SB	R2, Offset(_Circ+0)(GP)
-;Kinematics.c,464 :: 		}else
-J	L_Cir_Interpolation121
-NOP	
-L_Cir_Interpolation120:
-;Kinematics.c,465 :: 		Circ.x_next = 0;
-LBU	R2, Offset(_Circ+0)(GP)
-INS	R2, R0, 3, 1
-SB	R2, Offset(_Circ+0)(GP)
-L_Cir_Interpolation121:
-;Kinematics.c,467 :: 		if(Circ.lastY != Circ.yStep){
-LWC1	S1, Offset(_Circ+64)(GP)
-LWC1	S0, Offset(_Circ+88)(GP)
-C.EQ.S 	0, S0, S1
-BC1F	0, L__Cir_Interpolation282
-NOP	
-J	L_Cir_Interpolation122
-NOP	
-L__Cir_Interpolation282:
-;Kinematics.c,468 :: 		Circ.y_next = 1;
-LBU	R2, Offset(_Circ+0)(GP)
-ORI	R2, R2, 16
-SB	R2, Offset(_Circ+0)(GP)
-;Kinematics.c,469 :: 		}else
-J	L_Cir_Interpolation123
-NOP	
-L_Cir_Interpolation122:
-;Kinematics.c,470 :: 		Circ.y_next = 0;
-LBU	R2, Offset(_Circ+0)(GP)
-INS	R2, R0, 4, 1
-SB	R2, Offset(_Circ+0)(GP)
-L_Cir_Interpolation123:
-;Kinematics.c,473 :: 		if(Circ.lastX >= Circ.xStep){
+;Kinematics.c,450 :: 		if(Circ.lastX >= Circ.xStep){
 LWC1	S1, Offset(_Circ+60)(GP)
 LWC1	S0, Offset(_Circ+84)(GP)
 C.LT.S 	0, S0, S1
-BC1F	0, L__Cir_Interpolation283
+BC1F	0, L__Cir_Interpolation259
 NOP	
-J	L_Cir_Interpolation124
+J	L_Cir_Interpolation113
 NOP	
-L__Cir_Interpolation283:
-;Kinematics.c,474 :: 		DIR_StepX = 0;
+L__Cir_Interpolation259:
+;Kinematics.c,451 :: 		DIR_StepX = 0;
 _LX	
 INS	R2, R0, BitPos(DIR_StepX+0), 1
 _SX	
-;Kinematics.c,475 :: 		}else{
-J	L_Cir_Interpolation125
+;Kinematics.c,452 :: 		}else{
+J	L_Cir_Interpolation114
 NOP	
-L_Cir_Interpolation124:
-;Kinematics.c,476 :: 		DIR_StepX = 1;
+L_Cir_Interpolation113:
+;Kinematics.c,453 :: 		DIR_StepX = 1;
 _LX	
 ORI	R2, R2, BitMask(DIR_StepX+0)
 _SX	
-;Kinematics.c,477 :: 		}
-L_Cir_Interpolation125:
-;Kinematics.c,479 :: 		if(Circ.lastY >= Circ.yStep){
+;Kinematics.c,454 :: 		}
+L_Cir_Interpolation114:
+;Kinematics.c,456 :: 		if(Circ.lastY >= Circ.yStep){
 LWC1	S1, Offset(_Circ+64)(GP)
 LWC1	S0, Offset(_Circ+88)(GP)
 C.LT.S 	0, S0, S1
-BC1F	0, L__Cir_Interpolation284
+BC1F	0, L__Cir_Interpolation260
 NOP	
-J	L_Cir_Interpolation126
+J	L_Cir_Interpolation115
 NOP	
-L__Cir_Interpolation284:
-;Kinematics.c,480 :: 		DIR_StepY = 0;
+L__Cir_Interpolation260:
+;Kinematics.c,457 :: 		DIR_StepY = 0;
 _LX	
 INS	R2, R0, BitPos(DIR_StepY+0), 1
 _SX	
-;Kinematics.c,481 :: 		}else{
-J	L_Cir_Interpolation127
+;Kinematics.c,458 :: 		}else{
+J	L_Cir_Interpolation116
 NOP	
-L_Cir_Interpolation126:
-;Kinematics.c,482 :: 		DIR_StepY = 1;
+L_Cir_Interpolation115:
+;Kinematics.c,459 :: 		DIR_StepY = 1;
 _LX	
 ORI	R2, R2, BitMask(DIR_StepY+0)
 _SX	
-;Kinematics.c,483 :: 		}
-L_Cir_Interpolation127:
-;Kinematics.c,485 :: 		Circ_Tick();
+;Kinematics.c,460 :: 		}
+L_Cir_Interpolation116:
+;Kinematics.c,462 :: 		Circ_Tick();
 JAL	_Circ_Tick+0
 NOP	
-;Kinematics.c,486 :: 		}
+;Kinematics.c,463 :: 		}
 L_end_Cir_Interpolation:
 LW	RA, 0(SP)
 ADDIU	SP, SP, 4
@@ -2038,135 +1925,193 @@ JR	RA
 NOP	
 ; end of _Cir_Interpolation
 _Circ_Tick:
-;Kinematics.c,488 :: 		void Circ_Tick(){
-ADDIU	SP, SP, -4
+;Kinematics.c,465 :: 		void Circ_Tick(){
+ADDIU	SP, SP, -12
 SW	RA, 0(SP)
-;Kinematics.c,490 :: 		if (Circ.dir == CW){
+;Kinematics.c,468 :: 		x = (int)Circ.xStep;
+LWC1	S0, Offset(_Circ+60)(GP)
+CVT36.S 	S0, S0
+MFC1	R2, S0
+SH	R2, 4(SP)
+;Kinematics.c,469 :: 		y = (int)Circ.yStep;
+LWC1	S0, Offset(_Circ+64)(GP)
+CVT36.S 	S0, S0
+MFC1	R2, S0
+SH	R2, 6(SP)
+;Kinematics.c,471 :: 		if (Circ.dir == CW){
 LH	R2, Offset(_Circ+32)(GP)
-BEQ	R2, R0, L__Circ_Tick286
+BEQ	R2, R0, L__Circ_Tick262
 NOP	
-J	L_Circ_Tick128
+J	L_Circ_Tick117
 NOP	
-L__Circ_Tick286:
-;Kinematics.c,491 :: 		Circ.Deg.deg += 0.25;//Circ.divisor;
+L__Circ_Tick262:
+;Kinematics.c,472 :: 		Circ.Deg.deg += 0.25;//Circ.divisor;
 LWC1	S1, Offset(_Circ+104)(GP)
 LUI	R2, 16000
 ORI	R2, R2, 0
 MTC1	R2, S0
 ADD.S 	S1, S1, S0
 SWC1	S1, Offset(_Circ+104)(GP)
-;Kinematics.c,492 :: 		if (Circ.Deg.deg == Circ.Deg.newdeg){
+;Kinematics.c,473 :: 		if (Circ.Deg.deg == Circ.Deg.newdeg){
 LWC1	S0, Offset(_Circ+116)(GP)
 C.EQ.S 	0, S1, S0
-BC1T	0, L__Circ_Tick287
+BC1T	0, L__Circ_Tick263
 NOP	
-J	L_Circ_Tick129
+J	L_Circ_Tick118
 NOP	
-L__Circ_Tick287:
-;Kinematics.c,493 :: 		disableOCx();
+L__Circ_Tick263:
+;Kinematics.c,474 :: 		disableOCx();
 JAL	_disableOCx+0
 NOP	
-;Kinematics.c,494 :: 		}
-L_Circ_Tick129:
-;Kinematics.c,495 :: 		}
-L_Circ_Tick128:
-;Kinematics.c,497 :: 		if (Circ.dir == CCW){
+;Kinematics.c,475 :: 		}
+L_Circ_Tick118:
+;Kinematics.c,476 :: 		}
+L_Circ_Tick117:
+;Kinematics.c,478 :: 		if (Circ.dir == CCW){
 LH	R3, Offset(_Circ+32)(GP)
 ORI	R2, R0, 1
-BEQ	R3, R2, L__Circ_Tick288
+BEQ	R3, R2, L__Circ_Tick264
 NOP	
-J	L_Circ_Tick130
+J	L_Circ_Tick119
 NOP	
-L__Circ_Tick288:
-;Kinematics.c,498 :: 		Circ.Deg.deg -= 0.25;//Circ.divisor;
+L__Circ_Tick264:
+;Kinematics.c,479 :: 		Circ.Deg.deg -= 0.25;//Circ.divisor;
 LWC1	S1, Offset(_Circ+104)(GP)
 LUI	R2, 16000
 ORI	R2, R2, 0
 MTC1	R2, S0
 SUB.S 	S1, S1, S0
 SWC1	S1, Offset(_Circ+104)(GP)
-;Kinematics.c,499 :: 		if (Circ.Deg.deg == Circ.Deg.newdeg){
+;Kinematics.c,480 :: 		if (Circ.Deg.deg == Circ.Deg.newdeg){
 LWC1	S0, Offset(_Circ+116)(GP)
 C.EQ.S 	0, S1, S0
-BC1T	0, L__Circ_Tick289
+BC1T	0, L__Circ_Tick265
 NOP	
-J	L_Circ_Tick131
+J	L_Circ_Tick120
 NOP	
-L__Circ_Tick289:
-;Kinematics.c,500 :: 		disableOCx();
+L__Circ_Tick265:
+;Kinematics.c,481 :: 		disableOCx();
 JAL	_disableOCx+0
 NOP	
-;Kinematics.c,501 :: 		}
-L_Circ_Tick131:
-;Kinematics.c,503 :: 		}
-L_Circ_Tick130:
-;Kinematics.c,504 :: 		SV.Single_Dual = 2;
+;Kinematics.c,482 :: 		}
+L_Circ_Tick120:
+;Kinematics.c,484 :: 		}
+L_Circ_Tick119:
+;Kinematics.c,487 :: 		if(xL != x){
+LH	R3, 4(SP)
+LH	R2, 8(SP)
+BNE	R2, R3, L__Circ_Tick267
+NOP	
+J	L_Circ_Tick121
+NOP	
+L__Circ_Tick267:
+;Kinematics.c,488 :: 		Circ.x_next = 1;
+LBU	R2, Offset(_Circ+0)(GP)
+ORI	R2, R2, 8
+SB	R2, Offset(_Circ+0)(GP)
+;Kinematics.c,489 :: 		}else
+J	L_Circ_Tick122
+NOP	
+L_Circ_Tick121:
+;Kinematics.c,490 :: 		Circ.x_next = 0;
+LBU	R2, Offset(_Circ+0)(GP)
+INS	R2, R0, 3, 1
+SB	R2, Offset(_Circ+0)(GP)
+L_Circ_Tick122:
+;Kinematics.c,492 :: 		if(yL != y){
+LH	R3, 6(SP)
+LH	R2, 10(SP)
+BNE	R2, R3, L__Circ_Tick269
+NOP	
+J	L_Circ_Tick123
+NOP	
+L__Circ_Tick269:
+;Kinematics.c,493 :: 		Circ.y_next = 1;
+LBU	R2, Offset(_Circ+0)(GP)
+ORI	R2, R2, 16
+SB	R2, Offset(_Circ+0)(GP)
+;Kinematics.c,494 :: 		}else
+J	L_Circ_Tick124
+NOP	
+L_Circ_Tick123:
+;Kinematics.c,495 :: 		Circ.y_next = 0;
+LBU	R2, Offset(_Circ+0)(GP)
+INS	R2, R0, 4, 1
+SB	R2, Offset(_Circ+0)(GP)
+L_Circ_Tick124:
+;Kinematics.c,497 :: 		xL = x;
+LH	R2, 4(SP)
+SH	R2, 8(SP)
+;Kinematics.c,498 :: 		yL = y;
+LH	R2, 6(SP)
+SH	R2, 10(SP)
+;Kinematics.c,499 :: 		SV.Single_Dual = 2;
 ORI	R2, R0, 2
 SH	R2, Offset(_SV+0)(GP)
-;Kinematics.c,505 :: 		}
+;Kinematics.c,500 :: 		}
 L_end_Circ_Tick:
 LW	RA, 0(SP)
-ADDIU	SP, SP, 4
+ADDIU	SP, SP, 12
 JR	RA
 NOP	
 ; end of _Circ_Tick
 _Circ_Prep_Next:
-;Kinematics.c,512 :: 		void  Circ_Prep_Next(){
+;Kinematics.c,507 :: 		void  Circ_Prep_Next(){
 ADDIU	SP, SP, -8
 SW	RA, 0(SP)
-;Kinematics.c,513 :: 		Circ.steps++;
+;Kinematics.c,508 :: 		Circ.steps++;
 SW	R25, 4(SP)
 LHU	R2, Offset(_Circ+38)(GP)
 ADDIU	R2, R2, 1
 SH	R2, Offset(_Circ+38)(GP)
-;Kinematics.c,515 :: 		if(Circ.x_next)
+;Kinematics.c,510 :: 		if(Circ.x_next)
 LBU	R2, Offset(_Circ+0)(GP)
 EXT	R2, R2, 3, 1
-BNE	R2, R0, L__Circ_Prep_Next292
+BNE	R2, R0, L__Circ_Prep_Next272
 NOP	
-J	L_Circ_Prep_Next132
+J	L_Circ_Prep_Next125
 NOP	
-L__Circ_Prep_Next292:
-;Kinematics.c,516 :: 		toggleOCx(X);
+L__Circ_Prep_Next272:
+;Kinematics.c,511 :: 		toggleOCx(X);
 MOVZ	R25, R0, R0
 JAL	_toggleOCx+0
 NOP	
-L_Circ_Prep_Next132:
-;Kinematics.c,517 :: 		if(Circ.y_next)
+L_Circ_Prep_Next125:
+;Kinematics.c,512 :: 		if(Circ.y_next)
 LBU	R2, Offset(_Circ+0)(GP)
 EXT	R2, R2, 4, 1
-BNE	R2, R0, L__Circ_Prep_Next294
+BNE	R2, R0, L__Circ_Prep_Next274
 NOP	
-J	L_Circ_Prep_Next133
+J	L_Circ_Prep_Next126
 NOP	
-L__Circ_Prep_Next294:
-;Kinematics.c,518 :: 		toggleOCx(Y);
+L__Circ_Prep_Next274:
+;Kinematics.c,513 :: 		toggleOCx(Y);
 ORI	R25, R0, 1
 JAL	_toggleOCx+0
 NOP	
-L_Circ_Prep_Next133:
-;Kinematics.c,520 :: 		if(Circ.steps >= Circ.Idivisor){
+L_Circ_Prep_Next126:
+;Kinematics.c,515 :: 		if(Circ.steps >= Circ.Idivisor){
 LHU	R3, Offset(_Circ+40)(GP)
 LHU	R2, Offset(_Circ+38)(GP)
 SLTU	R2, R2, R3
-BEQ	R2, R0, L__Circ_Prep_Next295
+BEQ	R2, R0, L__Circ_Prep_Next275
 NOP	
-J	L_Circ_Prep_Next134
+J	L_Circ_Prep_Next127
 NOP	
-L__Circ_Prep_Next295:
-;Kinematics.c,521 :: 		Circ.steps = 0;
+L__Circ_Prep_Next275:
+;Kinematics.c,516 :: 		Circ.steps = 0;
 SH	R0, Offset(_Circ+38)(GP)
-;Kinematics.c,522 :: 		Circ.cir_next = 0;
+;Kinematics.c,517 :: 		Circ.cir_next = 0;
 LBU	R2, Offset(_Circ+0)(GP)
 INS	R2, R0, 2, 1
 SB	R2, Offset(_Circ+0)(GP)
-;Kinematics.c,523 :: 		Circ.cir_start = 1;
+;Kinematics.c,518 :: 		Circ.cir_start = 1;
 LBU	R2, Offset(_Circ+0)(GP)
 ORI	R2, R2, 1
 SB	R2, Offset(_Circ+0)(GP)
-;Kinematics.c,524 :: 		}
-L_Circ_Prep_Next134:
-;Kinematics.c,526 :: 		}
+;Kinematics.c,519 :: 		}
+L_Circ_Prep_Next127:
+;Kinematics.c,521 :: 		}
 L_end_Circ_Prep_Next:
 LW	R25, 4(SP)
 LW	RA, 0(SP)
@@ -2175,29 +2120,29 @@ JR	RA
 NOP	
 ; end of _Circ_Prep_Next
 _SerialPrint:
-;Kinematics.c,528 :: 		void SerialPrint(){
+;Kinematics.c,523 :: 		void SerialPrint(){
 ADDIU	SP, SP, -20
 SW	RA, 0(SP)
-;Kinematics.c,529 :: 		int str_len = 0;
+;Kinematics.c,524 :: 		int str_len = 0;
 SW	R25, 4(SP)
 SW	R26, 8(SP)
 SW	R27, 12(SP)
-;Kinematics.c,530 :: 		int str_lenA = 0;
-;Kinematics.c,531 :: 		str_lenA = strlen(txtA);
+;Kinematics.c,525 :: 		int str_lenA = 0;
+;Kinematics.c,526 :: 		str_lenA = strlen(txtA);
 LUI	R25, hi_addr(_txtA+0)
 ORI	R25, R25, lo_addr(_txtA+0)
 JAL	_strlen+0
 NOP	
 ; str_lenA start address is: 44 (R11)
 SEH	R11, R2
-;Kinematics.c,532 :: 		memset(txtB,0,30);
+;Kinematics.c,527 :: 		memset(txtB,0,30);
 ORI	R27, R0, 30
 MOVZ	R26, R0, R0
 LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_memset+0
 NOP	
-;Kinematics.c,534 :: 		sprintf(txt,"%0.2f",Circ.radius);
+;Kinematics.c,529 :: 		sprintf(txt,"%0.2f",Circ.radius);
 LW	R2, Offset(_Circ+28)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
@@ -2210,7 +2155,7 @@ SW	R2, 0(SP)
 JAL	_sprintf+0
 NOP	
 ADDIU	SP, SP, 12
-;Kinematics.c,535 :: 		strncpy(txtB, " ",strlen(txt));
+;Kinematics.c,530 :: 		strncpy(txtB, " ",strlen(txt));
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
@@ -2226,7 +2171,7 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncpy+0
 NOP	
-;Kinematics.c,536 :: 		strncat(txtB, txt,strlen(txt));
+;Kinematics.c,531 :: 		strncat(txtB, txt,strlen(txt));
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
@@ -2238,12 +2183,12 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,537 :: 		str_len += strlen(txt);
+;Kinematics.c,532 :: 		str_len += strlen(txt);
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
 NOP	
-;Kinematics.c,538 :: 		strncat(txtB,txtA,str_lenA);
+;Kinematics.c,533 :: 		strncat(txtB,txtA,str_lenA);
 SEH	R27, R11
 LUI	R26, hi_addr(_txtA+0)
 ORI	R26, R26, lo_addr(_txtA+0)
@@ -2251,7 +2196,7 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,541 :: 		sprintf(txt,"%0.2f",Circ.xStep);
+;Kinematics.c,536 :: 		sprintf(txt,"%0.2f",Circ.xStep);
 LW	R2, Offset(_Circ+60)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
@@ -2264,7 +2209,7 @@ SW	R2, 0(SP)
 JAL	_sprintf+0
 NOP	
 ADDIU	SP, SP, 12
-;Kinematics.c,542 :: 		strncat(txtB,txt,strlen(txt));
+;Kinematics.c,537 :: 		strncat(txtB,txt,strlen(txt));
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
@@ -2276,12 +2221,12 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,543 :: 		str_len += strlen(txt);
+;Kinematics.c,538 :: 		str_len += strlen(txt);
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
 NOP	
-;Kinematics.c,544 :: 		strncat(txtB,txtA,str_lenA);
+;Kinematics.c,539 :: 		strncat(txtB,txtA,str_lenA);
 SEH	R27, R11
 LUI	R26, hi_addr(_txtA+0)
 ORI	R26, R26, lo_addr(_txtA+0)
@@ -2289,7 +2234,7 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,547 :: 		sprintf(txt,"%0.2f",Circ.yStep);
+;Kinematics.c,542 :: 		sprintf(txt,"%0.2f",Circ.yStep);
 LW	R2, Offset(_Circ+64)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
@@ -2302,7 +2247,7 @@ SW	R2, 0(SP)
 JAL	_sprintf+0
 NOP	
 ADDIU	SP, SP, 12
-;Kinematics.c,548 :: 		strncat(txtB,txt,strlen(txt));
+;Kinematics.c,543 :: 		strncat(txtB,txt,strlen(txt));
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
@@ -2314,12 +2259,12 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,549 :: 		str_len += strlen(txt);
+;Kinematics.c,544 :: 		str_len += strlen(txt);
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
 NOP	
-;Kinematics.c,550 :: 		strncat(txtB,txtA,str_lenA);
+;Kinematics.c,545 :: 		strncat(txtB,txtA,str_lenA);
 SEH	R27, R11
 LUI	R26, hi_addr(_txtA+0)
 ORI	R26, R26, lo_addr(_txtA+0)
@@ -2327,7 +2272,7 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,553 :: 		sprintf(txt,"%0.2f",Circ.xFin);
+;Kinematics.c,548 :: 		sprintf(txt,"%0.2f",Circ.xFin);
 LW	R2, Offset(_Circ+68)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
@@ -2340,7 +2285,7 @@ SW	R2, 0(SP)
 JAL	_sprintf+0
 NOP	
 ADDIU	SP, SP, 12
-;Kinematics.c,554 :: 		strncat(txtB,txt,strlen(txt));
+;Kinematics.c,549 :: 		strncat(txtB,txt,strlen(txt));
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
@@ -2352,12 +2297,12 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,555 :: 		str_len += strlen(txt)+1;
+;Kinematics.c,550 :: 		str_len += strlen(txt)+1;
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
 NOP	
-;Kinematics.c,556 :: 		strncat(txtB,txtA,str_lenA);
+;Kinematics.c,551 :: 		strncat(txtB,txtA,str_lenA);
 SEH	R27, R11
 LUI	R26, hi_addr(_txtA+0)
 ORI	R26, R26, lo_addr(_txtA+0)
@@ -2365,7 +2310,7 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,559 :: 		sprintf(txt,"%0.2f",Circ.yFin);
+;Kinematics.c,554 :: 		sprintf(txt,"%0.2f",Circ.yFin);
 LW	R2, Offset(_Circ+72)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
@@ -2378,7 +2323,7 @@ SW	R2, 0(SP)
 JAL	_sprintf+0
 NOP	
 ADDIU	SP, SP, 12
-;Kinematics.c,560 :: 		strncat(txtB,txt,strlen(txt));
+;Kinematics.c,555 :: 		strncat(txtB,txt,strlen(txt));
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
@@ -2390,12 +2335,12 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,561 :: 		str_len += strlen(txt)+1;
+;Kinematics.c,556 :: 		str_len += strlen(txt)+1;
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
 NOP	
-;Kinematics.c,562 :: 		strncat(txtB,txtA,str_lenA);
+;Kinematics.c,557 :: 		strncat(txtB,txtA,str_lenA);
 SEH	R27, R11
 LUI	R26, hi_addr(_txtA+0)
 ORI	R26, R26, lo_addr(_txtA+0)
@@ -2403,7 +2348,7 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,565 :: 		sprintf(txt,"%0.2f",Circ.Deg.newdeg);
+;Kinematics.c,560 :: 		sprintf(txt,"%0.2f",Circ.Deg.newdeg);
 LW	R2, Offset(_Circ+116)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
@@ -2416,7 +2361,7 @@ SW	R2, 0(SP)
 JAL	_sprintf+0
 NOP	
 ADDIU	SP, SP, 12
-;Kinematics.c,566 :: 		strncat(txtB,txt,strlen(txt));
+;Kinematics.c,561 :: 		strncat(txtB,txt,strlen(txt));
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
@@ -2428,12 +2373,12 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,567 :: 		str_len += strlen(txt)+1;
+;Kinematics.c,562 :: 		str_len += strlen(txt)+1;
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
 NOP	
-;Kinematics.c,568 :: 		strncat(txtB,txtA,str_lenA);
+;Kinematics.c,563 :: 		strncat(txtB,txtA,str_lenA);
 SEH	R27, R11
 LUI	R26, hi_addr(_txtA+0)
 ORI	R26, R26, lo_addr(_txtA+0)
@@ -2441,7 +2386,7 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,571 :: 		sprintf(txt,"%0.2f",Circ.Deg.deg);
+;Kinematics.c,566 :: 		sprintf(txt,"%0.2f",Circ.Deg.deg);
 LW	R2, Offset(_Circ+104)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
@@ -2454,7 +2399,7 @@ SW	R2, 0(SP)
 JAL	_sprintf+0
 NOP	
 ADDIU	SP, SP, 12
-;Kinematics.c,572 :: 		strncat(txtB,txt,strlen(txt));
+;Kinematics.c,567 :: 		strncat(txtB,txt,strlen(txt));
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
@@ -2466,12 +2411,12 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,573 :: 		str_len += strlen(txt)+1;
+;Kinematics.c,568 :: 		str_len += strlen(txt)+1;
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
 NOP	
-;Kinematics.c,574 :: 		strncat(txtB,txtA,str_lenA);
+;Kinematics.c,569 :: 		strncat(txtB,txtA,str_lenA);
 SEH	R27, R11
 LUI	R26, hi_addr(_txtA+0)
 ORI	R26, R26, lo_addr(_txtA+0)
@@ -2479,7 +2424,7 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,577 :: 		sprintf(txt,"%d",Circ.quadrant);
+;Kinematics.c,572 :: 		sprintf(txt,"%d",Circ.quadrant);
 LH	R2, Offset(_Circ+36)(GP)
 ADDIU	SP, SP, -12
 SH	R2, 8(SP)
@@ -2492,7 +2437,7 @@ SW	R2, 0(SP)
 JAL	_sprintf+0
 NOP	
 ADDIU	SP, SP, 12
-;Kinematics.c,578 :: 		strncat(txtB,txt,strlen(txt));
+;Kinematics.c,573 :: 		strncat(txtB,txt,strlen(txt));
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
@@ -2504,12 +2449,12 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,579 :: 		str_len += strlen(txt)+1;
+;Kinematics.c,574 :: 		str_len += strlen(txt)+1;
 LUI	R25, hi_addr(_txt+0)
 ORI	R25, R25, lo_addr(_txt+0)
 JAL	_strlen+0
 NOP	
-;Kinematics.c,580 :: 		strncat(txtB,"\n",1);
+;Kinematics.c,575 :: 		strncat(txtB,"\n",1);
 ORI	R30, R0, 10
 SB	R30, 18(SP)
 MOVZ	R30, R0, R0
@@ -2521,7 +2466,7 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,582 :: 		strncat(txtB,txtA,str_lenA);
+;Kinematics.c,577 :: 		strncat(txtB,txtA,str_lenA);
 SEH	R27, R11
 ; str_lenA end address is: 44 (R11)
 LUI	R26, hi_addr(_txtA+0)
@@ -2530,12 +2475,12 @@ LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_strncat+0
 NOP	
-;Kinematics.c,585 :: 		UART2_Write_Text(txtB);
+;Kinematics.c,580 :: 		UART2_Write_Text(txtB);
 LUI	R25, hi_addr(_txtB+0)
 ORI	R25, R25, lo_addr(_txtB+0)
 JAL	_UART2_Write_Text+0
 NOP	
-;Kinematics.c,594 :: 		}
+;Kinematics.c,589 :: 		}
 L_end_SerialPrint:
 LW	R27, 12(SP)
 LW	R26, 8(SP)

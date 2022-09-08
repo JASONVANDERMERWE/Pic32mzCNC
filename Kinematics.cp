@@ -739,7 +739,7 @@ double newDeg;
  newDeg = 360.00 / Circ.Deg.degreeDeg;
  Circ.N = (2* 3.14159 *Circ.radius)/newDeg;
  Circ.divisor = Circ.Deg.deg/Circ.N;
- Circ.Idivisor = 1000;
+ Circ.Idivisor = 14;
 }
 
 
@@ -775,20 +775,6 @@ double angA;
 
  return atan2(j,i);
 
-}
-
-
-
-void CalcAngle(){
- double angB;
-
-
- if(Circ.quadrant == 1 || Circ.quadrant == 3)
- angB = Circ.Deg.deg - Circ.Deg.degreeDeg;
- else if(Circ.quadrant == 2 || Circ.quadrant == 4)
- angB = Circ.Deg.deg + Circ.Deg.degreeDeg;
-
- Circ.Deg.degreeRadians = angB *  ( 3.14159 /180.00) ;
 }
 
 
@@ -865,15 +851,6 @@ void Cir_Interpolation(){
  SerialPrint();
 
 
- if(Circ.lastX != Circ.xStep){
- Circ.x_next = 1;
- }else
- Circ.x_next = 0;
-
- if(Circ.lastY != Circ.yStep){
- Circ.y_next = 1;
- }else
- Circ.y_next = 0;
 
 
  if(Circ.lastX >= Circ.xStep){
@@ -892,6 +869,10 @@ void Cir_Interpolation(){
 }
 
 void Circ_Tick(){
+int x,y,xL,yL;
+
+ x = (int)Circ.xStep;
+ y = (int)Circ.yStep;
 
  if (Circ.dir ==  0 ){
  Circ.Deg.deg += 0.25;
@@ -907,9 +888,23 @@ void Circ_Tick(){
  }
 
  }
+
+
+ if(xL != x){
+ Circ.x_next = 1;
+ }else
+ Circ.x_next = 0;
+
+ if(yL != y){
+ Circ.y_next = 1;
+ }else
+ Circ.y_next = 0;
+
+ xL = x;
+ yL = y;
  SV.Single_Dual = 2;
 }
-#line 512 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 507 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 void Circ_Prep_Next(){
  Circ.steps++;
 
@@ -984,5 +979,5 @@ int str_lenA = 0;
  str_len += str_lenA;
 
  UART2_Write_Text(txtB);
-#line 594 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 589 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 }

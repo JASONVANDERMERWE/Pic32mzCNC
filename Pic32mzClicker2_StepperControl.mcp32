@@ -10,9 +10,9 @@ Value=Kinematics.c
 [USE_EEPROM]
 Value=0
 [USE_HEAP]
-Value=0
+Value=1
 [HEAP_SIZE]
-Value=0
+Value=8000
 [EEPROM_DEFINITION]
 Value=
 [FILES]
@@ -35,10 +35,12 @@ File0=Stepper.c
 File1=Stepper.h
 File2=Kinematics.h
 File3=Main.c
-File4=Serial_Dma.c
-File5=Pins.c
-File6=Kinematics.c
-Count=7
+File4=Kinematics.c
+File5=Config.c
+File6=Config.h
+File7=Timers.c
+File8=Stepper.asm
+Count=9
 [EEPROM]
 Count=0
 [ACTIVE_COMMENTS_FILES]
@@ -80,7 +82,7 @@ File12=TwiddleFactors
 Count=13
 [INTERRUPT_DEFS]
 EBASE=9FC01000
-VECTOR_SPACEING=128
+VECTOR_SPACEING=512
 VECTOR_MODE=1
 USE_SRS=7
 [EXPANDED_NODES]

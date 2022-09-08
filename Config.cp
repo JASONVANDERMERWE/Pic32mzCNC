@@ -419,6 +419,7 @@ void LCD_Display();
 #line 5 "C:/Users/Git/Pic32mzCNC/Config.c"
 void PinMode(){
 
+
  SYSKEY = 0xAA996655;
  SYSKEY = 0x556699AA;
  CFGCONbits.OCACLK = 1;
@@ -583,7 +584,7 @@ unsigned long cp0;
 
 
  SYSKEY = 0x33333333;
-
+ PRISS = 0x76543210;
 
  PREFEN0_bit = 1;
  PREFEN1_bit = 1;
@@ -594,7 +595,7 @@ unsigned long cp0;
 
 
 void OutPutPulseXYZ(){
-#line 187 "C:/Users/Git/Pic32mzCNC/Config.c"
+#line 188 "C:/Users/Git/Pic32mzCNC/Config.c"
  OC5CON = 0x0000;
  OC2CON = 0x0000;
  OC7CON = 0X0000;
@@ -632,7 +633,7 @@ void OutPutPulseXYZ(){
  OC3CON = 0x000C;
  OC6CON = 0x000C;
  OC8CON = 0x000C;
-#line 231 "C:/Users/Git/Pic32mzCNC/Config.c"
+#line 232 "C:/Users/Git/Pic32mzCNC/Config.c"
  OC5R = 0x5;
  OC5RS = 0x234;
  OC2R = 0x5;
@@ -651,7 +652,7 @@ void OutPutPulseXYZ(){
  OC5IP0_bit = 1;
  OC5IP1_bit = 1;
  OC5IP2_bit = 0;
- OC5IS0_bit = 1;
+ OC5IS0_bit = 0;
  OC5IS1_bit = 0;
  OC5IF_bit = 0;
  OC5IE_bit = 0;
@@ -660,7 +661,7 @@ void OutPutPulseXYZ(){
  OC2IP0_bit = 1;
  OC2IP1_bit = 1;
  OC2IP2_bit = 0;
- OC2IS0_bit = 0;
+ OC2IS0_bit = 1;
  OC2IS1_bit = 0;
  OC2IF_bit = 0;
  OC2IE_bit = 0;
@@ -668,9 +669,9 @@ void OutPutPulseXYZ(){
 
  OC7IP0_bit = 1;
  OC7IP1_bit = 1;
- OC7IP2_bit = 0;
- OC7IS0_bit = 1;
- OC7IS1_bit = 0;
+ OC7IP2_bit = 1;
+ OC7IS0_bit = 0;
+ OC7IS1_bit = 1;
  OC7IF_bit = 0;
  OC7IE_bit = 0;
 
@@ -678,8 +679,8 @@ void OutPutPulseXYZ(){
  OC3IP0_bit = 1;
  OC3IP1_bit = 1;
  OC3IP2_bit = 0;
- OC3IS0_bit = 0;
- OC3IS1_bit = 0;
+ OC3IS0_bit = 1;
+ OC3IS1_bit = 1;
  OC3IF_bit = 0;
  OC3IE_bit = 0;
 
@@ -688,7 +689,7 @@ void OutPutPulseXYZ(){
  OC6IP1_bit = 1;
  OC6IP2_bit = 0;
  OC6IS0_bit = 1;
- OC6IS1_bit = 0;
+ OC6IS1_bit = 1;
  OC6IF_bit = 0;
  OC6IE_bit = 0;
 
@@ -697,7 +698,7 @@ void OutPutPulseXYZ(){
  OC8IP1_bit = 1;
  OC8IP2_bit = 0;
  OC8IS0_bit = 1;
- OC8IS1_bit = 0;
+ OC8IS1_bit = 1;
  OC8IF_bit = 0;
  OC8IE_bit = 0;
 
