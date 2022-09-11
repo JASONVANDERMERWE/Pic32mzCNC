@@ -95,8 +95,8 @@ main
 				strncat
 				UART2_Write_Text
 					UART2_Write
-			Circ_Tick
-				disableOCx
+		Circ_Tick
+			disableOCx
 	ResetSteppers
 		DisableStepper
 StepA

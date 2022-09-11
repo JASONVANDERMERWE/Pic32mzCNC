@@ -13,7 +13,6 @@ unsigned int Toggle;
 
 //////////////////////////////////
 //structs
- STP STPS[NoOfAxis];
  sVars SV;
  StepTmr STmr;
  

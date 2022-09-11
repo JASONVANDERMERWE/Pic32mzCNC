@@ -4895,6 +4895,7 @@ asin
 asvalmonen
 asvalmonen
 asvalmonen_bit
+async
 atan
 atan2
 atof
@@ -81353,6 +81354,7 @@ wtid2
 wtid2_bit
 wtid3
 wtid3_bit
+x
 x
 x_next
 xcenter

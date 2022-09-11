@@ -1,10 +1,11 @@
 #include "Kinematics.h"
 
+STP STPS[NoOfAxis];
 Circle Circ;
 
 //////////////////////////////////
 //FUNCTION POINTERS
-void (*AxisPulse[3])();
+volatile void (*AxisPulse[3])();
 
 char txtA[] = " : ";
 char txtC[] =  "\r";
@@ -279,7 +280,7 @@ void YZ_Interpolate(){
 
 ////////////////////////////////////////////////
 //Set Circ values
-void SetCircleVals(double curX,double curY,double finX,double finY,double i,double j, double deg,int dir){
+void SetCircleVals(double curX,double curY,double finX,double finY,double i,double j,int dir){
  int str_len = 0;
  AxisPulse[2] = Circ_Prep_Next;
  Multi_Axis_Enable(xy);
@@ -303,7 +304,7 @@ void SetCircleVals(double curX,double curY,double finX,double finY,double i,doub
  Circ.Deg.degT = TestQuadrnt();
  Circ.dir = CircDir(dir);
  Calc_Angle(Circ.xStart,Circ.yStart);
- Circ.Deg.newdeg = deg;
+ Circ.Deg.newdeg = 0;
 
  CalcDivisor();
  Circ.lastX = 0;
@@ -328,12 +329,12 @@ int CircDir(int dir){
 ////////////////////////////////////////////////
 //Calculate divisor / pulse value before incrament
 void CalcDivisor(){
-double newDeg;
-
-   newDeg = 360.00 / Circ.Deg.degreeDeg;
+double newDeg,Circumfrence;
+   Circumfrence = 2*Pi*Circ.radius;
+   newDeg = 360.00 / Circ.Deg.degT;
    Circ.N = (2*Pi*Circ.radius)/newDeg;
    Circ.divisor = Circ.Deg.deg/Circ.N;
-   Circ.Idivisor = 14;
+   Circ.Idivisor = 1;
 }
 
 ////////////////////////////////////////////////
@@ -389,17 +390,11 @@ int Quadrant(double i,double j){
 double TestQuadrnt(){
 double totalDeg = 0.00;
 
-    if (Circ.I_end < 0)
+    if (Circ.I_end != 0)
     {
         Circ.Deg.degF = 180.0 - Circ.Deg.degF;
         totalDeg = abs(Circ.Deg.degS) + abs(Circ.Deg.degS);
-    }
-    else if (Circ.I_end > 0)
-    {
-        Circ.Deg.degF = 180.0 - Circ.Deg.degF;
-        totalDeg = abs(Circ.Deg.degS) + 180.0 + abs(Circ.Deg.degS);
-    }
-    else
+    }else
         totalDeg = abs(Circ.Deg.degS) + 180.0 + abs(Circ.Deg.degS);
 
     return totalDeg;
@@ -442,9 +437,10 @@ void Cir_Interpolation(){
 
      STPS[X].step_delay = 100;
      STPS[Y].step_delay = 100;
+
+#if Debug == 1
      SerialPrint();
-
-
+#endif
 
      //test for direction change x
      if(Circ.lastX >= Circ.xStep){
@@ -458,8 +454,7 @@ void Cir_Interpolation(){
       }else{
          DIR_StepY = 1;
       }
-
-     Circ_Tick();
+    //  Circ_Tick();
 }
 
 void Circ_Tick(){
@@ -497,6 +492,7 @@ int x,y,xL,yL;
     xL = x;
     yL = y;
     SV.Single_Dual = 2;
+
 }
 
 /*
@@ -509,6 +505,7 @@ void  Circ_Prep_Next(){
 
   if(Circ.x_next)
       toggleOCx(X);
+      
   if(Circ.y_next)
       toggleOCx(Y);
       
@@ -517,6 +514,7 @@ void  Circ_Prep_Next(){
     Circ.steps = 0;
     Circ.cir_next = 0;
     Circ.cir_start = 1;
+    Circ.async.x = 0;
   }
 
 }
