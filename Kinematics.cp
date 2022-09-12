@@ -749,7 +749,7 @@ int CircDir(int dir){
 
 void CalcDivisor(){
 double newDeg,Circumfrence;
- Circumfrence = 2* 3.14159 *Circ.radius;
+
  newDeg = 360.00 / Circ.Deg.degT;
  Circ.N = (2* 3.14159 *Circ.radius)/newDeg;
  Circ.divisor = Circ.Deg.deg/Circ.N;

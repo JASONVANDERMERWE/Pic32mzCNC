@@ -330,7 +330,7 @@ int CircDir(int dir){
 //Calculate divisor / pulse value before incrament
 void CalcDivisor(){
 double newDeg,Circumfrence;
-   Circumfrence = 2*Pi*Circ.radius;
+  // Circumfrence = 2*Pi*Circ.radius;
    newDeg = 360.00 / Circ.Deg.degT;
    Circ.N = (2*Pi*Circ.radius)/newDeg;
    Circ.divisor = Circ.Deg.deg/Circ.N;
