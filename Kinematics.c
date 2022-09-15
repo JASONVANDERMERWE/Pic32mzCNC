@@ -356,8 +356,7 @@ double Calc_Angle(double i, double j){
    res = atan2(j,i);
    //get the deg of radiuss from abs zero pos
    //and convert  radans to degrees
-   res = res*rad2deg;
-   return res;
+   return res*rad2deg;
 }
 
 ////////////////////////////////////////////////

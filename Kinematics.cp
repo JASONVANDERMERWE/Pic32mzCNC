@@ -775,8 +775,7 @@ double Calc_Angle(double i, double j){
  res = atan2(j,i);
 
 
- res = res* (180.00/ 3.141593 ) ;
- return res;
+ return res* (180.00/ 3.141593 ) ;
 }
 
 
@@ -938,7 +937,7 @@ int x,y,xL,yL;
  SV.Single_Dual = 2;
 
 }
-#line 528 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 527 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 void Circ_Prep_Next(){
  Circ.steps++;
 
@@ -1027,5 +1026,5 @@ int str_lenA = 0;
  strncat(txtB,txtA,str_lenA);
  str_len += str_lenA;
  UART2_Write_Text(txtB);
-#line 624 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 623 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 }
