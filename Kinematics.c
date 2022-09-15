@@ -429,15 +429,15 @@ double totalDeg,degF;
 }
 
 /////////////////////////////////////////////////
-//Get the Final cordinates of X,Y || 0 = fin pos
+//Convert degrees to radians ??
 double CalcStep(){
 double angleA;
-      if (Circ.quadrantS == 1 || Circ.quadrantS == 3)
+  /*    if (Circ.quadrantS == 1 || Circ.quadrantS == 3)
           angleA = Circ.Deg.deg - Circ.Deg.degS;
 
       if (Circ.quadrantS == 2 || Circ.quadrantS == 4)
           angleA = Circ.Deg.deg + Circ.Deg.degS;
-
+  */
       return angleA * deg2rad;
 }
 

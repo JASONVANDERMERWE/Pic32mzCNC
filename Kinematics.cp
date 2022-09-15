@@ -851,12 +851,7 @@ double totalDeg,degF;
 
 double CalcStep(){
 double angleA;
- if (Circ.quadrantS == 1 || Circ.quadrantS == 3)
- angleA = Circ.Deg.deg - Circ.Deg.degS;
-
- if (Circ.quadrantS == 2 || Circ.quadrantS == 4)
- angleA = Circ.Deg.deg + Circ.Deg.degS;
-
+#line 441 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
  return angleA *  ( 3.141593 /180.00) ;
 }
 
@@ -1030,9 +1025,5 @@ int str_lenA = 0;
  strncat(txtB,txtA,str_lenA);
  str_len += str_lenA;
  UART2_Write_Text(txtB);
-<<<<<<< HEAD
-#line 590 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
-=======
 #line 627 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
->>>>>>> patch2
 }

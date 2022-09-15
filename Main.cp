@@ -429,7 +429,7 @@ void LcdI2CConfig();
 void OutPutPulseXYZ();
 void Temp_Move(int a);
 void LCD_Display();
-#line 4 "C:/Users/Git/Pic32mzCNC/Main.c"
+#line 12 "C:/Users/Git/Pic32mzCNC/Main.c"
 bit testISR;
 bit oneShotA; sfr;
 bit oneShotB; sfr;

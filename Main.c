@@ -1,3 +1,11 @@
+/*
+* Check on CalcStep in Kinematics for redundant quadrant checking
+*
+*
+*/
+
+
+
 #include "Config.h"
 
 
