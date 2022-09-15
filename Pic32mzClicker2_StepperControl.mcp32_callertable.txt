@@ -56,33 +56,29 @@ main
 				toggleOCx
 		SetCircleVals
 			Multi_Axis_Enable
+			fabs
 			CalcRadius
-				abs
 				sqrt
 					frexp
 					ldexp
 			CalcCircCenter
-			Calc_Angle
-				atan2
-					fabs
-					atan
-						fabs
-						eval_poly
 			Quadrant
+			CalcI_J_FromEndPos
+			Calc_Angle
+				atan
+					fabs
+					eval_poly
+			TestQuadrnt
+			CircDir
+			CalcDivisor
+		Cir_Interpolation
+			CalcStep
 			NextCords
 				cos
 					sin
 						floor
 						eval_poly
 				sin
-			CalcI_J_FromEndPos
-			TestQuadrnt
-				abs
-			CircDir
-			CalcDivisor
-		Cir_Interpolation
-			CalcStep
-			NextCords
 			SerialPrint
 				strlen
 				memset
@@ -95,8 +91,8 @@ main
 				strncat
 				UART2_Write_Text
 					UART2_Write
-			Circ_Tick
-				disableOCx
+		Circ_Tick
+			disableOCx
 	ResetSteppers
 		DisableStepper
 StepA

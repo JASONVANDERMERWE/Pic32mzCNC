@@ -105,8 +105,60 @@ void DMA1();
 #line 1 "c:/users/git/pic32mzcnc/kinematics.h"
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
 #line 1 "c:/users/git/pic32mzcnc/serial_dma.h"
-#line 13 "c:/users/git/pic32mzcnc/kinematics.h"
-extern void (*AxisPulse[3])();
+#line 18 "c:/users/git/pic32mzcnc/kinematics.h"
+extern volatile void (*AxisPulse[3])();
+
+
+
+
+typedef struct Steps{
+
+ signed long microSec;
+
+ unsigned short CheckStep: 1;
+
+ unsigned short PLS_Step_ : 1;
+
+ unsigned short StepBits: 1;
+
+ unsigned short stopAxis: 1;
+
+ unsigned char run_state ;
+
+ long step_delay;
+
+ long decel_start;
+
+ long decel_val;
+
+ long min_delay;
+
+ long accel_count;
+ long deccl_count;
+
+ long step_count;
+
+ long dist;
+
+ long new_step_delay;
+
+ long last_accel_delay;
+
+ long accel_lim;
+
+ long max_step_lim;
+
+ long rest;
+
+ long StartUp_delay;
+
+ signed long mmToTravel;
+}STP;
+extern STP STPS[ 6 ];
+
+
+
+
 
 struct degs{
 double degS;
@@ -121,6 +173,10 @@ double newdeg;
 struct X_Y{
  double X;
  double Y;
+};
+
+struct async_{
+char x: 1;
 };
 
 
@@ -139,7 +195,7 @@ double N;
 double radius;
 int dir;
 int quadrantS;
-int quadrant;
+int quadrantF;
 unsigned int steps;
 unsigned int Idivisor;
 double xCenter;
@@ -156,6 +212,7 @@ double lastX;
 double lastY;
 struct degs Deg;
 struct X_Y XY;
+struct async_ async;
 }Circle;
 extern Circle Circ;
 
@@ -166,13 +223,13 @@ extern Circle Circ;
 void DualAxisStep(long newx,long newy,int axis_combo);
 void SingleAxisStep(long newxyz,int axis_No);
 
-void SetCircleVals(double curX,double curY,double finX,double finY,double i,double j, double deg,int dir);
-void CalcRadius();
-void CalcCircCenter();
-void CalcI_J_FromEndPos();
-double Calc_Angle(double i, double j);
+void SetCircleVals(double curX,double curY,double finX,double finY,double i,double j,int dir);
+void CalcRadius(double i,double j);
+void CalcCircCenter(double xS,double yS,double i,double j);
+void CalcI_J_FromEndPos(double xF,double yF,double xC,double yC);
+double Calc_Angle(double j, double i);
 int Quadrant(double i,double j);
-double TestQuadrnt();
+double TestQuadrnt(double i,double j,double aS,double aE);
 int CircDir(int dir);
 void CalcDivisor();
 void CalcStep();
@@ -259,7 +316,7 @@ unsigned int ResetSteppers(unsigned int sec_to_disable,unsigned int last_sec_to_
 #line 1 "c:/users/git/pic32mzcnc/kinematics.h"
 #line 15 "c:/users/git/pic32mzcnc/stepper.h"
 typedef unsigned short UInt8_t;
-#line 59 "c:/users/git/pic32mzcnc/stepper.h"
+#line 58 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
@@ -305,50 +362,6 @@ typedef struct STPT {
 }StepTmr;
 extern StepTmr STmr;
 
-typedef struct Steps{
-
- signed long microSec;
-
- unsigned short CheckStep: 1;
-
- unsigned short PLS_Step_ : 1;
-
- unsigned short StepBits: 1;
-
- unsigned short stopAxis: 1;
-
- unsigned char run_state ;
-
- long step_delay;
-
- long decel_start;
-
- long decel_val;
-
- long min_delay;
-
- long accel_count;
- long deccl_count;
-
- long step_count;
-
- long dist;
-
- long new_step_delay;
-
- long last_accel_delay;
-
- long accel_lim;
-
- long max_step_lim;
-
- long rest;
-
- long StartUp_delay;
-
- signed long mmToTravel;
-}STP;
-extern STP STPS[ 6 ];
 
 
 
@@ -426,7 +439,6 @@ unsigned int Toggle;
 
 
 
- STP STPS[ 6 ];
  sVars SV;
  StepTmr STmr;
 
@@ -505,7 +517,7 @@ void DisableStepper(){
  EN_StepZ = 1;
  EN_StepA = 1;
 }
-#line 112 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 111 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void speed_cntr_Move(signed long mmSteps, signed long speed, int axis_No){
 int ii;
 
@@ -646,14 +658,14 @@ void toggleOCx(int axis_No){
 
 
 int Pulse(int axis_No){
-#line 257 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 256 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  switch(STPS[axis_No].run_state) {
  case  0 :
  SV.Tog = 1;
  break;
 
  case  1 :
-#line 267 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 266 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  AccDec(axis_No);
  if(STPS[axis_No].step_delay <= STPS[axis_No].min_delay){
 
@@ -682,7 +694,7 @@ int Pulse(int axis_No){
  break;
 
  case  2 :
-#line 299 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 298 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  AccDec(axis_No);
 
 
@@ -890,7 +902,7 @@ void StopA(){
  OC3IE_bit = 0;
  OC3CONbits.ON = 0;
 }
-#line 516 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 515 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 unsigned int min_(unsigned int x, unsigned int y){
  if(x < y){
  return x;
@@ -899,7 +911,7 @@ unsigned int min_(unsigned int x, unsigned int y){
  return y;
  }
 }
-#line 533 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 532 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 static unsigned long sqrt_(unsigned long x){
 
  register unsigned long xr;
@@ -930,7 +942,7 @@ static unsigned long sqrt_(unsigned long x){
  return xr;
  }
 }
-#line 587 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 586 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void CycleStop(){
 int ii;
  STmr.uSec = 0;

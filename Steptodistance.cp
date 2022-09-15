@@ -106,8 +106,60 @@ void DMA1();
 #line 1 "c:/users/git/pic32mzcnc/kinematics.h"
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
 #line 1 "c:/users/git/pic32mzcnc/serial_dma.h"
-#line 13 "c:/users/git/pic32mzcnc/kinematics.h"
-extern void (*AxisPulse[3])();
+#line 18 "c:/users/git/pic32mzcnc/kinematics.h"
+extern volatile void (*AxisPulse[3])();
+
+
+
+
+typedef struct Steps{
+
+ signed long microSec;
+
+ unsigned short CheckStep: 1;
+
+ unsigned short PLS_Step_ : 1;
+
+ unsigned short StepBits: 1;
+
+ unsigned short stopAxis: 1;
+
+ unsigned char run_state ;
+
+ long step_delay;
+
+ long decel_start;
+
+ long decel_val;
+
+ long min_delay;
+
+ long accel_count;
+ long deccl_count;
+
+ long step_count;
+
+ long dist;
+
+ long new_step_delay;
+
+ long last_accel_delay;
+
+ long accel_lim;
+
+ long max_step_lim;
+
+ long rest;
+
+ long StartUp_delay;
+
+ signed long mmToTravel;
+}STP;
+extern STP STPS[ 6 ];
+
+
+
+
 
 struct degs{
 double degS;
@@ -122,6 +174,10 @@ double newdeg;
 struct X_Y{
  double X;
  double Y;
+};
+
+struct async_{
+char x: 1;
 };
 
 
@@ -140,7 +196,7 @@ double N;
 double radius;
 int dir;
 int quadrantS;
-int quadrant;
+int quadrantF;
 unsigned int steps;
 unsigned int Idivisor;
 double xCenter;
@@ -157,6 +213,7 @@ double lastX;
 double lastY;
 struct degs Deg;
 struct X_Y XY;
+struct async_ async;
 }Circle;
 extern Circle Circ;
 
@@ -167,13 +224,13 @@ extern Circle Circ;
 void DualAxisStep(long newx,long newy,int axis_combo);
 void SingleAxisStep(long newxyz,int axis_No);
 
-void SetCircleVals(double curX,double curY,double finX,double finY,double i,double j, double deg,int dir);
-void CalcRadius();
-void CalcCircCenter();
-void CalcI_J_FromEndPos();
-double Calc_Angle(double i, double j);
+void SetCircleVals(double curX,double curY,double finX,double finY,double i,double j,int dir);
+void CalcRadius(double i,double j);
+void CalcCircCenter(double xS,double yS,double i,double j);
+void CalcI_J_FromEndPos(double xF,double yF,double xC,double yC);
+double Calc_Angle(double j, double i);
 int Quadrant(double i,double j);
-double TestQuadrnt();
+double TestQuadrnt(double i,double j,double aS,double aE);
 int CircDir(int dir);
 void CalcDivisor();
 void CalcStep();
@@ -260,7 +317,7 @@ unsigned int ResetSteppers(unsigned int sec_to_disable,unsigned int last_sec_to_
 #line 1 "c:/users/git/pic32mzcnc/kinematics.h"
 #line 15 "c:/users/git/pic32mzcnc/stepper.h"
 typedef unsigned short UInt8_t;
-#line 59 "c:/users/git/pic32mzcnc/stepper.h"
+#line 58 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
@@ -306,50 +363,6 @@ typedef struct STPT {
 }StepTmr;
 extern StepTmr STmr;
 
-typedef struct Steps{
-
- signed long microSec;
-
- unsigned short CheckStep: 1;
-
- unsigned short PLS_Step_ : 1;
-
- unsigned short StepBits: 1;
-
- unsigned short stopAxis: 1;
-
- unsigned char run_state ;
-
- long step_delay;
-
- long decel_start;
-
- long decel_val;
-
- long min_delay;
-
- long accel_count;
- long deccl_count;
-
- long step_count;
-
- long dist;
-
- long new_step_delay;
-
- long last_accel_delay;
-
- long accel_lim;
-
- long max_step_lim;
-
- long rest;
-
- long StartUp_delay;
-
- signed long mmToTravel;
-}STP;
-extern STP STPS[ 6 ];
 
 
 

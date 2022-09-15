@@ -4895,6 +4895,7 @@ asin
 asvalmonen
 asvalmonen
 asvalmonen_bit
+async
 atan
 atan2
 atof
@@ -46086,7 +46087,7 @@ px
 py
 pz
 quadrant
-quadrant
+quadrantf
 quadrants
 r_w
 r_w
@@ -81353,6 +81354,7 @@ wtid2
 wtid2_bit
 wtid3
 wtid3_bit
+x
 x
 x_next
 xcenter
