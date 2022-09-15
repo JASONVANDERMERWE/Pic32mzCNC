@@ -1,6 +1,6 @@
 [DEVICE]
 Name=P32MZ2048EFH100
-Clock=10000000
+Clock=200000000
 [MEMORY_MODEL]
 Value=0
 [BUILD_TYPE]
@@ -33,11 +33,11 @@ ActiveImageIndex=-1
 [OPENED_FILES]
 File0=Stepper.c
 File1=Stepper.h
-File2=Kinematics.h
-File3=Main.c
-File4=Kinematics.c
-File5=Config.c
-File6=Config.h
+File2=Main.c
+File3=Kinematics.c
+File4=Config.c
+File5=Config.h
+File6=Kinematics.h
 Count=7
 [EEPROM]
 Count=0
@@ -80,7 +80,7 @@ File12=TwiddleFactors
 Count=13
 [INTERRUPT_DEFS]
 EBASE=9FC01000
-VECTOR_SPACEING=512
+VECTOR_SPACEING=32
 VECTOR_MODE=1
 USE_SRS=7
 [EXPANDED_NODES]

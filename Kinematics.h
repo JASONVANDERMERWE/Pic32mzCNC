@@ -7,7 +7,7 @@
 //Circle defines and consts
 // Decide how many axis you would like to run
 #define NoOfAxis 6
-#define  Pi         3.14159
+#define  Pi         3.141593
 #define  rad2deg   (180.00/Pi)
 #define  deg2rad   (Pi/180.00)
 
@@ -104,7 +104,7 @@ double N;
 double radius;
 int   dir;
 int   quadrantS;
-int   quadrant;
+int   quadrantF;
 unsigned int steps;
 unsigned int Idivisor;
 double xCenter;
@@ -133,12 +133,12 @@ void DualAxisStep(long newx,long newy,int axis_combo);
 void SingleAxisStep(long newxyz,int axis_No);
 //Circle move axis
 void SetCircleVals(double curX,double curY,double finX,double finY,double i,double j,int dir);
-void CalcRadius();
-void CalcCircCenter();
-void CalcI_J_FromEndPos();
-double Calc_Angle(double i, double j);
+void CalcRadius(double i,double j);
+void CalcCircCenter(double xS,double yS,double i,double j);
+void CalcI_J_FromEndPos(double xF,double yF,double xC,double yC);
+double Calc_Angle(double j, double i);
 int  Quadrant(double i,double j);
-double TestQuadrnt();
+double TestQuadrnt(double i,double j,double aS,double aE);
 int CircDir(int dir);
 void CalcDivisor();
 void CalcStep();

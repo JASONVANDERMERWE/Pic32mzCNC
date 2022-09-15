@@ -281,7 +281,9 @@ void YZ_Interpolate(){
 ////////////////////////////////////////////////
 //Set Circ values
 void SetCircleVals(double curX,double curY,double finX,double finY,double i,double j,int dir){
+double X,Y,Xe,Ye;
  int str_len = 0;
+  X = Y = Xe = Ye = 0;
  AxisPulse[2] = Circ_Prep_Next;
  Multi_Axis_Enable(xy);
  SV.Single_Dual = 2;
@@ -291,20 +293,27 @@ void SetCircleVals(double curX,double curY,double finX,double finY,double i,doub
  Circ.yFin   = finY;
  Circ.I = i;
  Circ.J = j;
- 
+
  //Start calculating the Initial values to use
- CalcRadius();
- CalcCircCenter();
- Circ.Deg.degS = Calc_Angle(Circ.I,Circ.J);
- Circ.quadrantS = Quadrant(Circ.I,Circ.J);
- NextCords();
- CalcI_J_FromEndPos();
- Circ.quadrant = Quadrant(Circ.I_end, Circ.J_end);
+ CalcRadius(i,j);
+ 
+ CalcCircCenter(curX,curY,i,j);
+ //angle is returned in degrees
+ Circ.Deg.degS = Calc_Angle(i,j);
+ //start quadrant
+ Circ.quadrantS = Quadrant(i,j);
+ //cordinates of
+// NextCords();
+ CalcI_J_FromEndPos(Circ.xFin,Circ.yFin,Circ.xCenter,Circ.yCenter);
+ //degrees returned for F and T
  Circ.Deg.degF = Calc_Angle(Circ.I_end, Circ.J_end);
- Circ.Deg.degT = TestQuadrnt();
+
+ Circ.quadrantF = Quadrant(Circ.I_end, Circ.J_end);
+
+ Circ.Deg.degT = TestQuadrnt(Circ.I_end, Circ.J_end,Circ.Deg.degS,Circ.Deg.degF);
+ 
  Circ.dir = CircDir(dir);
- Calc_Angle(Circ.xStart,Circ.yStart);
- Circ.Deg.newdeg = 0;
+
 
  CalcDivisor();
  Circ.lastX = 0;
@@ -338,38 +347,39 @@ double newDeg,Circumfrence;
 }
 
 ////////////////////////////////////////////////
+//return the angle of start and end pos
+double Calc_Angle(double i, double j){
+ double X,Y,res;
+ X = Y = 0.00;
+ //  X = fabs(i);
+ //  Y = fabs(j);
+   res = atan2(j,i);
+   //get the deg of radiuss from abs zero pos
+   //and convert  radans to degrees
+   res = res*rad2deg;
+   return res;
+}
+
+////////////////////////////////////////////////
 //Radius Calculation
-void CalcRadius(){
-double i,j;   //no negative nums for sqroot
-   i = abs(Circ.I);
-   j = abs(Circ.J);
-   
+void CalcRadius(double i,double j){
+
    Circ.radius = sqrt((i*i) + (j*j));
 }
 
 ////////////////////////////////////////////////
 //Calculate Circle center position X.Y
-void CalcCircCenter(){
+void CalcCircCenter(double xS,double yS,double i,double j){
     //radius position of Xrad and Yrad
-   Circ.xCenter = (Circ.xStart + Circ.I);
-   Circ.yCenter = (Circ.yStart + Circ.J);
+   Circ.xCenter = (xS + i);
+   Circ.yCenter = (yS + j);
 }
 
 ////////////////////////////////////////////////
 //Calc the I and J from end Position
-void CalcI_J_FromEndPos(){
-   Circ.I_end = Circ.xFin - Circ.xCenter;
-   Circ.J_end = Circ.yFin - Circ.yCenter;
-}
-
-////////////////////////////////////////////////
-//return the angle of start and end pos
-double Calc_Angle(double i, double j){
-double angA;
-   //get the deg of radiuss from abs zero pos
-   //and convert  radans to degrees
-   return atan2(j,i);//(Circ.XY.X,Circ.XY.Y);
-   //Circ.Deg.degreeDeg = angA * rad2deg;
+void CalcI_J_FromEndPos(double xF,double yF,double xC,double yC){
+   Circ.I_end = xF - xC;
+   Circ.J_end = yF - yC;
 }
 
 /////////////////////////////////////////////////
@@ -387,15 +397,30 @@ int Quadrant(double i,double j){
         return 0;
 }
 
-double TestQuadrnt(){
-double totalDeg = 0.00;
+double TestQuadrnt(double i,double j,double aS,double aE){
+double totalDeg,degF;
 
-    if (Circ.I_end != 0)
+    if (i >= 0 && j < 0)
     {
-        Circ.Deg.degF = 180.0 - Circ.Deg.degF;
-        totalDeg = abs(Circ.Deg.degS) + abs(Circ.Deg.degS);
-    }else
-        totalDeg = abs(Circ.Deg.degS) + 180.0 + abs(Circ.Deg.degS);
+        if (aE > aS)  //angle end > angle start
+            totalDeg = aS - aE;
+        else if (aE < aS && aE > -aS)
+            totalDeg = aE + aS;
+        else if (aE < -aS)
+            totalDeg = 360 + aE+ aS;
+    }
+    else if (i >= 0 && j >= 0)
+    {
+        totalDeg = aS + aE;
+    }
+    else if (i < 0 && j >= 0)
+    {
+        totalDeg = aS + aE;
+    }
+    else if (i < 0 && j < 0)
+    {
+        totalDeg = 360 + aE + aS;
+    }
 
     return totalDeg;
 }
@@ -416,11 +441,11 @@ double angleA;
 
 void NextCords(){
 
-     if(Circ.quadrant == 1 || Circ.quadrant == 4){
+     if(Circ.quadrantS == 1 || Circ.quadrantS == 4){
        Circ.xStep = Circ.xCenter + (Circ.radius * cos(Circ.Deg.degreeRadians));
        Circ.yStep = Circ.yCenter + (Circ.radius * sin(Circ.Deg.degreeRadians));
      }
-     if(Circ.quadrant == 2 || Circ.quadrant == 3){
+     if(Circ.quadrantS == 2 || Circ.quadrantS == 3){
        Circ.xStep = Circ.xCenter - (Circ.radius * cos(Circ.Deg.degreeRadians));
        Circ.yStep = Circ.yCenter - (Circ.radius * sin(Circ.Deg.degreeRadians));
      }
@@ -465,14 +490,14 @@ int x,y,xL,yL;
    
    if (Circ.dir == CW){
        Circ.Deg.deg += 0.25;//Circ.divisor;
-       if (Circ.Deg.deg == Circ.Deg.newdeg){
+       if (Circ.Deg.deg == Circ.Deg.degT){
            disableOCx();
        }
    }
 
     if (Circ.dir == CCW){
        Circ.Deg.deg -= 0.25;//Circ.divisor;
-       if (Circ.Deg.deg == Circ.Deg.newdeg){
+       if (Circ.Deg.deg == Circ.Deg.degT){
           disableOCx();
        }
 
@@ -556,7 +581,19 @@ int str_lenA = 0;
      strncat(txtB,txtA,str_lenA);
      str_len += str_lenA;
       //newdeg
-     sprintf(txt,"%0.2f",Circ.Deg.newdeg);
+     sprintf(txt,"%0.2f",Circ.Deg.degS);
+     strncat(txtB,txt,strlen(txt));
+     str_len += strlen(txt)+1;
+     strncat(txtB,txtA,str_lenA);
+     str_len += str_lenA;
+     //newdeg
+     sprintf(txt,"%0.2f",Circ.Deg.degF);
+     strncat(txtB,txt,strlen(txt));
+     str_len += strlen(txt)+1;
+     strncat(txtB,txtA,str_lenA);
+     str_len += str_lenA;
+      //newdeg
+     sprintf(txt,"%0.2f",Circ.Deg.degT);
      strncat(txtB,txt,strlen(txt));
      str_len += strlen(txt)+1;
      strncat(txtB,txtA,str_lenA);
@@ -568,14 +605,13 @@ int str_lenA = 0;
      strncat(txtB,txtA,str_lenA);
      str_len += str_lenA;
      //rad
-     sprintf(txt,"%d",Circ.quadrant);
+     sprintf(txt,"%d",Circ.quadrantS);
      strncat(txtB,txt,strlen(txt));
      str_len += strlen(txt)+1;
      strncat(txtB,"\n",1);
      str_len += 2;
      strncat(txtB,txtA,str_lenA);
      str_len += str_lenA;
-
      UART2_Write_Text(txtB);
    /*  memcpy(txBuf, txtB, str_len+1);
 

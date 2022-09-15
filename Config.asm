@@ -26,13 +26,11 @@ _LX
 INS	R2, R0, BitPos(JTAGEN_bit+0), 1
 _SX	
 ;Config.c,14 :: 		Delay_ms(100);
-LUI	R24, 5
-ORI	R24, R24, 5652
+LUI	R24, 101
+ORI	R24, R24, 47530
 L_PinMode0:
 ADDIU	R24, R24, -1
 BNE	R24, R0, L_PinMode0
-NOP	
-NOP	
 NOP	
 ;Config.c,17 :: 		ANSELA = 0X0000;
 SW	R0, Offset(ANSELA+0)(GP)
@@ -209,13 +207,11 @@ ORI	R25, R25, lo_addr(_UART2_Read+0)
 JAL	_UART_Set_Active+0
 NOP	
 ;Config.c,95 :: 		Delay_ms(100);                  // Wait for UART module to stabilize
-LUI	R24, 5
-ORI	R24, R24, 5652
+LUI	R24, 101
+ORI	R24, R24, 47530
 L_UartConfig2:
 ADDIU	R24, R24, -1
 BNE	R24, R0, L_UartConfig2
-NOP	
-NOP	
 NOP	
 ;Config.c,96 :: 		}
 L_end_UartConfig:

@@ -57,7 +57,6 @@ main
 		SetCircleVals
 			Multi_Axis_Enable
 			CalcRadius
-				abs
 				sqrt
 					frexp
 					ldexp
@@ -69,20 +68,18 @@ main
 						fabs
 						eval_poly
 			Quadrant
+			CalcI_J_FromEndPos
+			TestQuadrnt
+			CircDir
+			CalcDivisor
+		Cir_Interpolation
+			CalcStep
 			NextCords
 				cos
 					sin
 						floor
 						eval_poly
 				sin
-			CalcI_J_FromEndPos
-			TestQuadrnt
-				abs
-			CircDir
-			CalcDivisor
-		Cir_Interpolation
-			CalcStep
-			NextCords
 			SerialPrint
 				strlen
 				memset
