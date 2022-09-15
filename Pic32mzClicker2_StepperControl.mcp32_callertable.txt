@@ -56,19 +56,18 @@ main
 				toggleOCx
 		SetCircleVals
 			Multi_Axis_Enable
+			fabs
 			CalcRadius
 				sqrt
 					frexp
 					ldexp
 			CalcCircCenter
-			Calc_Angle
-				atan2
-					fabs
-					atan
-						fabs
-						eval_poly
 			Quadrant
 			CalcI_J_FromEndPos
+			Calc_Angle
+				atan
+					fabs
+					eval_poly
 			TestQuadrnt
 			CircDir
 			CalcDivisor

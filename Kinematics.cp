@@ -710,27 +710,30 @@ double X,Y,Xe,Ye;
  Circ.yStart = curY;
  Circ.xFin = finX;
  Circ.yFin = finY;
+ X = fabs(i);
+ Y = fabs(j);
  Circ.I = i;
  Circ.J = j;
 
 
- CalcRadius(i,j);
+ CalcRadius(Circ.I,Circ.J);
 
- CalcCircCenter(curX,curY,i,j);
+ CalcCircCenter(curX,curY,Circ.I,Circ.J);
 
- Circ.Deg.degS = Calc_Angle(i,j);
 
- Circ.quadrantS = Quadrant(i,j);
+ Circ.quadrantS = Quadrant(Circ.I,Circ.J);
 
 
  CalcI_J_FromEndPos(Circ.xFin,Circ.yFin,Circ.xCenter,Circ.yCenter);
 
- Circ.Deg.degF = Calc_Angle(Circ.I_end, Circ.J_end);
 
- Circ.quadrantF = Quadrant(Circ.I_end, Circ.J_end);
+ Circ.Deg.degS = Calc_Angle(X,Y);
+
+ Circ.Deg.degF = Calc_Angle(Circ.I_end, Circ.J_end);
 
  Circ.Deg.degT = TestQuadrnt(Circ.I_end, Circ.J_end,Circ.Deg.degS,Circ.Deg.degF);
 
+ Circ.quadrantF = Quadrant(Circ.I_end, Circ.J_end);
  Circ.dir = CircDir(dir);
 
 
@@ -772,7 +775,8 @@ double Calc_Angle(double i, double j){
  X = Y = 0.00;
 
 
- res = atan2(j,i);
+ res = j/i;
+ res = atan(res);
 
 
  return res* (180.00/ 3.141593 ) ;
@@ -833,11 +837,11 @@ double totalDeg,degF;
  }
  else if (i < 0 && j >= 0)
  {
- totalDeg = aS + aE;
+ totalDeg = 180.00 + aE + aS ;
  }
  else if (i < 0 && j < 0)
  {
- totalDeg = 360 + aE + aS;
+ totalDeg = 180 + aE + aS;
  }
 
  return totalDeg;
@@ -908,14 +912,14 @@ int x,y,xL,yL;
 
  if (Circ.dir ==  0 ){
  Circ.Deg.deg += 0.25;
- if (Circ.Deg.deg == Circ.Deg.degT){
+ if (Circ.Deg.deg >= Circ.Deg.degT){
  disableOCx();
  }
  }
 
  if (Circ.dir ==  1 ){
  Circ.Deg.deg -= 0.25;
- if (Circ.Deg.deg == Circ.Deg.degT){
+ if (Circ.Deg.deg <= Circ.Deg.degT){
  disableOCx();
  }
 
@@ -937,7 +941,7 @@ int x,y,xL,yL;
  SV.Single_Dual = 2;
 
 }
-#line 527 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 531 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 void Circ_Prep_Next(){
  Circ.steps++;
 
@@ -970,25 +974,25 @@ int str_lenA = 0;
  strncat(txtB,txtA,str_lenA);
  str_len += str_lenA;
 
- sprintf(txt,"%0.2f",Circ.xStep);
+ sprintf(txt,"%0.2f",Circ.I);
  strncat(txtB,txt,strlen(txt));
  str_len += strlen(txt);
  strncat(txtB,txtA,str_lenA);
  str_len += str_lenA;
 
- sprintf(txt,"%0.2f",Circ.yStep);
+ sprintf(txt,"%0.2f",Circ.J);
  strncat(txtB,txt,strlen(txt));
  str_len += strlen(txt);
  strncat(txtB,txtA,str_lenA);
  str_len += str_lenA;
 
- sprintf(txt,"%0.2f",Circ.xFin);
+ sprintf(txt,"%0.2f",Circ.I_end);
  strncat(txtB,txt,strlen(txt));
  str_len += strlen(txt)+1;
  strncat(txtB,txtA,str_lenA);
  str_len += str_lenA;
 
- sprintf(txt,"%0.2f",Circ.yFin);
+ sprintf(txt,"%0.2f",Circ.J_end);
  strncat(txtB,txt,strlen(txt));
  str_len += strlen(txt)+1;
  strncat(txtB,txtA,str_lenA);
@@ -1026,5 +1030,5 @@ int str_lenA = 0;
  strncat(txtB,txtA,str_lenA);
  str_len += str_lenA;
  UART2_Write_Text(txtB);
-#line 623 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 627 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 }

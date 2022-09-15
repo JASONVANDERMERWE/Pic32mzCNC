@@ -291,27 +291,30 @@ double X,Y,Xe,Ye;
  Circ.yStart = curY;
  Circ.xFin   = finX;
  Circ.yFin   = finY;
+ X = fabs(i);
+ Y = fabs(j);
  Circ.I = i;
  Circ.J = j;
 
  //Start calculating the Initial values to use
- CalcRadius(i,j);
+ CalcRadius(Circ.I,Circ.J);
  
- CalcCircCenter(curX,curY,i,j);
- //angle is returned in degrees
- Circ.Deg.degS = Calc_Angle(i,j);
+ CalcCircCenter(curX,curY,Circ.I,Circ.J);
+
  //start quadrant
- Circ.quadrantS = Quadrant(i,j);
+ Circ.quadrantS = Quadrant(Circ.I,Circ.J);
  //cordinates of
 // NextCords();
  CalcI_J_FromEndPos(Circ.xFin,Circ.yFin,Circ.xCenter,Circ.yCenter);
+ 
+ //angle is returned in degrees
+ Circ.Deg.degS = Calc_Angle(X,Y);
  //degrees returned for F and T
  Circ.Deg.degF = Calc_Angle(Circ.I_end, Circ.J_end);
-
- Circ.quadrantF = Quadrant(Circ.I_end, Circ.J_end);
-
+ 
  Circ.Deg.degT = TestQuadrnt(Circ.I_end, Circ.J_end,Circ.Deg.degS,Circ.Deg.degF);
  
+ Circ.quadrantF = Quadrant(Circ.I_end, Circ.J_end);
  Circ.dir = CircDir(dir);
 
 
@@ -353,7 +356,8 @@ double Calc_Angle(double i, double j){
  X = Y = 0.00;
  //  X = fabs(i);
  //  Y = fabs(j);
-   res = atan2(j,i);
+    res = j/i;
+    res = atan(res);
    //get the deg of radiuss from abs zero pos
    //and convert  radans to degrees
    return res*rad2deg;
@@ -414,11 +418,11 @@ double totalDeg,degF;
     }
     else if (i < 0 && j >= 0)
     {
-        totalDeg = aS + aE;
+        totalDeg = 180.00 + aE + aS ;
     }
     else if (i < 0 && j < 0)
     {
-        totalDeg = 360 + aE + aS;
+        totalDeg = 180 + aE + aS;
     }
 
     return totalDeg;
@@ -489,14 +493,14 @@ int x,y,xL,yL;
    
    if (Circ.dir == CW){
        Circ.Deg.deg += 0.25;//Circ.divisor;
-       if (Circ.Deg.deg == Circ.Deg.degT){
+       if (Circ.Deg.deg >= Circ.Deg.degT){
            disableOCx();
        }
    }
 
     if (Circ.dir == CCW){
        Circ.Deg.deg -= 0.25;//Circ.divisor;
-       if (Circ.Deg.deg == Circ.Deg.degT){
+       if (Circ.Deg.deg <= Circ.Deg.degT){
           disableOCx();
        }
 
@@ -556,25 +560,25 @@ int str_lenA = 0;
      strncat(txtB,txtA,str_lenA);
      str_len += str_lenA;
       //xPos
-     sprintf(txt,"%0.2f",Circ.xStep);
+     sprintf(txt,"%0.2f",Circ.I);//xStep);
      strncat(txtB,txt,strlen(txt));
      str_len += strlen(txt);
      strncat(txtB,txtA,str_lenA);
      str_len += str_lenA;
      //xFin
-     sprintf(txt,"%0.2f",Circ.yStep);
+     sprintf(txt,"%0.2f",Circ.J);//yStep);
      strncat(txtB,txt,strlen(txt));
      str_len += strlen(txt);
      strncat(txtB,txtA,str_lenA);
      str_len += str_lenA;
      //Deg
-     sprintf(txt,"%0.2f",Circ.xFin);
+     sprintf(txt,"%0.2f",Circ.I_end);//xFin);
      strncat(txtB,txt,strlen(txt));
      str_len += strlen(txt)+1;
      strncat(txtB,txtA,str_lenA);
      str_len += str_lenA;
       //yFin
-     sprintf(txt,"%0.2f",Circ.yFin);
+     sprintf(txt,"%0.2f",Circ.J_end);//.yFin);
      strncat(txtB,txt,strlen(txt));
      str_len += strlen(txt)+1;
      strncat(txtB,txtA,str_lenA);
