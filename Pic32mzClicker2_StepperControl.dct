@@ -33349,7 +33349,6 @@ hugefrm
 hugefrm
 hugefrm_bit
 hugefrm_emacxcfg2_bit
-hypot
 i
 i2c1add
 i2c1addbits
@@ -38890,7 +38889,6 @@ manfc
 manfc
 manfc_bit
 max
-mc_arc
 mcen
 mcen
 mcen
@@ -46085,7 +46083,6 @@ pwrconsetbits
 px
 py
 pz
-r_or_ijk
 r_w
 r_w
 r_w
@@ -56342,7 +56339,6 @@ seq2
 seq2bits
 seq3
 seq3bits
-serialprint
 serrie
 serrie
 serrie

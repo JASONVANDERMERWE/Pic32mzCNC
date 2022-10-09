@@ -474,31 +474,6 @@ J	L_Temp_Move21
 NOP	
 ;Main.c,126 :: 		case 7:
 L_Temp_Move29:
-;Main.c,128 :: 		r_or_ijk(450.00, 250.00, 486.00, 386.00, 0.00, -100.00, 100.00, 0.00);
-LUI	R5, 17345
-ORI	R5, R5, 0
-LUI	R4, 17395
-ORI	R4, R4, 0
-LUI	R3, 17274
-ORI	R3, R3, 0
-LUI	R2, 17377
-ORI	R2, R2, 0
-MTC1	R5, S15
-MTC1	R4, S14
-MTC1	R3, S13
-MTC1	R2, S12
-ADDIU	SP, SP, -16
-SWC1	S0, 12(SP)
-LUI	R2, 17096
-ORI	R2, R2, 0
-SW	R2, 8(SP)
-LUI	R2, 49864
-ORI	R2, R2, 0
-SW	R2, 4(SP)
-SWC1	S0, 0(SP)
-JAL	_r_or_ijk+0
-NOP	
-ADDIU	SP, SP, 16
 ;Main.c,129 :: 		break;
 J	L_Temp_Move21
 NOP	

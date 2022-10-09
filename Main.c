@@ -125,7 +125,7 @@ void Temp_Move(int a){
              break;
        case 7:
                 //r_or_ijk(float xCur,float yCur,float xFin,float yFin,float r, float i, float j, float k)
-                 r_or_ijk(450.00, 250.00, 486.00, 386.00, 0.00, -100.00, 100.00, 0.00);
+                // r_or_ijk(450.00, 250.00, 486.00, 386.00, 0.00, -100.00, 100.00, 0.00);
             break;
         default: a = 0;
               break;

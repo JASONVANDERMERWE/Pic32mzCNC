@@ -90,7 +90,7 @@ void DualAxisStep(long newx,long newy,int axis_combo){
 
   switch(axis_combo){
     case xy:
-          AxisPulse[1] = XY_Interpolate;
+          AxisPulse[1] = &XY_Interpolate;
           axis_xyz = xy;
           Multi_Axis_Enable(axis_xyz);
 
@@ -126,7 +126,7 @@ void DualAxisStep(long newx,long newy,int axis_combo){
 
          break;
     case xz:
-          AxisPulse[1] = XZ_Interpolate;
+          AxisPulse[1] = &XZ_Interpolate;
           axis_xyz = xz;
           Multi_Axis_Enable(axis_xyz);
 
@@ -155,7 +155,7 @@ void DualAxisStep(long newx,long newy,int axis_combo){
           AxisPulse[1]();
          break;
     case yz:
-          AxisPulse[1] = YZ_Interpolate;
+          AxisPulse[1] = &YZ_Interpolate;
           axis_xyz = yz;
           Multi_Axis_Enable(axis_xyz);
 
@@ -277,7 +277,7 @@ void YZ_Interpolate(){
 /////////////////////////////////////////////////
 //          Circular Interpolation             //
 /////////////////////////////////////////////////
-void r_or_ijk(float xCur,float yCur,float xFin,float yFin,float r, float i, float j, float k){
+/*void r_or_ijk(float xCur,float yCur,float xFin,float yFin,float r, float i, float j, float k){
 uint8_t char_counter = 0;
 char letter;
 float value;
@@ -357,16 +357,16 @@ uint8_t isclockwise = 0;
             */
 
             // Calculate the change in position along each selected axis
-            x = target[gc.plane_axis_0]-gc.position[gc.plane_axis_0];
-            y = target[gc.plane_axis_1]-gc.position[gc.plane_axis_1];
+            //x = target[gc.plane_axis_0]-gc.position[gc.plane_axis_0];
+            //y = target[gc.plane_axis_1]-gc.position[gc.plane_axis_1];
 
-            clear_vector(offset);
+            //clear_vector(offset);
             // First, use h_x2_div_d to compute 4*h^2 to check if it is negative or r is smaller
             // than d. If so, the sqrt of a negative number is complex and error out.
-            h_x2_div_d = 4 * r*r - x*x - y*y;
+           // h_x2_div_d = 4 * r*r - x*x - y*y;
           //  if (h_x2_div_d < 0) { FAIL(STATUS_ARC_RADIUS_ERROR); return(gc.status_code); }
             // Finish computing h_x2_div_d.
-            h_x2_div_d = -sqrt(h_x2_div_d)/hypot(x,y); // == -(h * 2 / d)
+         //   h_x2_div_d = -sqrt(h_x2_div_d)/hypot(x,y); // == -(h * 2 / d)
             // Invert the sign of h_x2_div_d if the circle is counter clockwise (see sketch below)
          ///\   if (gc.motion_mode == MOTION_MODE_CCW_ARC) { h_x2_div_d = -h_x2_div_d; }
 
@@ -391,37 +391,37 @@ uint8_t isclockwise = 0;
             // even though it is advised against ever generating such circles in a single line of g-code. By
             // inverting the sign of h_x2_div_d the center of the circles is placed on the opposite side of the line of
             // travel and thus we get the unadvisably long arcs as prescribed.
-            if (r < 0) {
+          /*  if (r < 0) {
                 h_x2_div_d = -h_x2_div_d;
                 r = -r; // Finished with r. Set to positive for mc_arc
-            }
+            }  */
             // Complete the operation by calculating the actual center of the arc
-            offset[gc.plane_axis_0] = 0.5*(x-(y*h_x2_div_d));
-            offset[gc.plane_axis_1] = 0.5*(y+(x*h_x2_div_d));
+         //   offset[gc.plane_axis_0] = 0.5*(x-(y*h_x2_div_d));
+         //   offset[gc.plane_axis_1] = 0.5*(y+(x*h_x2_div_d));
 
-          } else { 
+        //  } else {
           //using this section for understanding 1st
           // Arc Center Format Offset Mode
-            r = hypot(offset[X], offset[Y]); // Compute arc radius for mc_arc
-            SerialPrint(r);
-          }
+        //    r = hypot(offset[X], offset[Y]); // Compute arc radius for mc_arc
+        //    SerialPrint(r);
+        //  }
                     // Set clockwise/counter-clockwise sign for mc_arc computations
-         
-          isclockwise = false;
-          if (gc.motion_mode == MOTION_MODE_CW_ARC) { isclockwise = true; }
+
+        //  isclockwise = false;
+        //  if (gc.motion_mode == MOTION_MODE_CW_ARC) { isclockwise = true; }
 
           // Trace the arc
-          gc.inverse_feed_rate_mode = 1; //??
-          mc_arc(gc.position, target, offset, gc.plane_axis_0, gc.plane_axis_1, gc.plane_axis_2,
-            DEFAULT_FEEDRATE, gc.inverse_feed_rate_mode,
-            r, isclockwise);
-}
+       //   gc.inverse_feed_rate_mode = 1; //??
+       //   mc_arc(gc.position, target, offset, gc.plane_axis_0, gc.plane_axis_1, gc.plane_axis_2,
+       //     DEFAULT_FEEDRATE, gc.inverse_feed_rate_mode,
+       //     r, isclockwise);
+//}
 
 
-
+ /*
 void mc_arc(float *position, float *target, float *offset, uint8_t axis_0, uint8_t axis_1,
   uint8_t axis_linear, float feed_rate, uint8_t invert_feed_rate, float radius, uint8_t isclockwise){
-  
+
   float center_axis0             = position[X] + offset[X];
   float center_axis1             = position[Y] + offset[Y];
   float linear_travel            = target[X] - position[X];
@@ -465,7 +465,7 @@ void mc_arc(float *position, float *target, float *offset, uint8_t axis_0, uint8
    theta_per_segment = angular_travel/segments;
    SerialPrint(theta_per_segment);
    linear_per_segment = linear_travel/segments;
-   SerialPrint(linear_per_segment);
+   SerialPrint(linear_per_segment);   */
   /* Vector rotation by transformation matrix: r is the original vector, r_T is the rotated vector,
      and phi is the angle of rotation. Solution approach by Jens Geisler.
          r_T = [cos(phi) -sin(phi);
@@ -491,7 +491,7 @@ void mc_arc(float *position, float *target, float *offset, uint8_t axis_0, uint8
      This is important when there are successive arc motions.
   */
   // Vector rotation matrix values
-   cos_T = 1-0.5*theta_per_segment*theta_per_segment; // Small angle approximation
+ /*  cos_T = 1-0.5*theta_per_segment*theta_per_segment; // Small angle approximation
   SerialPrint(cos_T);
    sin_T = theta_per_segment;
   SerialPrint(sin_T);
@@ -514,10 +514,10 @@ void mc_arc(float *position, float *target, float *offset, uint8_t axis_0, uint8
       r_axis0 = -offset[axis_0]*cos_Ti + offset[axis_1]*sin_Ti;
       r_axis1 = -offset[axis_0]*sin_Ti - offset[axis_1]*cos_Ti;
       count = 0;
-    }
+    }  */
 
     // Update arc_target location
-    arc_target[X] = center_axis0 + r_axis0;
+  /*  arc_target[X] = center_axis0 + r_axis0;
     arc_target[Y] = center_axis1 + r_axis1;
     arc_target[axis_linear] += linear_per_segment;
     nPx =  arc_target[X] - position[X];
@@ -538,11 +538,11 @@ void mc_arc(float *position, float *target, float *offset, uint8_t axis_0, uint8
       if(!OC5IE_bit && !OC2IE_bit)
           break;
    }
-  }
+  }   */
   // Ensure last segment arrives at target location.
   //mc_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], feed_rate, invert_feed_rate);
-}
-
+//}
+/*
 float hypot(float angular_travel, float linear_travel){
       return(sqrt((angular_travel*angular_travel) + (linear_travel*linear_travel)));
 }
@@ -615,7 +615,7 @@ int str_lenA = 0;
      str_len += 2;
      strncat(txtB,txtA,str_lenA);
      str_len += str_lenA;   */
-     UART2_Write_Text(txtB);
+  //   UART2_Write_Text(txtB);
    /*  memcpy(txBuf, txtB, str_len+1);
 
      CHEN_DCH1CON_bit    = 1;     // Enable the DMA1 channel to transmit back what was received
@@ -624,4 +624,4 @@ int str_lenA = 0;
      CHEN_bit            = 1 ;
      CFORCE_DCH1ECON_bit = 1 ;                 // force DMA1 interrupt trigger
    */
-}
+//}
