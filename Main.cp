@@ -548,7 +548,7 @@ int xyz_ = 0;
  if((!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit)){
  Temp_Move(a);
  a++;
- if(a > 6)a=0;
+ if(a > 7)a=0;
  }
  }
 

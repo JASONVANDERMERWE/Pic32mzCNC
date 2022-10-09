@@ -203,9 +203,9 @@ NOP
 LHU	R2, Offset(Main_a+0)(GP)
 ADDIU	R2, R2, 1
 SH	R2, Offset(Main_a+0)(GP)
-;Main.c,74 :: 		if(a > 6)a=0;
+;Main.c,74 :: 		if(a > 7)a=0;
 ANDI	R2, R2, 65535
-SLTIU	R2, R2, 7
+SLTIU	R2, R2, 8
 BEQ	R2, R0, L__main62
 NOP	
 J	L_main19

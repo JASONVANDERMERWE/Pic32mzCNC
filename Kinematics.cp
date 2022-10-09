@@ -735,3 +735,198 @@ void YZ_Interpolate(){
  }
 
 }
+
+
+
+
+void r_or_ijk(float xCur,float yCur,float xFin,float yFin,float r, float i, float j, float k){
+uint8_t char_counter = 0;
+char letter;
+float value;
+int int_value;
+
+uint16_t modal_group_words = 0;
+uint8_t axis_words = 0;
+
+float inverse_feed_rate = -1;
+uint8_t absolute_override =  0 ;
+uint8_t non_modal_action =  0 ;
+float target[ 6 ];
+float offset[ 6 ];
+float x = 0.00;
+float y = 0.00;
+float h_x2_div_d = 0.00;
+uint8_t isclockwise = 0;
+
+ gc.position[X] = xCur;
+ gc.position[Y] = yCur;
+ target[X] = xFin;
+ target[Y] = yFin;
+ offset[X] = i;
+ offset[Y] = j;
+ gc.plane_axis_0 = X;
+ gc.plane_axis_1 = Y;
+ gc.plane_axis_2 = Z;
+ if (r != 0) {
+#line 360 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+ x = target[gc.plane_axis_0]-gc.position[gc.plane_axis_0];
+ y = target[gc.plane_axis_1]-gc.position[gc.plane_axis_1];
+
+  memset(offset, 0, sizeof(offset)) ;
+
+
+ h_x2_div_d = 4 * r*r - x*x - y*y;
+
+
+ h_x2_div_d = -sqrt(h_x2_div_d)/hypot(x,y);
+
+ if (gc.motion_mode ==  3 ) { h_x2_div_d = -h_x2_div_d; }
+#line 394 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+ if (r < 0) {
+ h_x2_div_d = -h_x2_div_d;
+ r = -r;
+ }
+
+ offset[gc.plane_axis_0] = 0.5*(x-(y*h_x2_div_d));
+ offset[gc.plane_axis_1] = 0.5*(y+(x*h_x2_div_d));
+
+ } else {
+
+
+ r = hypot(offset[X], offset[Y]);
+ SerialPrint(r);
+ }
+
+
+ isclockwise =  0 ;
+ if (gc.motion_mode ==  2 ) { isclockwise =  1 ; }
+
+
+ gc.inverse_feed_rate_mode = 1;
+ mc_arc(gc.position, target, offset, gc.plane_axis_0, gc.plane_axis_1, gc.plane_axis_2,
+  250.0 , gc.inverse_feed_rate_mode,
+ r, isclockwise);
+}
+
+
+
+void mc_arc(float *position, float *target, float *offset, uint8_t axis_0, uint8_t axis_1,
+ uint8_t axis_linear, float feed_rate, uint8_t invert_feed_rate, float radius, uint8_t isclockwise){
+
+ float center_axis0 = position[X] + offset[X];
+ float center_axis1 = position[Y] + offset[Y];
+ float linear_travel = target[X] - position[X];
+ float r_axis0 = -offset[X];
+ float r_axis1 = -offset[Y];
+ float rt_axis0 = target[X] - center_axis0;
+ float rt_axis1 = target[Y] - center_axis1;
+ float theta_per_segment = 0.00;
+ float linear_per_segment = 0.00;
+ float millimeters_of_travel = 0.00;
+ uint16_t segments = 0;
+ float cos_T = 0.00;
+ float sin_T = 0.00;
+
+ float arc_target[3];
+ float sin_Ti;
+ float cos_Ti;
+ float r_axisi;
+ uint16_t i;
+ int8_t count = 0;
+ float nPx,nPy;
+
+ float angular_travel = atan2(r_axis0*rt_axis1-r_axis1*rt_axis0, r_axis0*rt_axis0+r_axis1*rt_axis1);
+ if (isclockwise) {
+ if (angular_travel >= 0) { angular_travel -= 2* 3.1416 ; }
+ } else {
+ if (angular_travel <= 0) { angular_travel += 2* 3.1416 ; }
+ }
+ SerialPrint(angular_travel);
+ SerialPrint(linear_travel);
+ millimeters_of_travel = hypot(angular_travel*radius, fabs(linear_travel));
+ if (millimeters_of_travel == 0.0) { return; }
+ SerialPrint(millimeters_of_travel);
+ segments = floor(millimeters_of_travel/ 0.1 );
+ SerialPrint(segments);
+
+
+
+ if (invert_feed_rate) { feed_rate *= segments; }
+ angular_travel = angular_travel *  (180.00/ 3.141593 ) ;
+ theta_per_segment = angular_travel/segments;
+ SerialPrint(theta_per_segment);
+ linear_per_segment = linear_travel/segments;
+ SerialPrint(linear_per_segment);
+#line 494 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+ cos_T = 1-0.5*theta_per_segment*theta_per_segment;
+ SerialPrint(cos_T);
+ sin_T = theta_per_segment;
+ SerialPrint(sin_T);
+
+ nPx = arc_target[X] = position[X];
+ nPy = arc_target[Y] = position[Y];
+ for (i = 1; i<segments; i++) {
+
+ if (count < settings.n_arc_correction) {
+
+ r_axisi = r_axis0*sin_T + r_axis1*cos_T;
+ r_axis0 = r_axis0*cos_T - r_axis1*sin_T;
+ r_axis1 = r_axisi;
+ count++;
+ } else {
+
+
+ cos_Ti = cos(i*theta_per_segment);
+ sin_Ti = sin(i*theta_per_segment);
+ r_axis0 = -offset[axis_0]*cos_Ti + offset[axis_1]*sin_Ti;
+ r_axis1 = -offset[axis_0]*sin_Ti - offset[axis_1]*cos_Ti;
+ count = 0;
+ }
+
+
+ arc_target[X] = center_axis0 + r_axis0;
+ arc_target[Y] = center_axis1 + r_axis1;
+ arc_target[axis_linear] += linear_per_segment;
+ nPx = arc_target[X] - position[X];
+ position[X] = arc_target[X];
+ nPy = arc_target[Y] - position[Y];
+ position[Y] = arc_target[Y];
+ SerialPrint(nPx);
+ SerialPrint(nPy);
+
+ STPS[X].mmToTravel = calcSteps(nPx,8.06);
+ speed_cntr_Move(STPS[X].mmToTravel, 25000,Y);
+ STPS[Y].mmToTravel = calcSteps(nPy,8.06);
+ speed_cntr_Move(STPS[Y].mmToTravel, 25000,Z);
+ DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
+
+
+ while(1){
+ if(!OC5IE_bit && !OC2IE_bit)
+ break;
+ }
+ }
+
+
+}
+
+float hypot(float angular_travel, float linear_travel){
+ return(sqrt((angular_travel*angular_travel) + (linear_travel*linear_travel)));
+}
+
+void SerialPrint(float r){
+int str_len = 0;
+int str_lenA = 0;
+ str_lenA = strlen(txtA);
+ memset(txtB,0,30);
+
+ sprintf(txt,"%0.2f",r);
+ strncpy(txtB, " ",strlen(txt));
+ strncat(txtB, txt,strlen(txt));
+ str_len += strlen(txt);
+ strncat(txtB,txtA,str_lenA);
+ str_len += str_lenA;
+#line 618 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+ UART2_Write_Text(txtB);
+#line 627 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+}
