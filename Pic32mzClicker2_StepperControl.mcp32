@@ -6,7 +6,7 @@ Value=0
 [BUILD_TYPE]
 Value=0
 [ACTIVE_TAB]
-Value=Kinematics.c
+Value=Main.c
 [USE_EEPROM]
 Value=0
 [USE_HEAP]
@@ -33,24 +33,15 @@ ActiveImageIndex=-1
 [OPENED_FILES]
 File0=Stepper.c
 File1=Stepper.h
-<<<<<<< HEAD
 File2=Kinematics.h
-File3=Main.c
-File4=Kinematics.c
-File5=Config.c
-File6=Config.h
-File7=Timers.c
-File8=Stepper.asm
-File9=Kinematics.asm
-Count=10
-=======
-File2=Main.c
 File3=Kinematics.c
 File4=Config.c
 File5=Config.h
-File6=Kinematics.h
-Count=7
->>>>>>> patch2
+File6=Timers.c
+File7=Stepper.asm
+File8=Kinematics.asm
+File9=Main.c
+Count=10
 [EEPROM]
 Count=0
 [ACTIVE_COMMENTS_FILES]

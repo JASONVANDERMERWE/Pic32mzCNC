@@ -144,9 +144,8 @@ J	L__main46
 NOP	
 L__main63:
 L__main39:
-;Main.c,67 :: 		a = 7;
-ORI	R2, R0, 7
-SH	R2, Offset(Main_a+0)(GP)
+;Main.c,67 :: 		a = 0;
+SH	R0, Offset(Main_a+0)(GP)
 ;Main.c,68 :: 		LED1 = 0;
 _LX	
 INS	R2, R0, BitPos(LED1+0), 1
@@ -161,6 +160,12 @@ JAL	_EnStepperX+0
 NOP	
 ;Main.c,72 :: 		EnStepperY();
 JAL	_EnStepperY+0
+NOP	
+;Main.c,73 :: 		EnStepperZ();
+JAL	_EnStepperZ+0
+NOP	
+;Main.c,74 :: 		EnStepperA();
+JAL	_EnStepperA+0
 NOP	
 ;Main.c,66 :: 		if((!SW1)&&(!Toggle)){
 L__main47:
@@ -222,10 +227,19 @@ L__main52:
 LHU	R25, Offset(Main_a+0)(GP)
 JAL	_Temp_Move+0
 NOP	
-;Main.c,81 :: 		a=7;
-ORI	R2, R0, 7
+;Main.c,81 :: 		a++;
+LHU	R2, Offset(Main_a+0)(GP)
+ADDIU	R2, R2, 1
 SH	R2, Offset(Main_a+0)(GP)
-;Main.c,82 :: 		if(a > 7)a=0;
+;Main.c,82 :: 		if(a > 6)a=0;
+ANDI	R2, R2, 65535
+SLTIU	R2, R2, 7
+BEQ	R2, R0, L__main72
+NOP	
+J	L_main21
+NOP	
+L__main72:
+SH	R0, Offset(Main_a+0)(GP)
 L_main21:
 ;Main.c,83 :: 		}
 L_main20:
@@ -488,11 +502,11 @@ L_Temp_Move31:
 ;Main.c,135 :: 		if(!Circ.cir_start){
 LBU	R2, Offset(_Circ+0)(GP)
 EXT	R2, R2, 0, 1
-BEQ	R2, R0, L__Temp_Move74
+BEQ	R2, R0, L__Temp_Move75
 NOP	
 J	L_Temp_Move32
 NOP	
-L__Temp_Move74:
+L__Temp_Move75:
 ;Main.c,142 :: 		SetCircleVals(450.00,250.00,277.00,471.00,-100.00,100.00,CW);//==166deg
 LUI	R5, 17387
 ORI	R5, R5, 32768
@@ -526,19 +540,19 @@ L_Temp_Move32:
 ;Main.c,152 :: 		if(Circ.cir_start){
 LBU	R2, Offset(_Circ+0)(GP)
 EXT	R2, R2, 0, 1
-BNE	R2, R0, L__Temp_Move76
+BNE	R2, R0, L__Temp_Move77
 NOP	
 J	L_Temp_Move33
 NOP	
-L__Temp_Move76:
+L__Temp_Move77:
 ;Main.c,156 :: 		if(!Circ.async.x){
 LBU	R2, Offset(_Circ+128)(GP)
 EXT	R2, R2, 0, 1
-BEQ	R2, R0, L__Temp_Move77
+BEQ	R2, R0, L__Temp_Move78
 NOP	
 J	L_Temp_Move34
 NOP	
-L__Temp_Move77:
+L__Temp_Move78:
 ;Main.c,157 :: 		Circ.async.x = 1;
 LBU	R2, Offset(_Circ+128)(GP)
 ORI	R2, R2, 1
@@ -551,11 +565,11 @@ L_Temp_Move34:
 ;Main.c,161 :: 		if(!Circ.cir_next){
 LBU	R2, Offset(_Circ+0)(GP)
 EXT	R2, R2, 2, 1
-BEQ	R2, R0, L__Temp_Move78
+BEQ	R2, R0, L__Temp_Move79
 NOP	
 J	L_Temp_Move35
 NOP	
-L__Temp_Move78:
+L__Temp_Move79:
 ;Main.c,162 :: 		Circ.cir_next = 1;
 LBU	R2, Offset(_Circ+0)(GP)
 ORI	R2, R2, 4
@@ -579,60 +593,60 @@ NOP
 ;Main.c,169 :: 		}
 L_Temp_Move22:
 SEH	R2, R25
-BNE	R2, R0, L__Temp_Move80
+BNE	R2, R0, L__Temp_Move81
 NOP	
 J	L_Temp_Move24
 NOP	
-L__Temp_Move80:
+L__Temp_Move81:
 SEH	R3, R25
 ORI	R2, R0, 1
-BNE	R3, R2, L__Temp_Move82
+BNE	R3, R2, L__Temp_Move83
 NOP	
 J	L_Temp_Move25
 NOP	
-L__Temp_Move82:
+L__Temp_Move83:
 SEH	R3, R25
 ORI	R2, R0, 2
-BNE	R3, R2, L__Temp_Move84
+BNE	R3, R2, L__Temp_Move85
 NOP	
 J	L_Temp_Move26
 NOP	
-L__Temp_Move84:
+L__Temp_Move85:
 SEH	R3, R25
 ORI	R2, R0, 3
-BNE	R3, R2, L__Temp_Move86
+BNE	R3, R2, L__Temp_Move87
 NOP	
 J	L_Temp_Move27
 NOP	
-L__Temp_Move86:
+L__Temp_Move87:
 SEH	R3, R25
 ORI	R2, R0, 4
-BNE	R3, R2, L__Temp_Move88
+BNE	R3, R2, L__Temp_Move89
 NOP	
 J	L_Temp_Move28
 NOP	
-L__Temp_Move88:
+L__Temp_Move89:
 SEH	R3, R25
 ORI	R2, R0, 5
-BNE	R3, R2, L__Temp_Move90
+BNE	R3, R2, L__Temp_Move91
 NOP	
 J	L_Temp_Move29
 NOP	
-L__Temp_Move90:
+L__Temp_Move91:
 SEH	R3, R25
 ORI	R2, R0, 6
-BNE	R3, R2, L__Temp_Move92
+BNE	R3, R2, L__Temp_Move93
 NOP	
 J	L_Temp_Move30
 NOP	
-L__Temp_Move92:
+L__Temp_Move93:
 SEH	R3, R25
 ORI	R2, R0, 7
-BNE	R3, R2, L__Temp_Move94
+BNE	R3, R2, L__Temp_Move95
 NOP	
 J	L_Temp_Move31
 NOP	
-L__Temp_Move94:
+L__Temp_Move95:
 J	L_Temp_Move36
 NOP	
 L_Temp_Move23:
