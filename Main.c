@@ -1,5 +1,8 @@
 #include "Config.h"
 
+settings_t settings;
+parser_state_t gc;
+STP STPS[NoOfAxis];
 
 bit testISR;
 bit oneShotA; sfr;
@@ -50,28 +53,25 @@ int xyz_ = 0;
          if(!SW2){
                Toggle  = 0;
                disableOCx();
-               Circ.cir_start = 0;
-               Circ.cir_end   = 0;
-               Circ.cir_next  = 0;
          }
 
          if((!SW1)&&(!Toggle)){
-            a = 7;
+            a = 0;
             LED1 = 0;
             Toggle = 1;
             disable_steps = 0;
             EnStepperX();
             EnStepperY();
-          //  EnStepperZ();
-          //  EnStepperA();
+            EnStepperZ();
+            EnStepperA();
 
          }
          //X Y Z
          if(Toggle){
-           if((!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit)||!Circ.cir_next){
+           if((!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit)){
                Temp_Move(a);
-               a=7;
-               if(a > 7)a=0;
+               a++;
+               if(a > 6)a=0;
            }
          }
             
@@ -124,38 +124,9 @@ void Temp_Move(int a){
                  SingleAxisStep(STPS[A].mmToTravel,A);
              break;
        case 7:
-               if(!Circ.cir_start){
-                 //SetCircleVals(450.00,250.00,458.00,259.00,-100.00,100.00,CW);//==5deg
-                 //  SetCircleVals(450.00,250.00,486.00,313.00,-100.00,100.00,CW);//==30deg
-                 //  SetCircleVals(450.00,250.00,491.00,350.00,-100.00,100.00,CW);//==45deg
-                 // SetCircleVals(450.00,250.00,486.00,386.00,-100.00,100.00,CW);//==60deg
-                 //   SetCircleVals(450.00,250.00,450.00,450.00,-100.00,100.00,CW);//==90deg
-                 // SetCircleVals(450.00,250.00,431.00,465.00,-100.00,100.00,CW);//==100deg
-                  SetCircleVals(450.00,250.00,277.00,471.00,-100.00,100.00,CW);//==166deg
-                 //  SetCircleVals(450.00,250.00,227.00,420.00,-100.00,100.00,CW);//==195deg
-                 //  SetCircleVals(450.00,250.00,208.00,347.00,-100.00,100.00,CW);//==226deg
-                 //  SetCircleVals(450.00,250.00,249.00,250.00,-100.00,100.00,CW);//==270deg
-                 //  SetCircleVals(450.00,250.00,340.00,208.00,-100.00,100.00,CW);//==311deg
-                 //  SetCircleVals(450.00,250.00,409.00,221.00,-100.00,100.00,CW);//==340deg
-                 //  SetCircleVals(450.00,250.00,448.00,248.00,-100.00,100.00,CW);//==359deg
-                  Circ.cir_start = 1;
-               }
-               
-               if(Circ.cir_start){
-                 ////////////////////////////////////////////
-                 //asynchronously recalculate next position
-                 //after a degree change
-                 if(!Circ.async.x){
-                     Circ.async.x = 1;
-                     Cir_Interpolation();
-                 }
-                 
-                 if(!Circ.cir_next){
-                      Circ.cir_next = 1;
-                      Circ_Tick();
-                 }
-               }
-             break;
+                //r_or_ijk(float xCur,float yCur,float xFin,float yFin,float r, float i, float j, float k)
+                 r_or_ijk(450.00, 250.00, 486.00, 386.00, 0.00, -100.00, 100.00, 0.00);
+            break;
         default: a = 0;
               break;
     }

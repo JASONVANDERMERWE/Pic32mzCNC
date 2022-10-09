@@ -2,7 +2,7 @@ _calcSteps:
 ;Steptodistance.c,7 :: 		signed long calcSteps(double mmsToMove,  double Dia){
 ;Steptodistance.c,13 :: 		circ = Dia*Pi;
 LUI	R2, 16457
-ORI	R2, R2, 5767
+ORI	R2, R2, 4060
 MTC1	R2, S0
 MUL.S 	S0, S13, S0
 ;Steptodistance.c,17 :: 		cirDivision = mmsToMove / circ;
