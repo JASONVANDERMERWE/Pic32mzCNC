@@ -188,86 +188,9 @@ extern STP STPS[ 6 ];
 
 
 
-struct degs{
-double degS;
-double degF;
-double degT;
-double deg;
-double degreeDeg;
-double degreeRadians;
-double newdeg;
-};
-
-struct X_Y{
- double X;
- double Y;
-};
-
-struct async_{
-char x: 1;
-};
-
-
-typedef struct{
-char cir_start: 1;
-char cir_end: 1;
-char cir_next: 1;
-char x_next: 1;
-char y_next: 1;
-double divisor;
-double I;
-double J;
-double I_end;
-double J_end;
-double N;
-double radius;
-int dir;
-int quadrantS;
-int quadrantF;
-unsigned int steps;
-unsigned int Idivisor;
-double xCenter;
-double yCenter;
-double xStart;
-double yStart;
-double xStep;
-double yStep;
-double xFin;
-double yFin;
-double xLastStep;
-double yLastStep;
-double lastX;
-double lastY;
-struct degs Deg;
-struct X_Y XY;
-struct async_ async;
-}Circle;
-extern Circle Circ;
-
-
-
-
 
 void DualAxisStep(long newx,long newy,int axis_combo);
 void SingleAxisStep(long newxyz,int axis_No);
-
-void SetCircleVals(double curX,double curY,double finX,double finY,double i,double j,int dir);
-void CalcRadius(double i,double j);
-void CalcCircCenter(double xS,double yS,double i,double j);
-void CalcI_J_FromEndPos(double xF,double yF,double xC,double yC);
-double Calc_Angle(double j, double i);
-int Quadrant(double i,double j);
-double TestQuadrnt(double i,double j,double aS,double aE);
-int CircDir(int dir);
-void CalcDivisor();
-void CalcStep();
-void NextCords();
-void CirInterpolation();
-void Cir_Interpolation();
-void Circ_Tick();
-void Circ_Prep_Next();
-
-void SerialPrint();
 #line 15 "c:/users/git/pic32mzcnc/stepper.h"
 typedef unsigned short UInt8_t;
 #line 58 "c:/users/git/pic32mzcnc/stepper.h"
@@ -479,9 +402,6 @@ int xyz_ = 0;
  if(!SW2){
  Toggle = 0;
  disableOCx();
- Circ.cir_start = 0;
- Circ.cir_end = 0;
- Circ.cir_next = 0;
  }
 
  if((!SW1)&&(!Toggle)){
@@ -497,7 +417,7 @@ int xyz_ = 0;
  }
 
  if(Toggle){
- if((!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit)||!Circ.cir_next){
+ if((!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit)){
  Temp_Move(a);
  a++;
  if(a > 6)a=0;
@@ -552,39 +472,7 @@ void Temp_Move(int a){
  speed_cntr_Move(STPS[A].mmToTravel, 25000,A);
  SingleAxisStep(STPS[A].mmToTravel,A);
  break;
- case 7:
- if(!Circ.cir_start){
 
-
-
-
-
-
- SetCircleVals(450.00,250.00,277.00,471.00,-100.00,100.00, 0 );
-
-
-
-
-
-
- Circ.cir_start = 1;
- }
-
- if(Circ.cir_start){
-
-
-
- if(!Circ.async.x){
- Circ.async.x = 1;
- Cir_Interpolation();
- }
-
- if(!Circ.cir_next){
- Circ.cir_next = 1;
- Circ_Tick();
- }
- }
- break;
  default: a = 0;
  break;
  }

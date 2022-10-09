@@ -1639,8 +1639,14 @@ NOP
 J	L_StepX60
 NOP	
 L_StepX59:
-;Stepper.c,403 :: 		Circ_Prep_Next();//AxisPulse[SV.Single_Dual]();
-JAL	_Circ_Prep_Next+0
+;Stepper.c,403 :: 		AxisPulse[SV.Single_Dual]();
+LH	R2, Offset(_SV+0)(GP)
+SLL	R3, R2, 2
+LUI	R2, hi_addr(_AxisPulse+0)
+ORI	R2, R2, lo_addr(_AxisPulse+0)
+ADDU	R2, R2, R3
+LW	R2, 0(R2)
+JALR	RA, R2
 NOP	
 L_StepX60:
 ;Stepper.c,404 :: 		}
@@ -1744,8 +1750,14 @@ NOP
 J	L_StepY64
 NOP	
 L_StepY63:
-;Stepper.c,432 :: 		Circ_Prep_Next();//AxisPulse[SV.Single_Dual]();
-JAL	_Circ_Prep_Next+0
+;Stepper.c,432 :: 		AxisPulse[SV.Single_Dual]();
+LH	R2, Offset(_SV+0)(GP)
+SLL	R3, R2, 2
+LUI	R2, hi_addr(_AxisPulse+0)
+ORI	R2, R2, lo_addr(_AxisPulse+0)
+ADDU	R2, R2, R3
+LW	R2, 0(R2)
+JALR	RA, R2
 NOP	
 L_StepY64:
 ;Stepper.c,433 :: 		}

@@ -6,7 +6,7 @@ Value=0
 [BUILD_TYPE]
 Value=0
 [ACTIVE_TAB]
-Value=Main.c
+Value=Config.c
 [USE_EEPROM]
 Value=0
 [USE_HEAP]
@@ -37,10 +37,10 @@ File2=Kinematics.h
 File3=Kinematics.c
 File4=Config.c
 File5=Config.h
-File6=Timers.c
-File7=Stepper.asm
-File8=Kinematics.asm
-File9=Main.c
+File6=Main.c
+File7=Steptodistance.c
+File8=Steptodistance.h
+File9=Timers.c
 Count=10
 [EEPROM]
 Count=0
