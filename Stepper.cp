@@ -846,7 +846,8 @@ void StepX() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_SRS {
 
  if(SV.Single_Dual == 0)
  SingleStepX();
-
+ else
+ AxisPulse[SV.Single_Dual]();
 }
 
 void SingleStepX(){
@@ -874,6 +875,8 @@ void StepY() iv IVT_OUTPUT_COMPARE_2 ilevel 3 ics ICS_SRS {
 
  if(SV.Single_Dual == 0)
  SingleStepY();
+ else
+ AxisPulse[SV.Single_Dual]();
 }
 
 void SingleStepY(){
@@ -946,7 +949,7 @@ void StopA(){
  OC3IE_bit = 0;
  OC3CONbits.ON = 0;
 }
-#line 512 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 515 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 unsigned int min_(unsigned int x, unsigned int y){
  if(x < y){
  return x;
@@ -955,7 +958,7 @@ unsigned int min_(unsigned int x, unsigned int y){
  return y;
  }
 }
-#line 529 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 532 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 static unsigned long sqrt_(unsigned long x){
 
  register unsigned long xr;
@@ -986,7 +989,7 @@ static unsigned long sqrt_(unsigned long x){
  return xr;
  }
 }
-#line 583 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 586 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void CycleStop(){
 int ii;
  STmr.uSec = 0;

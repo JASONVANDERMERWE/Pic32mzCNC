@@ -399,7 +399,8 @@ void StepX() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_SRS {
 
      if(SV.Single_Dual == 0)
         SingleStepX();
-
+     else
+        AxisPulse[SV.Single_Dual]();
 }
 
 void SingleStepX(){
@@ -427,6 +428,8 @@ void StepY() iv IVT_OUTPUT_COMPARE_2 ilevel 3 ics ICS_SRS {
 
    if(SV.Single_Dual == 0)
         SingleStepY();
+   else
+        AxisPulse[SV.Single_Dual]();
 }
 
 void SingleStepY(){

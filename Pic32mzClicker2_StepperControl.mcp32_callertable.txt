@@ -54,6 +54,43 @@ main
 				StopY
 				StopZ
 				Step_Cycle
+		r_or_ijk
+			memset
+			sqrt
+				frexp
+				ldexp
+			hypot
+				sqrt
+			SerialPrint
+				strlen
+				memset
+				sprintf
+					_doprntf
+						isdigit
+						scale
+						fround
+				strncpy
+				strncat
+				UART2_Write_Text
+					UART2_Write
+			mc_arc
+				atan2
+					fabs
+					atan
+						fabs
+						eval_poly
+				SerialPrint
+				fabs
+				hypot
+				floor
+				cos
+					sin
+						floor
+						eval_poly
+				sin
+				calcSteps
+				speed_cntr_Move
+				DualAxisStep
 	ResetSteppers
 		DisableStepper
 StepA
@@ -74,10 +111,18 @@ StepX
 	SingleStepX
 		StopX
 		Step_Cycle
+	ClockPulse
+	XY_Interpolate
+	XZ_Interpolate
+	YZ_Interpolate
 StepY
 	SingleStepY
 		StopY
 		Step_Cycle
+	ClockPulse
+	XY_Interpolate
+	XZ_Interpolate
+	YZ_Interpolate
 StepZ
 	SingleStepZ
 		StopZ

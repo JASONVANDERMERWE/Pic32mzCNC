@@ -499,7 +499,7 @@ void mc_arc(float *position, float *target, float *offset, uint8_t axis_0, uint8
   nPx = arc_target[X] = position[X];
   nPy = arc_target[Y] = position[Y];
   for (i = 1; i<segments; i++) { // Increment (segments-1)
-
+    SerialPrint((float)i);
     if (count < settings.n_arc_correction) {
       // Apply vector rotation matrix
       r_axisi = r_axis0*sin_T + r_axis1*cos_T;
@@ -526,18 +526,24 @@ void mc_arc(float *position, float *target, float *offset, uint8_t axis_0, uint8
     position[Y] = arc_target[Y];
     SerialPrint(nPx);
     SerialPrint(nPy);
-  //  mc_line(arc_target[X_AXIS], arc_target[Y_AXIS], arc_target[Z_AXIS], feed_rate, invert_feed_rate);
-   STPS[X].mmToTravel = calcSteps(nPx,8.06);
-   speed_cntr_Move(STPS[X].mmToTravel, 25000,Y);
-   STPS[Y].mmToTravel = calcSteps(nPy,8.06);
-   speed_cntr_Move(STPS[Y].mmToTravel, 25000,Z);
-   DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
-    // Bail mid-circle on system abort. Runtime command check already performed by mc_line.
-   // if (sys.abort) { return; }
    while(1){
       if(!OC5IE_bit && !OC2IE_bit)
           break;
    }
+
+     DIR_StepX = (nPx < 0)? CCW:CW;
+     DIR_StepY = (nPy < 0)? CCW:CW;
+     nPx = fabs(nPx);
+     nPy = fabs(nPy);
+  //  mc_line(arc_target[X_AXIS], arc_target[Y_AXIS], arc_target[Z_AXIS], feed_rate, invert_feed_rate);
+   STPS[X].mmToTravel = calcSteps(nPx,8.06);
+   speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
+   STPS[Y].mmToTravel = calcSteps(nPy,8.06);
+   speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+   DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
+    // Bail mid-circle on system abort. Runtime command check already performed by mc_line.
+   // if (sys.abort) { return; }
+
   }
   // Ensure last segment arrives at target location.
   //mc_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], feed_rate, invert_feed_rate);
