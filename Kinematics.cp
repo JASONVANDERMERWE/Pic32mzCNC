@@ -897,16 +897,13 @@ void mc_arc(float *position, float *target, float *offset, uint8_t axis_0, uint8
  if(!OC5IE_bit && !OC2IE_bit)
  break;
  }
-
- DIR_StepX = (nPx < 0)?  1 : 0 ;
- DIR_StepY = (nPy < 0)?  1 : 0 ;
- nPx = fabs(nPx);
- nPy = fabs(nPy);
-
+#line 539 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
  STPS[X].mmToTravel = calcSteps(nPx,8.06);
- speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
+
  STPS[Y].mmToTravel = calcSteps(nPy,8.06);
- speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+
+ STPS[X].step_delay = 100;
+ STPS[Y].step_delay = 100;
  DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
 
 
@@ -932,7 +929,7 @@ int str_lenA = 0;
  str_len += strlen(txt);
  strncat(txtB,txtA,str_lenA);
  str_len += str_lenA;
-#line 624 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 626 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
  UART2_Write_Text(txtB);
-#line 633 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 635 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 }
