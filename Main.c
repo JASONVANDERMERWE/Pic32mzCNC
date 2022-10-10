@@ -8,6 +8,9 @@
 
 #include "Config.h"
 
+settings_t settings;
+parser_state_t gc;
+STP STPS[NoOfAxis];
 
 bit testISR;
 bit oneShotA; sfr;
@@ -76,7 +79,11 @@ int xyz_ = 0;
            if((!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit)){
                Temp_Move(a);
                a++;
+<<<<<<< HEAD
                if(a > 6)a=0;
+=======
+               if(a > 7)a=0;
+>>>>>>> patch2
            }
          }
             
@@ -128,7 +135,14 @@ void Temp_Move(int a){
                  speed_cntr_Move(STPS[A].mmToTravel, 25000,A);
                  SingleAxisStep(STPS[A].mmToTravel,A);
              break;
+<<<<<<< HEAD
 
+=======
+       case 7:
+                //r_or_ijk(float xCur,float yCur,float xFin,float yFin,float r, float i, float j, float k)
+                 r_or_ijk(450.00, 250.00, 486.00, 386.00, 0.00, -100.00, 100.00, 0.00);
+            break;
+>>>>>>> patch2
         default: a = 0;
               break;
     }

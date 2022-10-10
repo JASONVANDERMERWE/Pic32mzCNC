@@ -54,6 +54,45 @@ main
 				StopY
 				StopZ
 				Step_Cycle
+<<<<<<< HEAD
+=======
+		r_or_ijk
+			memset
+			sqrt
+				frexp
+				ldexp
+			hypot
+				sqrt
+			SerialPrint
+				strlen
+				memset
+				sprintf
+					_doprntf
+						isdigit
+						scale
+						fround
+				strncpy
+				strncat
+				UART2_Write_Text
+					UART2_Write
+			mc_arc
+				atan2
+					fabs
+					atan
+						fabs
+						eval_poly
+				SerialPrint
+				fabs
+				hypot
+				floor
+				cos
+					sin
+						floor
+						eval_poly
+				sin
+				calcSteps
+				DualAxisStep
+>>>>>>> patch2
 	ResetSteppers
 		DisableStepper
 StepA

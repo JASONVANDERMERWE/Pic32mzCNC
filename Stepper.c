@@ -428,7 +428,11 @@ void StepY() iv IVT_OUTPUT_COMPARE_2 ilevel 3 ics ICS_SRS {
 
    if(SV.Single_Dual == 0)
         SingleStepY();
+<<<<<<< HEAD
      else
+=======
+   else
+>>>>>>> patch2
         AxisPulse[SV.Single_Dual]();
 }
 
