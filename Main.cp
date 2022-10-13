@@ -480,13 +480,10 @@ void LcdI2CConfig();
 void OutPutPulseXYZ();
 void Temp_Move(int a);
 void LCD_Display();
-#line 3 "C:/Users/Git/Pic32mzCNC/Main.c"
+#line 11 "C:/Users/Git/Pic32mzCNC/Main.c"
 settings_t settings;
 parser_state_t gc;
 STP STPS[ 6 ];
-sVars SV;
-StepTmr STmr;
-
 
 bit testISR;
 bit oneShotA; sfr;
@@ -500,7 +497,7 @@ unsigned int ii;
 unsigned long testOcr;
 static unsigned int a;
 
-char txt_[9];
+
 
 
 void main() {
@@ -553,15 +550,10 @@ int xyz_ = 0;
 
  if(Toggle){
  if((!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit)){
- sprintf(txt_,"%d",STPS[X].step_count);
- UART2_Write_Text(txt_);
- UART2_Write(0x0D);
- sprintf(txt_,"%d",STPS[Y].step_count);
- UART2_Write_Text(txt_);
- UART2_Write(0x0D);
  Temp_Move(a);
  a++;
- if(a > 5)a=0;
+ if(a > 6)a=0;
+
  }
  }
 
@@ -574,46 +566,46 @@ void Temp_Move(int a){
  switch(a){
  case 0:
  STPS[X].mmToTravel = belt_steps(-50.00);
- speed_cntr_Move(STPS[X].mmToTravel, 15000,X);
+ speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
  SingleAxisStep(STPS[X].mmToTravel,X);
  break;
  case 1:
  STPS[X].mmToTravel = belt_steps(50.00);
- speed_cntr_Move(STPS[X].mmToTravel, 15000,X);
+ speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
  SingleAxisStep(STPS[X].mmToTravel,X);
  break;
  case 2:
- STPS[Y].mmToTravel = belt_steps(50.00);
- speed_cntr_Move(STPS[Y].mmToTravel, 15000,Y);
+ STPS[Y].mmToTravel = belt_steps(-50.00);
+ speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
  SingleAxisStep(STPS[Y].mmToTravel,Y);
  break;
  case 3:
- STPS[Y].mmToTravel = belt_steps(-50.00);
- speed_cntr_Move(STPS[Y].mmToTravel, 15000,Y);
+ STPS[Y].mmToTravel = belt_steps(50.00);
+ speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
  SingleAxisStep(STPS[Y].mmToTravel,Y);
  break;
  case 4:
- STPS[Y].mmToTravel = belt_steps(50.00);
- speed_cntr_Move(STPS[Y].mmToTravel, 15000,Y);
- STPS[X].mmToTravel = belt_steps(-100.00);
- speed_cntr_Move(STPS[X].mmToTravel, 15000,X);
- DualAxisStep(STPS[X].mmToTravel,STPS[Y].mmToTravel,xy);
+ STPS[X].mmToTravel = belt_steps(-50.00);
+ speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
+ STPS[Y].mmToTravel = belt_steps(-50.00);
+ speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+ DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
  break;
  case 5:
- STPS[Y].mmToTravel = belt_steps(-50.00);
- speed_cntr_Move(STPS[Y].mmToTravel, 15000,Y);
- STPS[X].mmToTravel = belt_steps(100.00);
- speed_cntr_Move(STPS[X].mmToTravel, 15000,X);
- DualAxisStep(STPS[X].mmToTravel,STPS[Y].mmToTravel,xy);
+ STPS[X].mmToTravel = belt_steps(50.00);
+ speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
+ STPS[Y].mmToTravel = belt_steps(50.00);
+ speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+ DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
  break;
  case 6:
  STPS[A].mmToTravel = calcSteps(-125.25,8.06);
- speed_cntr_Move(STPS[A].mmToTravel, 55000,A);
+ speed_cntr_Move(STPS[A].mmToTravel, 25000,A);
  SingleAxisStep(STPS[A].mmToTravel,A);
  break;
  case 7:
 
- r_or_ijk(450.00, 250.00, 486.00, 386.00, 0.00, -100.00, 100.00, 0.00,xy);
+
  break;
  default: a = 0;
  break;
@@ -621,6 +613,7 @@ void Temp_Move(int a){
 }
 
 void LCD_Display(){
+
 
 
 

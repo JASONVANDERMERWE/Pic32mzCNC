@@ -494,8 +494,8 @@ unsigned int Toggle;
 
 
 
-
-
+ sVars SV;
+ StepTmr STmr;
 
 
 
