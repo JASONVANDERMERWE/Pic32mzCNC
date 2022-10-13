@@ -78,8 +78,6 @@ typedef struct Steps{
 extern STP STPS[NoOfAxis];
 
 
-<<<<<<< HEAD
-=======
 ////////////////////////////////////////////////////
 //     ******CIRCULAR INTERPOLATION******         //
 ////////////////////////////////////////////////////
@@ -110,22 +108,19 @@ typedef struct {
 //  uint8_t status_report_mask; // Mask to indicate desired report data.
 } settings_t;
 extern settings_t settings;
->>>>>>> patch2
+
 
 ///////////////////////////////////////////
 //FUNCTION PROTOTYPES
 //Move inline
 void DualAxisStep(long newx,long newy,int axis_combo);
 void SingleAxisStep(long newxyz,int axis_No);
-<<<<<<< HEAD
 
-
-=======
 //Circle move axis
 void mc_arc(float *position, float *target, float *offset, uint8_t axis_0, uint8_t axis_1,
   uint8_t axis_linear, float feed_rate, uint8_t invert_feed_rate, float radius, uint8_t isclockwise);
 float hypot(float angular_travel, float linear_travel);
 void SerialPrint(float r);
 void r_or_ijk(float xCur,float yCur,float xFin,float yFin,float r, float i, float j, float k);
->>>>>>> patch2
+
 #endif

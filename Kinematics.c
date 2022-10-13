@@ -1,10 +1,5 @@
 #include "Kinematics.h"
 
-<<<<<<< HEAD
-STP STPS[NoOfAxis];
-=======
->>>>>>> patch2
-
 
 //////////////////////////////////
 //FUNCTION POINTERS
@@ -278,8 +273,6 @@ void YZ_Interpolate(){
 
 }
 
-<<<<<<< HEAD
-=======
 /////////////////////////////////////////////////
 //          Circular Interpolation             //
 /////////////////////////////////////////////////
@@ -639,4 +632,3 @@ int str_lenA = 0;
      CFORCE_DCH1ECON_bit = 1 ;                 // force DMA1 interrupt trigger
    */
 }
->>>>>>> patch2

@@ -23138,12 +23138,9 @@ debug1_ubadevcfg0_bit
 dec
 dec2bcd
 dec2bcd16
-<<<<<<< HEAD
-=======
 decimal_places
 default_feed_rate
 default_seek_rate
->>>>>>> patch2
 delay_100ms
 delay_10ms
 delay_10us
@@ -40110,10 +40107,7 @@ mwtd8_emacxmwtd_bit
 mwtd9
 mwtd9_bit
 mwtd9_emacxmwtd_bit
-<<<<<<< HEAD
-=======
 n_arc_correction
->>>>>>> patch2
 nak
 nak
 nak_bit
@@ -46091,10 +46085,7 @@ pwrconsetbits
 px
 py
 pz
-<<<<<<< HEAD
-=======
 r_or_ijk
->>>>>>> patch2
 r_w
 r_w
 r_w
@@ -56351,6 +56342,7 @@ seq2
 seq2bits
 seq3
 seq3bits
+serialprint
 serrie
 serrie
 serrie
@@ -60976,10 +60968,7 @@ step27_bit
 stepa
 stepper_idle_lock_time
 stepperconstants
-<<<<<<< HEAD
-=======
 steps_per_mm
->>>>>>> patch2
 stepx
 stepy
 stepz

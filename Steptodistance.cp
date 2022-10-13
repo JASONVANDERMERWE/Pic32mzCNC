@@ -248,12 +248,6 @@ extern STP STPS[ 6 ];
 
 
 
-<<<<<<< HEAD
-
-void DualAxisStep(long newx,long newy,int axis_combo);
-void SingleAxisStep(long newxyz,int axis_No);
-#line 28 "c:/users/git/pic32mzcnc/config.h"
-=======
 
 
 
@@ -285,8 +279,10 @@ extern settings_t settings;
 
 
 
+
 void DualAxisStep(long newx,long newy,int axis_combo);
 void SingleAxisStep(long newxyz,int axis_No);
+
 
 void mc_arc(float *position, float *target, float *offset, uint8_t axis_0, uint8_t axis_1,
  uint8_t axis_linear, float feed_rate, uint8_t invert_feed_rate, float radius, uint8_t isclockwise);
@@ -295,7 +291,6 @@ void SerialPrint(float r);
 void r_or_ijk(float xCur,float yCur,float xFin,float yFin,float r, float i, float j, float k);
 #line 1 "c:/users/git/pic32mzcnc/gcode.h"
 #line 31 "c:/users/git/pic32mzcnc/config.h"
->>>>>>> patch2
 extern unsigned char LCD_01_ADDRESS;
 extern bit oneShotA; sfr;
 extern bit oneShotB; sfr;
