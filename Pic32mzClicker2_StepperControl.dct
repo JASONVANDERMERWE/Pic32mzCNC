@@ -6256,6 +6256,7 @@ bdstate2
 bdstate2_bit
 bdstate3
 bdstate3_bit
+belt_steps
 bf1devcfg0
 bf1devcfg0bits
 bf1devcfg1
@@ -36423,6 +36424,7 @@ igntur_spi4con2_bit
 igntur_spi5con2_bit
 igntur_spi6con2_bit
 ii
+in2mm
 inches_mode
 incm
 incm
@@ -38541,6 +38543,7 @@ lcd_01_address
 lcd_display
 ldexp
 ldiv
+leadscrew_steps
 led1
 led1_dir
 led2
@@ -39116,6 +39119,7 @@ min103
 min103_alrmtime_bit
 min103_bit
 mm_per_arc_segment
+mm2in
 mode
 mode
 mode
@@ -71015,6 +71019,7 @@ txstate2_bit
 txstate3
 txstate3_bit
 txt
+txt_a
 txta
 txtb
 txtc

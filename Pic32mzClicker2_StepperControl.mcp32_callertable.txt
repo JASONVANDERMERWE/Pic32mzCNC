@@ -27,7 +27,7 @@ main
 	EnStepperZ
 	EnStepperA
 	Temp_Move
-		calcSteps
+		belt_steps
 		speed_cntr_Move
 			abs
 			sqrt_
@@ -43,8 +43,11 @@ main
 			abs
 			ClockPulse
 			XY_Interpolate
+				__CC2DW
 				StopX
 				StopY
+				UART2_Write_Text
+					UART2_Write
 				Step_Cycle
 			XZ_Interpolate
 				StopX
@@ -54,6 +57,7 @@ main
 				StopY
 				StopZ
 				Step_Cycle
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 		r_or_ijk
@@ -92,6 +96,9 @@ main
 				sin
 				calcSteps
 				DualAxisStep
+>>>>>>> patch2
+=======
+		calcSteps
 >>>>>>> patch2
 	ResetSteppers
 		DisableStepper

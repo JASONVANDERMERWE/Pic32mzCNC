@@ -92,23 +92,30 @@ void Temp_Move(int a){
 
     switch(a){
          case 0:
-                 STPS[Z].mmToTravel = calcSteps(-125.25,8.06);
-                 speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
-                 SingleAxisStep(STPS[Z].mmToTravel,Z);
+                 STPS[X].mmToTravel = belt_steps(-50.00);//calcSteps(-125.25,8.06);
+                 speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
+                 SingleAxisStep(STPS[X].mmToTravel,X);
               break;
         case 1:
-                 STPS[X].mmToTravel = calcSteps(125.25,8.06);
+                 STPS[X].mmToTravel = belt_steps(50.00);
                  speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
                  SingleAxisStep(STPS[X].mmToTravel,X);
               break;
         case 2:
+<<<<<<< HEAD
                  STPS[X].mmToTravel = calcSteps(-125.00,8.06);
                  speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
                  SingleAxisStep(STPS[X].mmToTravel,X);
+=======
+                 STPS[Y].mmToTravel = belt_steps(-50.00);
+                 speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+                 SingleAxisStep(STPS[Y].mmToTravel,Y);
+>>>>>>> patch2
               break;
        case 3:
-                 STPS[Y].mmToTravel = calcSteps(125.25,8.06);
+                 STPS[Y].mmToTravel = belt_steps(50.00);
                  speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+<<<<<<< HEAD
                  STPS[X].mmToTravel = calcSteps(125.25,8.06);
                  speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
                  DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
@@ -117,13 +124,27 @@ void Temp_Move(int a){
                  STPS[X].mmToTravel = calcSteps(-125.25,8.06);
                  speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
                  STPS[Y].mmToTravel = calcSteps(-125.25,8.06);
+=======
+                 SingleAxisStep(STPS[Y].mmToTravel,Y);
+              break;
+       case 4:
+                 STPS[X].mmToTravel = belt_steps(-50.00);
+                 speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
+                 STPS[Y].mmToTravel = belt_steps(-50.00);
+>>>>>>> patch2
                  speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
                  DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
               break;
        case 5:
+<<<<<<< HEAD
                  STPS[X].mmToTravel = calcSteps(125.25,8.06);
                  speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
                  STPS[Y].mmToTravel = calcSteps(125.25,8.06);
+=======
+                 STPS[X].mmToTravel = belt_steps(50.00);
+                 speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
+                 STPS[Y].mmToTravel = belt_steps(50.00);
+>>>>>>> patch2
                  speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
                  DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
               break;
@@ -135,7 +156,7 @@ void Temp_Move(int a){
 
        case 7:
                 //r_or_ijk(float xCur,float yCur,float xFin,float yFin,float r, float i, float j, float k)
-                 r_or_ijk(450.00, 250.00, 486.00, 386.00, 0.00, -100.00, 100.00, 0.00);
+                // r_or_ijk(450.00, 250.00, 486.00, 386.00, 0.00, -100.00, 100.00, 0.00);
             break;
 
         default: a = 0;
@@ -145,10 +166,6 @@ void Temp_Move(int a){
 
 void LCD_Display(){
 
-     STPS[X].mmToTravel = calcSteps(151.25,8.06);
-     speed_cntr_Move(STPS[X].mmToTravel, 2500,X);
-     STPS[Y].mmToTravel = calcSteps(-151.25,8.06);
-     speed_cntr_Move(STPS[Y].mmToTravel, 2500,Y);
 
      //line 1
      // Find out after how many Steps before we must start deceleration.

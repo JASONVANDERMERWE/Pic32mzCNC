@@ -1,6 +1,6 @@
 #include "Stepper.h"
 
-
+char txt_A[9];
 
 /////////////////////////////////
 //enum varibles
@@ -404,7 +404,7 @@ void StepX() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_SRS {
 }
 
 void SingleStepX(){
-    if(STPS[X].step_count >= STPS[X].dist){  //i think this is where the problem lies
+    if(/*(STPS[X].step_count >= STPS[X].dist)||*/(SV.Tog == 1)){
       StopX();
     }
     else{
@@ -433,7 +433,7 @@ void StepY() iv IVT_OUTPUT_COMPARE_2 ilevel 3 ics ICS_SRS {
 }
 
 void SingleStepY(){
-    if(STPS[Y].step_count >= STPS[Y].dist){  //i think this is where the problem lies
+    if(/*(STPS[Y].step_count >= STPS[Y].dist)||*/(SV.Tog == 1)){  //i think this is where the problem lies
       StopY();
     }
     else{
@@ -462,7 +462,7 @@ void StepZ() iv IVT_OUTPUT_COMPARE_7 ilevel 3 ics ICS_SRS {
 }
 
 void SingleStepZ(){
-   if(STPS[Z].step_count >= STPS[Z].dist){
+   if((STPS[Z].step_count >= STPS[Z].dist)||(SV.Tog == 1)){
       StopZ();
    }
    else{
@@ -474,6 +474,7 @@ void StopZ(){
    OC7IE_bit = 0;
    OC7CONbits.ON = 0;
 }
+
 
 //////////////////////////////////////////////////////////
 //            A AXIS PULSE CONTROL                      //
@@ -490,7 +491,7 @@ void StepA() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_SRS {
 }
 
 void SingleStepA(){
-   if(STPS[A].step_count >= STPS[A].dist){
+   if((STPS[A].step_count >= STPS[A].dist)||(SV.Tog == 1)){
       StopA();
    }
    else{
@@ -503,6 +504,90 @@ void StopA(){
    OC3CONbits.ON = 0;
 }
 
+////////////////////////////////////////////////////////
+//Dual Interpolate test conditions after interrrupts
+void XY_Interpolate(){
+
+   if((STPS[X].step_count > SV.dx)||(STPS[Y].step_count > SV.dy)/*||(SV.Tog == 1)*/){
+        StopX();
+        StopY();
+        UART2_Write_Text("Stopped");
+        return;
+   }
+
+   if(SV.dx > SV.dy){
+      Step_Cycle(X);
+      if(SV.d2 < 0){
+          SV.d2 += 2*SV.dy;
+      }else{
+          SV.d2 += 2 * (SV.dy - SV.dx);
+          Step_Cycle(Y);
+      }
+   }else{
+      Step_Cycle(Y);
+      if(SV.d2 < 0){
+         SV.d2 += 2 * SV.dx;
+      }else{
+         SV.d2 += 2 * (SV.dx - SV.dy);
+         Step_Cycle(X);
+       }
+    }
+}
+
+void XZ_Interpolate(){
+
+    if((STPS[X].step_count > SV.dx)||(STPS[Z].step_count > SV.dz)||(SV.Tog == 1)){
+        StopX();
+        StopZ();
+
+        return;
+    }
+
+   if(SV.dx > SV.dz){
+      Step_Cycle(X);
+      if(SV.d2 < 0)
+        SV.d2 += 2*SV.dz;
+      else{
+        SV.d2 += 2 * (SV.dz - SV.dx);
+        Step_Cycle(Z);
+      }
+
+    }else{
+        Step_Cycle(Z);
+        if(SV.d2 < 0)
+            SV.d2 += 2 * SV.dx;
+        else{
+            SV.d2 += 2 * (SV.dx - SV.dz);
+            Step_Cycle(X);
+        }
+     }
+}
+void YZ_Interpolate(){
+    if((STPS[Y].step_count > SV.dy)||(STPS[Z].step_count > SV.dz)/*||(SV.Tog == 1)*/){
+       StopY();
+       StopZ();
+       return;
+    }
+
+    if(SV.dy > SV.dz){
+      Step_Cycle(Y);
+      if(SV.d2 < 0)
+        SV.d2 += 2*SV.dz;
+      else{
+        SV.d2 += 2 * (SV.dz - SV.dy);
+        Step_Cycle(Z);
+      }
+    }else{
+      Step_Cycle(Z);
+      if(SV.d2 < 0)
+         SV.d2 += 2 * SV.dy;
+      else{
+         SV.d2 += 2 * (SV.dy - SV.dz);
+         Step_Cycle(Y);
+      }
+    }
+
+}
 ////////////////////////////////////////////////
 //              CALCULATIONS                  //
 ////////////////////////////////////////////////
