@@ -1,7 +1,7 @@
 #include "Kinematics.h"
 
 
-
+//axis_combination axis_xyz;
 //////////////////////////////////
 //FUNCTION POINTERS
 volatile void (*AxisPulse[3])();
@@ -83,6 +83,7 @@ void DualAxisStep(long newx,long newy,int axis_combo){
    SV.px = 0;
    SV.py = 0;
    SV.pz = 0;
+   SV.d2 = 0;
 /*!
  *use Bressenhams algorithm here
  */
@@ -177,7 +178,7 @@ void DualAxisStep(long newx,long newy,int axis_combo){
           SV.dz = abs(SV.dz);
 
          if(SV.dy > SV.dz) d2 = 2*(SV.dz - SV.dy);
-         else d2 = 2* (SV.dy - SV.dz);
+         else SV.d2 = 2* (SV.dy - SV.dz);
 
          STPS[Y].step_count = 0;
          STPS[Z].step_count = 0;
@@ -189,122 +190,51 @@ void DualAxisStep(long newx,long newy,int axis_combo){
 }
 
 
-//////////////////////////////////////////////////////////
-// X AXIS COMBOS
-void XY_Interpolate(){
 
-   if((STPS[X].step_count > SV.dx)||(STPS[Y].step_count > SV.dy)){
-        StopX();
-        StopY();
-        return;
-   }
 
-   if(SV.dx > SV.dy){
-      Step_Cycle(X);
-      if(SV.d2 < 0){
-          SV.d2 += 2*SV.dy;
-      }else{
-          SV.d2 += 2 * (SV.dy - SV.dx);
-          Step_Cycle(Y);
-      }
-   }else{
-      Step_Cycle(Y);
-      if(SV.d2 < 0){
-         SV.d2 += 2 * SV.dx;
-      }else{
-         SV.d2 += 2 * (SV.dx - SV.dy);
-         Step_Cycle(X);
-       }
-    }
-}
+///////////////////////////////////////////////////////////////////////////////
+//     Circular Interpolation taken from Grbl as it uses Rotation matrix     //
+///////////////////////////////////////////////////////////////////////////////
 
-void XZ_Interpolate(){
+/*/////////////////////////////////////////////////////////////////////////////
+*GCODE uses either radius or I,J,K for offset / this function can condition
+*for either standard / offset is mostly a byEuropean standard and
+*radius mostly an American standard
+/////////////////////////////////////////////////////////////////////////////*/
 
-    if((STPS[X].step_count > SV.dx)||(STPS[Z].step_count > SV.dz)){
-        StopX();
-        StopZ();
+//TODO: change function arguments to struct that holds positions, targets etc
+//      as arrays for GCODE sampling and conditioning mostly to compensate for
+//      for 3 axis helix movement/spiraling; for test purposes we keep
+//      axix_linear_per_segment as 0 test 2D plane circle
+void r_or_ijk(double Cur_axis_a,double Cur_axis_b,double Fin_axis_a,double Fin_axis_b,double r, double i, double j, double k, int axis_xyz){
+unsigned short isclockwise = 0;
+double inverse_feed_rate = -1; // negative inverse_feed_rate means no inverse_feed_rate specified
+double position[NoOfAxis];
+double target[NoOfAxis];
+double offset[NoOfAxis];
+double x = 0.00;
+double y = 0.00;
+double h_x2_div_d = 0.00;
+unsigned int axis_plane_a,axis_plane_b;
 
-        return;
-    }
-
-   if(SV.dx > SV.dz){
-      Step_Cycle(X);
-      if(d2 < 0)
-        d2 += 2*SV.dz;
-      else{
-        d2 += 2 * (SV.dz - SV.dx);
-        Step_Cycle(Z);
-      }
-
-    }else{
-        Step_Cycle(Z);
-        if(d2 < 0)
-            d2 += 2 * SV.dx;
-        else{
-            d2 += 2 * (SV.dx - SV.dz);
-            Step_Cycle(X);
-        }
-     }
-}
-
-void YZ_Interpolate(){
-    if((STPS[Y].step_count > SV.dy)||(STPS[Z].step_count > SV.dz)){
-       StopY();
-       StopZ();
-       return;
-    }
-
-    if(SV.dy > SV.dz){
-      Step_Cycle(Y);
-      if(d2 < 0)
-        d2 += 2*SV.dz;
-      else{
-        d2 += 2 * (SV.dz - SV.dy);
-        Step_Cycle(Z);
-      }
-    }else{
-      Step_Cycle(Z);
-      if(d2 < 0)
-         d2 += 2 * SV.dy;
-      else{
-         d2 += 2 * (SV.dy - SV.dz);
-         Step_Cycle(Y);
-      }
-    }
-
-}
-
-/////////////////////////////////////////////////
-//          Circular Interpolation             //
-/////////////////////////////////////////////////
-void r_or_ijk(float xCur,float yCur,float xFin,float yFin,float r, float i, float j, float k){
-uint8_t char_counter = 0;
-char letter;
-float value;
-int int_value;
-
-uint16_t modal_group_words = 0;  // Bitflag variable to track and check modal group words in block
-uint8_t axis_words = 0;          // Bitflag to track which XYZ(ABC) parameters exist in block
-
-float inverse_feed_rate = -1; // negative inverse_feed_rate means no inverse_feed_rate specified
-uint8_t absolute_override = false; // true(1) = absolute motion for this block only {G53}
-uint8_t non_modal_action = NON_MODAL_NONE; // Tracks the actions of modal group 0 (non-modal)
-float target[NoOfAxis];
-float offset[NoOfAxis];
-float x = 0.00;
-float y = 0.00;
-float h_x2_div_d = 0.00;
-uint8_t isclockwise = 0;
-
-     gc.position[X] = xCur;
-     gc.position[Y] = yCur;
-     target[X] = xFin;
-     target[Y] = yFin;
+     //use thess arrays to simplify call to arc function
+     position[X] = Cur_axis_a;
+     position[Y] = Cur_axis_b;
+     target[X] = Fin_axis_a;
+     target[Y] = Fin_axis_b;
      offset[X] = i;
      offset[Y] = j;
-     gc.plane_axis_0 = X;
-     gc.plane_axis_1 = Y;
-     gc.plane_axis_2 = Z;
+     if(axis_xyz == xy){
+       axis_plane_a = X;
+       axis_plane_b = Y;
+     }else if(axis_xyz == xz){
+       axis_plane_a = X;
+       axis_plane_b = Z;
+     }else if(axis_xyz == yz){
+       axis_plane_a = y;
+       axis_plane_b = Z;
+     }
+
      if (r != 0) { // Arc Radius Mode
             /*
               We need to calculate the center of the circle that has the designated radius and passes
@@ -314,7 +244,18 @@ uint8_t isclockwise = 0;
               the center of the travel vector. A vector perpendicular to the travel vector [-y,x] is scaled to the
               length of h [-y/d*h, x/d*h] and added to the center of the travel vector [x/2,y/2] to form the new point
               [i,j] at [x/2-y/d*h, y/2+x/d*h] which will be the center of our arc.
-
+              ******************************
+              Equilateral formulae derived as
+              area = 0.5 * d * h
+              a^2 = h^2 + (r/2)^2
+              ? h^2 = r^2 – (r^2/4)
+              ? h^2 = (3r^2)/4  Or h = ½(sqrt(3r))
+              *********************************
+              area formula: h? = 2 × area / r = sqrt(r² - (0.5 × b)²) × b / r
+              *********************************
+              area = ¼(sqrt(3r^2))
+              h = ½ × (sqrt(3 )× r)
+              *********************************
               d^2 == x^2 + y^2
               h^2 == r^2 - (d/2)^2
               i == x/2 - y/d*h
@@ -357,10 +298,11 @@ uint8_t isclockwise = 0;
             */
 
             // Calculate the change in position along each selected axis
-            x = target[gc.plane_axis_0]-gc.position[gc.plane_axis_0];
-            y = target[gc.plane_axis_1]-gc.position[gc.plane_axis_1];
-
-            clear_vector(offset);
+            //x = target[gc.plane_axis_0]-gc.position[gc.plane_axis_0];
+            x = target[axis_plane_a] - position[axis_plane_a];
+            //y = target[gc.plane_axis_1]-gc.position[gc.plane_axis_1];
+            y = target[axis_plane_b] - position[axis_plane_b];
+            //clear_vector(offset);
             // First, use h_x2_div_d to compute 4*h^2 to check if it is negative or r is smaller
             // than d. If so, the sqrt of a negative number is complex and error out.
             h_x2_div_d = 4 * r*r - x*x - y*y;
@@ -396,76 +338,82 @@ uint8_t isclockwise = 0;
                 r = -r; // Finished with r. Set to positive for mc_arc
             }
             // Complete the operation by calculating the actual center of the arc
-            offset[gc.plane_axis_0] = 0.5*(x-(y*h_x2_div_d));
-            offset[gc.plane_axis_1] = 0.5*(y+(x*h_x2_div_d));
-
+            //offset[gc.plane_axis_0] = 0.5*(x-(y*h_x2_div_d));
+            i =  0.5*(x-(y*h_x2_div_d));
+            //offset[gc.plane_axis_1] = 0.5*(y+(x*h_x2_div_d));
+            j =  0.5*(y+(x*h_x2_div_d));
           } else {
-          //using this section for understanding 1st
-          // Arc Center Format Offset Mode
-            r = hypot(offset[X], offset[Y]); // Compute arc radius for mc_arc
-            SerialPrint(r);
+            //using this section for understanding 1st
+            // Arc Center Format Offset Mode
+             r = hypot(i, j); // Compute arc radius for mc_arc
           }
-                    // Set clockwise/counter-clockwise sign for mc_arc computations
-
+          
+          // Set clockwise/counter-clockwise sign for mc_arc computations
           isclockwise = false;
           if (gc.motion_mode == MOTION_MODE_CW_ARC) { isclockwise = true; }
 
-          // Trace the arc
-          gc.inverse_feed_rate_mode = 1; //??
-          mc_arc(gc.position, target, offset, gc.plane_axis_0, gc.plane_axis_1, gc.plane_axis_2,
+          // Trace the arc  inverse_feed_rate_mode used withG01 G02 G03 for Fxxx
+          mc_arc(position, target, offset, gc.plane_axis_0, gc.plane_axis_1, gc.plane_axis_2,
             DEFAULT_FEEDRATE, gc.inverse_feed_rate_mode,
             r, isclockwise);
 }
 
 
 
-void mc_arc(float *position, float *target, float *offset, uint8_t axis_0, uint8_t axis_1,
-  uint8_t axis_linear, float feed_rate, uint8_t invert_feed_rate, float radius, uint8_t isclockwise){
+void mc_arc(double *position, double *target, double *offset, uint8_t axis_0, uint8_t axis_1,
+  uint8_t axis_linear, double feed_rate, uint8_t invert_feed_rate, double radius, uint8_t isclockwise){
 
-  float center_axis0             = position[X] + offset[X];
-  float center_axis1             = position[Y] + offset[Y];
-  float linear_travel            = target[X] - position[X];
-  float r_axis0                  = -offset[X];  // Radius vector from center to current location
-  float r_axis1                  = -offset[Y];
-  float rt_axis0                 = target[X] - center_axis0;
-  float rt_axis1                 = target[Y] - center_axis1;
-  float theta_per_segment        = 0.00;
-  float linear_per_segment       = 0.00;
-  float millimeters_of_travel    = 0.00;
+  double center_axis0            = position[X] + offset[X];
+ double center_axis1             = position[Y] + offset[Y];
+  double linear_travel           = target[X] - position[X];
+  double r_axis0                 = -offset[X];  // Radius vector from center to current location
+  double r_axis1                 = -offset[Y];
+  double rt_axis0                = target[X] - center_axis0;
+ double rt_axis1                 = target[Y] - center_axis1;
+  double theta_per_segment       = 0.00;
+  double linear_per_segment      = 0.00;
+  double angular_travel          = 0.00;
+  double millimeters_of_travel   = 0.00;
   uint16_t segments              = 0;
-  float cos_T = 0.00;
-  float sin_T = 0.00;
+  double cos_T                   = 0.00;
+  double sin_T                   = 0.00;
 
-  float arc_target[3];
-  float sin_Ti;
-  float cos_Ti;
-  float r_axisi;
+  double arc_target[3];
+  double sin_Ti;
+  double cos_Ti;
+  double r_axisi;
   uint16_t i;
   int8_t count = 0;
-  float nPx,nPy;
+  double nPx,nPy;
+  
   // CCW angle between position and target from circle center. Only one atan2() trig computation required.
-  float angular_travel = atan2(r_axis0*rt_axis1-r_axis1*rt_axis0, r_axis0*rt_axis0+r_axis1*rt_axis1);
-  if (isclockwise) { // Correct atan2 output per direction
+  // atan2((I*-J' - I'*J ),(I*J + I'-J'))   ~ arctan Vector opp/Vector adj
+  angular_travel = atan2(r_axis0*rt_axis1-r_axis1*rt_axis0, r_axis0*rt_axis0+r_axis1*rt_axis1);
+  // Correct atan2 output per direction
+  if (isclockwise) {
+    // 2*Pi = 360deg in radians
     if (angular_travel >= 0) { angular_travel -= 2*M_PI; }
   } else {
     if (angular_travel <= 0) { angular_travel += 2*M_PI; }
   }
-  SerialPrint(angular_travel);
-  SerialPrint(linear_travel);
+
+  // Check this with calculator
   millimeters_of_travel = hypot(angular_travel*radius, fabs(linear_travel));
   if (millimeters_of_travel == 0.0) { return; }
-  SerialPrint(millimeters_of_travel);
+  
   segments = floor(millimeters_of_travel/DEFAULT_MM_PER_ARC_SEGMENT);
-  SerialPrint(segments);
+
   // Multiply inverse feed_rate to compensate for the fact that this movement is approximated
   // by a number of discrete segments. The inverse feed_rate should be correct for the sum of
   // all segments.
   if (invert_feed_rate) { feed_rate *= segments; }
    angular_travel = angular_travel * rad2deg;
    theta_per_segment = angular_travel/segments;
-   SerialPrint(theta_per_segment);
+   //linear_per_segmentis the down feed of the 3 axis
+   //In most cases this will be 0 for 2D plane unless
+   //spiral pocket cutting is needed
    linear_per_segment = linear_travel/segments;
-   SerialPrint(linear_per_segment);
+
   /* Vector rotation by transformation matrix: r is the original vector, r_T is the rotated vector,
      and phi is the angle of rotation. Solution approach by Jens Geisler.
          r_T = [cos(phi) -sin(phi);
@@ -492,14 +440,11 @@ void mc_arc(float *position, float *target, float *offset, uint8_t axis_0, uint8
   */
   // Vector rotation matrix values
    cos_T = 1-0.5*theta_per_segment*theta_per_segment; // Small angle approximation
-  SerialPrint(cos_T);
    sin_T = theta_per_segment;
-  SerialPrint(sin_T);
   // Initialize the linear axis
   nPx = arc_target[X] = position[X];
   nPy = arc_target[Y] = position[Y];
   for (i = 1; i<segments; i++) { // Increment (segments-1)
-    SerialPrint((float)i);
     if (count < settings.n_arc_correction) {
       // Apply vector rotation matrix
       r_axisi = r_axis0*sin_T + r_axis1*cos_T;
@@ -524,8 +469,6 @@ void mc_arc(float *position, float *target, float *offset, uint8_t axis_0, uint8
     position[X] = arc_target[X];
     nPy =  arc_target[Y] - position[Y];
     position[Y] = arc_target[Y];
-    SerialPrint(nPx);
-    SerialPrint(nPy);
    while(1){
       if(!OC5IE_bit && !OC2IE_bit)
           break;
@@ -536,9 +479,9 @@ void mc_arc(float *position, float *target, float *offset, uint8_t axis_0, uint8
      nPx = fabs(nPx);
      nPy = fabs(nPy);   */
   //  mc_line(arc_target[X_AXIS], arc_target[Y_AXIS], arc_target[Z_AXIS], feed_rate, invert_feed_rate);
-   STPS[X].mmToTravel = calcSteps(nPx,8.06);
+   STPS[X].mmToTravel = belt_steps(nPx);//calcSteps(nPx,8.06);
    //speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
-   STPS[Y].mmToTravel = calcSteps(nPy,8.06);
+   STPS[Y].mmToTravel = belt_steps(nPy);//calcSteps(nPy,8.06);
    //speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
    STPS[X].step_delay = 100;
    STPS[Y].step_delay = 100;

@@ -1,6 +1,4 @@
 main
-	__CC2DW
-	__FillZeros
 	PinMode
 		Unlock_IOLOCK
 		PPS_Mapping_NoLock
@@ -26,8 +24,16 @@ main
 	EnStepperY
 	EnStepperZ
 	EnStepperA
+	sprintf
+		_doprntf
+			isdigit
+			scale
+			fround
+	UART2_Write_Text
+		UART2_Write
+	UART2_Write
 	Temp_Move
-		calcSteps
+		belt_steps
 		speed_cntr_Move
 			abs
 			sqrt_
@@ -43,8 +49,10 @@ main
 			abs
 			ClockPulse
 			XY_Interpolate
+				__CC2DW
 				StopX
 				StopY
+				UART2_Write_Text
 				Step_Cycle
 			XZ_Interpolate
 				StopX
@@ -54,32 +62,19 @@ main
 				StopY
 				StopZ
 				Step_Cycle
+		calcSteps
 		r_or_ijk
-			memset
 			sqrt
 				frexp
 				ldexp
 			hypot
 				sqrt
-			SerialPrint
-				strlen
-				memset
-				sprintf
-					_doprntf
-						isdigit
-						scale
-						fround
-				strncpy
-				strncat
-				UART2_Write_Text
-					UART2_Write
 			mc_arc
 				atan2
 					fabs
 					atan
 						fabs
 						eval_poly
-				SerialPrint
 				fabs
 				hypot
 				floor
@@ -88,8 +83,10 @@ main
 						floor
 						eval_poly
 				sin
-				calcSteps
+				belt_steps
 				DualAxisStep
+	__CC2DW
+	__FillZeros
 	ResetSteppers
 		DisableStepper
 StepA

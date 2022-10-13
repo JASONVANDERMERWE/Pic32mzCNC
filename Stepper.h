@@ -5,7 +5,7 @@
  #include "Timers.h"
  #include "Pins.h"
  #include "Kinematics.h"
-
+ #include "Settings.h"
 
 //extern bit PLS_Step_;sfr;
 
@@ -33,9 +33,7 @@ typedef unsigned short UInt8_t;
 #define maxSpeed  510
 #define cirSpeed  100
 
-//! Number of (full)steps per round on stepper motor in use.
-#define FSPR 200       // 200 Steps per rev
-#define SPR (FSPR*16)  // FSPR * micro stepping of stepper drive
+
 
 // Maths constants. To simplify maths when calculating in speed_cntr_Move().
 #define ALPHA    (2*3.14159)/SPR                   // 2*pi/spr in rad
