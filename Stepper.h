@@ -30,7 +30,7 @@ typedef unsigned short UInt8_t;
 // Timer/Counter 1 running on 3,686MHz / 8 = 460,75kHz (2,17uS). (T1-FREQ 460750)
 #define T1_FREQ   781250//781250=1.28us || 796150=1us   per tick
 #define minSpeed  30210
-#define maxSpeed  510
+#define maxSpeed  10
 #define cirSpeed  100
 
 
@@ -145,22 +145,22 @@ void YZ_Interpolate();
 void XA_Interpolate();
 void YA_Interpolate();
 void ZA_Interpolate();
-
+ 
 void StopX();
 void StopY();
 void StopZ();
 void StopA();
 
-
-
 //Step control using Output compare module
 int Pulse(int axis_No);
 void toggleOCx(int axis_No);
+void multiToggleOCx(int axis_No);
 void AccDec(int axis_No);
 void Step_Cycle(int axis_No);
 void Multi_Axis_Enable(axis_combination axis);
 void Single_Axis_Enable(_axis_ axis_);
 
+ 
  void Test_CycleX();
  void Test_CycleY();
  void Test_CycleZ();

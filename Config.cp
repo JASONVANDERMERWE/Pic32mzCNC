@@ -269,6 +269,8 @@ typedef struct Steps{
  long StartUp_delay;
 
  signed long mmToTravel;
+
+ char master: 1;
 }STP;
 extern STP STPS[ 6 ];
 
@@ -297,10 +299,15 @@ typedef struct {
  uint8_t stepper_idle_lock_time;
  uint8_t decimal_places;
  uint8_t n_arc_correction;
+<<<<<<< HEAD
 
 } settings_t;
 extern settings_t settings;
+=======
+>>>>>>> patch2
 
+} settings_t;
+extern settings_t settings;
 
 
 
@@ -309,9 +316,14 @@ void DualAxisStep(long newx,long newy,int axis_combo);
 void SingleAxisStep(long newxyz,int axis_No);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 void mc_arc(float *position, float *target, float *offset, uint8_t axis_0, uint8_t axis_1,
  uint8_t axis_linear, float feed_rate, uint8_t invert_feed_rate, float radius, uint8_t isclockwise);
+=======
+void mc_arc(double *position, double *target, double *offset, uint8_t axis_0, uint8_t axis_1,
+ uint8_t axis_linear, double feed_rate, uint8_t invert_feed_rate, double radius, uint8_t isclockwise);
+>>>>>>> patch2
 =======
 void mc_arc(double *position, double *target, double *offset, uint8_t axis_0, uint8_t axis_1,
  uint8_t axis_linear, double feed_rate, uint8_t invert_feed_rate, double radius, uint8_t isclockwise);
@@ -422,14 +434,14 @@ void StopZ();
 void StopA();
 
 
-
-
 int Pulse(int axis_No);
 void toggleOCx(int axis_No);
+void multiToggleOCx(int axis_No);
 void AccDec(int axis_No);
 void Step_Cycle(int axis_No);
 void Multi_Axis_Enable(axis_combination axis);
 void Single_Axis_Enable(_axis_ axis_);
+
 
  void Test_CycleX();
  void Test_CycleY();

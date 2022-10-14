@@ -110,6 +110,7 @@ void DisableStepper(){
  */
 void speed_cntr_Move(signed long mmSteps, signed long speed, int axis_No){
 int ii;
+char txt_[9];
   // If moving only 1 step.
   if(mmSteps == 1){
 
@@ -184,6 +185,7 @@ int ii;
     }
 
   }
+     
       STPS[axis_No].step_count  = 0;
       STPS[axis_No].rest        = 0;
       STPS[axis_No].microSec    = 0;
@@ -191,6 +193,22 @@ int ii;
       STPS[axis_No].dist        = 0;
       SV.Tog   = 0;
       SV.running = 1;
+      
+     sprintf(txt_,"%d",STPS[axis_No].mmToTravel);
+     UART2_Write_Text(txt_);
+     UART2_Write_Text(" : ");
+     sprintf(txt_,"%d",STPS[axis_No].step_delay);
+     UART2_Write_Text(txt_);
+     UART2_Write_Text(" : ");
+     sprintf(txt_,"%d",STPS[axis_No].min_delay);
+     UART2_Write_Text(txt_);
+     UART2_Write_Text(" : ");
+     sprintf(txt_,"%d",STPS[axis_No].accel_lim);
+     UART2_Write_Text(txt_);
+     UART2_Write_Text(" : ");
+     sprintf(txt_,"%d",STPS[axis_No].decel_start);
+     UART2_Write_Text(txt_);
+     UART2_Write(0x0D);
 }
 
 
@@ -202,42 +220,47 @@ int ii;
 //Step cycle out of for loop
 void Step_Cycle(int axis_No){
       toggleOCx(axis_No);
-      Pulse(axis_No);
 }
 
 
 //toggle the OCxCON regs
 void toggleOCx(int axis_No){
       switch(axis_No){
-        case X: OC5R   = 0x5;
-                OC5RS  = STPS[X].step_delay & 0xFFFF;//0x234;
-                TMR2   =  0xFFFF;
-                OC5CON =  0x8004; //restart the output compare module
+        case X:
+             OC5R   = 0x5;
+             OC5RS  = STPS[X].step_delay & 0xFFFF;//0x234;
+             TMR2   =  0xFFFF;
+             OC5CON =  0x8004; //restart the output compare module
              break;
-        case Y: OC2R   = 0x5;
-                OC2RS  = STPS[Y].step_delay & 0xFFFF;
-                TMR4   =  0xFFFF;
-                OC2CON =  0x8004; //restart the output compare module
+        case Y:
+             OC2R   = 0x5;
+             OC2RS  = STPS[Y].step_delay & 0xFFFF;
+             TMR4   =  0xFFFF;
+             OC2CON =  0x8004; //restart the output compare module
              break;
-        case Z: OC7R   = 0x5;
-                OC7RS  = STPS[Z].step_delay & 0xFFFF;
-                TMR6   =  0xFFFF;
-                OC7CON =  0x8004; //restart the output compare module
+        case Z:
+             OC7R   = 0x5;
+             OC7RS  = STPS[Z].step_delay & 0xFFFF;
+             TMR6   =  0xFFFF;
+             OC7CON =  0x8004; //restart the output compare module
              break;
-        case A: OC3R   = 0x5;
-                OC3RS  = STPS[A].step_delay & 0xFFFF;
-                TMR5   =  0xFFFF;
-                OC3CON =  0x800C; //restart the output compare module
+        case A:
+             OC3R   = 0x5;
+             OC3RS  = STPS[A].step_delay & 0xFFFF;
+             TMR5   =  0xFFFF;
+             OC3CON =  0x800C; //restart the output compare module
              break;
-        case B: OC6R   = 0x5;
-                OC6RS  = STPS[B].step_delay & 0xFFFF;
-                TMR3   =  0xFFFF;
-                OC6CON =  0x800C; //restart the output compare module
+        case B:
+             OC6R   = 0x5;
+             OC6RS  = STPS[B].step_delay & 0xFFFF;
+             TMR3   =  0xFFFF;
+             OC6CON =  0x800C; //restart the output compare module
              break;
-        case C: OC8R   = 0x5;
-                OC8RS  = STPS[C].step_delay & 0xFFFF;
-                TMR7   =  0xFFFF;
-                OC8CON =  0x800C; //restart the output compare module
+        case C:
+             OC8R   = 0x5;
+             OC8RS  = STPS[C].step_delay & 0xFFFF;
+             TMR7   =  0xFFFF;
+             OC8CON =  0x800C; //restart the output compare module
              break;
         default:
              break;
@@ -245,7 +268,7 @@ void toggleOCx(int axis_No){
 
 }
 
-
+ 
 //reset the pulse
 int Pulse(int axis_No){
 
@@ -399,16 +422,28 @@ void StepX() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_SRS {
 
      if(SV.Single_Dual == 0)
         SingleStepX();
+<<<<<<< HEAD
      else
         AxisPulse[SV.Single_Dual]();
 }
 
 void SingleStepX(){
     if(/*(STPS[X].step_count >= STPS[X].dist)||*/(SV.Tog == 1)){
+=======
+     else{
+        if(STPS[X].master = 1)
+           AxisPulse[SV.Single_Dual]();
+     }
+}
+
+void SingleStepX(){
+    if((STPS[X].step_count >= STPS[X].dist)/*||(SV.Tog == 1)*/){
+>>>>>>> patch2
       StopX();
     }
     else{
       Step_Cycle(X);
+      Pulse(X);
     }
 }
 
@@ -428,8 +463,15 @@ void StepY() iv IVT_OUTPUT_COMPARE_2 ilevel 3 ics ICS_SRS {
 
    if(SV.Single_Dual == 0)
         SingleStepY();
+<<<<<<< HEAD
    else
         AxisPulse[SV.Single_Dual]();
+=======
+   else {
+      if(STPS[Y].master = 1)
+        AxisPulse[SV.Single_Dual]();
+   }
+>>>>>>> patch2
 }
 
 void SingleStepY(){
@@ -438,6 +480,7 @@ void SingleStepY(){
     }
     else{
       Step_Cycle(Y);
+      Pulse(Y);
     }
 }
 
@@ -467,6 +510,7 @@ void SingleStepZ(){
    }
    else{
       Step_Cycle(Z);
+      Pulse(Z);
    }
 }
 
@@ -496,6 +540,7 @@ void SingleStepA(){
    }
    else{
       Step_Cycle(A);
+      Pulse(A);
    }
 }
 
@@ -505,18 +550,33 @@ void StopA(){
 }
 
 ////////////////////////////////////////////////////////
+<<<<<<< HEAD
 //Dual Interpolate test conditions after interrrupts
 void XY_Interpolate(){
 
    if((STPS[X].step_count > SV.dx)||(STPS[Y].step_count > SV.dy)/*||(SV.Tog == 1)*/){
+=======
+//   INTERPOLATE MULTI AXIS USING BRESENHAMS ALGO     //
+//       MASTER AXIS CONTROLS THE ACCELERATION        //
+////////////////////////////////////////////////////////
+void XY_Interpolate(){
+
+   if(/*(STPS[X].step_count > SV.dx)||(STPS[Y].step_count > SV.dy)*/||(SV.Tog == 1)){
+>>>>>>> patch2
         StopX();
         StopY();
         UART2_Write_Text("Stopped");
         return;
    }
 
+<<<<<<< HEAD
    if(SV.dx > SV.dy){
       Step_Cycle(X);
+=======
+   if(SV.dx >= SV.dy){
+      Step_Cycle(X);
+      Pulse(X);
+>>>>>>> patch2
       if(SV.d2 < 0){
           SV.d2 += 2*SV.dy;
       }else{
@@ -525,6 +585,10 @@ void XY_Interpolate(){
       }
    }else{
       Step_Cycle(Y);
+<<<<<<< HEAD
+=======
+      Pulse(Y);
+>>>>>>> patch2
       if(SV.d2 < 0){
          SV.d2 += 2 * SV.dx;
       }else{
@@ -536,15 +600,25 @@ void XY_Interpolate(){
 
 void XZ_Interpolate(){
 
+<<<<<<< HEAD
     if((STPS[X].step_count > SV.dx)||(STPS[Z].step_count > SV.dz)||(SV.Tog == 1)){
+=======
+    if(/*(STPS[X].step_count > SV.dx)||(STPS[Z].step_count > SV.dz)*/||(SV.Tog == 1)){
+>>>>>>> patch2
         StopX();
         StopZ();
 
         return;
     }
 
+<<<<<<< HEAD
    if(SV.dx > SV.dz){
       Step_Cycle(X);
+=======
+   if(SV.dx >= SV.dz){
+      Step_Cycle(X);
+      Pulse(X);
+>>>>>>> patch2
       if(SV.d2 < 0)
         SV.d2 += 2*SV.dz;
       else{
@@ -554,6 +628,10 @@ void XZ_Interpolate(){
 
     }else{
         Step_Cycle(Z);
+<<<<<<< HEAD
+=======
+        Pulse(Z);
+>>>>>>> patch2
         if(SV.d2 < 0)
             SV.d2 += 2 * SV.dx;
         else{
@@ -569,8 +647,14 @@ void YZ_Interpolate(){
        return;
     }
 
+<<<<<<< HEAD
     if(SV.dy > SV.dz){
       Step_Cycle(Y);
+=======
+    if(SV.dy >= SV.dz){
+      Step_Cycle(Y);
+      Pulse(Y);
+>>>>>>> patch2
       if(SV.d2 < 0)
         SV.d2 += 2*SV.dz;
       else{
@@ -579,6 +663,10 @@ void YZ_Interpolate(){
       }
     }else{
       Step_Cycle(Z);
+<<<<<<< HEAD
+=======
+      Pulse(Z);
+>>>>>>> patch2
       if(SV.d2 < 0)
          SV.d2 += 2 * SV.dy;
       else{

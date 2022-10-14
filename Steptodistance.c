@@ -31,6 +31,7 @@ double temp = 0.00;
 long belt_steps(double move_distance){
  double temp = 0;
   temp = (SPRU/(BELT_PITCH*PULLEY_TOOTH_COUNT))*move_distance;
+<<<<<<< HEAD
 
   return (signed long)temp;
 }
@@ -42,6 +43,18 @@ double mm2in(double mm){
   return mm * INCH_PER_MM;
 }
 
+=======
+  return (long)temp;
+}
+
+///////////////////////////////////////////
+//mm to inches conversion arg in mm
+//returns inches
+double mm2in(double mm){
+  return mm * INCH_PER_MM;
+}
+
+>>>>>>> patch2
 //////////////////////////////////////////
 //Convert inches to mm arg in inches
 //returns mm

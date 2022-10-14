@@ -20,8 +20,8 @@ main
 		OutPutPulseXYZ
 		SetPinMode
 	StepperConstants
-	DisableStepper
 	disableOCx
+	DisableStepper
 	EnStepperX
 	EnStepperY
 	EnStepperZ
@@ -31,13 +31,19 @@ main
 		speed_cntr_Move
 			abs
 			sqrt_
+			sprintf
+				_doprntf
+					isdigit
+					scale
+					fround
+			UART2_Write_Text
+				UART2_Write
+			UART2_Write
 		SingleAxisStep
 			Single_Axis_Enable
 			abs
 			Step_Cycle
 				toggleOCx
-				Pulse
-					AccDec
 		DualAxisStep
 			Multi_Axis_Enable
 			abs
@@ -47,16 +53,23 @@ main
 				StopX
 				StopY
 				UART2_Write_Text
+<<<<<<< HEAD
 					UART2_Write
+=======
+>>>>>>> patch2
 				Step_Cycle
+				Pulse
+					AccDec
 			XZ_Interpolate
 				StopX
 				StopZ
 				Step_Cycle
+				Pulse
 			YZ_Interpolate
 				StopY
 				StopZ
 				Step_Cycle
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -100,12 +113,17 @@ main
 =======
 		calcSteps
 >>>>>>> patch2
+=======
+				Pulse
+		calcSteps
+>>>>>>> patch2
 	ResetSteppers
 		DisableStepper
 StepA
 	SingleStepA
 		StopA
 		Step_Cycle
+		Pulse
 	ClockPulse
 	XY_Interpolate
 	XZ_Interpolate
@@ -120,6 +138,10 @@ StepX
 	SingleStepX
 		StopX
 		Step_Cycle
+<<<<<<< HEAD
+=======
+		Pulse
+>>>>>>> patch2
 	ClockPulse
 	XY_Interpolate
 	XZ_Interpolate
@@ -128,6 +150,10 @@ StepY
 	SingleStepY
 		StopY
 		Step_Cycle
+<<<<<<< HEAD
+=======
+		Pulse
+>>>>>>> patch2
 	ClockPulse
 	XY_Interpolate
 	XZ_Interpolate
@@ -136,6 +162,10 @@ StepZ
 	SingleStepZ
 		StopZ
 		Step_Cycle
+<<<<<<< HEAD
+=======
+		Pulse
+>>>>>>> patch2
 	ClockPulse
 	XY_Interpolate
 	XZ_Interpolate

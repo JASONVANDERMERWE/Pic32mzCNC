@@ -2,6 +2,10 @@
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+//axis_combination axis_xyz;
+>>>>>>> patch2
 =======
 //axis_combination axis_xyz;
 >>>>>>> patch2
@@ -119,10 +123,16 @@ void DualAxisStep(long newx,long newy,int axis_combo){
           SV.dx = abs(SV.dx);
           SV.dy = abs(SV.dy);
 
-          if(SV.dx > SV.dy)
+          if(SV.dx > SV.dy){
              SV.d2 = 2*(SV.dy - SV.dx);
-          else
+             STPS[X].master = 1;
+             STPS[Y].master = 0;
+          }
+          else{
              SV.d2 = 2* (SV.dx - SV.dy);
+             STPS[X].master = 0;
+             STPS[Y].master = 1;
+          }
 
              STPS[X].step_count = 0;
              STPS[Y].step_count = 0;
