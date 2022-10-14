@@ -344,8 +344,10 @@ abf2seq2bits
 abf2seq3
 abf2seq3bits
 abs
+absolute_mode
 acc
 accdec
+acceleration
 ackdt
 ackdt
 ackdt
@@ -4895,7 +4897,6 @@ asin
 asvalmonen
 asvalmonen
 asvalmonen_bit
-async
 atan
 atan2
 atof
@@ -6255,6 +6256,7 @@ bdstate2
 bdstate2_bit
 bdstate3
 bdstate3_bit
+belt_steps
 bf1devcfg0
 bf1devcfg0bits
 bf1devcfg1
@@ -9622,12 +9624,6 @@ cal8
 cal8_bit
 cal9
 cal9_bit
-calc_angle
-calccirccenter
-calcdivisor
-calci_j_fromendpos
-calcradius
-calcstep
 calcsteps
 can1ie
 can1ie
@@ -14025,14 +14021,6 @@ chtaif_dch4int_bit
 chtaif_dch5int_bit
 chtaif_dch6int_bit
 chtaif_dch7int_bit
-cir_end
-cir_interpolation
-cir_next
-cir_start
-circ
-circ_prep_next
-circ_tick
-circdir
 cke
 cke
 cke
@@ -18397,6 +18385,10 @@ conthrif_bit
 conthrise
 conthrise
 conthrise_bit
+coolant_mode
+coord_offset
+coord_select
+coord_system
 cos
 cosc
 cosc
@@ -23147,13 +23139,9 @@ debug1_ubadevcfg0_bit
 dec
 dec2bcd
 dec2bcd16
-deg
-deg
-degf
-degreedeg
-degreeradians
-degs
-degt
+decimal_places
+default_feed_rate
+default_seek_rate
 delay_100ms
 delay_10ms
 delay_10us
@@ -23493,7 +23481,6 @@ digen4_bit
 digen7
 digen7
 digen7_bit
-dir
 dir_step_pindira
 dir_step_pindirx
 dir_step_pindiry
@@ -23610,7 +23597,6 @@ disslw_i2c3con_bit
 disslw_i2c4con_bit
 disslw_i2c5con_bit
 div
-divisor
 divspllrdy
 divspllrdy
 divspllrdy
@@ -28937,6 +28923,7 @@ fedge_ic6con_bit
 fedge_ic7con_bit
 fedge_ic8con_bit
 fedge_ic9con_bit
+feed_rate
 fen
 fen
 fen_bit
@@ -29492,6 +29479,7 @@ filhit3_c2vec_bit
 filhit4
 filhit4_bit
 filhit4_c2vec_bit
+flags
 flash_erase_lowermemory
 flash_erase_page
 flash_erase_uppermemory
@@ -32456,6 +32444,7 @@ fwmarkie_bit
 fwroverr
 fwroverr
 fwroverr_bit
+gc
 gcen
 gcen
 gcen
@@ -33136,6 +33125,11 @@ hird3_bit
 hold
 hold
 hold_bit
+homing_debounce_delay
+homing_dir_mask
+homing_feed_rate
+homing_pulloff
+homing_seek_rate
 hostmode
 hostmode
 hostmode_bit
@@ -33356,9 +33350,8 @@ hugefrm
 hugefrm
 hugefrm_bit
 hugefrm_emacxcfg2_bit
+hypot
 i
-i
-i_end
 i2c1add
 i2c1addbits
 i2c1addclr
@@ -36168,7 +36161,6 @@ id8
 id8_bit
 id9
 id9_bit
-idivisor
 idle
 idle
 idle
@@ -36432,6 +36424,8 @@ igntur_spi4con2_bit
 igntur_spi5con2_bit
 igntur_spi6con2_bit
 ii
+in2mm
+inches_mode
 incm
 incm
 incm
@@ -37005,6 +36999,8 @@ intstatsetbits
 inttohex
 inttostr
 inttostrwithzeros
+inverse_feed_rate_mode
+invert_mask
 ioancpen
 ioancpen
 ioancpen_bit
@@ -37933,8 +37929,6 @@ iwcol_i2c2stat_bit
 iwcol_i2c3stat_bit
 iwcol_i2c4stat_bit
 iwcol_i2c5stat_bit
-j
-j_end
 jtagen
 jtagen
 jtagen
@@ -37978,14 +37972,13 @@ jtagen_bf2devcfg0_bit
 jtagen_bit
 jtagen_devcfg0_bit
 jtagen_ubadevcfg0_bit
+junction_deviation
 labs
 lanemode
 lanemode0
 lanemode0_bit
 lanemode1
 lanemode1_bit
-lastx
-lasty
 lata
 lata0
 lata0
@@ -38550,6 +38543,7 @@ lcd_01_address
 lcd_display
 ldexp
 ldiv
+leadscrew_steps
 led1
 led1_dir
 led2
@@ -38899,6 +38893,7 @@ manfc
 manfc
 manfc_bit
 max
+mc_arc
 mcen
 mcen
 mcen
@@ -39031,6 +39026,7 @@ memtype1
 memtype1_bit
 memtype2
 memtype2_bit
+microsteps
 mide
 mide
 mide
@@ -39122,6 +39118,8 @@ min102_bit
 min103
 min103_alrmtime_bit
 min103_bit
+mm_per_arc_segment
+mm2in
 mode
 mode
 mode
@@ -39314,6 +39312,7 @@ month102_bit
 month103
 month103_alrmdate_bit
 month103_bit
+motion_mode
 mpen
 mpen
 mpen
@@ -40112,7 +40111,7 @@ mwtd8_emacxmwtd_bit
 mwtd9
 mwtd9_bit
 mwtd9_emacxmwtd_bit
-n
+n_arc_correction
 nak
 nak
 nak_bit
@@ -40197,8 +40196,6 @@ nb2bipktgp25_emacxipgr_bit
 nb2bipktgp26
 nb2bipktgp26_bit
 nb2bipktgp26_emacxipgr_bit
-newdeg
-nextcords
 nmicnt
 nmicnt
 nmicnt
@@ -44393,6 +44390,9 @@ pktpendie
 pktpendie
 pktpendie
 pktpendie_bit
+plane_axis_0
+plane_axis_1
+plane_axis_2
 plen
 plen
 plen
@@ -45254,6 +45254,7 @@ poscrdy
 poscrdy
 poscrdy
 poscrdy_bit
+position
 pow
 pps_mapping
 pps_mapping_nolock
@@ -45704,6 +45705,7 @@ progop3
 progop3
 progop3_bit
 progop3_nvmcon_bit
+program_flow
 protocol
 protocol
 protocol
@@ -46009,6 +46011,7 @@ ptwren
 ptwren
 ptwren_bit
 pulse
+pulse_microseconds
 purepre
 purepre
 purepre
@@ -46086,9 +46089,7 @@ pwrconsetbits
 px
 py
 pz
-quadrant
-quadrantf
-quadrants
+r_or_ijk
 r_w
 r_w
 r_w
@@ -46264,7 +46265,6 @@ raddr8
 raddr8_bit
 raddr9
 raddr9_bit
-radius
 rambits
 rambits0
 rambits0_bit
@@ -56379,7 +56379,6 @@ sessrqif
 sessrqif
 sessrqif_bit
 set_performance_mode
-setcirclevals
 setend
 setend
 setend_bit
@@ -56387,6 +56386,7 @@ setendc
 setendc
 setendc_bit
 setpinmode
+settings
 setup
 setup
 setup_bit
@@ -59755,6 +59755,7 @@ spife_spi3con_bit
 spife_spi4con_bit
 spife_spi5con_bit
 spife_spi6con_bit
+spindle_direction
 spirbe
 spirbe
 spirbe
@@ -60932,6 +60933,7 @@ stattype1_bit
 status
 status
 status_bit
+status_code
 step_cycle
 step1
 step10
@@ -60968,8 +60970,9 @@ step26_bit
 step27
 step27_bit
 stepa
+stepper_idle_lock_time
 stepperconstants
-steps
+steps_per_mm
 stepx
 stepy
 stepz
@@ -62860,7 +62863,6 @@ testpause
 testpause
 testpause_bit
 testpause_emacxtest_bit
-testquadrnt
 tgate
 tgate
 tgate
@@ -63227,6 +63229,7 @@ ton_t6con_bit
 ton_t7con_bit
 ton_t8con_bit
 ton_t9con_bit
+tool
 toupper
 tpc
 tpc
@@ -71016,6 +71019,7 @@ txstate2_bit
 txstate3
 txstate3_bit
 txt
+txt_a
 txta
 txtb
 txtc
@@ -81354,21 +81358,9 @@ wtid2
 wtid2_bit
 wtid3
 wtid3_bit
-x
-x
-x_next
-xcenter
-xfin
-xlaststep
-xstart
-xstep
 xtoi
-xy
 xy_interpolate
 xz_interpolate
-y
-y_next
-ycenter
 year01
 year01
 year01
@@ -81393,8 +81385,4 @@ year102
 year102_bit
 year103
 year103_bit
-yfin
-ylaststep
-ystart
-ystep
 yz_interpolate

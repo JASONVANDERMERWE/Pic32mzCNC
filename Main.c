@@ -1,5 +1,16 @@
+/*
+* Check on CalcStep in Kinematics for redundant quadrant checking
+*
+*
+*/
+
+
+
 #include "Config.h"
 
+settings_t settings;
+parser_state_t gc;
+STP STPS[NoOfAxis];
 
 bit testISR;
 bit oneShotA; sfr;
@@ -24,12 +35,13 @@ int xyz_ = 0;
   PinMode();
 
   StepperConstants(5000,15500);
-  EnableInterrupts();
   oneShotA = 0;
   //I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
   a=0;
   disable_steps = 0;
+  disableOCx();
   DisableStepper();
+  EnableInterrupts();
   while(1){
 
          if(!Toggle){
@@ -50,28 +62,26 @@ int xyz_ = 0;
          if(!SW2){
                Toggle  = 0;
                disableOCx();
-               Circ.cir_start = 0;
-               Circ.cir_end   = 0;
-               Circ.cir_next  = 0;
          }
 
          if((!SW1)&&(!Toggle)){
-            a = 7;
+            a = 0;
             LED1 = 0;
             Toggle = 1;
             disable_steps = 0;
             EnStepperX();
             EnStepperY();
-          //  EnStepperZ();
-          //  EnStepperA();
+            EnStepperZ();
+            EnStepperA();
 
          }
          //X Y Z
          if(Toggle){
-           if((!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit)||!Circ.cir_next){
+           if((!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit)){
                Temp_Move(a);
-               a=7;
-               if(a > 7)a=0;
+               a++;
+               if(a > 3)a=0;
+
            }
          }
             
@@ -80,42 +90,42 @@ int xyz_ = 0;
 
 //Temp code for trsting
 void Temp_Move(int a){
-
+char txt_[9];
     switch(a){
          case 0:
-                 STPS[Z].mmToTravel = calcSteps(-125.25,8.06);
-                 speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
-                 SingleAxisStep(STPS[Z].mmToTravel,Z);
+                 STPS[X].mmToTravel = belt_steps(-50.00);//calcSteps(-125.25,8.06);
+                 sprintf(txt_,"%d",STPS[X].mmToTravel);
+                 UART2_Write_Text(txt_);
+                 speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
+                 SingleAxisStep(STPS[X].mmToTravel,X);
               break;
         case 1:
-                 STPS[X].mmToTravel = calcSteps(125.25,8.06);
+                 STPS[X].mmToTravel = belt_steps(50.00);
                  speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
                  SingleAxisStep(STPS[X].mmToTravel,X);
               break;
         case 2:
-                 STPS[Y].mmToTravel = calcSteps(202.00,8.06);
+                 STPS[Y].mmToTravel = belt_steps(-50.00);
                  speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
                  SingleAxisStep(STPS[Y].mmToTravel,Y);
               break;
        case 3:
-                 STPS[Y].mmToTravel = calcSteps(125.25,8.06);
+                 STPS[Y].mmToTravel = belt_steps(50.00);
                  speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
-                 STPS[Z].mmToTravel = calcSteps(25.25,8.06);
-                 speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
-                 DualAxisStep(STPS[Y].mmToTravel, STPS[Z].mmToTravel,yz);
+                 SingleAxisStep(STPS[Y].mmToTravel,Y);
               break;
        case 4:
-                 STPS[X].mmToTravel = calcSteps(228.25,8.06);
+                 STPS[X].mmToTravel = belt_steps(-50.00);
                  speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
-                 STPS[Z].mmToTravel = calcSteps(-25.25,8.06);
-                 speed_cntr_Move(STPS[Z].mmToTravel, 25000,Z);
-                 DualAxisStep(STPS[X].mmToTravel, STPS[Z].mmToTravel,xz);
+                 STPS[Y].mmToTravel = belt_steps(-50.00);
+                 //speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+                 DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
               break;
        case 5:
-                 STPS[X].mmToTravel = calcSteps(-228.25,8.06);
+                 STPS[X].mmToTravel = belt_steps(50.00);
                  speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
-                 STPS[Y].mmToTravel = calcSteps(25.25,8.06);
-                 speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
+                 STPS[Y].mmToTravel = belt_steps(50.00);
+                 //speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
                  DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
               break;
        case 6:
@@ -124,38 +134,9 @@ void Temp_Move(int a){
                  SingleAxisStep(STPS[A].mmToTravel,A);
              break;
        case 7:
-               if(!Circ.cir_start){
-                 //SetCircleVals(450.00,250.00,458.00,259.00,-100.00,100.00,CW);//==5deg
-                 //  SetCircleVals(450.00,250.00,486.00,313.00,-100.00,100.00,CW);//==30deg
-                 //  SetCircleVals(450.00,250.00,491.00,350.00,-100.00,100.00,CW);//==45deg
-                 // SetCircleVals(450.00,250.00,486.00,386.00,-100.00,100.00,CW);//==60deg
-                 //   SetCircleVals(450.00,250.00,450.00,450.00,-100.00,100.00,CW);//==90deg
-                 // SetCircleVals(450.00,250.00,431.00,465.00,-100.00,100.00,CW);//==100deg
-                  SetCircleVals(450.00,250.00,277.00,471.00,-100.00,100.00,CW);//==166deg
-                 //  SetCircleVals(450.00,250.00,227.00,420.00,-100.00,100.00,CW);//==195deg
-                 //  SetCircleVals(450.00,250.00,208.00,347.00,-100.00,100.00,CW);//==226deg
-                 //  SetCircleVals(450.00,250.00,249.00,250.00,-100.00,100.00,CW);//==270deg
-                 //  SetCircleVals(450.00,250.00,340.00,208.00,-100.00,100.00,CW);//==311deg
-                 //  SetCircleVals(450.00,250.00,409.00,221.00,-100.00,100.00,CW);//==340deg
-                 //  SetCircleVals(450.00,250.00,448.00,248.00,-100.00,100.00,CW);//==359deg
-                  Circ.cir_start = 1;
-               }
-               
-               if(Circ.cir_start){
-                 ////////////////////////////////////////////
-                 //asynchronously recalculate next position
-                 //after a degree change
-                 if(!Circ.async.x){
-                     Circ.async.x = 1;
-                     Cir_Interpolation();
-                 }
-                 
-                 if(!Circ.cir_next){
-                      Circ.cir_next = 1;
-                      Circ_Tick();
-                 }
-               }
-             break;
+                //r_or_ijk(float xCur,float yCur,float xFin,float yFin,float r, float i, float j, float k)
+                // r_or_ijk(450.00, 250.00, 486.00, 386.00, 0.00, -100.00, 100.00, 0.00);
+            break;
         default: a = 0;
               break;
     }
@@ -163,10 +144,6 @@ void Temp_Move(int a){
 
 void LCD_Display(){
 
-     STPS[X].mmToTravel = calcSteps(151.25,8.06);
-     speed_cntr_Move(STPS[X].mmToTravel, 2500,X);
-     STPS[Y].mmToTravel = calcSteps(-151.25,8.06);
-     speed_cntr_Move(STPS[Y].mmToTravel, 2500,Y);
 
      //line 1
      // Find out after how many Steps before we must start deceleration.
