@@ -1685,11 +1685,12 @@ _SingleStepX:
 ;Stepper.c,413 :: 		void SingleStepX(){
 ADDIU	SP, SP, -8
 SW	RA, 0(SP)
-;Stepper.c,414 :: 		if(/*(STPS[X].step_count >= STPS[X].dist)||*/(SV.Tog == 1)){
+;Stepper.c,414 :: 		if((STPS[X].step_count >= STPS[X].dist)/*||(SV.Tog == 1)*/){
 SW	R25, 4(SP)
-LH	R3, Offset(_SV+4)(GP)
-ORI	R2, R0, 1
-BEQ	R3, R2, L__SingleStepX231
+LW	R3, Offset(_STPS+36)(GP)
+LW	R2, Offset(_STPS+32)(GP)
+SLT	R2, R2, R3
+BEQ	R2, R0, L__SingleStepX231
 NOP	
 J	L_SingleStepX62
 NOP	

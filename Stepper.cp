@@ -868,7 +868,7 @@ void StepX() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_SRS {
 }
 
 void SingleStepX(){
- if( (SV.Tog == 1)){
+ if((STPS[X].step_count >= STPS[X].dist) ){
  StopX();
  }
  else{
