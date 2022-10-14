@@ -569,8 +569,6 @@ char txt_[9];
  switch(a){
  case 0:
  STPS[X].mmToTravel = belt_steps(-50.00);
- sprintf(txt_,"%d",STPS[X].mmToTravel);
- UART2_Write_Text(txt_);
  speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
  SingleAxisStep(STPS[X].mmToTravel,X);
  break;

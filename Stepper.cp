@@ -577,6 +577,7 @@ void DisableStepper(){
 #line 111 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void speed_cntr_Move(signed long mmSteps, signed long speed, int axis_No){
 int ii;
+char txt_[9];
 
  if(mmSteps == 1){
 
@@ -651,6 +652,7 @@ int ii;
  }
 
  }
+
  STPS[axis_No].step_count = 0;
  STPS[axis_No].rest = 0;
  STPS[axis_No].microSec = 0;
@@ -658,6 +660,22 @@ int ii;
  STPS[axis_No].dist = 0;
  SV.Tog = 0;
  SV.running = 1;
+
+ sprintf(txt_,"%d",STPS[axis_No].mmToTravel);
+ UART2_Write_Text(txt_);
+ UART2_Write_Text(" : ");
+ sprintf(txt_,"%d",STPS[axis_No].step_delay);
+ UART2_Write_Text(txt_);
+ UART2_Write_Text(" : ");
+ sprintf(txt_,"%d",STPS[axis_No].min_delay);
+ UART2_Write_Text(txt_);
+ UART2_Write_Text(" : ");
+ sprintf(txt_,"%d",STPS[axis_No].accel_lim);
+ UART2_Write_Text(txt_);
+ UART2_Write_Text(" : ");
+ sprintf(txt_,"%d",STPS[axis_No].decel_start);
+ UART2_Write_Text(txt_);
+ UART2_Write(0x0D);
 }
 
 
@@ -720,14 +738,14 @@ void toggleOCx(int axis_No){
 
 
 int Pulse(int axis_No){
-#line 261 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 279 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  switch(STPS[axis_No].run_state) {
  case  0 :
  SV.Tog = 1;
  break;
 
  case  1 :
-#line 271 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 289 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  AccDec(axis_No);
  if(STPS[axis_No].step_delay <= STPS[axis_No].min_delay){
 
@@ -756,7 +774,7 @@ int Pulse(int axis_No){
  break;
 
  case  2 :
-#line 303 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 321 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  AccDec(axis_No);
 
 
@@ -873,6 +891,7 @@ void SingleStepX(){
  }
  else{
  Step_Cycle(X);
+ Pulse(X);
  }
 }
 
@@ -904,6 +923,7 @@ void SingleStepY(){
  }
  else{
  Step_Cycle(Y);
+ Pulse(Y);
  }
 }
 
@@ -933,6 +953,7 @@ void SingleStepZ(){
  }
  else{
  Step_Cycle(Z);
+ Pulse(Z);
  }
 }
 
@@ -962,6 +983,7 @@ void SingleStepA(){
  }
  else{
  Step_Cycle(A);
+ Pulse(A);
  }
 }
 
@@ -1062,7 +1084,7 @@ void YZ_Interpolate(){
  }
 
 }
-#line 617 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 639 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 unsigned int min_(unsigned int x, unsigned int y){
  if(x < y){
  return x;
@@ -1071,7 +1093,7 @@ unsigned int min_(unsigned int x, unsigned int y){
  return y;
  }
 }
-#line 634 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 656 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 static unsigned long sqrt_(unsigned long x){
 
  register unsigned long xr;
@@ -1102,7 +1124,7 @@ static unsigned long sqrt_(unsigned long x){
  return xr;
  }
 }
-#line 688 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 710 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void CycleStop(){
 int ii;
  STmr.uSec = 0;

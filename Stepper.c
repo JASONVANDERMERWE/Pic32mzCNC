@@ -110,6 +110,7 @@ void DisableStepper(){
  */
 void speed_cntr_Move(signed long mmSteps, signed long speed, int axis_No){
 int ii;
+char txt_[9];
   // If moving only 1 step.
   if(mmSteps == 1){
 
@@ -184,6 +185,7 @@ int ii;
     }
 
   }
+     
       STPS[axis_No].step_count  = 0;
       STPS[axis_No].rest        = 0;
       STPS[axis_No].microSec    = 0;
@@ -191,6 +193,22 @@ int ii;
       STPS[axis_No].dist        = 0;
       SV.Tog   = 0;
       SV.running = 1;
+      
+     sprintf(txt_,"%d",STPS[axis_No].mmToTravel);
+     UART2_Write_Text(txt_);
+     UART2_Write_Text(" : ");
+     sprintf(txt_,"%d",STPS[axis_No].step_delay);
+     UART2_Write_Text(txt_);
+     UART2_Write_Text(" : ");
+     sprintf(txt_,"%d",STPS[axis_No].min_delay);
+     UART2_Write_Text(txt_);
+     UART2_Write_Text(" : ");
+     sprintf(txt_,"%d",STPS[axis_No].accel_lim);
+     UART2_Write_Text(txt_);
+     UART2_Write_Text(" : ");
+     sprintf(txt_,"%d",STPS[axis_No].decel_start);
+     UART2_Write_Text(txt_);
+     UART2_Write(0x0D);
 }
 
 
@@ -416,6 +434,7 @@ void SingleStepX(){
     }
     else{
       Step_Cycle(X);
+      Pulse(X);
     }
 }
 
@@ -447,6 +466,7 @@ void SingleStepY(){
     }
     else{
       Step_Cycle(Y);
+      Pulse(Y);
     }
 }
 
@@ -476,6 +496,7 @@ void SingleStepZ(){
    }
    else{
       Step_Cycle(Z);
+      Pulse(Z);
    }
 }
 
@@ -505,6 +526,7 @@ void SingleStepA(){
    }
    else{
       Step_Cycle(A);
+      Pulse(A);
    }
 }
 
@@ -519,7 +541,7 @@ void StopA(){
 ////////////////////////////////////////////////////////
 void XY_Interpolate(){
 
-   if((STPS[X].step_count > SV.dx)||(STPS[Y].step_count > SV.dy)/*||(SV.Tog == 1)*/){
+   if(/*(STPS[X].step_count > SV.dx)||(STPS[Y].step_count > SV.dy)*/||(SV.Tog == 1)){
         StopX();
         StopY();
         UART2_Write_Text("Stopped");
@@ -549,7 +571,7 @@ void XY_Interpolate(){
 
 void XZ_Interpolate(){
 
-    if((STPS[X].step_count > SV.dx)||(STPS[Z].step_count > SV.dz)||(SV.Tog == 1)){
+    if(/*(STPS[X].step_count > SV.dx)||(STPS[Z].step_count > SV.dz)*/||(SV.Tog == 1)){
         StopX();
         StopZ();
 

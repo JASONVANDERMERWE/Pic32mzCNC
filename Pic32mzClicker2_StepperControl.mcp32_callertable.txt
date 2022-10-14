@@ -28,16 +28,17 @@ main
 	EnStepperA
 	Temp_Move
 		belt_steps
-		sprintf
-			_doprntf
-				isdigit
-				scale
-				fround
-		UART2_Write_Text
-			UART2_Write
 		speed_cntr_Move
 			abs
 			sqrt_
+			sprintf
+				_doprntf
+					isdigit
+					scale
+					fround
+			UART2_Write_Text
+				UART2_Write
+			UART2_Write
 		SingleAxisStep
 			Single_Axis_Enable
 			abs
@@ -72,6 +73,7 @@ StepA
 	SingleStepA
 		StopA
 		Step_Cycle
+		Pulse
 	ClockPulse
 	XY_Interpolate
 	XZ_Interpolate
@@ -86,6 +88,7 @@ StepX
 	SingleStepX
 		StopX
 		Step_Cycle
+		Pulse
 	ClockPulse
 	XY_Interpolate
 	XZ_Interpolate
@@ -94,6 +97,7 @@ StepY
 	SingleStepY
 		StopY
 		Step_Cycle
+		Pulse
 	ClockPulse
 	XY_Interpolate
 	XZ_Interpolate
@@ -102,6 +106,7 @@ StepZ
 	SingleStepZ
 		StopZ
 		Step_Cycle
+		Pulse
 	ClockPulse
 	XY_Interpolate
 	XZ_Interpolate
