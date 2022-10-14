@@ -59,6 +59,7 @@ void SetPinMode(){
 void StepperConstants(long accel,long decel){
     SV.acc = accel;
     SV.dec = decel;
+    
 }
 
 /////////////////////////////////
@@ -111,6 +112,7 @@ void DisableStepper(){
 void speed_cntr_Move(signed long mmSteps, signed long speed, int axis_No){
 int ii;
 char txt_[9];
+long abs_mmSteps = abs(mmSteps);
   // If moving only 1 step.
   if(mmSteps == 1){
 
@@ -130,7 +132,7 @@ char txt_[9];
     // Set accelration by calc the first (c0) step delay .
     // step_delay = 1/tt * sqrt(2*alpha/accel)
     // step_delay = ( tfreq*0.676/100 )*100 * sqrt( (2*alpha*10000000000) / (accel*100) )/10000
-    STPS[axis_No].step_delay = abs((T1_FREQ_148 * sqrt_(A_SQ / SV.acc))/100);
+    STPS[axis_No].step_delay = abs(T1_FREQ_148 * ((sqrt_(A_SQ / SV.acc))/100));
     STPS[axis_No].StartUp_delay = STPS[axis_No].step_delay ;
 
 /*if(8000 < STPS[axis_No].StartUp_delay)STPS[axis_No].StartUp_delay = 2000;*/
@@ -159,15 +161,19 @@ char txt_[9];
          if(mmSteps >= 0)STPS[axis_No].decel_val = STPS[axis_No].accel_lim - mmSteps; //needs to be -ve
          else STPS[axis_No].decel_val = mmSteps + STPS[axis_No].accel_lim;
     }else{
-         STPS[axis_No].decel_val = -((STPS[axis_No].max_step_lim * SV.acc) / SV.dec);
+         STPS[axis_No].decel_val = -((STPS[axis_No].max_step_lim * SV.acc)/ SV.dec);
     }
+    //we must at least dec by 1 step
+    if(STPS[axis_No].decel_val == 0)
+           STPS[axis_No].decel_val = -1;
+           
     // Find step to start decleration.
-    if(mmSteps >= 0){
+    if(abs_mmSteps >= 0){
         if(mmSteps > STPS[axis_No].decel_val) STPS[axis_No].decel_start = mmSteps + STPS[axis_No].decel_val;
         else  STPS[axis_No].decel_start =  STPS[axis_No].accel_lim;
     }
     else {
-        if(mmSteps > STPS[axis_No].decel_val) STPS[axis_No].decel_start = abs(mmSteps) * STPS[axis_No].decel_val;
+        if(mmSteps < STPS[axis_No].decel_val) STPS[axis_No].decel_start = abs(mmSteps) - STPS[axis_No].decel_val;
         else  STPS[axis_No].decel_start =  STPS[axis_No].accel_lim;
     }
     // We must decelrate at least 1 step to stop.
@@ -175,6 +181,8 @@ char txt_[9];
       STPS[axis_No].decel_val = -1;
     }
 
+    //find the position at which to start decelerating from
+    
     // If the maximum speed is so low that we dont need to go via accelration state.
     if(STPS[axis_No].StartUp_delay <= STPS[axis_No].min_delay){
       STPS[axis_No].step_delay = STPS[axis_No].min_delay;
@@ -429,7 +437,7 @@ void StepX() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_SRS {
 }
 
 void SingleStepX(){
-    if((STPS[X].step_count >= STPS[X].dist)/*||(SV.Tog == 1)*/){
+    if((STPS[X].step_count >= STPS[X].dist)||(SV.Tog == 1)){
       StopX();
     }
     else{
@@ -461,7 +469,7 @@ void StepY() iv IVT_OUTPUT_COMPARE_2 ilevel 3 ics ICS_SRS {
 }
 
 void SingleStepY(){
-    if(/*(STPS[Y].step_count >= STPS[Y].dist)||*/(SV.Tog == 1)){  //i think this is where the problem lies
+    if((STPS[Y].step_count >= STPS[Y].dist)||(SV.Tog == 1)){  //i think this is where the problem lies
       StopY();
     }
     else{
@@ -541,7 +549,7 @@ void StopA(){
 ////////////////////////////////////////////////////////
 void XY_Interpolate(){
 
-   if(/*(STPS[X].step_count > SV.dx)||(STPS[Y].step_count > SV.dy)*/||(SV.Tog == 1)){
+   if((STPS[X].step_count > SV.dx)||(STPS[Y].step_count > SV.dy)||(SV.Tog == 1)){
         StopX();
         StopY();
         UART2_Write_Text("Stopped");
@@ -571,7 +579,7 @@ void XY_Interpolate(){
 
 void XZ_Interpolate(){
 
-    if(/*(STPS[X].step_count > SV.dx)||(STPS[Z].step_count > SV.dz)*/||(SV.Tog == 1)){
+    if((STPS[X].step_count > SV.dx)||(STPS[Z].step_count > SV.dz)||(SV.Tog == 1)){
         StopX();
         StopZ();
 

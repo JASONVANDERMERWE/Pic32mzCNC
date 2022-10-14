@@ -370,7 +370,7 @@ unsigned int ResetSteppers(unsigned int sec_to_disable,unsigned int last_sec_to_
 #line 1 "c:/users/git/pic32mzcnc/settings.h"
 #line 15 "c:/users/git/pic32mzcnc/stepper.h"
 typedef unsigned short UInt8_t;
-#line 56 "c:/users/git/pic32mzcnc/stepper.h"
+#line 57 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 

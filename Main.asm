@@ -4,8 +4,8 @@ _main:
 ;Main.c,35 :: 		PinMode();
 JAL	_PinMode+0
 NOP	
-;Main.c,37 :: 		StepperConstants(5000,15500);
-ORI	R26, R0, 15500
+;Main.c,37 :: 		StepperConstants(5000,500);
+ORI	R26, R0, 500
 ORI	R25, R0, 5000
 JAL	_StepperConstants+0
 NOP	
@@ -206,9 +206,9 @@ NOP
 LHU	R2, Offset(Main_a+0)(GP)
 ADDIU	R2, R2, 1
 SH	R2, Offset(Main_a+0)(GP)
-;Main.c,83 :: 		if(a > 3)a=0;
+;Main.c,83 :: 		if(a > 5)a=0;
 ANDI	R2, R2, 65535
-SLTIU	R2, R2, 4
+SLTIU	R2, R2, 6
 BEQ	R2, R0, L__main62
 NOP	
 J	L_main19
@@ -244,8 +244,8 @@ J	L_Temp_Move20
 NOP	
 ;Main.c,95 :: 		case 0:
 L_Temp_Move22:
-;Main.c,96 :: 		STPS[X].mmToTravel = belt_steps(-50.00);//calcSteps(-125.25,8.06);
-LUI	R2, 49736
+;Main.c,96 :: 		STPS[X].mmToTravel = belt_steps(-150.00);//calcSteps(-125.25,8.06);
+LUI	R2, 49942
 ORI	R2, R2, 0
 MTC1	R2, S12
 JAL	_belt_steps+0
@@ -267,8 +267,8 @@ J	L_Temp_Move21
 NOP	
 ;Main.c,100 :: 		case 1:
 L_Temp_Move23:
-;Main.c,101 :: 		STPS[X].mmToTravel = belt_steps(50.00);
-LUI	R2, 16968
+;Main.c,101 :: 		STPS[X].mmToTravel = belt_steps(150.00);
+LUI	R2, 17174
 ORI	R2, R2, 0
 MTC1	R2, S12
 JAL	_belt_steps+0
@@ -290,8 +290,8 @@ J	L_Temp_Move21
 NOP	
 ;Main.c,105 :: 		case 2:
 L_Temp_Move24:
-;Main.c,106 :: 		STPS[Y].mmToTravel = belt_steps(-50.00);
-LUI	R2, 49736
+;Main.c,106 :: 		STPS[Y].mmToTravel = belt_steps(150.00);
+LUI	R2, 17174
 ORI	R2, R2, 0
 MTC1	R2, S12
 JAL	_belt_steps+0
@@ -313,8 +313,8 @@ J	L_Temp_Move21
 NOP	
 ;Main.c,110 :: 		case 3:
 L_Temp_Move25:
-;Main.c,111 :: 		STPS[Y].mmToTravel = belt_steps(50.00);
-LUI	R2, 16968
+;Main.c,111 :: 		STPS[Y].mmToTravel = belt_steps(-150.00);
+LUI	R2, 49942
 ORI	R2, R2, 0
 MTC1	R2, S12
 JAL	_belt_steps+0
@@ -336,8 +336,8 @@ J	L_Temp_Move21
 NOP	
 ;Main.c,115 :: 		case 4:
 L_Temp_Move26:
-;Main.c,116 :: 		STPS[X].mmToTravel = belt_steps(-50.00);
-LUI	R2, 49736
+;Main.c,116 :: 		STPS[X].mmToTravel = belt_steps(-150.00);
+LUI	R2, 49942
 ORI	R2, R2, 0
 MTC1	R2, S12
 JAL	_belt_steps+0
@@ -349,8 +349,8 @@ ORI	R26, R0, 25000
 MOVZ	R25, R2, R0
 JAL	_speed_cntr_Move+0
 NOP	
-;Main.c,118 :: 		STPS[Y].mmToTravel = belt_steps(-50.00);
-LUI	R2, 49736
+;Main.c,118 :: 		STPS[Y].mmToTravel = belt_steps(150.00);
+LUI	R2, 17174
 ORI	R2, R2, 0
 MTC1	R2, S12
 JAL	_belt_steps+0
@@ -367,8 +367,8 @@ J	L_Temp_Move21
 NOP	
 ;Main.c,122 :: 		case 5:
 L_Temp_Move27:
-;Main.c,123 :: 		STPS[X].mmToTravel = belt_steps(50.00);
-LUI	R2, 16968
+;Main.c,123 :: 		STPS[X].mmToTravel = belt_steps(150.00);
+LUI	R2, 17174
 ORI	R2, R2, 0
 MTC1	R2, S12
 JAL	_belt_steps+0
@@ -380,8 +380,8 @@ ORI	R26, R0, 25000
 MOVZ	R25, R2, R0
 JAL	_speed_cntr_Move+0
 NOP	
-;Main.c,125 :: 		STPS[Y].mmToTravel = belt_steps(50.00);
-LUI	R2, 16968
+;Main.c,125 :: 		STPS[Y].mmToTravel = belt_steps(-150.00);
+LUI	R2, 49942
 ORI	R2, R2, 0
 MTC1	R2, S12
 JAL	_belt_steps+0
@@ -408,9 +408,9 @@ MTC1	R2, S12
 JAL	_calcSteps+0
 NOP	
 SW	R2, Offset(_STPS+268)(GP)
-;Main.c,131 :: 		speed_cntr_Move(STPS[A].mmToTravel, 25000,A);
+;Main.c,131 :: 		speed_cntr_Move(STPS[A].mmToTravel, 5000,A);
 ORI	R27, R0, 3
-ORI	R26, R0, 25000
+ORI	R26, R0, 5000
 MOVZ	R25, R2, R0
 JAL	_speed_cntr_Move+0
 NOP	

@@ -369,7 +369,7 @@ unsigned int ResetSteppers(unsigned int sec_to_disable,unsigned int last_sec_to_
 #line 1 "c:/users/git/pic32mzcnc/settings.h"
 #line 15 "c:/users/git/pic32mzcnc/stepper.h"
 typedef unsigned short UInt8_t;
-#line 56 "c:/users/git/pic32mzcnc/stepper.h"
+#line 57 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
@@ -542,6 +542,7 @@ void SetPinMode(){
 void StepperConstants(long accel,long decel){
  SV.acc = accel;
  SV.dec = decel;
+
 }
 
 
@@ -574,10 +575,11 @@ void DisableStepper(){
  EN_StepZ = 1;
  EN_StepA = 1;
 }
-#line 111 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 112 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void speed_cntr_Move(signed long mmSteps, signed long speed, int axis_No){
 int ii;
 char txt_[9];
+long abs_mmSteps = abs(mmSteps);
 
  if(mmSteps == 1){
 
@@ -597,7 +599,7 @@ char txt_[9];
 
 
 
- STPS[axis_No].step_delay = abs(( (long)(( 781250 *0.676)/100)  * sqrt_( (long)( (2*3.14159)/ 200 *2*10000000000)  / SV.acc))/100);
+ STPS[axis_No].step_delay = abs( (long)(( 781250 *0.676)/100)  * ((sqrt_( (long)( (2*3.14159)/ 200 *2*10000000000)  / SV.acc))/100));
  STPS[axis_No].StartUp_delay = STPS[axis_No].step_delay ;
 
 
@@ -626,21 +628,27 @@ char txt_[9];
  if(mmSteps >= 0)STPS[axis_No].decel_val = STPS[axis_No].accel_lim - mmSteps;
  else STPS[axis_No].decel_val = mmSteps + STPS[axis_No].accel_lim;
  }else{
- STPS[axis_No].decel_val = -((STPS[axis_No].max_step_lim * SV.acc) / SV.dec);
+ STPS[axis_No].decel_val = -((STPS[axis_No].max_step_lim * SV.acc)/ SV.dec);
  }
 
- if(mmSteps >= 0){
+ if(STPS[axis_No].decel_val == 0)
+ STPS[axis_No].decel_val = -1;
+
+
+ if(abs_mmSteps >= 0){
  if(mmSteps > STPS[axis_No].decel_val) STPS[axis_No].decel_start = mmSteps + STPS[axis_No].decel_val;
  else STPS[axis_No].decel_start = STPS[axis_No].accel_lim;
  }
  else {
- if(mmSteps > STPS[axis_No].decel_val) STPS[axis_No].decel_start = abs(mmSteps) * STPS[axis_No].decel_val;
+ if(mmSteps < STPS[axis_No].decel_val) STPS[axis_No].decel_start = abs(mmSteps) - STPS[axis_No].decel_val;
  else STPS[axis_No].decel_start = STPS[axis_No].accel_lim;
  }
 
  if(STPS[axis_No].decel_val == 0){
  STPS[axis_No].decel_val = -1;
  }
+
+
 
 
  if(STPS[axis_No].StartUp_delay <= STPS[axis_No].min_delay){
@@ -738,14 +746,14 @@ void toggleOCx(int axis_No){
 
 
 int Pulse(int axis_No){
-#line 279 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 287 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  switch(STPS[axis_No].run_state) {
  case  0 :
  SV.Tog = 1;
  break;
 
  case  1 :
-#line 289 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 297 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  AccDec(axis_No);
  if(STPS[axis_No].step_delay <= STPS[axis_No].min_delay){
 
@@ -774,7 +782,7 @@ int Pulse(int axis_No){
  break;
 
  case  2 :
-#line 321 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 329 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  AccDec(axis_No);
 
 
@@ -886,7 +894,7 @@ void StepX() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_SRS {
 }
 
 void SingleStepX(){
- if((STPS[X].step_count >= STPS[X].dist) ){
+ if((STPS[X].step_count >= STPS[X].dist)||(SV.Tog == 1)){
  StopX();
  }
  else{
@@ -918,7 +926,7 @@ void StepY() iv IVT_OUTPUT_COMPARE_2 ilevel 3 ics ICS_SRS {
 }
 
 void SingleStepY(){
- if( (SV.Tog == 1)){
+ if((STPS[Y].step_count >= STPS[Y].dist)||(SV.Tog == 1)){
  StopY();
  }
  else{
@@ -998,7 +1006,7 @@ void StopA(){
 
 void XY_Interpolate(){
 
- if((STPS[X].step_count > SV.dx)||(STPS[Y].step_count > SV.dy) ){
+ if((STPS[X].step_count > SV.dx)||(STPS[Y].step_count > SV.dy)||(SV.Tog == 1)){
  StopX();
  StopY();
  UART2_Write_Text("Stopped");
@@ -1084,7 +1092,7 @@ void YZ_Interpolate(){
  }
 
 }
-#line 639 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 647 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 unsigned int min_(unsigned int x, unsigned int y){
  if(x < y){
  return x;
@@ -1093,7 +1101,7 @@ unsigned int min_(unsigned int x, unsigned int y){
  return y;
  }
 }
-#line 656 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 664 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 static unsigned long sqrt_(unsigned long x){
 
  register unsigned long xr;
@@ -1124,7 +1132,7 @@ static unsigned long sqrt_(unsigned long x){
  return xr;
  }
 }
-#line 710 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 718 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void CycleStop(){
 int ii;
  STmr.uSec = 0;
