@@ -49,12 +49,14 @@ main
 			abs
 			ClockPulse
 			XY_Interpolate
-				__CC2DW
 				StopX
 				StopY
+<<<<<<< HEAD
 				UART2_Write_Text
 <<<<<<< HEAD
 					UART2_Write
+=======
+>>>>>>> patch2
 =======
 >>>>>>> patch2
 				Step_Cycle
