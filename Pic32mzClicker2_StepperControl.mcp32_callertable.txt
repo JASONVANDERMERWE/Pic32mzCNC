@@ -49,10 +49,8 @@ main
 			abs
 			ClockPulse
 			XY_Interpolate
-				__CC2DW
 				StopX
 				StopY
-				UART2_Write_Text
 				Step_Cycle
 				Pulse
 					AccDec

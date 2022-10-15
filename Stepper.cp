@@ -369,7 +369,7 @@ unsigned int ResetSteppers(unsigned int sec_to_disable,unsigned int last_sec_to_
 #line 1 "c:/users/git/pic32mzcnc/settings.h"
 #line 15 "c:/users/git/pic32mzcnc/stepper.h"
 typedef unsigned short UInt8_t;
-#line 57 "c:/users/git/pic32mzcnc/stepper.h"
+#line 61 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
@@ -581,31 +581,29 @@ int ii;
 char txt_[9];
 long abs_mmSteps = abs(mmSteps);
 
- if(mmSteps == 1){
 
+
+ if(mmSteps == 1){
  STPS[axis_No].accel_count = -1;
  STPS[axis_No].run_state =  2 ;
  STPS[axis_No].step_delay = 20000;
  SV.running = 1;
 
- }
-
- else if((mmSteps != 0)&&(abs(mmSteps) != 1)){
+ }else if((mmSteps != 0)&&(abs_mmSteps != 1)){
 
 
 
- STPS[axis_No].min_delay =  (long)(( (2*3.14159)/ 200 * 781250 )*100)  / speed;
+ STPS[axis_No].min_delay =  (long)(( (2*3.14159)/ 188 * 781250 )*100)  / speed;
 
 
 
 
- STPS[axis_No].step_delay = abs( (long)(( 781250 *0.676)/100)  * ((sqrt_( (long)( (2*3.14159)/ 200 *2*10000000000)  / SV.acc))/100));
+ STPS[axis_No].step_delay = abs( (long)(( 781250 *0.676)/100)  * ((sqrt_( (long)( (2*3.14159)/ 188 *2*10000000000)  / SV.acc))/100));
  STPS[axis_No].StartUp_delay = STPS[axis_No].step_delay ;
 
 
+ STPS[axis_No].max_step_lim =(speed*speed)/(long)(2.0* (2*3.14159)/ 188 *(double)SV.acc*100.0);
 
-
- STPS[axis_No].max_step_lim = (speed*speed)/(long)(2.0* (2*3.14159)/ 200 *(double)SV.acc*100.0);
 
 
 
@@ -616,36 +614,28 @@ long abs_mmSteps = abs(mmSteps);
 
 
 
- STPS[axis_No].accel_lim = (abs(mmSteps) * SV.dec) / (SV.acc + SV.dec);
-
+ STPS[axis_No].accel_lim = (abs_mmSteps * SV.dec) / (SV.acc + SV.dec);
 
  if(STPS[axis_No].accel_lim == 0){
  STPS[axis_No].accel_lim = 1;
  }
 
 
- if(STPS[axis_No].accel_lim <= STPS[axis_No].max_step_lim){
- if(mmSteps >= 0)STPS[axis_No].decel_val = STPS[axis_No].accel_lim - mmSteps;
- else STPS[axis_No].decel_val = mmSteps + STPS[axis_No].accel_lim;
+ if(STPS[axis_No].accel_lim < STPS[axis_No].max_step_lim){
+ STPS[axis_No].decel_val = STPS[axis_No].accel_lim - mmSteps;
  }else{
- STPS[axis_No].decel_val = -((STPS[axis_No].max_step_lim * SV.acc)/ SV.dec);
+ STPS[axis_No].decel_val = -((STPS[axis_No].max_step_lim *SV.acc)/SV.dec);
  }
 
  if(STPS[axis_No].decel_val == 0)
  STPS[axis_No].decel_val = -1;
 
 
- if(abs_mmSteps >= 0){
- if(mmSteps > STPS[axis_No].decel_val) STPS[axis_No].decel_start = mmSteps + STPS[axis_No].decel_val;
- else STPS[axis_No].decel_start = STPS[axis_No].accel_lim;
+ if(mmSteps < 0){
+ STPS[axis_No].decel_start = -(mmSteps - STPS[axis_No].decel_val);
  }
  else {
- if(mmSteps < STPS[axis_No].decel_val) STPS[axis_No].decel_start = abs(mmSteps) - STPS[axis_No].decel_val;
- else STPS[axis_No].decel_start = STPS[axis_No].accel_lim;
- }
-
- if(STPS[axis_No].decel_val == 0){
- STPS[axis_No].decel_val = -1;
+ STPS[axis_No].decel_start = mmSteps + STPS[axis_No].decel_val;
  }
 
 
@@ -678,7 +668,13 @@ long abs_mmSteps = abs(mmSteps);
  sprintf(txt_,"%d",STPS[axis_No].min_delay);
  UART2_Write_Text(txt_);
  UART2_Write_Text(" : ");
+ sprintf(txt_,"%d",STPS[axis_No].max_step_lim);
+ UART2_Write_Text(txt_);
+ UART2_Write_Text(" : ");
  sprintf(txt_,"%d",STPS[axis_No].accel_lim);
+ UART2_Write_Text(txt_);
+ UART2_Write_Text(" : ");
+ sprintf(txt_,"%d",STPS[axis_No].decel_val);
  UART2_Write_Text(txt_);
  UART2_Write_Text(" : ");
  sprintf(txt_,"%d",STPS[axis_No].decel_start);
@@ -746,14 +742,14 @@ void toggleOCx(int axis_No){
 
 
 int Pulse(int axis_No){
-#line 287 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 283 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  switch(STPS[axis_No].run_state) {
  case  0 :
  SV.Tog = 1;
  break;
 
  case  1 :
-#line 297 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 293 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  AccDec(axis_No);
  if(STPS[axis_No].step_delay <= STPS[axis_No].min_delay){
 
@@ -782,7 +778,7 @@ int Pulse(int axis_No){
  break;
 
  case  2 :
-#line 329 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 325 "C:/Users/Git/Pic32mzCNC/Stepper.c"
  AccDec(axis_No);
 
 
@@ -1006,10 +1002,9 @@ void StopA(){
 
 void XY_Interpolate(){
 
- if((STPS[X].step_count > SV.dx)||(STPS[Y].step_count > SV.dy)||(SV.Tog == 1)){
+ if( (SV.Tog == 1)){
  StopX();
  StopY();
- UART2_Write_Text("Stopped");
  return;
  }
 
@@ -1036,7 +1031,7 @@ void XY_Interpolate(){
 
 void XZ_Interpolate(){
 
- if((STPS[X].step_count > SV.dx)||(STPS[Z].step_count > SV.dz)||(SV.Tog == 1)){
+ if( (SV.Tog == 1)){
  StopX();
  StopZ();
 
@@ -1065,7 +1060,7 @@ void XZ_Interpolate(){
  }
 }
 void YZ_Interpolate(){
- if((STPS[Y].step_count > SV.dy)||(STPS[Z].step_count > SV.dz) ){
+ if((STPS[Y].step_count > SV.dy)||(STPS[Z].step_count > SV.dz)||(SV.Tog == 1)){
  StopY();
  StopZ();
  return;
@@ -1092,7 +1087,7 @@ void YZ_Interpolate(){
  }
 
 }
-#line 647 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 642 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 unsigned int min_(unsigned int x, unsigned int y){
  if(x < y){
  return x;
@@ -1101,7 +1096,7 @@ unsigned int min_(unsigned int x, unsigned int y){
  return y;
  }
 }
-#line 664 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 659 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 static unsigned long sqrt_(unsigned long x){
 
  register unsigned long xr;
@@ -1132,7 +1127,7 @@ static unsigned long sqrt_(unsigned long x){
  return xr;
  }
 }
-#line 718 "C:/Users/Git/Pic32mzCNC/Stepper.c"
+#line 713 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void CycleStop(){
 int ii;
  STmr.uSec = 0;

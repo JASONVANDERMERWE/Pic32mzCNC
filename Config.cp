@@ -317,7 +317,7 @@ void r_or_ijk(double xCur,double yCur,double xFin,double yFin,double r, double i
 #line 1 "c:/users/git/pic32mzcnc/settings.h"
 #line 15 "c:/users/git/pic32mzcnc/stepper.h"
 typedef unsigned short UInt8_t;
-#line 57 "c:/users/git/pic32mzcnc/stepper.h"
+#line 61 "c:/users/git/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
@@ -677,12 +677,12 @@ void OutPutPulseXYZ(){
  T6CON = 0x0000;
  T7CON = 0x0000;
 
- T2CON = 0x0060;
- T3CON = 0x0060;
- T4CON = 0x0060;
- T5CON = 0x0060;
- T6CON = 0x0060;
- T7CON = 0x0060;
+ T2CON = 0x0030;
+ T3CON = 0x0030;
+ T4CON = 0x0030;
+ T5CON = 0x0030;
+ T6CON = 0x0030;
+ T7CON = 0x0030;
 
 
  PR2 = 0xFFFF;

@@ -35,9 +35,13 @@ typedef unsigned short UInt8_t;
 
 #define MAX_ACC_LIM 5000
 #define MIN_ACC_LIN 10
-
-// Maths constants. To simplify maths when calculating in speed_cntr_Move().
-#define ALPHA    (2*3.14159)/SPR                   // 2*pi/spr in rad
+/************************************************************************
+* Maths constants. To simplify maths when calculating in speed_cntr_Move().
+* Alpha is stepangle in radians 2*pi/spr in rad  || (1.8 * Pi) / 180
+* Speed = (ALPHA * T1_FREQ) / Step
+* acc = ((2 * ALPHA * T1_FREQ)*(Step1 - Step2)) / (Step1*Step2)*(Step1+Step2)
+*************************************************************************/
+#define ALPHA    (2*3.14159)/SPR
 #define A_T_x100 (long)((ALPHA*T1_FREQ)*100)    // (ALPHA / T1_FREQ)*100
 #define T1_FREQ_148 (long)((T1_FREQ*0.676)/100)      // divided by 100 and scaled by 0.676
 #define A_SQ (long)(ALPHA*2*10000000000)                    // ALPHA*2*10000000000
