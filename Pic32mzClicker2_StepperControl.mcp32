@@ -6,7 +6,7 @@ Value=0
 [BUILD_TYPE]
 Value=0
 [ACTIVE_TAB]
-Value=Main.c
+Value=Config.h
 [USE_EEPROM]
 Value=0
 [USE_HEAP]
@@ -26,7 +26,8 @@ File6=Pins.c
 File7=Serial_Dma.c
 File8=Print.c
 File9=GCODE.c
-Count=10
+File10=Globals.c
+Count=11
 [BINARIES]
 Count=0
 [IMAGES]
@@ -44,7 +45,8 @@ File7=Settings.h
 File8=GCODE.c
 File9=GCODE.h
 File10=Config.c
-Count=11
+File11=Config.h
+Count=12
 [EEPROM]
 Count=0
 [ACTIVE_COMMENTS_FILES]
@@ -68,7 +70,8 @@ File6=Serial_Dma.h
 File7=Settings.h
 File8=Print.h
 File9=GCODE.h
-Count=10
+File10=Globals.h
+Count=11
 [PLDS]
 File0=DEFINES.pld
 Count=1
@@ -95,5 +98,5 @@ USE_SRS=7
 [EXPANDED_NODES]
 0=Pic32mzClicker2_StepperControl.mcp32
 1=Sources
-12=Header Files
+13=Header Files
 Count=3

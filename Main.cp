@@ -463,6 +463,19 @@ double in2mm(double inch);
 #line 1 "c:/users/git/pic32mzcnc/serial_dma.h"
 #line 1 "c:/users/git/pic32mzcnc/kinematics.h"
 #line 1 "c:/users/git/pic32mzcnc/gcode.h"
+#line 1 "c:/users/git/pic32mzcnc/globals.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/stdint.h"
+#line 1 "c:/users/git/pic32mzcnc/settings.h"
+#line 50 "c:/users/git/pic32mzcnc/globals.h"
+typedef struct {
+ uint8_t abort;
+ uint8_t state;
+ volatile uint8_t execute;
+ int32_t position[ 6 ];
+
+ uint8_t auto_start;
+} system_t;
+extern system_t sys;
 #line 31 "c:/users/git/pic32mzcnc/config.h"
 extern unsigned char LCD_01_ADDRESS;
 extern bit oneShotA; sfr;
@@ -487,6 +500,7 @@ settings_t settings;
 parser_state_t gc;
 STP STPS[ 6 ];
 
+char txt_[9];
 bit testISR;
 bit oneShotA; sfr;
 bit oneShotB; sfr;
@@ -561,7 +575,7 @@ int xyz_ = 0;
 
  Temp_Move(a);
  a++;
- if(a > 8)a=0;
+ if(a > 3)a=0;
 
  }
  }
@@ -571,11 +585,16 @@ int xyz_ = 0;
 
 
 void Temp_Move(int a){
-char txt_[9];
+
  switch(a){
  case 0:
  STPS[X].mmToTravel = belt_steps(-50.00);
- speed_cntr_Move(STPS[X].mmToTravel, 5000,X);
+ speed_cntr_Move(STPS[X].mmToTravel, 2000,X);
+ SingleAxisStep(STPS[X].mmToTravel,X);
+ break;
+ case 2:
+ STPS[X].mmToTravel = belt_steps(50.00);
+ speed_cntr_Move(STPS[X].mmToTravel, 8000,X);
  SingleAxisStep(STPS[X].mmToTravel,X);
  break;
  case 1:
@@ -583,14 +602,9 @@ char txt_[9];
  speed_cntr_Move(STPS[Y].mmToTravel, 5000,Y);
  SingleAxisStep(STPS[Y].mmToTravel,Y);
  break;
- case 2:
- STPS[X].mmToTravel = belt_steps(50.00);
- speed_cntr_Move(STPS[X].mmToTravel, 5000,X);
- SingleAxisStep(STPS[X].mmToTravel,X);
- break;
  case 3:
  STPS[Y].mmToTravel = belt_steps(-50.00);
- speed_cntr_Move(STPS[Y].mmToTravel, 5000,Y);
+ speed_cntr_Move(STPS[Y].mmToTravel, 2000,Y);
  SingleAxisStep(STPS[Y].mmToTravel,Y);
  break;
  case 4:
@@ -609,14 +623,14 @@ char txt_[9];
  break;
  case 6:
  STPS[X].mmToTravel = belt_steps(-150.00);
- speed_cntr_Move(STPS[X].mmToTravel, 7000,X);
+ speed_cntr_Move(STPS[X].mmToTravel, 10000,X);
  STPS[Y].mmToTravel = belt_steps(100.00);
 
  DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
  break;
  case 7:
  STPS[X].mmToTravel = belt_steps(150.00);
- speed_cntr_Move(STPS[X].mmToTravel, 5000,X);
+ speed_cntr_Move(STPS[X].mmToTravel, 10000,X);
  STPS[Y].mmToTravel = belt_steps(-100.00);
 
  DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
@@ -626,9 +640,9 @@ char txt_[9];
  speed_cntr_Move(STPS[A].mmToTravel, 15000,A);
  SingleAxisStep(STPS[A].mmToTravel,A);
  break;
- case 7:
+ case 9:
 
-
+ r_or_ijk(-50.00, 50.00, -150.00, 150.00, 0.00, -50.00, 50.00,1.0, 0.00);
  break;
  default: a = 0;
  break;
