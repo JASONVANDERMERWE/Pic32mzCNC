@@ -87,12 +87,7 @@ int xyz_ = 0;
                
                Temp_Move(a);
                a++;
-<<<<<<< HEAD
                if(a > 8)a=0;
-=======
-               if(a > 3)a=0;
-
->>>>>>> patch2
            }
          }
             
@@ -120,7 +115,6 @@ void Temp_Move(int a){
               break;
        case 3:
                  STPS[Y].mmToTravel = belt_steps(-50.00);
-<<<<<<< HEAD
                  speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
                  DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
               break;
@@ -133,16 +127,9 @@ void Temp_Move(int a){
               break;
        case 5:
                  STPS[X].mmToTravel = belt_steps(50.00);
-<<<<<<< HEAD
-                 speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
-                 STPS[Y].mmToTravel = belt_steps(50.00);
-                 //speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
->>>>>>> patch2
-=======
                  //speed_cntr_Move(STPS[X].mmToTravel, 75000,X);
                  STPS[Y].mmToTravel = belt_steps(-100.00);
                  speed_cntr_Move(STPS[Y].mmToTravel, 5000,Y);
->>>>>>> patch2
                  DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
               break;
        case 6:
@@ -164,19 +151,10 @@ void Temp_Move(int a){
                  speed_cntr_Move(STPS[A].mmToTravel, 15000,A);
                  SingleAxisStep(STPS[A].mmToTravel,A);
              break;
-<<<<<<< HEAD
-
-       case 7:
-=======
        case 9:
->>>>>>> patch2
                 //r_or_ijk(float xCur,float yCur,float xFin,float yFin,float r, float i, float j, float k)
                  r_or_ijk(-50.00, 50.00, -150.00, 150.00, 0.00, -50.00, 50.00,1.0, 0.00);
             break;
-<<<<<<< HEAD
-
-=======
->>>>>>> patch2
         default: a = 0;
               break;
     }

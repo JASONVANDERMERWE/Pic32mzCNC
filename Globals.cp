@@ -53,10 +53,12 @@ typedef unsigned long long uintmax_t;
 typedef struct {
  uint8_t abort;
  uint8_t state;
- volatile uint8_t execute;
- int32_t position[ 6 ];
-
  uint8_t auto_start;
+ volatile uint8_t execute;
+ long steps_position[ 6 ];
+
+ double mm_position[ 6 ];
+ double mm_home_position[ 6 ];
 } system_t;
 extern system_t sys;
 #line 4 "C:/Users/Git/Pic32mzCNC/Globals.c"

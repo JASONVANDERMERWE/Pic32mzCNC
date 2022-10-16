@@ -39121,7 +39121,9 @@ min102_bit
 min103
 min103_alrmtime_bit
 min103_bit
+mm_home_position
 mm_per_arc_segment
+mm_position
 mm2in
 mode
 mode
@@ -45257,7 +45259,6 @@ poscrdy
 poscrdy
 poscrdy
 poscrdy_bit
-position
 position
 pow
 pps_mapping
@@ -60978,6 +60979,7 @@ stepa
 stepper_idle_lock_time
 stepperconstants
 steps_per_mm
+steps_position
 stepx
 stepy
 stepz

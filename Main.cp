@@ -299,12 +299,6 @@ typedef struct {
  uint8_t stepper_idle_lock_time;
  uint8_t decimal_places;
  uint8_t n_arc_correction;
-<<<<<<< HEAD
-
-} settings_t;
-extern settings_t settings;
-=======
->>>>>>> patch2
 
 } settings_t;
 extern settings_t settings;
@@ -315,19 +309,9 @@ extern settings_t settings;
 void DualAxisStep(long newx,long newy,int axis_combo);
 void SingleAxisStep(long newxyz,int axis_No);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-void mc_arc(float *position, float *target, float *offset, uint8_t axis_0, uint8_t axis_1,
- uint8_t axis_linear, float feed_rate, uint8_t invert_feed_rate, float radius, uint8_t isclockwise);
-=======
 void mc_arc(double *position, double *target, double *offset, uint8_t axis_0, uint8_t axis_1,
  uint8_t axis_linear, double feed_rate, uint8_t invert_feed_rate, double radius, uint8_t isclockwise);
->>>>>>> patch2
-=======
-void mc_arc(double *position, double *target, double *offset, uint8_t axis_0, uint8_t axis_1,
- uint8_t axis_linear, double feed_rate, uint8_t invert_feed_rate, double radius, uint8_t isclockwise);
->>>>>>> patch2
 float hypot(float angular_travel, float linear_travel);
 void SerialPrint(float r);
 void r_or_ijk(double xCur,double yCur,double xFin,double yFin,double r, double i, double j, double k,int axis_xyz);
@@ -487,10 +471,12 @@ double in2mm(double inch);
 typedef struct {
  uint8_t abort;
  uint8_t state;
- volatile uint8_t execute;
- int32_t position[ 6 ];
-
  uint8_t auto_start;
+ volatile uint8_t execute;
+ long steps_position[ 6 ];
+
+ double mm_position[ 6 ];
+ double mm_home_position[ 6 ];
 } system_t;
 extern system_t sys;
 #line 31 "c:/users/git/pic32mzcnc/config.h"
@@ -592,24 +578,7 @@ int xyz_ = 0;
 
  Temp_Move(a);
  a++;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
- if(a > 6)a=0;
-=======
- if(a > 3)a=0;
->>>>>>> patch2
-=======
- if(a > 5)a=0;
->>>>>>> patch2
-=======
  if(a > 8)a=0;
->>>>>>> patch2
-=======
- if(a > 3)a=0;
->>>>>>> patch2
-
  }
  }
 
@@ -631,78 +600,14 @@ void Temp_Move(int a){
  SingleAxisStep(STPS[X].mmToTravel,X);
  break;
  case 1:
-<<<<<<< HEAD
- STPS[X].mmToTravel = belt_steps(50.00);
- speed_cntr_Move(STPS[X].mmToTravel, 5000,X);
- SingleAxisStep(STPS[X].mmToTravel,X);
- break;
- case 2:
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
- STPS[X].mmToTravel = calcSteps(-125.00,8.06);
- speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
- SingleAxisStep(STPS[X].mmToTravel,X);
-=======
-=======
->>>>>>> patch2
- STPS[Y].mmToTravel = belt_steps(-50.00);
- speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
-=======
-=======
->>>>>>> patch2
  STPS[Y].mmToTravel = belt_steps(50.00);
  speed_cntr_Move(STPS[Y].mmToTravel, 5000,Y);
->>>>>>> patch2
  SingleAxisStep(STPS[Y].mmToTravel,Y);
->>>>>>> patch2
  break;
  case 3:
-<<<<<<< HEAD
- STPS[Y].mmToTravel = belt_steps(50.00);
- speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
-<<<<<<< HEAD
-<<<<<<< HEAD
- STPS[X].mmToTravel = calcSteps(125.25,8.06);
- speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
- DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
- break;
- case 4:
- STPS[X].mmToTravel = calcSteps(-125.25,8.06);
- speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
- STPS[Y].mmToTravel = calcSteps(-125.25,8.06);
-=======
- SingleAxisStep(STPS[Y].mmToTravel,Y);
- break;
- case 4:
- STPS[X].mmToTravel = belt_steps(-50.00);
- speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
  STPS[Y].mmToTravel = belt_steps(-50.00);
->>>>>>> patch2
  speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
  DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
- break;
- case 5:
-<<<<<<< HEAD
- STPS[X].mmToTravel = calcSteps(125.25,8.06);
- speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
- STPS[Y].mmToTravel = calcSteps(125.25,8.06);
-=======
- STPS[X].mmToTravel = belt_steps(50.00);
- speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
- STPS[Y].mmToTravel = belt_steps(50.00);
->>>>>>> patch2
- speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
-=======
-=======
- STPS[Y].mmToTravel = belt_steps(-50.00);
-<<<<<<< HEAD
- speed_cntr_Move(STPS[Y].mmToTravel, 5000,Y);
->>>>>>> patch2
-=======
- speed_cntr_Move(STPS[Y].mmToTravel, 2000,Y);
->>>>>>> patch2
- SingleAxisStep(STPS[Y].mmToTravel,Y);
  break;
  case 4:
  STPS[X].mmToTravel = belt_steps(-50.00);
@@ -714,12 +619,8 @@ void Temp_Move(int a){
  case 5:
  STPS[X].mmToTravel = belt_steps(50.00);
 
-<<<<<<< HEAD
->>>>>>> patch2
-=======
  STPS[Y].mmToTravel = belt_steps(-100.00);
  speed_cntr_Move(STPS[Y].mmToTravel, 5000,Y);
->>>>>>> patch2
  DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
  break;
  case 6:
@@ -741,17 +642,10 @@ void Temp_Move(int a){
  speed_cntr_Move(STPS[A].mmToTravel, 15000,A);
  SingleAxisStep(STPS[A].mmToTravel,A);
  break;
-<<<<<<< HEAD
-
- case 7:
-
-=======
  case 9:
->>>>>>> patch2
 
  r_or_ijk(-50.00, 50.00, -150.00, 150.00, 0.00, -50.00, 50.00,1.0, 0.00);
  break;
-
  default: a = 0;
  break;
  }
