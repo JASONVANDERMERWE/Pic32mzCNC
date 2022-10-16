@@ -10,6 +10,7 @@ Value=0
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 Value=Config.c
 =======
 Value=Main.c
@@ -22,6 +23,9 @@ Value=Main.c
 >>>>>>> patch2
 =======
 Value=Config.c
+>>>>>>> patch2
+=======
+Value=Main.c
 >>>>>>> patch2
 [USE_EEPROM]
 Value=0
