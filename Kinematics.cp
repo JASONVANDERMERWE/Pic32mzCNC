@@ -197,6 +197,19 @@ uint8_t gc_execute_line(char *line);
 
 
 void gc_set_current_position(int32_t x, int32_t y, int32_t z);
+#line 1 "c:/users/git/pic32mzcnc/globals.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/stdint.h"
+#line 1 "c:/users/git/pic32mzcnc/settings.h"
+#line 50 "c:/users/git/pic32mzcnc/globals.h"
+typedef struct {
+ uint8_t abort;
+ uint8_t state;
+ volatile uint8_t execute;
+ int32_t position[ 6 ];
+
+ uint8_t auto_start;
+} system_t;
+extern system_t sys;
 #line 31 "c:/users/git/pic32mzcnc/config.h"
 extern unsigned char LCD_01_ADDRESS;
 extern bit oneShotA; sfr;
@@ -723,7 +736,7 @@ double x = 0.00;
 double y = 0.00;
 double h_x2_div_d = 0.00;
 unsigned int axis_plane_a,axis_plane_b;
-
+char txt_[9];
 
  position[X] = Cur_axis_a;
  position[Y] = Cur_axis_b;
@@ -754,10 +767,15 @@ unsigned int axis_plane_a,axis_plane_b;
  axis_plane_b = Z;
  }
 
+<<<<<<< HEAD
  if (r != 0) {
 <<<<<<< HEAD
 <<<<<<< HEAD
 #line 302 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+=======
+ if (r != 0.00) {
+#line 310 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+>>>>>>> patch2
  x = target[axis_plane_a] - position[axis_plane_a];
 
  y = target[axis_plane_b] - position[axis_plane_b];
@@ -807,11 +825,16 @@ unsigned int axis_plane_a,axis_plane_b;
 
  r = hypot(i, j);
  }
+ sprintf(txt_,"%0.2f",r);
+ UART2_Write_Text("r:= ");
+ UART2_Write_Text(txt_);
+ UART2_Write(0x0D);
 
 
  isclockwise =  0 ;
  if (gc.motion_mode ==  2 ) { isclockwise =  1 ; }
 
+ gc.plane_axis_2 =1;
 
  mc_arc(position, target, offset, gc.plane_axis_0, gc.plane_axis_1, gc.plane_axis_2,
   250.0 , gc.inverse_feed_rate_mode,
@@ -822,7 +845,7 @@ unsigned int axis_plane_a,axis_plane_b;
 
 void mc_arc(double *position, double *target, double *offset, uint8_t axis_0, uint8_t axis_1,
  uint8_t axis_linear, double feed_rate, uint8_t invert_feed_rate, double radius, uint8_t isclockwise){
-
+ long tempA,tempB;
  double center_axis0 = position[X] + offset[X];
  double center_axis1 = position[Y] + offset[Y];
  double linear_travel = target[X] - position[X];
@@ -859,7 +882,7 @@ void mc_arc(double *position, double *target, double *offset, uint8_t axis_0, ui
 
 
  millimeters_of_travel = hypot(angular_travel*radius, fabs(linear_travel));
- if (millimeters_of_travel == 0.0) { return; }
+
 
  segments = floor(millimeters_of_travel/ 0.1 );
 
@@ -876,6 +899,7 @@ void mc_arc(double *position, double *target, double *offset, uint8_t axis_0, ui
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
  SerialPrint(linear_per_segment);
 #line 493 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 =======
@@ -886,6 +910,9 @@ void mc_arc(double *position, double *target, double *offset, uint8_t axis_0, ui
 >>>>>>> patch2
 =======
 #line 450 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+>>>>>>> patch2
+=======
+#line 455 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 >>>>>>> patch2
  cos_T = 1-0.5*theta_per_segment*theta_per_segment;
  sin_T = theta_per_segment;
@@ -924,6 +951,7 @@ void mc_arc(double *position, double *target, double *offset, uint8_t axis_0, ui
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 #line 538 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
  STPS[X].mmToTravel = calcSteps(nPx,8.06);
 =======
@@ -938,10 +966,19 @@ void mc_arc(double *position, double *target, double *offset, uint8_t axis_0, ui
  STPS[X].mmToTravel = belt_steps(nPx);
 >>>>>>> patch2
 
+=======
+#line 495 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+ STPS[X].mmToTravel = belt_steps(nPx);
+>>>>>>> patch2
  STPS[Y].mmToTravel = belt_steps(nPy);
+ tempA = abs(STPS[X].mmToTravel);
+ tempB = abs(STPS[Y].mmToTravel);
+ if(tempA > tempB)
+ speed_cntr_Move(STPS[X].mmToTravel, 1000,X);
+ else
+ speed_cntr_Move(STPS[Y].mmToTravel, 1000,Y);
 
- STPS[X].step_delay = 100;
- STPS[Y].step_delay = 100;
+
  DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
 
 
@@ -970,6 +1007,7 @@ int str_lenA = 0;
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 #line 625 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
  UART2_Write_Text(txtB);
 #line 634 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
@@ -987,5 +1025,10 @@ int str_lenA = 0;
 #line 577 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
  UART2_Write_Text(txtB);
 #line 586 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+>>>>>>> patch2
+=======
+#line 586 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+ UART2_Write_Text(txtB);
+#line 595 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 >>>>>>> patch2
 }

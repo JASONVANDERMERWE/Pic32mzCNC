@@ -11,6 +11,7 @@ Value=0
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 Value=Config.c
 =======
 Value=Main.c
@@ -26,6 +27,9 @@ Value=Config.c
 >>>>>>> patch2
 =======
 Value=Main.c
+>>>>>>> patch2
+=======
+Value=Config.h
 >>>>>>> patch2
 [USE_EEPROM]
 Value=0
@@ -46,7 +50,8 @@ File6=Pins.c
 File7=Serial_Dma.c
 File8=Print.c
 File9=GCODE.c
-Count=10
+File10=Globals.c
+Count=11
 [BINARIES]
 Count=0
 [IMAGES]
@@ -88,7 +93,12 @@ Count=10
 >>>>>>> patch2
 =======
 File10=Config.c
+<<<<<<< HEAD
 Count=11
+>>>>>>> patch2
+=======
+File11=Config.h
+Count=12
 >>>>>>> patch2
 [EEPROM]
 Count=0
@@ -113,7 +123,8 @@ File6=Serial_Dma.h
 File7=Settings.h
 File8=Print.h
 File9=GCODE.h
-Count=10
+File10=Globals.h
+Count=11
 [PLDS]
 File0=DEFINES.pld
 Count=1
@@ -140,5 +151,5 @@ USE_SRS=7
 [EXPANDED_NODES]
 0=Pic32mzClicker2_StepperControl.mcp32
 1=Sources
-12=Header Files
+13=Header Files
 Count=3
