@@ -124,20 +124,6 @@ char txt_[9];
                  //speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
                  DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
               break;
-       case 5:
-=======
-                 STPS[X].mmToTravel = belt_steps(50.00);
-                 speed_cntr_Move(STPS[X].mmToTravel, 25000,X);
-                 STPS[Y].mmToTravel = belt_steps(50.00);
->>>>>>> patch2
-                 speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
-=======
-=======
-                 STPS[Y].mmToTravel = belt_steps(-50.00);
-                 speed_cntr_Move(STPS[Y].mmToTravel, 5000,Y);
->>>>>>> patch2
-                 SingleAxisStep(STPS[Y].mmToTravel,Y);
-              break;
        case 4:
                  STPS[X].mmToTravel = belt_steps(-50.00);
                 // speed_cntr_Move(STPS[X].mmToTravel, 75000,X);
