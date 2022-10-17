@@ -1,21 +1,32 @@
-==================================================
-astepper lib
-==================================================
-= Copyright (c) Davide Gironi, 2014              =
-= http://davidegironi.blogspot.it/               =
-==================================================
+Credit must go to where and whome it is due:
+a) Stepper Implimentation code half uses ideas from...
+    ==================================================
+    astepper lib
+    = Copyright (c) Davide Gironi, 2014              =
+    = http://davidegironi.blogspot.it/               =
+    = Ideas taken from grbl code written by          =
+    = Simen Svale Skogsrud / Sungeun K. Jeon         =
+    ==================================================
+b) Stepper Acceleration and Deceleration profile
+   was taken from Appnote AVR446 which impliments very 
+   efficiently on this micro
+  ====================================================
+c) The pic32mz is setup to run at 200mhz with all its 
+   pbclk's set at various frequencies.
+   ===================================================
+d) The steps and pulses are driven from master timers 
+   associated with the Output compare modules, 
+   the code impliments 6 axis output compare with
+   2 axis control at present moment. 
+   the stepper controls are therefore asychrinous due 
+   to this implimentation, the relevant timers can
+   run very fast, although setup for 1:8 prescalar 
+   with a 50mhz master pbclk
+   ==================================================
+e) Bresenhams alog is used for interpolation and grbls
+   matrix circle will be used, some of grbl's ideas 
+   are used here but the cotrol is quite different as it 
+   uses a form of nco using the OCx module.
+   ===================================================
 
 
-This library drive up to stepper motor using the Allegro driver like the
-A3967 (EasyDriver) on ATmega8.
-It uses the CTC mode of TIMER2, changing OCR2 register results in the
-change of the interrupt frequency.
-
-Devel Notes
------------
-This library was developed on Eclipse, built with avr-gcc on Atmega8 @ 8MHz.
-
-
-License
--------
-Please refer to LICENSE file for licensing information.
