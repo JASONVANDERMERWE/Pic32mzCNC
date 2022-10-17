@@ -18,15 +18,17 @@ d) The steps and pulses are driven from master timers
    associated with the Output compare modules, 
    the code impliments 6 axis output compare with
    2 axis control at present moment. 
-   the stepper controls are therefore asychrinous due 
+   the stepper controls are therefore asynchronous due 
    to this implimentation, the relevant timers can
    run very fast, although setup for 1:8 prescalar 
    with a 50mhz master pbclk
    ==================================================
 e) Bresenhams alog is used for interpolation and grbls
-   matrix circle will be used, some of grbl's ideas 
-   are used here but the cotrol is quite different as it 
-   uses a form of nco using the OCx module.
+   matrix circle will be used, NO while loops and for loops
+   are implimented during Interpolation of stepper moves
+   this is due to the nature of the output compare modules.
+   The steppers are very smooth and the pulses can clock
+   very fast without any overhead.
    ===================================================
 
 
