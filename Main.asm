@@ -1,6 +1,6 @@
 _main:
 ;Main.c,31 :: 		void main() {
-ADDIU	SP, SP, -16
+ADDIU	SP, SP, -112
 ;Main.c,36 :: 		int xyz_ = 0;
 ;Main.c,37 :: 		PinMode();
 JAL	_PinMode+0
@@ -159,6 +159,8 @@ NOP
 ;Main.c,77 :: 		EnStepperA();
 JAL	_EnStepperA+0
 NOP	
+;Main.c,78 :: 		sys.steps_position[X] = 0;
+SW	R0, Offset(_sys+16)(GP)
 ;Main.c,69 :: 		if((!SW1)&&(!Toggle)){
 L__main42:
 L__main41:
@@ -231,21 +233,189 @@ ADDIU	R2, SP, 0
 MOVZ	R25, R2, R0
 JAL	_UART2_Write_Text+0
 NOP	
-;Main.c,86 :: 		UART2_Write(0x0D);
+;Main.c,86 :: 		sprintf(txt_,"%d",STPS[X].step_count);
+ADDIU	R3, SP, 0
+LW	R2, Offset(_STPS+32)(GP)
+ADDIU	SP, SP, -12
+SW	R2, 8(SP)
+LUI	R2, hi_addr(?lstr_3_Main+0)
+ORI	R2, R2, lo_addr(?lstr_3_Main+0)
+SW	R2, 4(SP)
+SW	R3, 0(SP)
+JAL	_sprintf+0
+NOP	
+ADDIU	SP, SP, 12
+;Main.c,87 :: 		UART2_Write_Text(" | step_count[X]:= ");
+ADDIU	R23, SP, 14
+ADDIU	R22, R23, 20
+LUI	R24, hi_addr(?ICS?lstr4_Main+0)
+ORI	R24, R24, lo_addr(?ICS?lstr4_Main+0)
+JAL	___CC2DW+0
+NOP	
+ADDIU	R2, SP, 14
+MOVZ	R25, R2, R0
+JAL	_UART2_Write_Text+0
+NOP	
+;Main.c,88 :: 		UART2_Write_Text(txt_);
+ADDIU	R2, SP, 0
+MOVZ	R25, R2, R0
+JAL	_UART2_Write_Text+0
+NOP	
+;Main.c,89 :: 		sprintf(txt_,"%d",sys.axis_dir[X]);
+ADDIU	R3, SP, 0
+LH	R2, Offset(_sys+0)(GP)
+ADDIU	SP, SP, -12
+SH	R2, 8(SP)
+LUI	R2, hi_addr(?lstr_5_Main+0)
+ORI	R2, R2, lo_addr(?lstr_5_Main+0)
+SW	R2, 4(SP)
+SW	R3, 0(SP)
+JAL	_sprintf+0
+NOP	
+ADDIU	SP, SP, 12
+;Main.c,90 :: 		UART2_Write_Text(" | axis_dir[X]:= ");
+ADDIU	R23, SP, 34
+ADDIU	R22, R23, 18
+LUI	R24, hi_addr(?ICS?lstr6_Main+0)
+ORI	R24, R24, lo_addr(?ICS?lstr6_Main+0)
+JAL	___CC2DW+0
+NOP	
+ADDIU	R2, SP, 34
+MOVZ	R25, R2, R0
+JAL	_UART2_Write_Text+0
+NOP	
+;Main.c,91 :: 		UART2_Write_Text(txt_);
+ADDIU	R2, SP, 0
+MOVZ	R25, R2, R0
+JAL	_UART2_Write_Text+0
+NOP	
+;Main.c,92 :: 		sprintf(txt_,"%d",sys.steps_position[X]);
+ADDIU	R3, SP, 0
+LW	R2, Offset(_sys+16)(GP)
+ADDIU	SP, SP, -12
+SW	R2, 8(SP)
+LUI	R2, hi_addr(?lstr_7_Main+0)
+ORI	R2, R2, lo_addr(?lstr_7_Main+0)
+SW	R2, 4(SP)
+SW	R3, 0(SP)
+JAL	_sprintf+0
+NOP	
+ADDIU	SP, SP, 12
+;Main.c,93 :: 		UART2_Write_Text(" | absX:= ");
+ADDIU	R23, SP, 52
+ADDIU	R22, R23, 11
+LUI	R24, hi_addr(?ICS?lstr8_Main+0)
+ORI	R24, R24, lo_addr(?ICS?lstr8_Main+0)
+JAL	___CC2DW+0
+NOP	
+ADDIU	R2, SP, 52
+MOVZ	R25, R2, R0
+JAL	_UART2_Write_Text+0
+NOP	
+;Main.c,94 :: 		UART2_Write_Text(txt_);
+ADDIU	R2, SP, 0
+MOVZ	R25, R2, R0
+JAL	_UART2_Write_Text+0
+NOP	
+;Main.c,95 :: 		sprintf(txt_,"%d",STPS[Y].step_count);
+ADDIU	R3, SP, 0
+LW	R2, Offset(_STPS+100)(GP)
+ADDIU	SP, SP, -12
+SW	R2, 8(SP)
+LUI	R2, hi_addr(?lstr_9_Main+0)
+ORI	R2, R2, lo_addr(?lstr_9_Main+0)
+SW	R2, 4(SP)
+SW	R3, 0(SP)
+JAL	_sprintf+0
+NOP	
+ADDIU	SP, SP, 12
+;Main.c,96 :: 		UART2_Write_Text(" | step_count[Y]:= ");
+ADDIU	R23, SP, 63
+ADDIU	R22, R23, 20
+LUI	R24, hi_addr(?ICS?lstr10_Main+0)
+ORI	R24, R24, lo_addr(?ICS?lstr10_Main+0)
+JAL	___CC2DW+0
+NOP	
+ADDIU	R2, SP, 63
+MOVZ	R25, R2, R0
+JAL	_UART2_Write_Text+0
+NOP	
+;Main.c,97 :: 		UART2_Write_Text(txt_);
+ADDIU	R2, SP, 0
+MOVZ	R25, R2, R0
+JAL	_UART2_Write_Text+0
+NOP	
+;Main.c,98 :: 		sprintf(txt_,"%d",sys.axis_dir[Y]);
+ADDIU	R3, SP, 0
+LH	R2, Offset(_sys+2)(GP)
+ADDIU	SP, SP, -12
+SH	R2, 8(SP)
+LUI	R2, hi_addr(?lstr_11_Main+0)
+ORI	R2, R2, lo_addr(?lstr_11_Main+0)
+SW	R2, 4(SP)
+SW	R3, 0(SP)
+JAL	_sprintf+0
+NOP	
+ADDIU	SP, SP, 12
+;Main.c,99 :: 		UART2_Write_Text(" | axis_dir[Y]:= ");
+ADDIU	R23, SP, 83
+ADDIU	R22, R23, 18
+LUI	R24, hi_addr(?ICS?lstr12_Main+0)
+ORI	R24, R24, lo_addr(?ICS?lstr12_Main+0)
+JAL	___CC2DW+0
+NOP	
+ADDIU	R2, SP, 83
+MOVZ	R25, R2, R0
+JAL	_UART2_Write_Text+0
+NOP	
+;Main.c,100 :: 		UART2_Write_Text(txt_);
+ADDIU	R2, SP, 0
+MOVZ	R25, R2, R0
+JAL	_UART2_Write_Text+0
+NOP	
+;Main.c,101 :: 		sprintf(txt_,"%d",sys.steps_position[Y]);
+ADDIU	R3, SP, 0
+LW	R2, Offset(_sys+20)(GP)
+ADDIU	SP, SP, -12
+SW	R2, 8(SP)
+LUI	R2, hi_addr(?lstr_13_Main+0)
+ORI	R2, R2, lo_addr(?lstr_13_Main+0)
+SW	R2, 4(SP)
+SW	R3, 0(SP)
+JAL	_sprintf+0
+NOP	
+ADDIU	SP, SP, 12
+;Main.c,102 :: 		UART2_Write_Text(" | absY:= ");
+ADDIU	R23, SP, 101
+ADDIU	R22, R23, 11
+LUI	R24, hi_addr(?ICS?lstr14_Main+0)
+ORI	R24, R24, lo_addr(?ICS?lstr14_Main+0)
+JAL	___CC2DW+0
+NOP	
+ADDIU	R2, SP, 101
+MOVZ	R25, R2, R0
+JAL	_UART2_Write_Text+0
+NOP	
+;Main.c,103 :: 		UART2_Write_Text(txt_);
+ADDIU	R2, SP, 0
+MOVZ	R25, R2, R0
+JAL	_UART2_Write_Text+0
+NOP	
+;Main.c,104 :: 		UART2_Write(0x0D);
 ORI	R25, R0, 13
 JAL	_UART2_Write+0
 NOP	
-;Main.c,88 :: 		Temp_Move(a);
+;Main.c,106 :: 		Temp_Move(a);
 LHU	R25, Offset(Main_a+0)(GP)
 JAL	_Temp_Move+0
 NOP	
-;Main.c,89 :: 		a++;
+;Main.c,107 :: 		a++;
 LHU	R2, Offset(Main_a+0)(GP)
 ADDIU	R2, R2, 1
 SH	R2, Offset(Main_a+0)(GP)
-;Main.c,90 :: 		if(a > 3)a=0;
+;Main.c,108 :: 		if(a > 8)a=0;
 ANDI	R2, R2, 65535
-SLTIU	R2, R2, 4
+SLTIU	R2, R2, 9
 BEQ	R2, R0, L__main64
 NOP	
 J	L_main19
@@ -258,269 +428,269 @@ L__main46:
 L__main45:
 L__main44:
 L__main43:
-;Main.c,93 :: 		}
+;Main.c,111 :: 		}
 L_main15:
-;Main.c,95 :: 		}
+;Main.c,113 :: 		}
 J	L_main0
 NOP	
-;Main.c,96 :: 		}
+;Main.c,114 :: 		}
 L_end_main:
 L__main_end_loop:
 J	L__main_end_loop
 NOP	
 ; end of _main
 _Temp_Move:
-;Main.c,99 :: 		void Temp_Move(int a){
+;Main.c,117 :: 		void Temp_Move(int a){
 ADDIU	SP, SP, -16
 SW	RA, 0(SP)
-;Main.c,101 :: 		switch(a){
+;Main.c,119 :: 		switch(a){
 SW	R25, 4(SP)
 SW	R26, 8(SP)
 SW	R27, 12(SP)
 J	L_Temp_Move20
 NOP	
-;Main.c,102 :: 		case 0:
+;Main.c,120 :: 		case 0:
 L_Temp_Move22:
-;Main.c,103 :: 		STPS[X].mmToTravel = belt_steps(-50.00);//calcSteps(-125.25,8.06);
+;Main.c,121 :: 		STPS[X].mmToTravel = belt_steps(-50.00);//calcSteps(-125.25,8.06);
 LUI	R2, 49736
 ORI	R2, R2, 0
 MTC1	R2, S12
 JAL	_belt_steps+0
 NOP	
 SW	R2, Offset(_STPS+64)(GP)
-;Main.c,104 :: 		speed_cntr_Move(STPS[X].mmToTravel, 2000,X);
-MOVZ	R27, R0, R0
-ORI	R26, R0, 2000
-MOVZ	R25, R2, R0
-JAL	_speed_cntr_Move+0
-NOP	
-;Main.c,105 :: 		SingleAxisStep(STPS[X].mmToTravel,X);
-MOVZ	R26, R0, R0
-LW	R25, Offset(_STPS+64)(GP)
-JAL	_SingleAxisStep+0
-NOP	
-;Main.c,106 :: 		break;
-J	L_Temp_Move21
-NOP	
-;Main.c,107 :: 		case 2:
-L_Temp_Move23:
-;Main.c,108 :: 		STPS[X].mmToTravel = belt_steps(50.00);
-LUI	R2, 16968
-ORI	R2, R2, 0
-MTC1	R2, S12
-JAL	_belt_steps+0
-NOP	
-SW	R2, Offset(_STPS+64)(GP)
-;Main.c,109 :: 		speed_cntr_Move(STPS[X].mmToTravel, 8000,X);
+;Main.c,122 :: 		speed_cntr_Move(STPS[X].mmToTravel, 8000,X);
 MOVZ	R27, R0, R0
 ORI	R26, R0, 8000
 MOVZ	R25, R2, R0
 JAL	_speed_cntr_Move+0
 NOP	
-;Main.c,110 :: 		SingleAxisStep(STPS[X].mmToTravel,X);
+;Main.c,123 :: 		SingleAxisStep(STPS[X].mmToTravel,X);
 MOVZ	R26, R0, R0
 LW	R25, Offset(_STPS+64)(GP)
 JAL	_SingleAxisStep+0
 NOP	
-;Main.c,111 :: 		break;
+;Main.c,124 :: 		break;
 J	L_Temp_Move21
 NOP	
-;Main.c,112 :: 		case 1:
+;Main.c,125 :: 		case 2:
+L_Temp_Move23:
+;Main.c,126 :: 		STPS[X].mmToTravel = belt_steps(50.00);
+LUI	R2, 16968
+ORI	R2, R2, 0
+MTC1	R2, S12
+JAL	_belt_steps+0
+NOP	
+SW	R2, Offset(_STPS+64)(GP)
+;Main.c,127 :: 		speed_cntr_Move(STPS[X].mmToTravel, 8000,X);
+MOVZ	R27, R0, R0
+ORI	R26, R0, 8000
+MOVZ	R25, R2, R0
+JAL	_speed_cntr_Move+0
+NOP	
+;Main.c,128 :: 		SingleAxisStep(STPS[X].mmToTravel,X);
+MOVZ	R26, R0, R0
+LW	R25, Offset(_STPS+64)(GP)
+JAL	_SingleAxisStep+0
+NOP	
+;Main.c,129 :: 		break;
+J	L_Temp_Move21
+NOP	
+;Main.c,130 :: 		case 1:
 L_Temp_Move24:
-;Main.c,113 :: 		STPS[Y].mmToTravel = belt_steps(50.00);
+;Main.c,131 :: 		STPS[Y].mmToTravel = belt_steps(50.00);
 LUI	R2, 16968
 ORI	R2, R2, 0
 MTC1	R2, S12
 JAL	_belt_steps+0
 NOP	
 SW	R2, Offset(_STPS+132)(GP)
-;Main.c,114 :: 		speed_cntr_Move(STPS[Y].mmToTravel, 5000,Y);
+;Main.c,132 :: 		speed_cntr_Move(STPS[Y].mmToTravel, 8000,Y);
 ORI	R27, R0, 1
-ORI	R26, R0, 5000
+ORI	R26, R0, 8000
 MOVZ	R25, R2, R0
 JAL	_speed_cntr_Move+0
 NOP	
-;Main.c,115 :: 		SingleAxisStep(STPS[Y].mmToTravel,Y);
+;Main.c,133 :: 		SingleAxisStep(STPS[Y].mmToTravel,Y);
 ORI	R26, R0, 1
 LW	R25, Offset(_STPS+132)(GP)
 JAL	_SingleAxisStep+0
 NOP	
-;Main.c,116 :: 		break;
+;Main.c,134 :: 		break;
 J	L_Temp_Move21
 NOP	
-;Main.c,117 :: 		case 3:
+;Main.c,135 :: 		case 3:
 L_Temp_Move25:
-;Main.c,118 :: 		STPS[Y].mmToTravel = belt_steps(-50.00);
+;Main.c,136 :: 		STPS[Y].mmToTravel = belt_steps(-50.00);
 LUI	R2, 49736
 ORI	R2, R2, 0
 MTC1	R2, S12
 JAL	_belt_steps+0
 NOP	
 SW	R2, Offset(_STPS+132)(GP)
-;Main.c,119 :: 		speed_cntr_Move(STPS[Y].mmToTravel, 2000,Y);
+;Main.c,137 :: 		speed_cntr_Move(STPS[Y].mmToTravel, 8000,Y);
 ORI	R27, R0, 1
-ORI	R26, R0, 2000
+ORI	R26, R0, 8000
 MOVZ	R25, R2, R0
 JAL	_speed_cntr_Move+0
 NOP	
-;Main.c,120 :: 		SingleAxisStep(STPS[Y].mmToTravel,Y);
+;Main.c,138 :: 		SingleAxisStep(STPS[Y].mmToTravel,Y);
 ORI	R26, R0, 1
 LW	R25, Offset(_STPS+132)(GP)
 JAL	_SingleAxisStep+0
 NOP	
-;Main.c,121 :: 		break;
+;Main.c,139 :: 		break;
 J	L_Temp_Move21
 NOP	
-;Main.c,122 :: 		case 4:
+;Main.c,140 :: 		case 4:
 L_Temp_Move26:
-;Main.c,123 :: 		STPS[X].mmToTravel = belt_steps(-50.00);
+;Main.c,141 :: 		STPS[X].mmToTravel = belt_steps(-50.00);
 LUI	R2, 49736
 ORI	R2, R2, 0
 MTC1	R2, S12
 JAL	_belt_steps+0
 NOP	
 SW	R2, Offset(_STPS+64)(GP)
-;Main.c,125 :: 		STPS[Y].mmToTravel = belt_steps(100.00);
+;Main.c,143 :: 		STPS[Y].mmToTravel = belt_steps(100.00);
 LUI	R2, 17096
 ORI	R2, R2, 0
 MTC1	R2, S12
 JAL	_belt_steps+0
 NOP	
 SW	R2, Offset(_STPS+132)(GP)
-;Main.c,126 :: 		speed_cntr_Move(STPS[Y].mmToTravel, 5000,Y);
+;Main.c,144 :: 		speed_cntr_Move(STPS[Y].mmToTravel, 8000,Y);
 ORI	R27, R0, 1
-ORI	R26, R0, 5000
+ORI	R26, R0, 8000
 MOVZ	R25, R2, R0
 JAL	_speed_cntr_Move+0
 NOP	
-;Main.c,127 :: 		DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
+;Main.c,145 :: 		DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
 MOVZ	R27, R0, R0
 LW	R26, Offset(_STPS+132)(GP)
 LW	R25, Offset(_STPS+64)(GP)
 JAL	_DualAxisStep+0
 NOP	
-;Main.c,128 :: 		break;
+;Main.c,146 :: 		break;
 J	L_Temp_Move21
 NOP	
-;Main.c,129 :: 		case 5:
+;Main.c,147 :: 		case 5:
 L_Temp_Move27:
-;Main.c,130 :: 		STPS[X].mmToTravel = belt_steps(50.00);
+;Main.c,148 :: 		STPS[X].mmToTravel = belt_steps(50.00);
 LUI	R2, 16968
 ORI	R2, R2, 0
 MTC1	R2, S12
 JAL	_belt_steps+0
 NOP	
 SW	R2, Offset(_STPS+64)(GP)
-;Main.c,132 :: 		STPS[Y].mmToTravel = belt_steps(-100.00);
+;Main.c,150 :: 		STPS[Y].mmToTravel = belt_steps(-100.00);
 LUI	R2, 49864
 ORI	R2, R2, 0
 MTC1	R2, S12
 JAL	_belt_steps+0
 NOP	
 SW	R2, Offset(_STPS+132)(GP)
-;Main.c,133 :: 		speed_cntr_Move(STPS[Y].mmToTravel, 5000,Y);
+;Main.c,151 :: 		speed_cntr_Move(STPS[Y].mmToTravel, 8000,Y);
 ORI	R27, R0, 1
-ORI	R26, R0, 5000
+ORI	R26, R0, 8000
 MOVZ	R25, R2, R0
 JAL	_speed_cntr_Move+0
 NOP	
-;Main.c,134 :: 		DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
+;Main.c,152 :: 		DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
 MOVZ	R27, R0, R0
 LW	R26, Offset(_STPS+132)(GP)
 LW	R25, Offset(_STPS+64)(GP)
 JAL	_DualAxisStep+0
 NOP	
-;Main.c,135 :: 		break;
+;Main.c,153 :: 		break;
 J	L_Temp_Move21
 NOP	
-;Main.c,136 :: 		case 6:
+;Main.c,154 :: 		case 6:
 L_Temp_Move28:
-;Main.c,137 :: 		STPS[X].mmToTravel = belt_steps(-150.00);
+;Main.c,155 :: 		STPS[X].mmToTravel = belt_steps(-150.00);
 LUI	R2, 49942
 ORI	R2, R2, 0
 MTC1	R2, S12
 JAL	_belt_steps+0
 NOP	
 SW	R2, Offset(_STPS+64)(GP)
-;Main.c,138 :: 		speed_cntr_Move(STPS[X].mmToTravel, 10000,X);
+;Main.c,156 :: 		speed_cntr_Move(STPS[X].mmToTravel, 8000,X);
 MOVZ	R27, R0, R0
-ORI	R26, R0, 10000
+ORI	R26, R0, 8000
 MOVZ	R25, R2, R0
 JAL	_speed_cntr_Move+0
 NOP	
-;Main.c,139 :: 		STPS[Y].mmToTravel = belt_steps(100.00);
+;Main.c,157 :: 		STPS[Y].mmToTravel = belt_steps(100.00);
 LUI	R2, 17096
 ORI	R2, R2, 0
 MTC1	R2, S12
 JAL	_belt_steps+0
 NOP	
 SW	R2, Offset(_STPS+132)(GP)
-;Main.c,141 :: 		DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
+;Main.c,159 :: 		DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
 MOVZ	R27, R0, R0
 MOVZ	R26, R2, R0
 LW	R25, Offset(_STPS+64)(GP)
 JAL	_DualAxisStep+0
 NOP	
-;Main.c,142 :: 		break;
+;Main.c,160 :: 		break;
 J	L_Temp_Move21
 NOP	
-;Main.c,143 :: 		case 7:
+;Main.c,161 :: 		case 7:
 L_Temp_Move29:
-;Main.c,144 :: 		STPS[X].mmToTravel = belt_steps(150.00);
+;Main.c,162 :: 		STPS[X].mmToTravel = belt_steps(150.00);
 LUI	R2, 17174
 ORI	R2, R2, 0
 MTC1	R2, S12
 JAL	_belt_steps+0
 NOP	
 SW	R2, Offset(_STPS+64)(GP)
-;Main.c,145 :: 		speed_cntr_Move(STPS[X].mmToTravel, 10000,X);
+;Main.c,163 :: 		speed_cntr_Move(STPS[X].mmToTravel, 8000,X);
 MOVZ	R27, R0, R0
-ORI	R26, R0, 10000
+ORI	R26, R0, 8000
 MOVZ	R25, R2, R0
 JAL	_speed_cntr_Move+0
 NOP	
-;Main.c,146 :: 		STPS[Y].mmToTravel = belt_steps(-100.00);
+;Main.c,164 :: 		STPS[Y].mmToTravel = belt_steps(-100.00);
 LUI	R2, 49864
 ORI	R2, R2, 0
 MTC1	R2, S12
 JAL	_belt_steps+0
 NOP	
 SW	R2, Offset(_STPS+132)(GP)
-;Main.c,148 :: 		DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
+;Main.c,166 :: 		DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
 MOVZ	R27, R0, R0
 MOVZ	R26, R2, R0
 LW	R25, Offset(_STPS+64)(GP)
 JAL	_DualAxisStep+0
 NOP	
-;Main.c,149 :: 		break;
+;Main.c,167 :: 		break;
 J	L_Temp_Move21
 NOP	
-;Main.c,150 :: 		case 8:
+;Main.c,168 :: 		case 8:
 L_Temp_Move30:
-;Main.c,151 :: 		STPS[A].mmToTravel = belt_steps(150.00);
+;Main.c,169 :: 		STPS[A].mmToTravel = belt_steps(150.00);
 LUI	R2, 17174
 ORI	R2, R2, 0
 MTC1	R2, S12
 JAL	_belt_steps+0
 NOP	
 SW	R2, Offset(_STPS+268)(GP)
-;Main.c,152 :: 		speed_cntr_Move(STPS[A].mmToTravel, 15000,A);
+;Main.c,170 :: 		speed_cntr_Move(STPS[A].mmToTravel, 15000,A);
 ORI	R27, R0, 3
 ORI	R26, R0, 15000
 MOVZ	R25, R2, R0
 JAL	_speed_cntr_Move+0
 NOP	
-;Main.c,153 :: 		SingleAxisStep(STPS[A].mmToTravel,A);
+;Main.c,171 :: 		SingleAxisStep(STPS[A].mmToTravel,A);
 ORI	R26, R0, 3
 LW	R25, Offset(_STPS+268)(GP)
 JAL	_SingleAxisStep+0
 NOP	
-;Main.c,154 :: 		break;
+;Main.c,172 :: 		break;
 J	L_Temp_Move21
 NOP	
-;Main.c,155 :: 		case 9:
+;Main.c,173 :: 		case 9:
 L_Temp_Move31:
-;Main.c,157 :: 		r_or_ijk(-50.00, 50.00, -150.00, 150.00, 0.00, -50.00, 50.00,1.0, 0.00);
+;Main.c,175 :: 		r_or_ijk(-50.00, 50.00, -150.00, 150.00, 0.00, -50.00, 50.00,1.0, 0.00);
 LUI	R5, 17174
 ORI	R5, R5, 0
 LUI	R4, 49942
@@ -548,16 +718,16 @@ SWC1	S0, 0(SP)
 JAL	_r_or_ijk+0
 NOP	
 ADDIU	SP, SP, 16
-;Main.c,158 :: 		break;
+;Main.c,176 :: 		break;
 J	L_Temp_Move21
 NOP	
-;Main.c,159 :: 		default: a = 0;
+;Main.c,177 :: 		default: a = 0;
 L_Temp_Move32:
 MOVZ	R25, R0, R0
-;Main.c,160 :: 		break;
+;Main.c,178 :: 		break;
 J	L_Temp_Move21
 NOP	
-;Main.c,161 :: 		}
+;Main.c,179 :: 		}
 L_Temp_Move20:
 SEH	R2, R25
 BNE	R2, R0, L__Temp_Move68
@@ -631,7 +801,7 @@ L__Temp_Move86:
 J	L_Temp_Move32
 NOP	
 L_Temp_Move21:
-;Main.c,162 :: 		}
+;Main.c,180 :: 		}
 L_end_Temp_Move:
 LW	R27, 12(SP)
 LW	R26, 8(SP)
@@ -642,10 +812,10 @@ JR	RA
 NOP	
 ; end of _Temp_Move
 _LCD_Display:
-;Main.c,164 :: 		void LCD_Display(){
+;Main.c,182 :: 		void LCD_Display(){
 ADDIU	SP, SP, -20
 SW	RA, 0(SP)
-;Main.c,169 :: 		sprintf(txt,"%d",STPS[0].accel_lim);
+;Main.c,187 :: 		sprintf(txt,"%d",STPS[0].accel_lim);
 SW	R25, 4(SP)
 SW	R26, 8(SP)
 SW	R27, 12(SP)
@@ -653,8 +823,8 @@ SW	R28, 16(SP)
 LW	R2, Offset(_STPS+48)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
-LUI	R2, hi_addr(?lstr_3_Main+0)
-ORI	R2, R2, lo_addr(?lstr_3_Main+0)
+LUI	R2, hi_addr(?lstr_15_Main+0)
+ORI	R2, R2, lo_addr(?lstr_15_Main+0)
 SW	R2, 4(SP)
 LUI	R2, hi_addr(_txt+0)
 ORI	R2, R2, lo_addr(_txt+0)
@@ -662,7 +832,7 @@ SW	R2, 0(SP)
 JAL	_sprintf+0
 NOP	
 ADDIU	SP, SP, 12
-;Main.c,170 :: 		I2C_LCD_Out(LCD_01_ADDRESS,1,1,txt);
+;Main.c,188 :: 		I2C_LCD_Out(LCD_01_ADDRESS,1,1,txt);
 LUI	R28, hi_addr(_txt+0)
 ORI	R28, R28, lo_addr(_txt+0)
 ORI	R27, R0, 1
@@ -670,12 +840,12 @@ ORI	R26, R0, 1
 LBU	R25, Offset(_LCD_01_ADDRESS+0)(GP)
 JAL	_I2C_LCD_Out+0
 NOP	
-;Main.c,172 :: 		sprintf(txt,"%d",STPS[0].decel_start);
+;Main.c,190 :: 		sprintf(txt,"%d",STPS[0].decel_start);
 LW	R2, Offset(_STPS+12)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
-LUI	R2, hi_addr(?lstr_4_Main+0)
-ORI	R2, R2, lo_addr(?lstr_4_Main+0)
+LUI	R2, hi_addr(?lstr_16_Main+0)
+ORI	R2, R2, lo_addr(?lstr_16_Main+0)
 SW	R2, 4(SP)
 LUI	R2, hi_addr(_txt+0)
 ORI	R2, R2, lo_addr(_txt+0)
@@ -683,7 +853,7 @@ SW	R2, 0(SP)
 JAL	_sprintf+0
 NOP	
 ADDIU	SP, SP, 12
-;Main.c,173 :: 		I2C_LCD_Out(LCD_01_ADDRESS,1,11,txt);
+;Main.c,191 :: 		I2C_LCD_Out(LCD_01_ADDRESS,1,11,txt);
 LUI	R28, hi_addr(_txt+0)
 ORI	R28, R28, lo_addr(_txt+0)
 ORI	R27, R0, 11
@@ -691,12 +861,12 @@ ORI	R26, R0, 1
 LBU	R25, Offset(_LCD_01_ADDRESS+0)(GP)
 JAL	_I2C_LCD_Out+0
 NOP	
-;Main.c,177 :: 		sprintf(txt,"%d",STPS[0].step_delay);
+;Main.c,195 :: 		sprintf(txt,"%d",STPS[0].step_delay);
 LW	R2, Offset(_STPS+8)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
-LUI	R2, hi_addr(?lstr_5_Main+0)
-ORI	R2, R2, lo_addr(?lstr_5_Main+0)
+LUI	R2, hi_addr(?lstr_17_Main+0)
+ORI	R2, R2, lo_addr(?lstr_17_Main+0)
 SW	R2, 4(SP)
 LUI	R2, hi_addr(_txt+0)
 ORI	R2, R2, lo_addr(_txt+0)
@@ -704,7 +874,7 @@ SW	R2, 0(SP)
 JAL	_sprintf+0
 NOP	
 ADDIU	SP, SP, 12
-;Main.c,178 :: 		I2C_LCD_Out(LCD_01_ADDRESS,2,1,txt);
+;Main.c,196 :: 		I2C_LCD_Out(LCD_01_ADDRESS,2,1,txt);
 LUI	R28, hi_addr(_txt+0)
 ORI	R28, R28, lo_addr(_txt+0)
 ORI	R27, R0, 1
@@ -712,12 +882,12 @@ ORI	R26, R0, 2
 LBU	R25, Offset(_LCD_01_ADDRESS+0)(GP)
 JAL	_I2C_LCD_Out+0
 NOP	
-;Main.c,180 :: 		sprintf(txt,"%d",STPS[0].min_delay);
+;Main.c,198 :: 		sprintf(txt,"%d",STPS[0].min_delay);
 LW	R2, Offset(_STPS+20)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
-LUI	R2, hi_addr(?lstr_6_Main+0)
-ORI	R2, R2, lo_addr(?lstr_6_Main+0)
+LUI	R2, hi_addr(?lstr_18_Main+0)
+ORI	R2, R2, lo_addr(?lstr_18_Main+0)
 SW	R2, 4(SP)
 LUI	R2, hi_addr(_txt+0)
 ORI	R2, R2, lo_addr(_txt+0)
@@ -725,7 +895,7 @@ SW	R2, 0(SP)
 JAL	_sprintf+0
 NOP	
 ADDIU	SP, SP, 12
-;Main.c,181 :: 		I2C_LCD_Out(LCD_01_ADDRESS,2,11,txt);
+;Main.c,199 :: 		I2C_LCD_Out(LCD_01_ADDRESS,2,11,txt);
 LUI	R28, hi_addr(_txt+0)
 ORI	R28, R28, lo_addr(_txt+0)
 ORI	R27, R0, 11
@@ -733,12 +903,12 @@ ORI	R26, R0, 2
 LBU	R25, Offset(_LCD_01_ADDRESS+0)(GP)
 JAL	_I2C_LCD_Out+0
 NOP	
-;Main.c,185 :: 		sprintf(txt,"%d",STPS[0].max_step_lim);
+;Main.c,203 :: 		sprintf(txt,"%d",STPS[0].max_step_lim);
 LW	R2, Offset(_STPS+52)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
-LUI	R2, hi_addr(?lstr_7_Main+0)
-ORI	R2, R2, lo_addr(?lstr_7_Main+0)
+LUI	R2, hi_addr(?lstr_19_Main+0)
+ORI	R2, R2, lo_addr(?lstr_19_Main+0)
 SW	R2, 4(SP)
 LUI	R2, hi_addr(_txt+0)
 ORI	R2, R2, lo_addr(_txt+0)
@@ -746,7 +916,7 @@ SW	R2, 0(SP)
 JAL	_sprintf+0
 NOP	
 ADDIU	SP, SP, 12
-;Main.c,186 :: 		I2C_LCD_Out(LCD_01_ADDRESS,3,1,txt);
+;Main.c,204 :: 		I2C_LCD_Out(LCD_01_ADDRESS,3,1,txt);
 LUI	R28, hi_addr(_txt+0)
 ORI	R28, R28, lo_addr(_txt+0)
 ORI	R27, R0, 1
@@ -754,12 +924,12 @@ ORI	R26, R0, 3
 LBU	R25, Offset(_LCD_01_ADDRESS+0)(GP)
 JAL	_I2C_LCD_Out+0
 NOP	
-;Main.c,188 :: 		sprintf(txt,"%d",STPS[0].decel_val);
+;Main.c,206 :: 		sprintf(txt,"%d",STPS[0].decel_val);
 LW	R2, Offset(_STPS+16)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
-LUI	R2, hi_addr(?lstr_8_Main+0)
-ORI	R2, R2, lo_addr(?lstr_8_Main+0)
+LUI	R2, hi_addr(?lstr_20_Main+0)
+ORI	R2, R2, lo_addr(?lstr_20_Main+0)
 SW	R2, 4(SP)
 LUI	R2, hi_addr(_txt+0)
 ORI	R2, R2, lo_addr(_txt+0)
@@ -767,7 +937,7 @@ SW	R2, 0(SP)
 JAL	_sprintf+0
 NOP	
 ADDIU	SP, SP, 12
-;Main.c,189 :: 		I2C_LCD_Out(LCD_01_ADDRESS,3,11,txt);
+;Main.c,207 :: 		I2C_LCD_Out(LCD_01_ADDRESS,3,11,txt);
 LUI	R28, hi_addr(_txt+0)
 ORI	R28, R28, lo_addr(_txt+0)
 ORI	R27, R0, 11
@@ -775,7 +945,7 @@ ORI	R26, R0, 3
 LBU	R25, Offset(_LCD_01_ADDRESS+0)(GP)
 JAL	_I2C_LCD_Out+0
 NOP	
-;Main.c,190 :: 		}
+;Main.c,208 :: 		}
 L_end_LCD_Display:
 LW	R28, 16(SP)
 LW	R27, 12(SP)
