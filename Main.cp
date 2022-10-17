@@ -457,23 +457,6 @@ double in2mm(double inch);
 #line 1 "c:/users/git/pic32mzcnc/kinematics.h"
 #line 1 "c:/users/git/pic32mzcnc/gcode.h"
 #line 1 "c:/users/git/pic32mzcnc/globals.h"
-<<<<<<< HEAD
-#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/stdint.h"
-#line 1 "c:/users/git/pic32mzcnc/settings.h"
-#line 50 "c:/users/git/pic32mzcnc/globals.h"
-typedef struct {
- uint8_t abort;
- uint8_t state;
- uint8_t auto_start;
- volatile uint8_t execute;
- long steps_position[ 6 ];
-
- double mm_position[ 6 ];
- double mm_home_position[ 6 ];
-} system_t;
-extern system_t sys;
-=======
->>>>>>> patch2
 #line 31 "c:/users/git/pic32mzcnc/config.h"
 extern unsigned char LCD_01_ADDRESS;
 extern bit oneShotA; sfr;
@@ -591,10 +574,6 @@ int xyz_ = 0;
  Temp_Move(a);
  a++;
  if(a > 8)a=0;
-<<<<<<< HEAD
-=======
-
->>>>>>> patch2
  }
  }
 
@@ -622,13 +601,8 @@ void Temp_Move(int a){
  break;
  case 3:
  STPS[Y].mmToTravel = belt_steps(-50.00);
-<<<<<<< HEAD
- speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
- DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
-=======
  speed_cntr_Move(STPS[Y].mmToTravel, 8000,Y);
  SingleAxisStep(STPS[Y].mmToTravel,Y);
->>>>>>> patch2
  break;
  case 4:
  STPS[X].mmToTravel = belt_steps(-50.00);

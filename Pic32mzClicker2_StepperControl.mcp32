@@ -13,7 +13,7 @@ Value=0
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-Value=GCODE.h
+Value=Stepper.c
 =======
 Value=Main.c
 >>>>>>> patch2
@@ -63,27 +63,14 @@ Count=0
 ActiveImageIndex=-1
 [OPENED_FILES]
 File0=Stepper.c
-File1=Stepper.h
-File2=Kinematics.h
-File3=Kinematics.c
-File4=Main.c
-File5=Steptodistance.c
-File6=Steptodistance.h
-<<<<<<< HEAD
-File7=Settings.h
-File8=GCODE.c
-File9=GCODE.h
-File10=Config.c
-File11=Config.h
-File12=Globals.c
-File13=Globals.h
-Count=14
-=======
-File7=Globals.c
-File8=Globals.h
-File9=Settings.h
-Count=10
->>>>>>> patch2
+File1=Main.c
+File2=GCODE.c
+File3=GCODE.h
+File4=Config.c
+File5=Config.h
+File6=Globals.c
+File7=Globals.h
+Count=8
 [EEPROM]
 Count=0
 [ACTIVE_COMMENTS_FILES]

@@ -488,12 +488,8 @@ static long d2;
 #line 21 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 void SingleAxisStep(long newxyz,int axis_No){
 int dir;
-<<<<<<< HEAD
-#line 27 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
-=======
 char txt_[9];
-#line 29 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
->>>>>>> patch2
+#line 28 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
  SV.Single_Dual = 0;
  sys.axis_dir[axis_No] = GetAxisDirection(newxyz);
 
@@ -553,10 +549,7 @@ void DualAxisStep(long axis_a,long axis_b,int axis_combo){
  SV.py = 0;
  SV.pz = 0;
  SV.d2 = 0;
-<<<<<<< HEAD
-#line 88 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
-=======
-#line 91 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 90 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
  if(axis_combo == xy){
  sys.axis_dir[X] = GetAxisDirection(axis_a);
  sys.axis_dir[Y] = GetAxisDirection(axis_b);
@@ -567,7 +560,6 @@ void DualAxisStep(long axis_a,long axis_b,int axis_combo){
  sys.axis_dir[Y] = GetAxisDirection(axis_a);
  sys.axis_dir[Z] = GetAxisDirection(axis_b);
  }
->>>>>>> patch2
  SV.Single_Dual = 1;
 
  switch(axis_combo){
@@ -679,11 +671,7 @@ void DualAxisStep(long axis_a,long axis_b,int axis_combo){
 
  }
 }
-<<<<<<< HEAD
-#line 216 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
-=======
-#line 230 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
->>>>>>> patch2
+#line 229 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 void r_or_ijk(double Cur_axis_a,double Cur_axis_b,double Fin_axis_a,double Fin_axis_b,double r, double i, double j, double k, int axis_xyz){
 unsigned short isclockwise = 0;
 double inverse_feed_rate = -1;
@@ -714,11 +702,7 @@ char txt_[9];
  }
 
  if (r != 0.00) {
-<<<<<<< HEAD
-#line 309 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
-=======
-#line 323 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
->>>>>>> patch2
+#line 322 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
  x = target[axis_plane_a] - position[axis_plane_a];
 
  y = target[axis_plane_b] - position[axis_plane_b];
@@ -731,11 +715,7 @@ char txt_[9];
  h_x2_div_d = -sqrt(h_x2_div_d)/hypot(x,y);
 
  if (gc.motion_mode ==  3 ) { h_x2_div_d = -h_x2_div_d; }
-<<<<<<< HEAD
-#line 343 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
-=======
-#line 357 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
->>>>>>> patch2
+#line 356 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
  if (r < 0) {
  h_x2_div_d = -h_x2_div_d;
  r = -r;
@@ -822,11 +802,7 @@ void mc_arc(double *position, double *target, double *offset, uint8_t axis_0, ui
 
 
  linear_per_segment = linear_travel/segments;
-<<<<<<< HEAD
-#line 454 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
-=======
-#line 469 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
->>>>>>> patch2
+#line 468 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
  cos_T = 1-0.5*theta_per_segment*theta_per_segment;
  sin_T = theta_per_segment;
 
@@ -861,11 +837,7 @@ void mc_arc(double *position, double *target, double *offset, uint8_t axis_0, ui
  if(!OC5IE_bit && !OC2IE_bit)
  break;
  }
-<<<<<<< HEAD
-#line 494 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
-=======
-#line 509 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
->>>>>>> patch2
+#line 508 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
  STPS[X].mmToTravel = belt_steps(nPx);
  STPS[Y].mmToTravel = belt_steps(nPy);
  tempA = abs(STPS[X].mmToTravel);
@@ -901,13 +873,7 @@ int str_lenA = 0;
  str_len += strlen(txt);
  strncat(txtB,txtA,str_lenA);
  str_len += str_lenA;
-<<<<<<< HEAD
-#line 585 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 599 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
  UART2_Write_Text(txtB);
-#line 594 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
-=======
-#line 600 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
- UART2_Write_Text(txtB);
-#line 609 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
->>>>>>> patch2
+#line 608 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
 }

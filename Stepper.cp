@@ -314,23 +314,6 @@ void SerialPrint(float r);
 void r_or_ijk(double xCur,double yCur,double xFin,double yFin,double r, double i, double j, double k,int axis_xyz);
 #line 1 "c:/users/git/pic32mzcnc/gcode.h"
 #line 1 "c:/users/git/pic32mzcnc/globals.h"
-<<<<<<< HEAD
-#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/stdint.h"
-#line 1 "c:/users/git/pic32mzcnc/settings.h"
-#line 50 "c:/users/git/pic32mzcnc/globals.h"
-typedef struct {
- uint8_t abort;
- uint8_t state;
- uint8_t auto_start;
- volatile uint8_t execute;
- long steps_position[ 6 ];
-
- double mm_position[ 6 ];
- double mm_home_position[ 6 ];
-} system_t;
-extern system_t sys;
-=======
->>>>>>> patch2
 #line 31 "c:/users/git/pic32mzcnc/config.h"
 extern unsigned char LCD_01_ADDRESS;
 extern bit oneShotA; sfr;
@@ -1090,11 +1073,7 @@ void YZ_Interpolate(){
  }
 
 }
-<<<<<<< HEAD
-#line 640 "C:/Users/Git/Pic32mzCNC/Stepper.c"
-=======
-#line 658 "C:/Users/Git/Pic32mzCNC/Stepper.c"
->>>>>>> patch2
+#line 657 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 unsigned int min_(unsigned int x, unsigned int y){
  if(x < y){
  return x;
@@ -1103,11 +1082,7 @@ unsigned int min_(unsigned int x, unsigned int y){
  return y;
  }
 }
-<<<<<<< HEAD
-#line 657 "C:/Users/Git/Pic32mzCNC/Stepper.c"
-=======
-#line 675 "C:/Users/Git/Pic32mzCNC/Stepper.c"
->>>>>>> patch2
+#line 674 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 static unsigned long sqrt_(unsigned long x){
 
  register unsigned long xr;
@@ -1138,11 +1113,7 @@ static unsigned long sqrt_(unsigned long x){
  return xr;
  }
 }
-<<<<<<< HEAD
-#line 711 "C:/Users/Git/Pic32mzCNC/Stepper.c"
-=======
-#line 729 "C:/Users/Git/Pic32mzCNC/Stepper.c"
->>>>>>> patch2
+#line 728 "C:/Users/Git/Pic32mzCNC/Stepper.c"
 void CycleStop(){
 int ii;
  STmr.uSec = 0;

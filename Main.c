@@ -106,10 +106,6 @@ int xyz_ = 0;
                Temp_Move(a);
                a++;
                if(a > 8)a=0;
-<<<<<<< HEAD
-=======
-
->>>>>>> patch2
            }
          }
             
@@ -137,13 +133,8 @@ void Temp_Move(int a){
               break;
        case 3:
                  STPS[Y].mmToTravel = belt_steps(-50.00);
-<<<<<<< HEAD
-                 speed_cntr_Move(STPS[Y].mmToTravel, 25000,Y);
-                 DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
-=======
                  speed_cntr_Move(STPS[Y].mmToTravel, 8000,Y);
                  SingleAxisStep(STPS[Y].mmToTravel,Y);
->>>>>>> patch2
               break;
        case 4:
                  STPS[X].mmToTravel = belt_steps(-50.00);

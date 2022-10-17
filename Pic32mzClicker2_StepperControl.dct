@@ -39111,10 +39111,6 @@ min103
 min103_alrmtime_bit
 min103_bit
 mm_home_position
-<<<<<<< HEAD
-mm_per_arc_segment
-=======
->>>>>>> patch2
 mm_position
 mm2in
 mode
@@ -60966,10 +60962,6 @@ step27
 step27_bit
 stepa
 stepperconstants
-<<<<<<< HEAD
-steps_per_mm
-=======
->>>>>>> patch2
 steps_position
 stepx
 stepy
