@@ -489,127 +489,145 @@ short dma1int_flag;
 
 
 void DMA_global(){
- DMACON = 1<<16;
- DCH0CON = 0x03;
-
+ DMACON = 1<<15;
  DMA0();
  DMA1();
 }
-
-
+#line 32 "C:/Users/Git/Pic32mzCNC/Serial_Dma.c"
 void DMA0(){
- DMACONbits.ON = 1;
- DCH0CONbits.CHAEN = 1;
- DCH0CONbits.CHPATLEN = 0;
- DMA0IE_bit = 0;
- DMA0IF_bit = 0;
 
- DCH0ECON =(146 << 8 ) | 0x30;
- DCH0DAT = 0x0D;
+ IEC4CLR = 1 << 6;
 
- DCH0SSA = KVA_TO_PA(0xBF822230);
- DCH0DSA = KVA_TO_PA(0xA0002000);
-
- DCH0SSIZ = 200 ;
- DCH0DSIZ = 200 ;
- DCH0CSIZ = 200 ;
 
  DCH0INTCLR = 0x00FF00FF ;
- CHBCIE_bit = 1 ;
- CHERIE_bit = 1 ;
+
+
+ DCH0ECON =(146 << 8 ) | 0x30;
 
 
 
- IPC33CLR = 0x0000001F ;
- DMA0IP2_bit = 1 ;
- DMA0IP1_bit = 0 ;
- DMA0IP0_bit = 1 ;
- DMA0IS1_bit = 1 ;
- DMA0IS0_bit = 1 ;
+ DCH0DAT = '\n';
 
- DMA0IE_bit = 1 ;
- CHEN_bit = 1 ;
 
+ DCH0SSA = KVA_TO_PA(0xBF822230);
+ DCH0SSIZ = 1;
+
+
+ DCH0DSA = KVA_TO_PA(0xA0002000);
+ DCH0DSIZ = 200 ;
+
+
+ DCH0CSIZ = 1 ;
+
+
+ IPC33CLR = 0x17 << 16 ;
+ IPC33SET = (0x17 << 16);
+ IEC4SET = 1 << 6;
+ IFS4CLR = 1 << 6;
+
+
+ DCH0INTSET = 0x9 << 16;
+
+
+ DCH0CONSET = 0X093;
 }
-
-
+#line 82 "C:/Users/Git/Pic32mzCNC/Serial_Dma.c"
 void DMA1(){
 
- DMA1IE_bit = 0 ;
- DMA1IF_bit = 0 ;
- DCH1CONbits.CHPATLEN = 0;
- DCH1ECON=(147 << 8)| 0x30;
- DCH1SSA = KVA_TO_PA(0xA0002200) ;
- DCH1DSA = KVA_TO_PA(0xBF822220) ;
- DCH1DAT = 0x00;
 
+ IPC33CLR = 0x16 << 24;
+ IEC4CLR = 1 << 7;
+ IFS4CLR = 1 << 7;
+
+
+ DCH1INTCLR = 0x00FF00FF ;
+
+
+ DCH1ECON=(147 << 8)| 0x30;
+
+
+
+
+ DCH1DAT = '\n';
+
+
+ DCH1SSA = KVA_TO_PA(0xA0002200) ;
  DCH1SSIZ = 200;
 
+
+
+ DCH1DSA = KVA_TO_PA(0xBF822220) ;
  DCH1DSIZ = 1;
+
 
  DCH1CSIZ = 1;
 
- DCH1INTCLR = 0x00FF00FF ;
- SIRQEN_DCH1ECON_bit = 1;
- CHBCIE_DCH1INT_bit = 1 ;
- CHERIE_DCH1INT_bit = 1 ;
 
- DMA1IP2_bit = 1 ;
- DMA1IP1_bit = 0 ;
- DMA1IP0_bit = 1 ;
- DMA1IS1_bit = 0 ;
- DMA1IS0_bit = 1 ;
- DMA1IE_bit = 0 ;
+
+ IPC33SET = (0x16 << 24);
+ IEC4SET = 1 << 7;
+ IFS4CLR = 1 << 7;
+
+
+ DCH1INTSET = 0x9 << 16;
+
+
+ DCH1CONSET = 0x083;
+
 }
 
 
 
 
 void DMA_CH0_ISR() iv IVT_DMA0 ilevel 5 ics ICS_AUTO {
- char A[6];
  int i,ptr;
- if (CHBCIF_bit == 1) {
  i = 0;
 
 
+
+ if (DCH0INTbits.CHBCIF == 1) {
+ dma1int_flag = 0;
+ dma0int_flag = 1;
+
+
+ DCH1CONbits.CHEN = 1;
  i = strlen(rxBuf);
  dma0int_flag = 1;
  memcpy(txBuf, rxBuf, i);
- CHEN_DCH1CON_bit = 1;
- }
  DCH1SSIZ = i ;
+
+ DCH1ECONbits.CFORCE = 1 ;
+ }
 
 
  if( CHERIF_bit == 1){
- CHERIF_bit = 0;
- memcpy(txBuf,"CHERIF Error",13);
+
+
+ memcpy(txBuf,"CHERIF Error\r",15);
+ DCH1SSIZ = 13;
+ DCH1ECONbits.CFORCE = 1 ;
  }
  DCH0INTCLR = 0x00FF;
-
- DMA1IE_bit = 1 ;
- CHEN_bit = 1 ;
-
- CFORCE_DCH1ECON_bit = 1 ;
- DMA0IF_bit = 0 ;
-
 }
 
 
-void DMA_CH1_ISR() iv IVT_DMA1 ilevel 5 ics ICS_AUTO {
-int ptr = 0;
-char ptrAdd[6];
 
- if (CHBCIF_DCH1INT_bit == 1){
- CHBCIF_DCH1INT_bit = 0;
+void DMA_CH1_ISR() iv IVT_DMA1 ilevel 5 ics ICS_AUTO {
+
+
+ if (DCH1INTbits.CHBCIF){
+ dma1int_flag = 1;
+ dma0int_flag = 0;
+
+
  }
 
  if( CHERIF_DCH1INT_bit == 1){
- CHERIF_DCH1INT_bit = 0;
+
 
  }
 
- dma1int_flag = 1;
  DCH1INTCLR = 0x00FF;
- DMA1IF_bit = 0 ;
+
 
 }

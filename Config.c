@@ -66,8 +66,8 @@ void PinMode(){
     set_performance_mode();
 
 //////////////////////////////////////////////////
-//configure the interrupts
-  //  Uart2InterruptSetup();
+//configure UART the interrupts
+    //Uart2InterruptSetup();
 
 //////////////////////////////////////////////////
 //TMR8 config
@@ -98,15 +98,22 @@ void UartConfig(){
 ////////////////////////////////////////////////
 //Uart 2 interrupt setup
 void Uart2InterruptSetup(){
-    URXISEL0_bit = 0;
-    URXISEL1_bit = 1;
-    IEC4.B18 = 1;              // Enable UART2 RX interrupt
+    URXISEL0_bit = 0;          // IRQ after 3/4 full of 8 bytes
+    URXISEL1_bit = 0;
+    
+    //UTXISEL0_bit = 0;          // IRQ after 3/4 full of 8 bytes
+    //UTXISEL1_bit = 1;
+    
+
 
     U2RXIP0_bit = 1;           //
-    U2RXIP1_bit = 1;           //
+    U2RXIP1_bit = 0;           //
     U2RXIP2_bit = 1;           // Set priority
-
-    URXISEL1_U2STA_bit = 0;
+    U2RXIS0_bit = 1;
+    U2RXIS1_bit = 1;
+    //U2STA = 0x80;
+    
+    IEC4.B18 = 1;              // Enable UART2 RX interrupt
     U2RXIF_bit = 0;            // Ensure interrupt is not pending
 }
 

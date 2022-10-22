@@ -573,14 +573,21 @@ void UartConfig(){
 
 void Uart2InterruptSetup(){
  URXISEL0_bit = 0;
- URXISEL1_bit = 1;
- IEC4.B18 = 1;
+ URXISEL1_bit = 0;
+
+
+
+
+
 
  U2RXIP0_bit = 1;
- U2RXIP1_bit = 1;
+ U2RXIP1_bit = 0;
  U2RXIP2_bit = 1;
+ U2RXIS0_bit = 1;
+ U2RXIS1_bit = 1;
 
- URXISEL1_U2STA_bit = 0;
+
+ IEC4.B18 = 1;
  U2RXIF_bit = 0;
 }
 
@@ -654,7 +661,7 @@ unsigned long cp0;
 
 
 void OutPutPulseXYZ(){
-#line 188 "C:/Users/Git/Pic32mzCNC/Config.c"
+#line 195 "C:/Users/Git/Pic32mzCNC/Config.c"
  OC5CON = 0x0000;
  OC2CON = 0x0000;
  OC7CON = 0X0000;
@@ -692,7 +699,7 @@ void OutPutPulseXYZ(){
  OC3CON = 0x000C;
  OC6CON = 0x000C;
  OC8CON = 0x000C;
-#line 232 "C:/Users/Git/Pic32mzCNC/Config.c"
+#line 239 "C:/Users/Git/Pic32mzCNC/Config.c"
  OC5R = 0x5;
  OC5RS = 0x234;
  OC2R = 0x5;
