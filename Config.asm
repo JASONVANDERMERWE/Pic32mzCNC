@@ -82,91 +82,97 @@ _SX
 LUI	R2, BitMask(TRISG8_bit+0)
 ORI	R2, R2, BitMask(TRISG8_bit+0)
 _SX	
-;Config.c,47 :: 		Unlock_IOLOCK();
+;Config.c,46 :: 		set_performance_mode();
+JAL	_set_performance_mode+0
+NOP	
+;Config.c,50 :: 		Unlock_IOLOCK();
 JAL	_Unlock_IOLOCK+0
 NOP	
-;Config.c,48 :: 		PPS_Mapping_NoLock(_RPE8, _OUTPUT, _U2TX);    // Sets pin PORTE.B8 to be Output and maps UART1 Transmit to it
+;Config.c,51 :: 		PPS_Mapping_NoLock(_RPE8, _OUTPUT, _U2TX);    // Sets pin PORTE.B8 to be Output and maps UART2 Transmit
 ORI	R27, R0, 2
 MOVZ	R26, R0, R0
 ORI	R25, R0, 61
 JAL	_PPS_Mapping_NoLock+0
 NOP	
-;Config.c,49 :: 		PPS_Mapping_NoLock(_RPE9, _INPUT,  _U2RX);    // Sets pin PORTE.B9 to be Input and maps UART1 Receive to it
+;Config.c,52 :: 		PPS_Mapping_NoLock(_RPE9, _INPUT,  _U2RX);    // Sets pin PORTE.B9 to be Input and maps UART2 Receive
 ORI	R27, R0, 32
 ORI	R26, R0, 1
 ORI	R25, R0, 45
 JAL	_PPS_Mapping_NoLock+0
 NOP	
-;Config.c,50 :: 		PPS_Mapping_NoLock(_RPB9, _OUTPUT, _NULL);
+;Config.c,53 :: 		PPS_Mapping_NoLock(_RPB9, _OUTPUT, _NULL);
 MOVZ	R27, R0, R0
 MOVZ	R26, R0, R0
 ORI	R25, R0, 5
 JAL	_PPS_Mapping_NoLock+0
 NOP	
-;Config.c,51 :: 		PPS_Mapping_NoLock(_RPB10, _OUTPUT, _NULL);
+;Config.c,54 :: 		PPS_Mapping_NoLock(_RPB10, _OUTPUT, _NULL);
 MOVZ	R27, R0, R0
 MOVZ	R26, R0, R0
 ORI	R25, R0, 6
 JAL	_PPS_Mapping_NoLock+0
 NOP	
-;Config.c,52 :: 		PPS_Mapping_NoLock(_RPD4, _OUTPUT, _OC5);     //X_Axis TMR2
+;Config.c,55 :: 		PPS_Mapping_NoLock(_RPD4, _OUTPUT, _OC5);     //X_Axis TMR2
 ORI	R27, R0, 11
 MOVZ	R26, R0, R0
 ORI	R25, R0, 36
 JAL	_PPS_Mapping_NoLock+0
 NOP	
-;Config.c,53 :: 		PPS_Mapping_NoLock(_RPD5, _OUTPUT, _OC2);     //Y_Axis TMR4
+;Config.c,56 :: 		PPS_Mapping_NoLock(_RPD5, _OUTPUT, _OC2);     //Y_Axis TMR4
 ORI	R27, R0, 11
 MOVZ	R26, R0, R0
 ORI	R25, R0, 54
 JAL	_PPS_Mapping_NoLock+0
 NOP	
-;Config.c,54 :: 		PPS_Mapping_NoLock(_RPF0, _OUTPUT, _OC7);     //Z_Axis TMR6
+;Config.c,57 :: 		PPS_Mapping_NoLock(_RPF0, _OUTPUT, _OC7);     //Z_Axis TMR6
 ORI	R27, R0, 12
 MOVZ	R26, R0, R0
 ORI	R25, R0, 20
 JAL	_PPS_Mapping_NoLock+0
 NOP	
-;Config.c,55 :: 		PPS_Mapping_NoLock(_RPF1, _OUTPUT, _OC3);     //A_Axis TMR5
+;Config.c,58 :: 		PPS_Mapping_NoLock(_RPF1, _OUTPUT, _OC3);     //A_Axis TMR5
 ORI	R27, R0, 11
 MOVZ	R26, R0, R0
 ORI	R25, R0, 4
 JAL	_PPS_Mapping_NoLock+0
 NOP	
-;Config.c,56 :: 		PPS_Mapping_NoLock(_RPG1, _OUTPUT, _OC6);     //B_Axis TMR3
+;Config.c,59 :: 		PPS_Mapping_NoLock(_RPG1, _OUTPUT, _OC6);     //B_Axis TMR3
 ORI	R27, R0, 12
 MOVZ	R26, R0, R0
 ORI	R25, R0, 12
 JAL	_PPS_Mapping_NoLock+0
 NOP	
-;Config.c,57 :: 		PPS_Mapping_NoLock(_RPE3, _OUTPUT, _OC8);     //C_Axis TMR7
+;Config.c,60 :: 		PPS_Mapping_NoLock(_RPE3, _OUTPUT, _OC8);     //C_Axis TMR7
 ORI	R27, R0, 12
 MOVZ	R26, R0, R0
 ORI	R25, R0, 38
 JAL	_PPS_Mapping_NoLock+0
 NOP	
-;Config.c,58 :: 		Lock_IOLOCK();
+;Config.c,61 :: 		Lock_IOLOCK();
 JAL	_Lock_IOLOCK+0
 NOP	
-;Config.c,62 :: 		UartConfig();
-JAL	_UartConfig+0
-NOP	
-;Config.c,66 :: 		set_performance_mode();
-JAL	_set_performance_mode+0
-NOP	
-;Config.c,74 :: 		InitTimer1();
+;Config.c,65 :: 		InitTimer1();
 JAL	_InitTimer1+0
 NOP	
-;Config.c,82 :: 		DMA_global();
+;Config.c,70 :: 		UartConfig();
+JAL	_UartConfig+0
+NOP	
+;Config.c,74 :: 		Uart2InterruptSetup();
+JAL	_Uart2InterruptSetup+0
+NOP	
+;Config.c,78 :: 		DMA_global();
 JAL	_DMA_global+0
 NOP	
-;Config.c,86 :: 		OutPutPulseXYZ();
+;Config.c,79 :: 		DMA0_Enable();
+JAL	_DMA0_Enable+0
+NOP	
+;Config.c,82 :: 		OutPutPulseXYZ();
 JAL	_OutPutPulseXYZ+0
 NOP	
-;Config.c,87 :: 		SetPinMode();
+;Config.c,83 :: 		SetPinMode();
 JAL	_SetPinMode+0
 NOP	
-;Config.c,88 :: 		}
+;Config.c,89 :: 		}
 L_end_PinMode:
 LW	R27, 12(SP)
 LW	R26, 8(SP)
@@ -177,17 +183,18 @@ JR	RA
 NOP	
 ; end of _PinMode
 _UartConfig:
-;Config.c,90 :: 		void UartConfig(){
+;Config.c,91 :: 		void UartConfig(){
 ADDIU	SP, SP, -20
 SW	RA, 0(SP)
-;Config.c,93 :: 		UART2_Init_Advanced(256000, 50000/*PBClk x 2*/, _UART_LOW_SPEED, _UART_8BIT_NOPARITY, _UART_ONE_STOPBIT);
+;Config.c,94 :: 		UART2_Init_Advanced(256000, 200000/*PBClk x 2*/, _UART_LOW_SPEED, _UART_8BIT_NOPARITY, _UART_ONE_STOPBIT);
 SW	R25, 4(SP)
 SW	R26, 8(SP)
 SW	R27, 12(SP)
 SW	R28, 16(SP)
 MOVZ	R28, R0, R0
 ORI	R27, R0, 1
-ORI	R26, R0, 50000
+LUI	R26, 3
+ORI	R26, R26, 3392
 LUI	R25, 3
 ORI	R25, R25, 59392
 ADDIU	SP, SP, -4
@@ -195,7 +202,7 @@ SB	R0, 0(SP)
 JAL	_UART2_Init_Advanced+0
 NOP	
 ADDIU	SP, SP, 4
-;Config.c,94 :: 		UART_Set_Active(&UART2_Read, &UART2_Write, &UART2_Data_Ready, &UART2_Tx_Idle); // set UART2 active
+;Config.c,95 :: 		UART_Set_Active(&UART2_Read, &UART2_Write, &UART2_Data_Ready, &UART2_Tx_Idle); // set UART2 active
 LUI	R28, hi_addr(_UART2_Tx_Idle+0)
 ORI	R28, R28, lo_addr(_UART2_Tx_Idle+0)
 LUI	R27, hi_addr(_UART2_Data_Ready+0)
@@ -206,14 +213,14 @@ LUI	R25, hi_addr(_UART2_Read+0)
 ORI	R25, R25, lo_addr(_UART2_Read+0)
 JAL	_UART_Set_Active+0
 NOP	
-;Config.c,95 :: 		Delay_ms(100);                  // Wait for UART module to stabilize
+;Config.c,96 :: 		Delay_ms(100);                  // Wait for UART module to stabilize
 LUI	R24, 101
 ORI	R24, R24, 47530
 L_UartConfig2:
 ADDIU	R24, R24, -1
 BNE	R24, R0, L_UartConfig2
 NOP	
-;Config.c,96 :: 		}
+;Config.c,97 :: 		}
 L_end_UartConfig:
 LW	R28, 16(SP)
 LW	R27, 12(SP)
@@ -225,42 +232,26 @@ JR	RA
 NOP	
 ; end of _UartConfig
 _Uart2InterruptSetup:
-;Config.c,100 :: 		void Uart2InterruptSetup(){
-;Config.c,101 :: 		URXISEL0_bit = 0;          // IRQ after 3/4 full of 8 bytes
+;Config.c,106 :: 		void Uart2InterruptSetup(){
+;Config.c,108 :: 		URXISEL0_bit = 0;
 LUI	R2, BitMask(URXISEL0_bit+0)
 ORI	R2, R2, BitMask(URXISEL0_bit+0)
 _SX	
-;Config.c,102 :: 		URXISEL1_bit = 0;
+;Config.c,109 :: 		URXISEL1_bit = 0;
 LUI	R2, BitMask(URXISEL1_bit+0)
 ORI	R2, R2, BitMask(URXISEL1_bit+0)
 _SX	
-;Config.c,109 :: 		U2RXIP0_bit = 1;           //
-LUI	R2, BitMask(U2RXIP0_bit+0)
-ORI	R2, R2, BitMask(U2RXIP0_bit+0)
+;Config.c,112 :: 		UTXISEL0_bit = 0;
+LUI	R2, BitMask(UTXISEL0_bit+0)
+ORI	R2, R2, BitMask(UTXISEL0_bit+0)
 _SX	
-;Config.c,110 :: 		U2RXIP1_bit = 0;           //
-LUI	R2, BitMask(U2RXIP1_bit+0)
-ORI	R2, R2, BitMask(U2RXIP1_bit+0)
+;Config.c,113 :: 		UTXISEL1_bit = 0;
+LUI	R2, BitMask(UTXISEL1_bit+0)
+ORI	R2, R2, BitMask(UTXISEL1_bit+0)
 _SX	
-;Config.c,111 :: 		U2RXIP2_bit = 1;           // Set priority
-LUI	R2, BitMask(U2RXIP2_bit+0)
-ORI	R2, R2, BitMask(U2RXIP2_bit+0)
-_SX	
-;Config.c,112 :: 		U2RXIS0_bit = 1;
-LUI	R2, BitMask(U2RXIS0_bit+0)
-ORI	R2, R2, BitMask(U2RXIS0_bit+0)
-_SX	
-;Config.c,113 :: 		U2RXIS1_bit = 1;
-LUI	R2, BitMask(U2RXIS1_bit+0)
-ORI	R2, R2, BitMask(U2RXIS1_bit+0)
-_SX	
-;Config.c,116 :: 		IEC4.B18 = 1;              // Enable UART2 RX interrupt
-LUI	R2, 4
-SW	R2, Offset(IEC4+8)(GP)
-;Config.c,117 :: 		U2RXIF_bit = 0;            // Ensure interrupt is not pending
-LUI	R2, BitMask(U2RXIF_bit+0)
-ORI	R2, R2, BitMask(U2RXIF_bit+0)
-_SX	
+;Config.c,116 :: 		IEC4CLR      = 0xc000;
+ORI	R2, R0, 49152
+SW	R2, Offset(IEC4CLR+0)(GP)
 ;Config.c,118 :: 		}
 L_end_Uart2InterruptSetup:
 JR	RA

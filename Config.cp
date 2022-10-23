@@ -168,7 +168,7 @@ typedef unsigned long long uintmax_t;
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
 #line 1 "c:/users/git/pic32mzcnc/serial_dma.h"
 #line 1 "c:/users/git/pic32mzcnc/config.h"
-#line 7 "c:/users/git/pic32mzcnc/serial_dma.h"
+#line 11 "c:/users/git/pic32mzcnc/serial_dma.h"
 extern char txt[];
 extern char rxBuf[];
 extern char txBuf[];
@@ -182,6 +182,10 @@ extern char txBuf[];
 void DMA_global();
 void DMA0();
 void DMA1();
+void DMA0_Enable();
+void DMA0_Disable();
+void DMA1_Enable();
+void DMA1_Disable();
 #line 1 "c:/users/git/pic32mzcnc/gcode.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/stdint.h"
 #line 1 "c:/users/git/pic32mzcnc/config.h"
@@ -517,6 +521,9 @@ void PinMode(){
  TRISG8_bit = 1;
 
 
+ set_performance_mode();
+
+
 
  Unlock_IOLOCK();
  PPS_Mapping_NoLock(_RPE8, _OUTPUT, _U2TX);
@@ -533,62 +540,59 @@ void PinMode(){
 
 
 
- UartConfig();
-
-
-
- set_performance_mode();
-
-
-
-
-
-
-
  InitTimer1();
 
 
 
 
+ UartConfig();
+
+
+
+ Uart2InterruptSetup();
 
 
 
  DMA_global();
-
+ DMA0_Enable();
 
 
  OutPutPulseXYZ();
  SetPinMode();
+
+
+
+
+
 }
 
 void UartConfig(){
 
 
- UART2_Init_Advanced(256000, 50000 , _UART_LOW_SPEED, _UART_8BIT_NOPARITY, _UART_ONE_STOPBIT);
+ UART2_Init_Advanced(256000, 200000 , _UART_LOW_SPEED, _UART_8BIT_NOPARITY, _UART_ONE_STOPBIT);
  UART_Set_Active(&UART2_Read, &UART2_Write, &UART2_Data_Ready, &UART2_Tx_Idle);
  Delay_ms(100);
 }
 
 
 
+
+
+
+
+
 void Uart2InterruptSetup(){
+
  URXISEL0_bit = 0;
  URXISEL1_bit = 0;
 
 
+ UTXISEL0_bit = 0;
+ UTXISEL1_bit = 0;
 
 
+ IEC4CLR = 0xc000;
 
-
- U2RXIP0_bit = 1;
- U2RXIP1_bit = 0;
- U2RXIP2_bit = 1;
- U2RXIS0_bit = 1;
- U2RXIS1_bit = 1;
-
-
- IEC4.B18 = 1;
- U2RXIF_bit = 0;
 }
 
 void set_performance_mode(){

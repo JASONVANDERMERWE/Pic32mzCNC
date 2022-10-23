@@ -461,7 +461,7 @@ void LcdI2CConfig();
 void OutPutPulseXYZ();
 void Temp_Move(int a);
 void LCD_Display();
-#line 7 "c:/users/git/pic32mzcnc/serial_dma.h"
+#line 11 "c:/users/git/pic32mzcnc/serial_dma.h"
 extern char txt[];
 extern char rxBuf[];
 extern char txBuf[];
@@ -475,38 +475,45 @@ extern char txBuf[];
 void DMA_global();
 void DMA0();
 void DMA1();
-#line 4 "C:/Users/Git/Pic32mzCNC/Serial_Dma.c"
-char txt[] = "Start......";
-char rxBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} absolute 0xA0002000 ;
-char txBuf[] ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} absolute 0xA0002200 ;
+void DMA0_Enable();
+void DMA0_Disable();
+void DMA1_Enable();
+void DMA1_Disable();
+#line 6 "C:/Users/Git/Pic32mzCNC/Serial_Dma.c"
+char rxBuf[200] = {0} absolute 0xA0002000 ;
+char txBuf[200] = {0} absolute 0xA0002200 ;
+char cherie[] = " CHERIF Error\r";
+char dma0[] = "DMA0_";
+char dma1[] = "DMA1_";
 
 char DMA_Buff[200];
-short dma0int_flag;
-short dma1int_flag;
+char dma0int_flag;
+char dma1int_flag;
 
 
 
 
 
 void DMA_global(){
- DMACON = 1<<15;
+
+ DMACONSET = 0x8000;
  DMA0();
- DMA1();
+
 }
-#line 32 "C:/Users/Git/Pic32mzCNC/Serial_Dma.c"
+#line 37 "C:/Users/Git/Pic32mzCNC/Serial_Dma.c"
 void DMA0(){
 
- IEC4CLR = 1 << 6;
+ IEC4CLR = 0x40;
+ IFS4CLR = 0x40;
 
 
- DCH0INTCLR = 0x00FF00FF ;
+ DCH0CONCLR = 0x8003;
 
 
- DCH0ECON =(146 << 8 ) | 0x30;
+ DCH0ECON = (146 << 8 ) | 0x30;
 
 
-
- DCH0DAT = '\n';
+ DCH0DAT = '\r';
 
 
  DCH0SSA = KVA_TO_PA(0xBF822230);
@@ -520,35 +527,92 @@ void DMA0(){
  DCH0CSIZ = 1 ;
 
 
- IPC33CLR = 0x17 << 16 ;
- IPC33SET = (0x17 << 16);
- IEC4SET = 1 << 6;
- IFS4CLR = 1 << 6;
+
+ DCH0INTCLR = 0x00FF00FF ;
+
+ DCH0INTSET = 0x90000;
 
 
- DCH0INTSET = 0x9 << 16;
+
+ IPC33CLR = 0x160000;
+
+ IPC33SET = 0x00140000;
+
+ IEC4SET = 0x40;
+ IFS4CLR = 0x40;
 
 
- DCH0CONSET = 0X093;
+ DCH0CONSET = 0X0000013;
+
 }
-#line 82 "C:/Users/Git/Pic32mzCNC/Serial_Dma.c"
+
+
+
+void DMA0_Enable(){
+#line 93 "C:/Users/Git/Pic32mzCNC/Serial_Dma.c"
+ DCH0CONSET |= 1<<7;
+}
+
+
+
+void DMA0_Disable(){
+
+ DCH0CONCLR |= 1<<7;
+
+}
+
+
+
+void DMA_CH0_ISR() iv IVT_DMA0 ilevel 5 ics ICS_AUTO{
+ int i = 0;
+
+ dma0int_flag = DCH0INT & 0x00FF;
+
+
+
+
+ if (DCH0INTbits.CHBCIF == 1) {
+
+
+
+ i = strlen(rxBuf)+1;
+ strncpy(txBuf, rxBuf, i);
+ DCH1SSIZ = i+2 ;
+ UART2_Write_Text(txBuf);
+
+
+ }
+
+
+ if( CHERIF_bit == 1){
+ dma0int_flag = 2;
+
+
+ strcpy(txBuf, ("dma0" " " "cherie") );
+ UART2_Write_Text(txBuf);
+
+
+ }
+
+ DCH0INTCLR = 0x000000ff;
+ IFS4CLR = 0x40;
+}
+#line 153 "C:/Users/Git/Pic32mzCNC/Serial_Dma.c"
 void DMA1(){
 
 
- IPC33CLR = 0x16 << 24;
- IEC4CLR = 1 << 7;
- IFS4CLR = 1 << 7;
+ IPC33CLR = 0x17000000;
+ IEC4CLR = 0x7;
 
 
- DCH1INTCLR = 0x00FF00FF ;
+ DCH1CONCLR = 0x8003;
 
 
  DCH1ECON=(147 << 8)| 0x30;
 
 
 
-
- DCH1DAT = '\n';
+ DCH1DAT = '\r';
 
 
  DCH1SSA = KVA_TO_PA(0xA0002200) ;
@@ -563,71 +627,61 @@ void DMA1(){
  DCH1CSIZ = 1;
 
 
+ DCH1INTCLR = 0x00FF00FF ;
 
- IPC33SET = (0x16 << 24);
- IEC4SET = 1 << 7;
- IFS4CLR = 1 << 7;
-
-
- DCH1INTSET = 0x9 << 16;
+ DCH1INTSET = 0x90000;
 
 
- DCH1CONSET = 0x083;
 
+ IPC33CLR = 0x16000000;
+
+ IPC33SET = 0x16000000;
+
+ IEC4SET = 0x80;
+
+ IFS4CLR = 0x80;
+
+
+
+ DCH1CONSET = 0x00000003;
+
+}
+
+
+void DMA1_Enable(){
+ DCH1CONSET |= 1<<7;
+}
+
+
+
+void DMA1_Disable(){
+ DCH1CONCLR |= 1<<7;
 }
 
 
 
 
-void DMA_CH0_ISR() iv IVT_DMA0 ilevel 5 ics ICS_AUTO {
- int i,ptr;
- i = 0;
 
 
 
- if (DCH0INTbits.CHBCIF == 1) {
- dma1int_flag = 0;
- dma0int_flag = 1;
+void DMA_CH1_ISR() iv IVT_DMA1 ilevel 5 ics ICS_SRS {
 
 
- DCH1CONbits.CHEN = 1;
- i = strlen(rxBuf);
- dma0int_flag = 1;
- memcpy(txBuf, rxBuf, i);
- DCH1SSIZ = i ;
-
- DCH1ECONbits.CFORCE = 1 ;
- }
-
-
- if( CHERIF_bit == 1){
-
-
- memcpy(txBuf,"CHERIF Error\r",15);
- DCH1SSIZ = 13;
- DCH1ECONbits.CFORCE = 1 ;
- }
- DCH0INTCLR = 0x00FF;
-}
-
-
-
-void DMA_CH1_ISR() iv IVT_DMA1 ilevel 5 ics ICS_AUTO {
-
+ dma1int_flag = DCH1INT & 0x00FF;
 
  if (DCH1INTbits.CHBCIF){
  dma1int_flag = 1;
  dma0int_flag = 0;
-
-
  }
 
  if( CHERIF_DCH1INT_bit == 1){
 
-
  }
 
- DCH1INTCLR = 0x00FF;
 
+
+
+ DCH1INTCLR = 0x00FF;
+ IFS4CLR = 0x80;
 
 }
