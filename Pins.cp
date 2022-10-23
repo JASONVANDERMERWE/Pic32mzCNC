@@ -1,5 +1,5 @@
-#line 1 "C:/Users/Git/Pic32mzCNC/Pins.c"
-#line 1 "c:/users/git/pic32mzcnc/pins.h"
+#line 1 "C:/Users/User/Pic32mzCNC/Pins.c"
+#line 1 "c:/users/user/pic32mzcnc/pins.h"
 
 
 
@@ -72,7 +72,7 @@ extern sfr sbit DIR_StepA;
 extern sfr sbit DIR_Step_PinDirA;
 extern sfr sbit FLT_StepA;
 extern sfr sbit FLT_Step_PinDirA;
-#line 10 "C:/Users/Git/Pic32mzCNC/Pins.c"
+#line 10 "C:/Users/User/Pic32mzCNC/Pins.c"
  sbit LED2 at LATA9_bit;
  sbit LED2_Dir at TRISA9_bit;
  sbit LED1 at LATE7_bit;

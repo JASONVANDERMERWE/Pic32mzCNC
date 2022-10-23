@@ -15,8 +15,8 @@ EI	R30
 LBU	R2, Offset(_oneShotA+0)(GP)
 INS	R2, R0, BitPos(_oneShotA+0), 1
 SB	R2, Offset(_oneShotA+0)(GP)
-;Main.c,30 :: 		a=0;
-SH	R0, Offset(Main_a+0)(GP)
+;Main.c,30 :: 		ax=0;
+SH	R0, Offset(Main_ax+0)(GP)
 ;Main.c,31 :: 		disable_steps = 0;
 SH	R0, Offset(main_disable_steps_L0+0)(GP)
 ;Main.c,33 :: 		while(1){
@@ -141,9 +141,9 @@ J	L__main45
 NOP	
 L__main62:
 L__main38:
-;Main.c,59 :: 		a = 7;
+;Main.c,59 :: 		ax = 7;
 ORI	R2, R0, 7
-SH	R2, Offset(Main_a+0)(GP)
+SH	R2, Offset(Main_ax+0)(GP)
 ;Main.c,60 :: 		LED1 = 0;
 _LX	
 INS	R2, R0, BitPos(LED1+0), 1
@@ -215,14 +215,14 @@ J	L_main20
 NOP	
 L__main36:
 L__main51:
-;Main.c,72 :: 		Temp_Move(a);
-LHU	R25, Offset(Main_a+0)(GP)
+;Main.c,72 :: 		Temp_Move(ax);
+LHU	R25, Offset(Main_ax+0)(GP)
 JAL	_Temp_Move+0
 NOP	
-;Main.c,73 :: 		a=7;//++;
+;Main.c,73 :: 		ax=7;//++;
 ORI	R2, R0, 7
-SH	R2, Offset(Main_a+0)(GP)
-;Main.c,74 :: 		if(a > 7)a=7;
+SH	R2, Offset(Main_ax+0)(GP)
+;Main.c,74 :: 		if(ax > 7)ax=7;
 L_main21:
 ;Main.c,75 :: 		}
 L_main20:

@@ -1,12 +1,12 @@
-#line 1 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
-#line 1 "c:/users/git/pic32mzcnc/kinematics.h"
-#line 1 "c:/users/git/pic32mzcnc/stepper.h"
+#line 1 "C:/Users/User/Pic32mzCNC/Kinematics.c"
+#line 1 "c:/users/user/pic32mzcnc/kinematics.h"
+#line 1 "c:/users/user/pic32mzcnc/stepper.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 1 "c:/users/git/pic32mzcnc/timers.h"
-#line 1 "c:/users/git/pic32mzcnc/config.h"
-#line 1 "c:/users/git/pic32mzcnc/timers.h"
+#line 1 "c:/users/user/pic32mzcnc/timers.h"
+#line 1 "c:/users/user/pic32mzcnc/config.h"
+#line 1 "c:/users/user/pic32mzcnc/timers.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 1 "c:/users/git/pic32mzcnc/pins.h"
+#line 1 "c:/users/user/pic32mzcnc/pins.h"
 
 
 
@@ -79,17 +79,17 @@ extern sfr sbit DIR_StepA;
 extern sfr sbit DIR_Step_PinDirA;
 extern sfr sbit FLT_StepA;
 extern sfr sbit FLT_Step_PinDirA;
-#line 1 "c:/users/git/pic32mzcnc/stepper.h"
-#line 1 "c:/users/git/pic32mzcnc/steptodistance.h"
-#line 1 "c:/users/git/pic32mzcnc/stepper.h"
+#line 1 "c:/users/user/pic32mzcnc/stepper.h"
+#line 1 "c:/users/user/pic32mzcnc/steptodistance.h"
+#line 1 "c:/users/user/pic32mzcnc/stepper.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 11 "c:/users/git/pic32mzcnc/steptodistance.h"
+#line 11 "c:/users/user/pic32mzcnc/steptodistance.h"
 const float Dia;
-#line 23 "c:/users/git/pic32mzcnc/steptodistance.h"
+#line 23 "c:/users/user/pic32mzcnc/steptodistance.h"
 signed long calcSteps( double mmsToMove, double Dia);
-#line 1 "c:/users/git/pic32mzcnc/serial_dma.h"
-#line 1 "c:/users/git/pic32mzcnc/config.h"
-#line 7 "c:/users/git/pic32mzcnc/serial_dma.h"
+#line 1 "c:/users/user/pic32mzcnc/serial_dma.h"
+#line 1 "c:/users/user/pic32mzcnc/config.h"
+#line 7 "c:/users/user/pic32mzcnc/serial_dma.h"
 extern char txt[];
 extern char rxBuf[];
 extern char txBuf[];
@@ -103,8 +103,8 @@ extern char txBuf[];
 void DMA_global();
 void DMA0();
 void DMA1();
-#line 1 "c:/users/git/pic32mzcnc/kinematics.h"
-#line 28 "c:/users/git/pic32mzcnc/config.h"
+#line 1 "c:/users/user/pic32mzcnc/kinematics.h"
+#line 28 "c:/users/user/pic32mzcnc/config.h"
 extern unsigned char LCD_01_ADDRESS;
 extern bit oneShotA; sfr;
 extern bit oneShotB; sfr;
@@ -125,8 +125,7 @@ void Temp_Move(int a);
 void LCD_Display();
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
-#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 62 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
+#line 59 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
 typedef enum{
  _LCD_FIRST_ROW = 1,
  _LCD_SECOND_ROW,
@@ -159,9 +158,8 @@ extern Cmd_Type Cmd;
  void I2C_Lcd_Chr( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  out_char);
  void I2C_LCD_init( unsigned char  addr);
  void I2C_LCD_init4l( unsigned char  addr);
- void I2C_Pins(char i2c_pins);
-#line 1 "c:/users/git/pic32mzcnc/stepper.h"
-#line 12 "c:/users/git/pic32mzcnc/timers.h"
+#line 1 "c:/users/user/pic32mzcnc/stepper.h"
+#line 12 "c:/users/user/pic32mzcnc/timers.h"
 struct Timer{
 char clock;
 char P1: 1;
@@ -176,11 +174,11 @@ void InitTimer1();
 void InitTimer8();
 void ClockPulse();
 unsigned int ResetSteppers(unsigned int sec_to_disable,unsigned int last_sec_to_disable);
-#line 1 "c:/users/git/pic32mzcnc/pins.h"
-#line 1 "c:/users/git/pic32mzcnc/kinematics.h"
-#line 15 "c:/users/git/pic32mzcnc/stepper.h"
+#line 1 "c:/users/user/pic32mzcnc/pins.h"
+#line 1 "c:/users/user/pic32mzcnc/kinematics.h"
+#line 15 "c:/users/user/pic32mzcnc/stepper.h"
 typedef unsigned short UInt8_t;
-#line 59 "c:/users/git/pic32mzcnc/stepper.h"
+#line 59 "c:/users/user/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
 
 
@@ -337,8 +335,8 @@ void Single_Axis_Enable(_axis_ axis_);
  void Test_CycleY();
  void Test_CycleZ();
  void Test_CycleA();
-#line 1 "c:/users/git/pic32mzcnc/serial_dma.h"
-#line 13 "c:/users/git/pic32mzcnc/kinematics.h"
+#line 1 "c:/users/user/pic32mzcnc/serial_dma.h"
+#line 13 "c:/users/user/pic32mzcnc/kinematics.h"
 extern void (*AxisPulse[3])();
 
 
@@ -396,7 +394,7 @@ void Circ_Tick();
 void Circ_Prep_Next();
 
 void SerialPrint();
-#line 3 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 3 "C:/Users/User/Pic32mzCNC/Kinematics.c"
 Circle Circ;
 
 
@@ -409,10 +407,10 @@ char txtB[200];
 
 
 static long d2;
-#line 22 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 22 "C:/Users/User/Pic32mzCNC/Kinematics.c"
 void SingleAxisStep(long newxyz,int axis_No){
 int dir;
-#line 28 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 28 "C:/Users/User/Pic32mzCNC/Kinematics.c"
  SV.Single_Dual = 0;
 
  switch(axis_No){
@@ -471,7 +469,7 @@ void DualAxisStep(long newx,long newy,int axis_combo){
  SV.px = 0;
  SV.py = 0;
  SV.pz = 0;
-#line 89 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 89 "C:/Users/User/Pic32mzCNC/Kinematics.c"
  SV.Single_Dual = 1;
 
  switch(axis_combo){
@@ -810,7 +808,7 @@ void Circ_Tick(){
  }
  SV.Single_Dual = 2;
 }
-#line 433 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 433 "C:/Users/User/Pic32mzCNC/Kinematics.c"
 void Circ_Prep_Next(){
  Circ.steps++;
 
@@ -871,5 +869,5 @@ int str_lenA = 0;
  str_len += str_lenA;
 
  UART2_Write_Text(txtB);
-#line 501 "C:/Users/Git/Pic32mzCNC/Kinematics.c"
+#line 501 "C:/Users/User/Pic32mzCNC/Kinematics.c"
 }
