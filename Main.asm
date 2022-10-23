@@ -1,6 +1,5 @@
 _main:
 ;Main.c,31 :: 		void main() {
-ADDIU	SP, SP, -112
 ;Main.c,36 :: 		int xyz_ = 0, i;
 ;Main.c,38 :: 		PinMode();
 JAL	_PinMode+0
@@ -201,210 +200,6 @@ J	L__main43
 NOP	
 L__main63:
 L__main33:
-;Main.c,88 :: 		sprintf(txt_,"%d",a);
-ADDIU	R3, SP, 0
-LHU	R2, Offset(Main_a+0)(GP)
-ADDIU	SP, SP, -12
-SH	R2, 8(SP)
-LUI	R2, hi_addr(?lstr_1_Main+0)
-ORI	R2, R2, lo_addr(?lstr_1_Main+0)
-SW	R2, 4(SP)
-SW	R3, 0(SP)
-JAL	_sprintf+0
-NOP	
-ADDIU	SP, SP, 12
-;Main.c,89 :: 		UART2_Write_Text("a:= ");
-ORI	R30, R0, 97
-SB	R30, 9(SP)
-ORI	R30, R0, 58
-SB	R30, 10(SP)
-ORI	R30, R0, 61
-SB	R30, 11(SP)
-ORI	R30, R0, 32
-SB	R30, 12(SP)
-MOVZ	R30, R0, R0
-SB	R30, 13(SP)
-ADDIU	R2, SP, 9
-MOVZ	R25, R2, R0
-JAL	_UART2_Write_Text+0
-NOP	
-;Main.c,90 :: 		UART2_Write_Text(txt_);
-ADDIU	R2, SP, 0
-MOVZ	R25, R2, R0
-JAL	_UART2_Write_Text+0
-NOP	
-;Main.c,91 :: 		sprintf(txt_,"%d",STPS[X].step_count);
-ADDIU	R3, SP, 0
-LW	R2, Offset(_STPS+32)(GP)
-ADDIU	SP, SP, -12
-SW	R2, 8(SP)
-LUI	R2, hi_addr(?lstr_3_Main+0)
-ORI	R2, R2, lo_addr(?lstr_3_Main+0)
-SW	R2, 4(SP)
-SW	R3, 0(SP)
-JAL	_sprintf+0
-NOP	
-ADDIU	SP, SP, 12
-;Main.c,92 :: 		UART2_Write_Text(" | step_count[X]:= ");
-ADDIU	R23, SP, 14
-ADDIU	R22, R23, 20
-LUI	R24, hi_addr(?ICS?lstr4_Main+0)
-ORI	R24, R24, lo_addr(?ICS?lstr4_Main+0)
-JAL	___CC2DW+0
-NOP	
-ADDIU	R2, SP, 14
-MOVZ	R25, R2, R0
-JAL	_UART2_Write_Text+0
-NOP	
-;Main.c,93 :: 		UART2_Write_Text(txt_);
-ADDIU	R2, SP, 0
-MOVZ	R25, R2, R0
-JAL	_UART2_Write_Text+0
-NOP	
-;Main.c,94 :: 		sprintf(txt_,"%d",sys.axis_dir[X]);
-ADDIU	R3, SP, 0
-LH	R2, Offset(_sys+0)(GP)
-ADDIU	SP, SP, -12
-SH	R2, 8(SP)
-LUI	R2, hi_addr(?lstr_5_Main+0)
-ORI	R2, R2, lo_addr(?lstr_5_Main+0)
-SW	R2, 4(SP)
-SW	R3, 0(SP)
-JAL	_sprintf+0
-NOP	
-ADDIU	SP, SP, 12
-;Main.c,95 :: 		UART2_Write_Text(" | axis_dir[X]:= ");
-ADDIU	R23, SP, 34
-ADDIU	R22, R23, 18
-LUI	R24, hi_addr(?ICS?lstr6_Main+0)
-ORI	R24, R24, lo_addr(?ICS?lstr6_Main+0)
-JAL	___CC2DW+0
-NOP	
-ADDIU	R2, SP, 34
-MOVZ	R25, R2, R0
-JAL	_UART2_Write_Text+0
-NOP	
-;Main.c,96 :: 		UART2_Write_Text(txt_);
-ADDIU	R2, SP, 0
-MOVZ	R25, R2, R0
-JAL	_UART2_Write_Text+0
-NOP	
-;Main.c,97 :: 		sprintf(txt_,"%d",sys.steps_position[X]);
-ADDIU	R3, SP, 0
-LW	R2, Offset(_sys+16)(GP)
-ADDIU	SP, SP, -12
-SW	R2, 8(SP)
-LUI	R2, hi_addr(?lstr_7_Main+0)
-ORI	R2, R2, lo_addr(?lstr_7_Main+0)
-SW	R2, 4(SP)
-SW	R3, 0(SP)
-JAL	_sprintf+0
-NOP	
-ADDIU	SP, SP, 12
-;Main.c,98 :: 		UART2_Write_Text(" | absX:= ");
-ADDIU	R23, SP, 52
-ADDIU	R22, R23, 11
-LUI	R24, hi_addr(?ICS?lstr8_Main+0)
-ORI	R24, R24, lo_addr(?ICS?lstr8_Main+0)
-JAL	___CC2DW+0
-NOP	
-ADDIU	R2, SP, 52
-MOVZ	R25, R2, R0
-JAL	_UART2_Write_Text+0
-NOP	
-;Main.c,99 :: 		UART2_Write_Text(txt_);
-ADDIU	R2, SP, 0
-MOVZ	R25, R2, R0
-JAL	_UART2_Write_Text+0
-NOP	
-;Main.c,100 :: 		sprintf(txt_,"%d",STPS[Y].step_count);
-ADDIU	R3, SP, 0
-LW	R2, Offset(_STPS+100)(GP)
-ADDIU	SP, SP, -12
-SW	R2, 8(SP)
-LUI	R2, hi_addr(?lstr_9_Main+0)
-ORI	R2, R2, lo_addr(?lstr_9_Main+0)
-SW	R2, 4(SP)
-SW	R3, 0(SP)
-JAL	_sprintf+0
-NOP	
-ADDIU	SP, SP, 12
-;Main.c,101 :: 		UART2_Write_Text(" | step_count[Y]:= ");
-ADDIU	R23, SP, 63
-ADDIU	R22, R23, 20
-LUI	R24, hi_addr(?ICS?lstr10_Main+0)
-ORI	R24, R24, lo_addr(?ICS?lstr10_Main+0)
-JAL	___CC2DW+0
-NOP	
-ADDIU	R2, SP, 63
-MOVZ	R25, R2, R0
-JAL	_UART2_Write_Text+0
-NOP	
-;Main.c,102 :: 		UART2_Write_Text(txt_);
-ADDIU	R2, SP, 0
-MOVZ	R25, R2, R0
-JAL	_UART2_Write_Text+0
-NOP	
-;Main.c,103 :: 		sprintf(txt_,"%d",sys.axis_dir[Y]);
-ADDIU	R3, SP, 0
-LH	R2, Offset(_sys+2)(GP)
-ADDIU	SP, SP, -12
-SH	R2, 8(SP)
-LUI	R2, hi_addr(?lstr_11_Main+0)
-ORI	R2, R2, lo_addr(?lstr_11_Main+0)
-SW	R2, 4(SP)
-SW	R3, 0(SP)
-JAL	_sprintf+0
-NOP	
-ADDIU	SP, SP, 12
-;Main.c,104 :: 		UART2_Write_Text(" | axis_dir[Y]:= ");
-ADDIU	R23, SP, 83
-ADDIU	R22, R23, 18
-LUI	R24, hi_addr(?ICS?lstr12_Main+0)
-ORI	R24, R24, lo_addr(?ICS?lstr12_Main+0)
-JAL	___CC2DW+0
-NOP	
-ADDIU	R2, SP, 83
-MOVZ	R25, R2, R0
-JAL	_UART2_Write_Text+0
-NOP	
-;Main.c,105 :: 		UART2_Write_Text(txt_);
-ADDIU	R2, SP, 0
-MOVZ	R25, R2, R0
-JAL	_UART2_Write_Text+0
-NOP	
-;Main.c,106 :: 		sprintf(txt_,"%d",sys.steps_position[Y]);
-ADDIU	R3, SP, 0
-LW	R2, Offset(_sys+20)(GP)
-ADDIU	SP, SP, -12
-SW	R2, 8(SP)
-LUI	R2, hi_addr(?lstr_13_Main+0)
-ORI	R2, R2, lo_addr(?lstr_13_Main+0)
-SW	R2, 4(SP)
-SW	R3, 0(SP)
-JAL	_sprintf+0
-NOP	
-ADDIU	SP, SP, 12
-;Main.c,107 :: 		UART2_Write_Text(" | absY:= ");
-ADDIU	R23, SP, 101
-ADDIU	R22, R23, 11
-LUI	R24, hi_addr(?ICS?lstr14_Main+0)
-ORI	R24, R24, lo_addr(?ICS?lstr14_Main+0)
-JAL	___CC2DW+0
-NOP	
-ADDIU	R2, SP, 101
-MOVZ	R25, R2, R0
-JAL	_UART2_Write_Text+0
-NOP	
-;Main.c,108 :: 		UART2_Write_Text(txt_);
-ADDIU	R2, SP, 0
-MOVZ	R25, R2, R0
-JAL	_UART2_Write_Text+0
-NOP	
-;Main.c,109 :: 		UART2_Write(0x0D);
-ORI	R25, R0, 13
-JAL	_UART2_Write+0
-NOP	
 ;Main.c,111 :: 		Temp_Move(a);
 LHU	R25, Offset(Main_a+0)(GP)
 JAL	_Temp_Move+0
@@ -823,8 +618,8 @@ SW	R28, 16(SP)
 LW	R2, Offset(_STPS+48)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
-LUI	R2, hi_addr(?lstr_15_Main+0)
-ORI	R2, R2, lo_addr(?lstr_15_Main+0)
+LUI	R2, hi_addr(?lstr_1_Main+0)
+ORI	R2, R2, lo_addr(?lstr_1_Main+0)
 SW	R2, 4(SP)
 LUI	R2, hi_addr(_txt+0)
 ORI	R2, R2, lo_addr(_txt+0)
@@ -844,8 +639,8 @@ NOP
 LW	R2, Offset(_STPS+12)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
-LUI	R2, hi_addr(?lstr_16_Main+0)
-ORI	R2, R2, lo_addr(?lstr_16_Main+0)
+LUI	R2, hi_addr(?lstr_2_Main+0)
+ORI	R2, R2, lo_addr(?lstr_2_Main+0)
 SW	R2, 4(SP)
 LUI	R2, hi_addr(_txt+0)
 ORI	R2, R2, lo_addr(_txt+0)
@@ -865,8 +660,8 @@ NOP
 LW	R2, Offset(_STPS+8)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
-LUI	R2, hi_addr(?lstr_17_Main+0)
-ORI	R2, R2, lo_addr(?lstr_17_Main+0)
+LUI	R2, hi_addr(?lstr_3_Main+0)
+ORI	R2, R2, lo_addr(?lstr_3_Main+0)
 SW	R2, 4(SP)
 LUI	R2, hi_addr(_txt+0)
 ORI	R2, R2, lo_addr(_txt+0)
@@ -886,8 +681,8 @@ NOP
 LW	R2, Offset(_STPS+20)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
-LUI	R2, hi_addr(?lstr_18_Main+0)
-ORI	R2, R2, lo_addr(?lstr_18_Main+0)
+LUI	R2, hi_addr(?lstr_4_Main+0)
+ORI	R2, R2, lo_addr(?lstr_4_Main+0)
 SW	R2, 4(SP)
 LUI	R2, hi_addr(_txt+0)
 ORI	R2, R2, lo_addr(_txt+0)
@@ -907,8 +702,8 @@ NOP
 LW	R2, Offset(_STPS+52)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
-LUI	R2, hi_addr(?lstr_19_Main+0)
-ORI	R2, R2, lo_addr(?lstr_19_Main+0)
+LUI	R2, hi_addr(?lstr_5_Main+0)
+ORI	R2, R2, lo_addr(?lstr_5_Main+0)
 SW	R2, 4(SP)
 LUI	R2, hi_addr(_txt+0)
 ORI	R2, R2, lo_addr(_txt+0)
@@ -928,8 +723,8 @@ NOP
 LW	R2, Offset(_STPS+16)(GP)
 ADDIU	SP, SP, -12
 SW	R2, 8(SP)
-LUI	R2, hi_addr(?lstr_20_Main+0)
-ORI	R2, R2, lo_addr(?lstr_20_Main+0)
+LUI	R2, hi_addr(?lstr_6_Main+0)
+ORI	R2, R2, lo_addr(?lstr_6_Main+0)
 SW	R2, 4(SP)
 LUI	R2, hi_addr(_txt+0)
 ORI	R2, R2, lo_addr(_txt+0)

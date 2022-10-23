@@ -84,7 +84,7 @@ int xyz_ = 0, i;
               //DCH1SSIZ            = i+2 ;  // change the size of block register
               UART2_Write_Text(txBuf); */
            if((!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit)){
-
+             /*
                sprintf(txt_,"%d",a);
                UART2_Write_Text("a:= ");
                UART2_Write_Text(txt_);
@@ -107,7 +107,7 @@ int xyz_ = 0, i;
                UART2_Write_Text(" | absY:= ");
                UART2_Write_Text(txt_);
                UART2_Write(0x0D);
-
+              */
                Temp_Move(a);
                a++;
                if(a > 8)a=0;

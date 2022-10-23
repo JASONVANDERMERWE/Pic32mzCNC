@@ -67,7 +67,8 @@ Count=0
 ActiveImageIndex=-1
 [OPENED_FILES]
 File0=Main.c
-Count=1
+File1=Stepper.c
+Count=2
 [EEPROM]
 Count=0
 [ACTIVE_COMMENTS_FILES]
