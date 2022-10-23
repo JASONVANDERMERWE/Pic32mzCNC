@@ -4,8 +4,7 @@
 #line 1 "c:/users/git/pic32mzcnc/config.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
-#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 62 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
+#line 59 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
 typedef enum{
  _LCD_FIRST_ROW = 1,
  _LCD_SECOND_ROW,
@@ -38,7 +37,6 @@ extern Cmd_Type Cmd;
  void I2C_Lcd_Chr( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  out_char);
  void I2C_LCD_init( unsigned char  addr);
  void I2C_LCD_init4l( unsigned char  addr);
- void I2C_Pins(char i2c_pins);
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
 #line 1 "c:/users/git/pic32mzcnc/timers.h"
@@ -553,7 +551,30 @@ int xyz_ = 0, i;
  if(Toggle){
 #line 86 "C:/Users/Git/Pic32mzCNC/Main.c"
  if((!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit)){
-#line 111 "C:/Users/Git/Pic32mzCNC/Main.c"
+
+ sprintf(txt_,"%d",a);
+ UART2_Write_Text("a:= ");
+ UART2_Write_Text(txt_);
+ sprintf(txt_,"%d",STPS[X].step_count);
+ UART2_Write_Text(" | step_count[X]:= ");
+ UART2_Write_Text(txt_);
+ sprintf(txt_,"%d",sys.axis_dir[X]);
+ UART2_Write_Text(" | axis_dir[X]:= ");
+ UART2_Write_Text(txt_);
+ sprintf(txt_,"%d",sys.steps_position[X]);
+ UART2_Write_Text(" | absX:= ");
+ UART2_Write_Text(txt_);
+ sprintf(txt_,"%d",STPS[Y].step_count);
+ UART2_Write_Text(" | step_count[Y]:= ");
+ UART2_Write_Text(txt_);
+ sprintf(txt_,"%d",sys.axis_dir[Y]);
+ UART2_Write_Text(" | axis_dir[Y]:= ");
+ UART2_Write_Text(txt_);
+ sprintf(txt_,"%d",sys.steps_position[Y]);
+ UART2_Write_Text(" | absY:= ");
+ UART2_Write_Text(txt_);
+ UART2_Write(0x0D);
+
  Temp_Move(a);
  a++;
  if(a > 8)a=0;
