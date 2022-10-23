@@ -78,6 +78,7 @@ extern sfr sbit FLT_StepA;
 extern sfr sbit FLT_Step_PinDirA;
 #line 1 "c:/users/user/pic32mzcnc/stepper.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+<<<<<<< HEAD
 #line 1 "c:/users/user/pic32mzcnc/timers.h"
 #line 1 "c:/users/user/pic32mzcnc/pins.h"
 #line 1 "c:/users/user/pic32mzcnc/kinematics.h"
@@ -85,6 +86,64 @@ extern sfr sbit FLT_Step_PinDirA;
 #line 1 "c:/users/user/pic32mzcnc/serial_dma.h"
 #line 1 "c:/users/user/pic32mzcnc/config.h"
 #line 7 "c:/users/user/pic32mzcnc/serial_dma.h"
+=======
+#line 1 "c:/users/git/pic32mzcnc/timers.h"
+#line 1 "c:/users/git/pic32mzcnc/pins.h"
+#line 1 "c:/users/git/pic32mzcnc/kinematics.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/stdint.h"
+
+
+
+
+typedef signed char int8_t;
+typedef signed int int16_t;
+typedef signed long int int32_t;
+typedef signed long long int64_t;
+
+
+typedef unsigned char uint8_t;
+typedef unsigned int uint16_t;
+typedef unsigned long int uint32_t;
+typedef unsigned long long uint64_t;
+
+
+typedef signed char int_least8_t;
+typedef signed int int_least16_t;
+typedef signed long int int_least32_t;
+typedef signed long long int_least64_t;
+
+
+typedef unsigned char uint_least8_t;
+typedef unsigned int uint_least16_t;
+typedef unsigned long int uint_least32_t;
+typedef unsigned long long uint_least64_t;
+
+
+
+typedef signed long int int_fast8_t;
+typedef signed long int int_fast16_t;
+typedef signed long int int_fast32_t;
+typedef signed long long int_fast64_t;
+
+
+typedef unsigned long int uint_fast8_t;
+typedef unsigned long int uint_fast16_t;
+typedef unsigned long int uint_fast32_t;
+typedef unsigned long long uint_fast64_t;
+
+
+typedef signed long int intptr_t;
+typedef unsigned long int uintptr_t;
+
+
+typedef signed long long intmax_t;
+typedef unsigned long long uintmax_t;
+#line 1 "c:/users/git/pic32mzcnc/settings.h"
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
+#line 1 "c:/users/git/pic32mzcnc/serial_dma.h"
+#line 1 "c:/users/git/pic32mzcnc/config.h"
+#line 7 "c:/users/git/pic32mzcnc/serial_dma.h"
+>>>>>>> abed49a44f9ab848d3b753f6cddd5c3c17e9c488
 extern char txt[];
 extern char rxBuf[];
 extern char txBuf[];
@@ -98,51 +157,68 @@ extern char txBuf[];
 void DMA_global();
 void DMA0();
 void DMA1();
+<<<<<<< HEAD
 #line 13 "c:/users/user/pic32mzcnc/kinematics.h"
 extern void (*AxisPulse[3])();
+=======
+#line 1 "c:/users/git/pic32mzcnc/gcode.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/stdint.h"
+#line 1 "c:/users/git/pic32mzcnc/config.h"
+#line 1 "c:/users/git/pic32mzcnc/kinematics.h"
+#line 54 "c:/users/git/pic32mzcnc/gcode.h"
+typedef struct {
+ uint8_t status_code;
+ uint8_t motion_mode;
+ uint8_t inverse_feed_rate_mode;
+ uint8_t inches_mode;
+ uint8_t absolute_mode;
+ uint8_t program_flow;
+ int8_t spindle_direction;
+ uint8_t coolant_mode;
+ float feed_rate;
+
+ float position[3];
+ uint8_t tool;
+
+ uint8_t plane_axis_0,
+ plane_axis_1,
+ plane_axis_2;
+ uint8_t coord_select;
+ float coord_system[ 6 ];
+
+ float coord_offset[ 6 ];
+
+} parser_state_t;
+extern parser_state_t gc;
+>>>>>>> abed49a44f9ab848d3b753f6cddd5c3c17e9c488
 
 
 
-typedef struct{
-char cir_start: 1;
-char cir_end: 1;
-char cir_next: 1;
-double deg;
-double degreeDeg;
-double degreeRadians;
-double deg_A;
-double deg_B;
-double divisor;
-double newdeg_;
-
-double I;
-double J;
-double N;
-double radius;
-int dir;
-int quadrant;
-unsigned int steps;
-unsigned int Idivisor;
-double xRad;
-double yRad;
-double xStart;
-double yStart;
-double xStep;
-double yStep;
-double xFin;
-double yFin;
-double lastX;
-double lastY;
-}Circle;
-extern Circle Circ;
+void gc_init();
 
 
+uint8_t gc_execute_line(char *line);
 
 
+void gc_set_current_position(int32_t x, int32_t y, int32_t z);
+#line 1 "c:/users/git/pic32mzcnc/globals.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/stdint.h"
+#line 1 "c:/users/git/pic32mzcnc/settings.h"
+#line 50 "c:/users/git/pic32mzcnc/globals.h"
+typedef struct {
+ int axis_dir[ 6 ];
+ uint8_t abort;
+ uint8_t state;
+ uint8_t auto_start;
+ volatile uint8_t execute;
+ long steps_position[ 6 ];
 
-void DualAxisStep(long newx,long newy,int axis_combo);
-void SingleAxisStep(long newxyz,int axis_No);
+ double mm_position[ 6 ];
+ double mm_home_position[ 6 ];
+} system_t;
+extern system_t sys;
 
+<<<<<<< HEAD
 void SetCircleVals(double curX,double curY,double finX,double finY,double i,double j, double deg,int dir);
 void CalcRadius();
 void CalcAngle();
@@ -160,13 +236,15 @@ void SerialPrint();
 typedef unsigned short UInt8_t;
 #line 59 "c:/users/user/pic32mzcnc/stepper.h"
 extern unsigned int Toggle;
+=======
+>>>>>>> abed49a44f9ab848d3b753f6cddd5c3c17e9c488
 
 
 
 typedef struct genVars{
  int Single_Dual;
- UInt8_t running: 1;
- UInt8_t startPulses: 1;
+ unsigned short running: 1;
+ unsigned short startPulses: 1;
  int Tog;
  int AxisNo;
  long i;
@@ -192,17 +270,14 @@ typedef struct genVars{
 }sVars;
 extern sVars SV;
 
-typedef struct STPT {
 
- long uSec;
 
- int axisTosample;
+int GetAxisDirection(long mm2move);
+#line 38 "c:/users/git/pic32mzcnc/kinematics.h"
+extern volatile void (*AxisPulse[3])();
 
- int howManyOCxRunning;
 
- int compOCxRunning;
-}StepTmr;
-extern StepTmr STmr;
+
 
 typedef struct Steps{
 
@@ -246,14 +321,47 @@ typedef struct Steps{
  long StartUp_delay;
 
  signed long mmToTravel;
+
+ char master: 1;
 }STP;
 extern STP STPS[ 6 ];
+#line 100 "c:/users/git/pic32mzcnc/kinematics.h"
+void DualAxisStep(long newx,long newy,int axis_combo);
+void SingleAxisStep(long newxyz,int axis_No);
+
+
+void mc_arc(double *position, double *target, double *offset, uint8_t axis_0, uint8_t axis_1,
+ uint8_t axis_linear, double feed_rate, uint8_t invert_feed_rate, double radius, uint8_t isclockwise);
+float hypot(float angular_travel, float linear_travel);
+void SerialPrint(float r);
+void r_or_ijk(double xCur,double yCur,double xFin,double yFin,double r, double i, double j, double k,int axis_xyz);
+#line 1 "c:/users/git/pic32mzcnc/settings.h"
+#line 1 "c:/users/git/pic32mzcnc/globals.h"
+#line 15 "c:/users/git/pic32mzcnc/stepper.h"
+typedef unsigned short UInt8_t;
+#line 54 "c:/users/git/pic32mzcnc/stepper.h"
+extern unsigned int Toggle;
+
+
+
+typedef struct STPT {
+
+ long uSec;
+
+ int axisTosample;
+
+ int howManyOCxRunning;
+
+ int compOCxRunning;
+}StepTmr;
+extern StepTmr STmr;
+
 
 
 
 typedef enum xyz{X,Y,Z,A,B,C}_axis_;
 typedef enum {xy,xz,yz,xa,ya,za}axis_combination ;
-enum swt{FALSE,TRUE};
+
 
 extern _axis_ _axis;
 extern axis_combination axis_xyz;
@@ -302,14 +410,14 @@ void StopZ();
 void StopA();
 
 
-
-
 int Pulse(int axis_No);
 void toggleOCx(int axis_No);
+void multiToggleOCx(int axis_No);
 void AccDec(int axis_No);
 void Step_Cycle(int axis_No);
 void Multi_Axis_Enable(axis_combination axis);
 void Single_Axis_Enable(_axis_ axis_);
+
 
  void Test_CycleX();
  void Test_CycleY();
@@ -318,6 +426,7 @@ void Single_Axis_Enable(_axis_ axis_);
 #line 1 "c:/users/user/pic32mzcnc/steptodistance.h"
 #line 1 "c:/users/user/pic32mzcnc/stepper.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+<<<<<<< HEAD
 #line 11 "c:/users/user/pic32mzcnc/steptodistance.h"
 const float Dia;
 #line 23 "c:/users/user/pic32mzcnc/steptodistance.h"
@@ -325,6 +434,22 @@ signed long calcSteps( double mmsToMove, double Dia);
 #line 1 "c:/users/user/pic32mzcnc/serial_dma.h"
 #line 1 "c:/users/user/pic32mzcnc/kinematics.h"
 #line 28 "c:/users/user/pic32mzcnc/config.h"
+=======
+#line 1 "c:/users/git/pic32mzcnc/settings.h"
+#line 20 "c:/users/git/pic32mzcnc/steptodistance.h"
+const float Dia;
+#line 32 "c:/users/git/pic32mzcnc/steptodistance.h"
+long calcSteps( double mmsToMove, double Dia);
+long leadscrew_sets(double move_distance);
+long belt_steps(double move_distance);
+double mm2in(double mm);
+double in2mm(double inch);
+#line 1 "c:/users/git/pic32mzcnc/serial_dma.h"
+#line 1 "c:/users/git/pic32mzcnc/kinematics.h"
+#line 1 "c:/users/git/pic32mzcnc/gcode.h"
+#line 1 "c:/users/git/pic32mzcnc/globals.h"
+#line 31 "c:/users/git/pic32mzcnc/config.h"
+>>>>>>> abed49a44f9ab848d3b753f6cddd5c3c17e9c488
 extern unsigned char LCD_01_ADDRESS;
 extern bit oneShotA; sfr;
 extern bit oneShotB; sfr;

@@ -1,6 +1,6 @@
 #include "Stepper.h"
 
-
+char txt_A[9];
 
 /////////////////////////////////
 //enum varibles
@@ -13,8 +13,6 @@ unsigned int Toggle;
 
 //////////////////////////////////
 //structs
- STP STPS[NoOfAxis];
- sVars SV;
  StepTmr STmr;
  
 
@@ -60,6 +58,7 @@ void SetPinMode(){
 void StepperConstants(long accel,long decel){
     SV.acc = accel;
     SV.dec = decel;
+    
 }
 
 /////////////////////////////////
@@ -111,32 +110,32 @@ void DisableStepper(){
  */
 void speed_cntr_Move(signed long mmSteps, signed long speed, int axis_No){
 int ii;
-  // If moving only 1 step.
+char txt_[9];
+long abs_mmSteps = abs(mmSteps);
+  // If moving only 1 step then set accel counter
+  // and run state to decellerate -ve acc count value
+  // is for addition to step couter.
   if(mmSteps == 1){
-
     STPS[axis_No].accel_count = -1;        // Move one step...
     STPS[axis_No].run_state = DECEL;       // ...in DECEL state.
     STPS[axis_No].step_delay = 20000;      // Just a short delay so main() can act on 'running'.
     SV.running = 1;                        // start running
 
-  }
-  // Only move if number of steps to move is not zero.
-  else if((mmSteps != 0)&&(abs(mmSteps) != 1)){
-  
+  }else if((mmSteps != 0)&&(abs_mmSteps != 1)){
+    // Only move if number of steps to move is not zero.
     // Set max speed limit, by calc min_delay to use in timer.
-    // min_delay = (alpha / tt)/ w
+    // min_delay = (ALPHA / T1_Freq)/ speed
     STPS[axis_No].min_delay =  A_T_x100 / speed;
     
     // Set accelration by calc the first (c0) step delay .
-    // step_delay = 1/tt * sqrt(2*alpha/accel)
-    // step_delay = ( tfreq*0.676/100 )*100 * sqrt( (2*alpha*10000000000) / (accel*100) )/10000
-    STPS[axis_No].step_delay = abs((T1_FREQ_148 * sqrt_(A_SQ / SV.acc))/100);
+    // step_delay = 1/T1_Freq * sqrt(2*alpha/accel)
+    // step_delay = ( T1_Freq*0.676/100 ) * sqrt( (2*alpha*10000000000) / (accel*100) )/10000
+    STPS[axis_No].step_delay = abs(T1_FREQ_148 * ((sqrt_(A_SQ / SV.acc))/100));
     STPS[axis_No].StartUp_delay = STPS[axis_No].step_delay ;
 
-/*if(8000 < STPS[axis_No].StartUp_delay)STPS[axis_No].StartUp_delay = 2000;*/
-    
     // Find out after how many steps does the speed hits the max speed limit.
-    STPS[axis_No].max_step_lim = (speed*speed)/(long)(2.0*ALPHA*(double)SV.acc*100.0);
+    STPS[axis_No].max_step_lim =(speed*speed)/(long)(2.0*ALPHA*(double)SV.acc*100.0);
+    
     
     //STPS.max_s_lim = (long)speed*speed/(long)(((long)A_x20000*accel)/100);
     // If we hit max speed limit before 0,5 step it will round to 0.
@@ -147,34 +146,32 @@ int ii;
     
     // Find out after how many Steps before we must start deceleration.
     // n1 = (n1+n2)decel / (accel + decel) which is 50%
-    STPS[axis_No].accel_lim = (abs(mmSteps) * SV.dec) / (SV.acc + SV.dec);
-    
+     STPS[axis_No].accel_lim = (abs_mmSteps * SV.dec) / (SV.acc + SV.dec);
     // We must accelrate at least 1 step before we can start deceleration.
     if(STPS[axis_No].accel_lim == 0){
        STPS[axis_No].accel_lim = 1;
     }
 
     // Use the limit we hit first to calc decel.
-    if(STPS[axis_No].accel_lim <= STPS[axis_No].max_step_lim){
-         if(mmSteps >= 0)STPS[axis_No].decel_val = STPS[axis_No].accel_lim - mmSteps; //needs to be -ve
-         else STPS[axis_No].decel_val = mmSteps + STPS[axis_No].accel_lim;
+    if(STPS[axis_No].accel_lim < STPS[axis_No].max_step_lim){
+         STPS[axis_No].decel_val = STPS[axis_No].accel_lim - mmSteps;//-(abs_mmSteps - STPS[axis_No].max_step_lim);
     }else{
-         STPS[axis_No].decel_val = -((STPS[axis_No].max_step_lim * SV.acc) / SV.dec);
+         STPS[axis_No].decel_val = -((STPS[axis_No].max_step_lim *SV.acc)/SV.dec);
     }
+    //we must at least dec by 1 step
+    if(STPS[axis_No].decel_val == 0)
+           STPS[axis_No].decel_val = -1;
+           
     // Find step to start decleration.
-    if(mmSteps >= 0){
-        if(mmSteps > STPS[axis_No].decel_val) STPS[axis_No].decel_start = mmSteps + STPS[axis_No].decel_val;
-        else  STPS[axis_No].decel_start =  STPS[axis_No].accel_lim;
+    if(mmSteps < 0){
+        STPS[axis_No].decel_start = -(mmSteps - STPS[axis_No].decel_val);
     }
     else {
-        if(mmSteps > STPS[axis_No].decel_val) STPS[axis_No].decel_start = abs(mmSteps) * STPS[axis_No].decel_val;
-        else  STPS[axis_No].decel_start =  STPS[axis_No].accel_lim;
-    }
-    // We must decelrate at least 1 step to stop.
-    if(STPS[axis_No].decel_val == 0){
-      STPS[axis_No].decel_val = -1;
+        STPS[axis_No].decel_start = mmSteps + STPS[axis_No].decel_val;
     }
 
+    //find the position at which to start decelerating from
+    
     // If the maximum speed is so low that we dont need to go via accelration state.
     if(STPS[axis_No].StartUp_delay <= STPS[axis_No].min_delay){
       STPS[axis_No].step_delay = STPS[axis_No].min_delay;
@@ -185,6 +182,7 @@ int ii;
     }
 
   }
+     
       STPS[axis_No].step_count  = 0;
       STPS[axis_No].rest        = 0;
       STPS[axis_No].microSec    = 0;
@@ -192,6 +190,29 @@ int ii;
       STPS[axis_No].dist        = 0;
       SV.Tog   = 0;
       SV.running = 1;
+ /*
+     sprintf(txt_,"%d",STPS[axis_No].mmToTravel);
+     UART2_Write_Text(txt_);
+     UART2_Write_Text(" : ");
+     sprintf(txt_,"%d",STPS[axis_No].step_delay);
+     UART2_Write_Text(txt_);
+     UART2_Write_Text(" : ");
+     sprintf(txt_,"%d",STPS[axis_No].min_delay);
+     UART2_Write_Text(txt_);
+     UART2_Write_Text(" : ");
+     sprintf(txt_,"%d",STPS[axis_No].max_step_lim);
+     UART2_Write_Text(txt_);
+     UART2_Write_Text(" : ");
+     sprintf(txt_,"%d",STPS[axis_No].accel_lim);
+     UART2_Write_Text(txt_);
+     UART2_Write_Text(" : ");
+     sprintf(txt_,"%d",STPS[axis_No].decel_val);
+     UART2_Write_Text(txt_);
+     UART2_Write_Text(" : ");
+     sprintf(txt_,"%d",STPS[axis_No].decel_start);
+     UART2_Write_Text(txt_);
+     UART2_Write(0x0D);
+ */
 }
 
 
@@ -202,43 +223,52 @@ int ii;
 
 //Step cycle out of for loop
 void Step_Cycle(int axis_No){
+     //keep track of relative position
+      STPS[axis_No].step_count++;
+     //keep track of absolute position
+      sys.steps_position[axis_No] += sys.axis_dir[axis_No];
       toggleOCx(axis_No);
-      Pulse(axis_No);
 }
 
 
 //toggle the OCxCON regs
 void toggleOCx(int axis_No){
       switch(axis_No){
-        case X: OC5R   = 0x5;
-                OC5RS  = STPS[X].step_delay & 0xFFFF;//0x234;
-                TMR2   =  0xFFFF;
-                OC5CON =  0x8004; //restart the output compare module
+        case X:
+             OC5R   = 0x5;
+             OC5RS  = STPS[X].step_delay & 0xFFFF;//0x234;
+             TMR2   =  0xFFFF;
+             OC5CON =  0x8004; //restart the output compare module
              break;
-        case Y: OC2R   = 0x5;
-                OC2RS  = STPS[Y].step_delay & 0xFFFF;
-                TMR4   =  0xFFFF;
-                OC2CON =  0x8004; //restart the output compare module
+        case Y:
+             OC2R   = 0x5;
+             OC2RS  = STPS[Y].step_delay & 0xFFFF;
+             TMR4   =  0xFFFF;
+             OC2CON =  0x8004; //restart the output compare module
              break;
-        case Z: OC7R   = 0x5;
-                OC7RS  = STPS[Z].step_delay & 0xFFFF;
-                TMR6   =  0xFFFF;
-                OC7CON =  0x8004; //restart the output compare module
+        case Z:
+             OC7R   = 0x5;
+             OC7RS  = STPS[Z].step_delay & 0xFFFF;
+             TMR6   =  0xFFFF;
+             OC7CON =  0x8004; //restart the output compare module
              break;
-        case A: OC3R   = 0x5;
-                OC3RS  = STPS[A].step_delay & 0xFFFF;
-                TMR5   =  0xFFFF;
-                OC3CON =  0x800C; //restart the output compare module
+        case A:
+             OC3R   = 0x5;
+             OC3RS  = STPS[A].step_delay & 0xFFFF;
+             TMR5   =  0xFFFF;
+             OC3CON =  0x800C; //restart the output compare module
              break;
-        case B: OC6R   = 0x5;
-                OC6RS  = STPS[B].step_delay & 0xFFFF;
-                TMR3   =  0xFFFF;
-                OC6CON =  0x800C; //restart the output compare module
+        case B:
+             OC6R   = 0x5;
+             OC6RS  = STPS[B].step_delay & 0xFFFF;
+             TMR3   =  0xFFFF;
+             OC6CON =  0x800C; //restart the output compare module
              break;
-        case C: OC8R   = 0x5;
-                OC8RS  = STPS[C].step_delay & 0xFFFF;
-                TMR7   =  0xFFFF;
-                OC8CON =  0x800C; //restart the output compare module
+        case C:
+             OC8R   = 0x5;
+             OC8RS  = STPS[C].step_delay & 0xFFFF;
+             TMR7   =  0xFFFF;
+             OC8CON =  0x800C; //restart the output compare module
              break;
         default:
              break;
@@ -246,7 +276,7 @@ void toggleOCx(int axis_No){
 
 }
 
-
+ 
 //reset the pulse
 int Pulse(int axis_No){
 
@@ -300,7 +330,7 @@ int Pulse(int axis_No){
         // else STPS[axis_No].new_step_delay = STPS[axis_No].StartUp_delay;
         // Check if we at last step
 
-        if(STPS[axis_No].accel_count >= 0 ){
+        if(STPS[axis_No].accel_count > -1 ){
          STPS[axis_No].run_state = STOP;
         }
         break;
@@ -394,24 +424,27 @@ void disableOCx(){
 //////////////////////////////////////////////////////////
 //            X AXIS PULSE CONTROL                      //
 //////////////////////////////////////////////////////////
-void StepX() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_AUTO {
-     STPS[X].step_count++;
+void StepX() iv IVT_OUTPUT_COMPARE_5 ilevel 3 ics ICS_SRS {
+   //  STPS[X].step_count++;
      OC5IF_bit = 0;
+
+     //keep track of absolute position
+     //sys.steps_position[X] += sys.axis_dir[X];
 
      if(SV.Single_Dual == 0)
         SingleStepX();
      else
         AxisPulse[SV.Single_Dual]();
-
-
 }
 
+
 void SingleStepX(){
-    if(STPS[X].step_count >= STPS[X].dist){  //i think this is where the problem lies
+    if((STPS[X].step_count >= STPS[X].dist)||(SV.Tog == 1)){
       StopX();
     }
     else{
       Step_Cycle(X);
+      Pulse(X);
     }
 }
 
@@ -425,22 +458,28 @@ void StopX(){
 //////////////////////////////////////////////////////////
 //            Y AXIS PULSE CONTROL                      //
 //////////////////////////////////////////////////////////
-void StepY() iv IVT_OUTPUT_COMPARE_2 ilevel 3 ics ICS_AUTO {
-   STPS[Y].step_count++;
+void StepY() iv IVT_OUTPUT_COMPARE_2 ilevel 3 ics ICS_SRS {
+  // STPS[Y].step_count++;
    OC2IF_bit = 0;
+
+   //keep track of absolute position
+   //sys.steps_position[Y] += sys.axis_dir[Y];
 
    if(SV.Single_Dual == 0)
         SingleStepY();
-     else
+   else {
+      if(STPS[Y].master = 1)
         AxisPulse[SV.Single_Dual]();
+   }
 }
 
 void SingleStepY(){
-    if(STPS[Y].step_count >= STPS[Y].dist){  //i think this is where the problem lies
+    if((STPS[Y].step_count >= STPS[Y].dist)||(SV.Tog == 1)){  //i think this is where the problem lies
       StopY();
     }
     else{
       Step_Cycle(Y);
+      Pulse(Y);
     }
 }
 
@@ -453,10 +492,13 @@ void StopY(){
 //////////////////////////////////////////////////////////
 //            Z AXIS PULSE CONTROL                      //
 //////////////////////////////////////////////////////////
-void StepZ() iv IVT_OUTPUT_COMPARE_7 ilevel 3 ics ICS_AUTO {
-   STPS[Z].step_count++;
+void StepZ() iv IVT_OUTPUT_COMPARE_7 ilevel 3 ics ICS_SRS {
+  // STPS[Z].step_count++;
    OC7IF_bit = 0;
-
+   
+   //keep track of absolute position
+   //sys.steps_position[Z] += sys.axis_dir[Z];
+   
    if(SV.Single_Dual == 0)
         SingleStepZ();
      else
@@ -465,11 +507,12 @@ void StepZ() iv IVT_OUTPUT_COMPARE_7 ilevel 3 ics ICS_AUTO {
 }
 
 void SingleStepZ(){
-   if(STPS[Z].step_count >= STPS[Z].dist){
+   if((STPS[Z].step_count >= STPS[Z].dist)||(SV.Tog == 1)){
       StopZ();
    }
    else{
       Step_Cycle(Z);
+      Pulse(Z);
    }
 }
 
@@ -478,13 +521,17 @@ void StopZ(){
    OC7CONbits.ON = 0;
 }
 
+
 //////////////////////////////////////////////////////////
 //            A AXIS PULSE CONTROL                      //
 //////////////////////////////////////////////////////////
-void StepA() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
-   STPS[A].step_count++;
+void StepA() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_SRS {
+  // STPS[A].step_count++;
    OC3IF_bit = 0;
 
+   //keep track of absolute position
+   //sys.steps_position[A] += sys.axis_dir[A];
+     
    if(SV.Single_Dual == 0)
         SingleStepA();
      else
@@ -493,17 +540,109 @@ void StepA() iv IVT_OUTPUT_COMPARE_3 ilevel 3 ics ICS_AUTO {
 }
 
 void SingleStepA(){
-   if(STPS[A].step_count >= STPS[A].dist){
+   if((STPS[A].step_count >= STPS[A].dist)||(SV.Tog == 1)){
       StopA();
    }
    else{
       Step_Cycle(A);
+      Pulse(A);
    }
 }
 
 void StopA(){
    OC3IE_bit = 0;
    OC3CONbits.ON = 0;
+}
+
+////////////////////////////////////////////////////////
+//   INTERPOLATE MULTI AXIS USING BRESENHAMS ALGO     //
+//       MASTER AXIS CONTROLS THE ACCELERATION        //
+////////////////////////////////////////////////////////
+void XY_Interpolate(){
+
+   if((STPS[X].step_count > SV.dx)||(STPS[Y].step_count > SV.dy)||(SV.Tog == 1)){
+        StopX();
+        StopY();
+        return;
+   }
+
+   if(SV.dx >= SV.dy){
+      Step_Cycle(X);
+      Pulse(X);
+      if(SV.d2 < 0){
+          SV.d2 += 2*SV.dy;
+      }else{
+          SV.d2 += 2 * (SV.dy - SV.dx);
+          Step_Cycle(Y);
+      }
+   }else{
+      Step_Cycle(Y);
+      Pulse(Y);
+      if(SV.d2 < 0){
+         SV.d2 += 2 * SV.dx;
+      }else{
+         SV.d2 += 2 * (SV.dx - SV.dy);
+         Step_Cycle(X);
+       }
+    }
+}
+
+void XZ_Interpolate(){
+
+    if((STPS[X].step_count > SV.dx)||(STPS[Z].step_count > SV.dz)||(SV.Tog == 1)){
+        StopX();
+        StopZ();
+        return;
+    }
+
+   if(SV.dx >= SV.dz){
+      Step_Cycle(X);
+      Pulse(X);
+      if(SV.d2 < 0)
+        SV.d2 += 2*SV.dz;
+      else{
+        SV.d2 += 2 * (SV.dz - SV.dx);
+        Step_Cycle(Z);
+      }
+
+    }else{
+        Step_Cycle(Z);
+        Pulse(Z);
+        if(SV.d2 < 0)
+            SV.d2 += 2 * SV.dx;
+        else{
+            SV.d2 += 2 * (SV.dx - SV.dz);
+            Step_Cycle(X);
+        }
+     }
+}
+void YZ_Interpolate(){
+    if((STPS[Y].step_count > SV.dy)||(STPS[Z].step_count > SV.dz)||(SV.Tog == 1)){
+       StopY();
+       StopZ();
+       return;
+    }
+
+    if(SV.dy >= SV.dz){
+      Step_Cycle(Y);
+      Pulse(Y);
+      if(SV.d2 < 0)
+        SV.d2 += 2*SV.dz;
+      else{
+        SV.d2 += 2 * (SV.dz - SV.dy);
+        Step_Cycle(Z);
+      }
+    }else{
+      Step_Cycle(Z);
+      Pulse(Z);
+      if(SV.d2 < 0)
+         SV.d2 += 2 * SV.dy;
+      else{
+         SV.d2 += 2 * (SV.dy - SV.dz);
+         Step_Cycle(Y);
+      }
+    }
+
 }
 
 ////////////////////////////////////////////////

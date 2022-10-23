@@ -6,13 +6,45 @@ Value=0
 [BUILD_TYPE]
 Value=0
 [ACTIVE_TAB]
+<<<<<<< HEAD
 Value=Main.c
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+Value=Stepper.c
+=======
+Value=Main.c
+>>>>>>> patch2
+=======
+Value=Kinematics.c
+>>>>>>> patch2
+=======
+Value=Main.c
+>>>>>>> patch2
+=======
+Value=Config.c
+>>>>>>> patch2
+=======
+Value=Main.c
+>>>>>>> patch2
+=======
+Value=Config.h
+>>>>>>> patch2
+=======
+Value=Globals.c
+>>>>>>> patch2
+>>>>>>> abed49a44f9ab848d3b753f6cddd5c3c17e9c488
 [USE_EEPROM]
 Value=0
 [USE_HEAP]
-Value=0
+Value=1
 [HEAP_SIZE]
-Value=0
+Value=8000
 [EEPROM_DEFINITION]
 Value=
 [FILES]
@@ -24,16 +56,31 @@ File4=Timers.c
 File5=Kinematics.c
 File6=Pins.c
 File7=Serial_Dma.c
-Count=8
+File8=Print.c
+File9=GCODE.c
+File10=Globals.c
+Count=11
 [BINARIES]
 Count=0
 [IMAGES]
 Count=0
 ActiveImageIndex=-1
 [OPENED_FILES]
+<<<<<<< HEAD
 File0=Kinematics.c
 File1=Main.c
 Count=2
+=======
+File0=Stepper.c
+File1=Main.c
+File2=GCODE.c
+File3=GCODE.h
+File4=Config.c
+File5=Config.h
+File6=Globals.c
+File7=Globals.h
+Count=8
+>>>>>>> abed49a44f9ab848d3b753f6cddd5c3c17e9c488
 [EEPROM]
 Count=0
 [ACTIVE_COMMENTS_FILES]
@@ -54,7 +101,11 @@ File3=Timers.h
 File4=Kinematics.h
 File5=Pins.h
 File6=Serial_Dma.h
-Count=7
+File7=Settings.h
+File8=Print.h
+File9=GCODE.h
+File10=Globals.h
+Count=11
 [PLDS]
 File0=DEFINES.pld
 Count=1
@@ -75,10 +126,15 @@ File12=TwiddleFactors
 Count=13
 [INTERRUPT_DEFS]
 EBASE=9FC01000
-VECTOR_SPACEING=128
+VECTOR_SPACEING=32
 VECTOR_MODE=1
 USE_SRS=7
 [EXPANDED_NODES]
 0=Pic32mzClicker2_StepperControl.mcp32
 1=Sources
+<<<<<<< HEAD
 Count=2
+=======
+13=Header Files
+Count=3
+>>>>>>> abed49a44f9ab848d3b753f6cddd5c3c17e9c488
