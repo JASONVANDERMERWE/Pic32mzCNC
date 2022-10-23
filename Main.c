@@ -18,12 +18,12 @@ bit oneShotA; sfr;
 bit oneShotB; sfr;
 char uart_rd;
 //struct Timer TMR;
-unsigned char LCD_01_ADDRESS = 0x4E;//7E; //PCF8574T
+//unsigned char LCD_01_ADDRESS = 0x4E;//7E; //PCF8574T
 //////////////////////////////////////////
 // temp vars
 unsigned int ii;
 unsigned long testOcr;
-static unsigned int ax;
+static unsigned int a;
 
 
 /////////////////////////////////////////
@@ -39,7 +39,7 @@ int xyz_ = 0;
   StepperConstants(15000,15000);
   oneShotA = 0;
   //I2C_LCD_Out(LCD_01_ADDRESS,1,4,txt);
-  ax=0;
+  a=0;
   disable_steps = 0;
   disableOCx();
   DisableStepper();
@@ -67,11 +67,8 @@ int xyz_ = 0;
          }
 
          if((!SW1)&&(!Toggle)){
-<<<<<<< HEAD
-            ax = 7;
-=======
+
             a = 0;
->>>>>>> abed49a44f9ab848d3b753f6cddd5c3c17e9c488
             LED1 = 0;
             Toggle = 1;
             disable_steps = 0;
@@ -83,12 +80,7 @@ int xyz_ = 0;
          }
          //X Y Z
          if(Toggle){
-<<<<<<< HEAD
-           if((!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit)||!Circ.cir_next){
-               Temp_Move(ax);
-               ax=7;//++;
-               if(ax > 7)ax=7;
-=======
+
            if((!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit)){
                sprintf(txt_,"%d",a);
                UART2_Write_Text("a:= ");
@@ -116,7 +108,7 @@ int xyz_ = 0;
                Temp_Move(a);
                a++;
                if(a > 8)a=0;
->>>>>>> abed49a44f9ab848d3b753f6cddd5c3c17e9c488
+
            }
          }
             

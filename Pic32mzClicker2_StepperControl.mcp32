@@ -66,21 +66,9 @@ Count=0
 Count=0
 ActiveImageIndex=-1
 [OPENED_FILES]
-<<<<<<< HEAD
-File0=Kinematics.c
-File1=Main.c
+File0=Main.c
+File1=Config.c
 Count=2
-=======
-File0=Stepper.c
-File1=Main.c
-File2=GCODE.c
-File3=GCODE.h
-File4=Config.c
-File5=Config.h
-File6=Globals.c
-File7=Globals.h
-Count=8
->>>>>>> abed49a44f9ab848d3b753f6cddd5c3c17e9c488
 [EEPROM]
 Count=0
 [ACTIVE_COMMENTS_FILES]
@@ -132,9 +120,4 @@ USE_SRS=7
 [EXPANDED_NODES]
 0=Pic32mzClicker2_StepperControl.mcp32
 1=Sources
-<<<<<<< HEAD
 Count=2
-=======
-13=Header Files
-Count=3
->>>>>>> abed49a44f9ab848d3b753f6cddd5c3c17e9c488

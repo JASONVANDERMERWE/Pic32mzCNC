@@ -1,5 +1,5 @@
-#line 1 "C:/Users/Git/Pic32mzCNC/Globals.c"
-#line 1 "c:/users/git/pic32mzcnc/globals.h"
+#line 1 "C:/Users/User/Pic32mzCNC/Globals.c"
+#line 1 "c:/users/user/pic32mzcnc/globals.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/stdint.h"
 
 
@@ -48,8 +48,8 @@ typedef unsigned long int uintptr_t;
 
 typedef signed long long intmax_t;
 typedef unsigned long long uintmax_t;
-#line 1 "c:/users/git/pic32mzcnc/settings.h"
-#line 50 "c:/users/git/pic32mzcnc/globals.h"
+#line 1 "c:/users/user/pic32mzcnc/settings.h"
+#line 50 "c:/users/user/pic32mzcnc/globals.h"
 typedef struct {
  int axis_dir[ 6 ];
  uint8_t abort;
@@ -98,7 +98,7 @@ extern sVars SV;
 
 
 int GetAxisDirection(long mm2move);
-#line 3 "C:/Users/Git/Pic32mzCNC/Globals.c"
+#line 3 "C:/Users/User/Pic32mzCNC/Globals.c"
 char txtL[9];
 system_t sys;
 sVars SV;
