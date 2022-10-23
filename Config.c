@@ -4,6 +4,7 @@
 
 void PinMode(){
 
+
      SYSKEY = 0xAA996655;
      SYSKEY = 0x556699AA;
      CFGCONbits.OCACLK = 1;
@@ -40,12 +41,15 @@ void PinMode(){
     
     TRISG7_bit = 1;
     TRISG8_bit = 1;
+///////////////////////////////////////////////////
+//setup the performance of the sys clocks
+    set_performance_mode();
 
 ////////////////////////////////////////////////////
 //Remapping of Uart 2 pins
     Unlock_IOLOCK();
-     PPS_Mapping_NoLock(_RPE8, _OUTPUT, _U2TX);    // Sets pin PORTE.B8 to be Output and maps UART1 Transmit to it
-     PPS_Mapping_NoLock(_RPE9, _INPUT,  _U2RX);    // Sets pin PORTE.B9 to be Input and maps UART1 Receive to it
+     PPS_Mapping_NoLock(_RPE8, _OUTPUT, _U2TX);    // Sets pin PORTE.B8 to be Output and maps UART2 Transmit
+     PPS_Mapping_NoLock(_RPE9, _INPUT,  _U2RX);    // Sets pin PORTE.B9 to be Input and maps UART2 Receive
      PPS_Mapping_NoLock(_RPB9, _OUTPUT, _NULL);
      PPS_Mapping_NoLock(_RPB10, _OUTPUT, _NULL);
      PPS_Mapping_NoLock(_RPD4, _OUTPUT, _OC5);     //X_Axis TMR2
@@ -57,56 +61,60 @@ void PinMode(){
     Lock_IOLOCK();
 
 //////////////////////////////////////////////////
+//TMR 1 & 8 config
+   InitTimer1();
+  // InitTimer8();
+  
+//////////////////////////////////////////////////
 //configure the uart2 module
     UartConfig();
 
-///////////////////////////////////////////////////
-//setup the performance of the sys clocks
-    set_performance_mode();
-
 //////////////////////////////////////////////////
-//configure the interrupts
-  //  Uart2InterruptSetup();
-
-//////////////////////////////////////////////////
-//TMR8 config
-   InitTimer1();
-   InitTimer8();
-/////////////////////////////////////////////////
-//setup i2c_lcd
-  //  LcdI2CConfig();
+//configure UART the interrupts
+  Uart2InterruptSetup();
 
 ////////////////////////////////////////////////
 //DMA CONFIG
    DMA_global();
-   
+   DMA0_Enable();
 ////////////////////////////////////////////////
 //set up output compare module for oc3 RF1 pin
   OutPutPulseXYZ();
   SetPinMode();
+
+/////////////////////////////////////////////////
+//setup i2c_lcd
+  //  LcdI2CConfig();
+  
 }
 
 void UartConfig(){
 //////////////////////////////////////////////////
 //setup the serial comms on uart 2  using PBCLK2 at 50mhz
-  UART2_Init_Advanced(256000, 50000/*PBClk x 2*/, _UART_LOW_SPEED, _UART_8BIT_NOPARITY, _UART_ONE_STOPBIT);
+  UART2_Init_Advanced(256000, 200000/*PBClk x 2*/, _UART_LOW_SPEED, _UART_8BIT_NOPARITY, _UART_ONE_STOPBIT);
   UART_Set_Active(&UART2_Read, &UART2_Write, &UART2_Data_Ready, &UART2_Tx_Idle); // set UART2 active
   Delay_ms(100);                  // Wait for UART module to stabilize
 }
 
 ////////////////////////////////////////////////
-//Uart 2 interrupt setup
+//Uart 2 interrupt setup, make sure that for DMA
+//the interrupt is turned of for this module,
+//only use the IRQ from the DMA controller but
+//itis important it set up the irelx bits of the
+// 8 level deep interrupt buffer specific to the
+//UART module
 void Uart2InterruptSetup(){
+    // IRQ after 1 byte is empty, buffer is 8 deep
     URXISEL0_bit = 0;
-    URXISEL1_bit = 1;
-    IEC4.B18 = 1;              // Enable UART2 RX interrupt
+    URXISEL1_bit = 0;
 
-    U2RXIP0_bit = 1;           //
-    U2RXIP1_bit = 1;           //
-    U2RXIP2_bit = 1;           // Set priority
+    // IRQ after 1 byte is empty buffer is 8 deep
+    UTXISEL0_bit = 0;
+    UTXISEL1_bit = 0;
 
-    URXISEL1_U2STA_bit = 0;
-    U2RXIF_bit = 0;            // Ensure interrupt is not pending
+    // Disnable UART2 RX & TX interrupts
+    IEC4CLR      = 0xc000;
+
 }
 
 void set_performance_mode(){
@@ -122,7 +130,7 @@ unsigned long cp0;
     // Peripheral Bus 1 cannot be turned off, so there's no need to turn it on
     PB1DIVbits.PBDIV = 1; // Peripheral Bus 1 Clock Divisor Control (PBCLK1 is SYSCLK divided by 2)
 
-    // PB2DIV
+    // PB2DIV  UART / SPI / I2C / PMP
     UEN0_bit = 1;
     UEN1_bit = 1;
     PB2DIVbits.ON = 1; // Peripheral Bus 2 Output Clock Enable (Output clock is enabled)
@@ -168,7 +176,7 @@ unsigned long cp0;
 
     // Lock Sequence
     SYSKEY = 0x33333333;
-
+    PRISS = 0x76543210;   //SRS all priorities
     // SETTING UP PREFETCH MODULE
     PREFEN0_bit = 1;
     PREFEN1_bit = 1;
@@ -199,12 +207,12 @@ void OutPutPulseXYZ(){
   T6CON  = 0x0000;  // disable Timer4  OC3
   T7CON  = 0x0000;  // disable Timer6  OC8
 //setup  Tmr2,3,4,5,6&7 as 1:64 prescaler 16bit
-  T2CON  = 0x0060;  //   a prescaler of 1:64 to get 1.28usec tick resolution
-  T3CON  = 0x0060;  //   a prescaler of 1:64 to get 1.28usec tick resolution
-  T4CON  = 0x0060;  //   a prescaler of 1:64 to get 1.28usec tick resolution
-  T5CON  = 0x0060;  //   a prescaler of 1:64 to get 1.28usec tick resolution
-  T6CON  = 0x0060;  //   a prescaler of 1:64 to get 1.28usec tick resolution
-  T7CON  = 0x0060;  //   a prescaler of 1:64 to get 1.28usec tick resolution
+  T2CON  = 0x0030;  //   a prescaler of 1:8 to get 1.28usec tick resolution
+  T3CON  = 0x0030;  //   a prescaler of 1:8 to get 1.28usec tick resolution
+  T4CON  = 0x0030;  //   a prescaler of 1:8 to get 1.28usec tick resolution
+  T5CON  = 0x0030;  //   a prescaler of 1:8 to get 1.28usec tick resolution
+  T6CON  = 0x0030;  //   a prescaler of 1:8 to get 1.28usec tick resolution
+  T7CON  = 0x0030;  //   a prescaler of 1:8 to get 1.28usec tick resolution
   
 // Set period (PR2 is 32-bits wide) and common to all OCx compares
   PR2    = 0xFFFF;   //OC5
@@ -246,7 +254,7 @@ void OutPutPulseXYZ(){
   OC5IP0_bit = 1;  // Set OC5 interrupt priority to 3
   OC5IP1_bit = 1;
   OC5IP2_bit = 0;
-  OC5IS0_bit = 1;  // Set OC5 sub priority 2
+  OC5IS0_bit = 0;  // Set OC5 sub priority 2
   OC5IS1_bit = 0;
   OC5IF_bit  = 0;  // reset interrupt flag
   OC5IE_bit  = 0;  // enable interrupt
@@ -255,7 +263,7 @@ void OutPutPulseXYZ(){
   OC2IP0_bit = 1;  // Set OC3 interrupt priority to 3
   OC2IP1_bit = 1;
   OC2IP2_bit = 0;
-  OC2IS0_bit = 0;  // Set OC3 sub priority 1
+  OC2IS0_bit = 1;  // Set OC3 sub priority 1
   OC2IS1_bit = 0;
   OC2IF_bit  = 0;   // reset interrupt flag
   OC2IE_bit  = 0;   // enable interrupt
@@ -263,9 +271,9 @@ void OutPutPulseXYZ(){
 //interrupt priority and enable set Z_Axis
   OC7IP0_bit = 1;  // Set OC8 interrupt priority to 3
   OC7IP1_bit = 1;
-  OC7IP2_bit = 0;
-  OC7IS0_bit = 1;  // Set OC8 sub priority 2
-  OC7IS1_bit = 0;
+  OC7IP2_bit = 1;
+  OC7IS0_bit = 0;  // Set OC8 sub priority 2
+  OC7IS1_bit = 1;
   OC7IF_bit  = 0;  // reset interrupt flag
   OC7IE_bit  = 0;  // enable interrupt
   
@@ -273,8 +281,8 @@ void OutPutPulseXYZ(){
   OC3IP0_bit = 1;  // Set OC3 interrupt priority to 3
   OC3IP1_bit = 1;
   OC3IP2_bit = 0;
-  OC3IS0_bit = 0;  // Set OC3 sub priority 1
-  OC3IS1_bit = 0;
+  OC3IS0_bit = 1;  // Set OC3 sub priority 1
+  OC3IS1_bit = 1;
   OC3IF_bit  = 0;   // reset interrupt flag
   OC3IE_bit  = 0;   // enable interrupt
   
@@ -283,7 +291,7 @@ void OutPutPulseXYZ(){
   OC6IP1_bit = 1;
   OC6IP2_bit = 0;
   OC6IS0_bit = 1;  // Set OC5 sub priority 2
-  OC6IS1_bit = 0;
+  OC6IS1_bit = 1;
   OC6IF_bit  = 0;  // reset interrupt flag
   OC6IE_bit  = 0;  // enable interrupt
   
@@ -292,7 +300,7 @@ void OutPutPulseXYZ(){
   OC8IP1_bit = 1;
   OC8IP2_bit = 0;
   OC8IS0_bit = 1;  // Set OC8 sub priority 2
-  OC8IS1_bit = 0;
+  OC8IS1_bit = 1;
   OC8IF_bit  = 0;  // reset interrupt flag
   OC8IE_bit  = 0;  // enable interrupt
   
@@ -310,7 +318,7 @@ void OutPutPulseXYZ(){
  // OC8CONSET = 0x8000; // Enable OC8
 }
 
-void LcdI2CConfig(){
+/*void LcdI2CConfig(){
 
      I2C4_Init_Advanced(50000, 100000);
      I2C_Set_Active(&I2C4_Start, &I2C4_Restart, &I2C4_Read, &I2C4_Write,
@@ -321,5 +329,4 @@ void LcdI2CConfig(){
      I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_FIRST_ROW,1);
      I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_CURSOR_OFF,1); // Cursor off
      I2C_Lcd_Cmd(LCD_01_ADDRESS,_LCD_CLEAR,1); // Clear display
-}
-
+} */
