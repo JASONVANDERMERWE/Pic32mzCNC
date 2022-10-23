@@ -13,6 +13,7 @@ Value=0
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 Value=Stepper.c
 =======
 Value=Main.c
@@ -34,6 +35,9 @@ Value=Config.h
 >>>>>>> patch2
 =======
 Value=Globals.c
+>>>>>>> patch2
+=======
+Value=Serial_Dma.c
 >>>>>>> patch2
 [USE_EEPROM]
 Value=0
@@ -62,6 +66,7 @@ Count=0
 Count=0
 ActiveImageIndex=-1
 [OPENED_FILES]
+<<<<<<< HEAD
 File0=Stepper.c
 File1=Main.c
 File2=GCODE.c
@@ -71,6 +76,13 @@ File5=Config.h
 File6=Globals.c
 File7=Globals.h
 Count=8
+=======
+File0=Main.c
+File1=Serial_Dma.c
+File2=Serial_Dma.h
+File3=Config.c
+Count=4
+>>>>>>> patch2
 [EEPROM]
 Count=0
 [ACTIVE_COMMENTS_FILES]
