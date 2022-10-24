@@ -14,7 +14,7 @@ Value=0
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-Value=Main.c
+Value=Serial_Dma.h
 =======
 Value=Main.c
 >>>>>>> patch2
@@ -67,8 +67,9 @@ Count=0
 ActiveImageIndex=-1
 [OPENED_FILES]
 File0=Main.c
-File1=Stepper.c
-Count=2
+File1=Serial_Dma.c
+File2=Serial_Dma.h
+Count=3
 [EEPROM]
 Count=0
 [ACTIVE_COMMENTS_FILES]
