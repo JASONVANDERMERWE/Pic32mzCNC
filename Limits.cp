@@ -1,47 +1,5 @@
-#line 1 "C:/Users/Git/Pic32mzCNC/Main.c"
-#line 1 "c:/users/git/pic32mzcnc/config.h"
-#line 1 "c:/users/git/pic32mzcnc/timers.h"
-#line 1 "c:/users/git/pic32mzcnc/config.h"
-#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
-#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 62 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
-typedef enum{
- _LCD_FIRST_ROW = 1,
- _LCD_SECOND_ROW,
- _LCD_THIRD_ROW,
- _LCD_FOURTH_ROW,
- _LCD_CLEAR,
- _LCD_RETURN_HOME,
- _LCD_CURSOR_OFF,
- _LCD_UNDERLINE_ON,
- _LCD_BLINK_CURSOR_ON,
- _LCD_MOVE_CURSOR_LEFT,
- _LCD_MOVE_CURSOR_RIGHT,
- _LCD_TURN_ON,
- _LCD_TURN_OFF,
- _LCD_SHIFT_LEFT,
- _LCD_SHIFT_RIGHT,
- _LCD_INCREMENT_NO_SHIFT
-}Cmd_Type;
-
-extern Cmd_Type Cmd;
-
-
-
-  unsigned char  I2C_PCF8574_Write( unsigned char  addr, unsigned char  Data);
- void I2C_LCD_putcmd( unsigned char  addr,  unsigned char  dta, unsigned char  cmdtype);
- void I2C_LCD_goto( unsigned char  addr, unsigned char  row,  unsigned char  col);
- void I2C_Lcd_Cmd( unsigned char  addr,Cmd_Type cmd, unsigned char  col);
- void I2C_LCD_putch( unsigned char  addr,  unsigned char  dta);
- void I2C_LCD_Out( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  *s);
- void I2C_Lcd_Chr( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  out_char);
- void I2C_LCD_init( unsigned char  addr);
- void I2C_LCD_init4l( unsigned char  addr);
- void I2C_Pins(char i2c_pins);
-#line 1 "c:/users/git/pic32mzcnc/stepper.h"
-#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 1 "c:/users/git/pic32mzcnc/timers.h"
+#line 1 "C:/Users/Git/Pic32mzCNC/Limits.c"
+#line 1 "c:/users/git/pic32mzcnc/limits.h"
 #line 1 "c:/users/git/pic32mzcnc/pins.h"
 
 
@@ -121,6 +79,15 @@ extern sfr sbit X_Min_Limit;
 extern sfr sbit X_Min_Limit_Dir;
 extern sfr sbit Y_Min_Limit;
 extern sfr sbit Y_Min_Limit_Dir;
+#line 1 "c:/users/git/pic32mzcnc/timers.h"
+#line 1 "c:/users/git/pic32mzcnc/config.h"
+#line 1 "c:/users/git/pic32mzcnc/timers.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 1 "c:/users/git/pic32mzcnc/pins.h"
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 1 "c:/users/git/pic32mzcnc/timers.h"
+#line 1 "c:/users/git/pic32mzcnc/pins.h"
 #line 1 "c:/users/git/pic32mzcnc/kinematics.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/stdint.h"
 
@@ -478,24 +445,6 @@ void Single_Axis_Enable(_axis_ axis_);
  void Test_CycleY();
  void Test_CycleZ();
  void Test_CycleA();
-#line 12 "c:/users/git/pic32mzcnc/timers.h"
-struct Timer{
-char clock;
-char P1: 1;
-char P2: 1;
-unsigned int disable_cnt;
-unsigned int (*Reset)(unsigned int time,unsigned int last_sec);
-};
-extern struct Timer TMR;
-
-
-void InitTimer1();
-void InitTimer8();
-void ClockPulse();
-unsigned int ResetSteppers(unsigned int sec_to_disable,unsigned int last_sec_to_disable);
-#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
-#line 1 "c:/users/git/pic32mzcnc/pins.h"
-#line 1 "c:/users/git/pic32mzcnc/stepper.h"
 #line 1 "c:/users/git/pic32mzcnc/steptodistance.h"
 #line 1 "c:/users/git/pic32mzcnc/stepper.h"
 #line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
@@ -513,8 +462,78 @@ double in2mm(double inch);
 #line 1 "c:/users/git/pic32mzcnc/gcode.h"
 #line 1 "c:/users/git/pic32mzcnc/globals.h"
 #line 1 "c:/users/git/pic32mzcnc/limits.h"
-#line 1 "c:/users/git/pic32mzcnc/pins.h"
-#line 1 "c:/users/git/pic32mzcnc/timers.h"
+#line 31 "c:/users/git/pic32mzcnc/config.h"
+extern unsigned char LCD_01_ADDRESS;
+extern bit oneShotA; sfr;
+extern bit oneShotB; sfr;
+
+
+
+
+
+
+
+void PinMode();
+void UartConfig();
+void set_performance_mode();
+void Uart2InterruptSetup();
+void LcdI2CConfig();
+void OutPutPulseXYZ();
+void Temp_Move(int a);
+void LCD_Display();
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
+#line 1 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/include/built_in.h"
+#line 62 "c:/users/public/documents/mikroelektronika/mikroc pro for pic32/packages/i2c_lcd/uses/i2c_lcd.h"
+typedef enum{
+ _LCD_FIRST_ROW = 1,
+ _LCD_SECOND_ROW,
+ _LCD_THIRD_ROW,
+ _LCD_FOURTH_ROW,
+ _LCD_CLEAR,
+ _LCD_RETURN_HOME,
+ _LCD_CURSOR_OFF,
+ _LCD_UNDERLINE_ON,
+ _LCD_BLINK_CURSOR_ON,
+ _LCD_MOVE_CURSOR_LEFT,
+ _LCD_MOVE_CURSOR_RIGHT,
+ _LCD_TURN_ON,
+ _LCD_TURN_OFF,
+ _LCD_SHIFT_LEFT,
+ _LCD_SHIFT_RIGHT,
+ _LCD_INCREMENT_NO_SHIFT
+}Cmd_Type;
+
+extern Cmd_Type Cmd;
+
+
+
+  unsigned char  I2C_PCF8574_Write( unsigned char  addr, unsigned char  Data);
+ void I2C_LCD_putcmd( unsigned char  addr,  unsigned char  dta, unsigned char  cmdtype);
+ void I2C_LCD_goto( unsigned char  addr, unsigned char  row,  unsigned char  col);
+ void I2C_Lcd_Cmd( unsigned char  addr,Cmd_Type cmd, unsigned char  col);
+ void I2C_LCD_putch( unsigned char  addr,  unsigned char  dta);
+ void I2C_LCD_Out( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  *s);
+ void I2C_Lcd_Chr( unsigned char  addr,  unsigned char  row,  unsigned char  col,  unsigned char  out_char);
+ void I2C_LCD_init( unsigned char  addr);
+ void I2C_LCD_init4l( unsigned char  addr);
+ void I2C_Pins(char i2c_pins);
+#line 1 "c:/users/git/pic32mzcnc/stepper.h"
+#line 12 "c:/users/git/pic32mzcnc/timers.h"
+struct Timer{
+char clock;
+char P1: 1;
+char P2: 1;
+unsigned int disable_cnt;
+unsigned int (*Reset)(unsigned int time,unsigned int last_sec);
+};
+extern struct Timer TMR;
+
+
+void InitTimer1();
+void InitTimer8();
+void ClockPulse();
+unsigned int ResetSteppers(unsigned int sec_to_disable,unsigned int last_sec_to_disable);
 #line 1 "c:/users/git/pic32mzcnc/settings.h"
 #line 28 "c:/users/git/pic32mzcnc/limits.h"
 extern sbit TX0;
@@ -584,10 +603,28 @@ void Debounce_X_Limits();
 void Debounce_Y_Limits();
 void Reset_X_Min_Debounce();
 void Reset_Y_Min_Debounce();
-#line 31 "c:/users/git/pic32mzcnc/config.h"
-extern unsigned char LCD_01_ADDRESS;
-extern bit oneShotA; sfr;
-extern bit oneShotB; sfr;
+#line 7 "C:/Users/Git/Pic32mzCNC/Limits.c"
+struct limits Limits;
+
+
+
+static unsigned int last_cntX_min;
+static unsigned int last_cntY_min;
+static unsigned int last_cntZ_min;
+static unsigned int last_cntA_min;
+
+
+
+
+static char bits;
+sbit TX0 at bits.B0;
+sbit TX1 at bits.B1;
+sbit TX2 at bits.B2;
+sbit TX3 at bits.B3;
+sbit TY0 at bits.B4;
+sbit TY1 at bits.B5;
+sbit TY2 at bits.B6;
+sbit TY3 at bits.B7;
 
 
 
@@ -595,205 +632,190 @@ extern bit oneShotB; sfr;
 
 
 
-void PinMode();
-void UartConfig();
-void set_performance_mode();
-void Uart2InterruptSetup();
-void LcdI2CConfig();
-void OutPutPulseXYZ();
-void Temp_Move(int a);
-void LCD_Display();
-#line 12 "C:/Users/Git/Pic32mzCNC/Main.c"
-parser_state_t gc;
-STP STPS[ 6 ];
 
-char DMA_Buff[200];
-char txt_[9];
-char spc[] = " : ";
-bit testISR;
-bit oneShotA; sfr;
-bit oneShotB; sfr;
-char uart_rd;
+void Limit_Initialize(){
 
-unsigned char LCD_01_ADDRESS = 0x4E;
+ X_Min_Limit_Dir = 1;
+ Y_Min_Limit_Dir = 1;
 
 
-unsigned int ii;
-unsigned long testOcr;
-static unsigned int a;
+ Limits.X_Limit_Min = 0;
+ Limits.Y_Limit_Min = 0;
 
 
+ last_cntX_min = 0;
+ last_cntY_min = 0;
+ last_cntZ_min = 0;
+ last_cntA_min = 0;
 
 
-void main() {
-char txt_[9];
-static char oneshot = 0;
-unsigned char j;
-static unsigned int disable_steps = 0;
-int xyz_ = 0, i;
-static int cntr;
- PinMode();
+ IEC0 |= 0x21 << 8;
 
- StepperConstants(15000,15000);
- oneShotA = 0;
+ INTCON |= 0x0000001F;
 
- a=0;
- disable_steps = 0;
- disableOCx();
- DisableStepper();
+ X_Min_Limit_Setup();
+ Y_Min_Limit_Setup();
 
- EnableInterrupts();
- while(1){
-
- if(!Toggle){
- LED1 = TMR.clock >> 4;
- if(disable_steps <=  10 )
- disable_steps = TMR.Reset( 10 ,disable_steps);
- if(LED1 && (oneshot == 0)){
- oneshot = 1;
- }else if(!LED1 && (oneshot == 1))
- oneshot = 0;
-
- }
-
-
-
- if(!SW2){
- Toggle = 0;
- disableOCx();
- }
-
- if((!SW1)&&(!Toggle)){
- a = 0;
- LED1 = 0;
- Toggle = 1;
- disable_steps = 0;
- EnStepperX();
- EnStepperY();
- EnStepperZ();
- EnStepperA();
- cntr = 0;
- }
-
- if(Toggle){
- cntr++;
- if((!OC5IE_bit && !OC2IE_bit && !OC7IE_bit && !OC3IE_bit)){
- Temp_Move(a);
- a++;
- if(a > 8)a=0;
-#line 97 "C:/Users/Git/Pic32mzCNC/Main.c"
- }
- if(cntr > 10000){
-
-
-
-
- dma_printf("a:=%d:%l:%d:abs:=%l:%l:%d:abs:=%l \r\n",
- a,STPS[X].step_count,sys.axis_dir[X],
- sys.steps_position[X],STPS[Y].step_count,
- sys.axis_dir[Y],sys.steps_position[Y]);
-
- cntr = 0;
- }
- }
-
- Debounce_X_Limits();
- Debounce_Y_Limits();
- }
 }
 
 
-void Temp_Move(int a){
 
- switch(a){
- case 0:
- STPS[X].mmToTravel = belt_steps(-50.00);
- speed_cntr_Move(STPS[X].mmToTravel, 8000,X);
- SingleAxisStep(STPS[X].mmToTravel,X);
- break;
- case 2:
- STPS[X].mmToTravel = belt_steps(50.00);
- speed_cntr_Move(STPS[X].mmToTravel, 8000,X);
- SingleAxisStep(STPS[X].mmToTravel,X);
- break;
- case 1:
- STPS[Y].mmToTravel = belt_steps(50.00);
- speed_cntr_Move(STPS[Y].mmToTravel, 8000,Y);
- SingleAxisStep(STPS[Y].mmToTravel,Y);
- break;
- case 3:
- STPS[Y].mmToTravel = belt_steps(-50.00);
- speed_cntr_Move(STPS[Y].mmToTravel, 8000,Y);
- SingleAxisStep(STPS[Y].mmToTravel,Y);
- break;
- case 4:
- STPS[X].mmToTravel = belt_steps(-50.00);
-
- STPS[Y].mmToTravel = belt_steps(100.00);
- speed_cntr_Move(STPS[Y].mmToTravel, 8000,Y);
- DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
- break;
- case 5:
- STPS[X].mmToTravel = belt_steps(50.00);
-
- STPS[Y].mmToTravel = belt_steps(-100.00);
- speed_cntr_Move(STPS[Y].mmToTravel, 8000,Y);
- DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
- break;
- case 6:
- STPS[X].mmToTravel = belt_steps(-150.00);
- speed_cntr_Move(STPS[X].mmToTravel, 8000,X);
- STPS[Y].mmToTravel = belt_steps(100.00);
-
- DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
- break;
- case 7:
- STPS[X].mmToTravel = belt_steps(150.00);
- speed_cntr_Move(STPS[X].mmToTravel, 8000,X);
- STPS[Y].mmToTravel = belt_steps(-100.00);
-
- DualAxisStep(STPS[X].mmToTravel, STPS[Y].mmToTravel,xy);
- break;
- case 8:
- STPS[A].mmToTravel = belt_steps(150.00);
- speed_cntr_Move(STPS[A].mmToTravel, 15000,A);
- SingleAxisStep(STPS[A].mmToTravel,A);
- break;
- case 9:
+void X_Min_Limit_Setup(){
 
 
 
- r_or_ijk(-50.00, 50.00, -150.00, 150.00, 0.00, -50.00, 50.00,0.00,X,Y, 0 );
- break;
- default: a = 0;
- break;
- }
+
+
+
+ IPC2 |= 13 ;
+
+
+ IEC0 |= 1 << 8;
+
+ IFS0 |= ~(1 << 8);
 }
 
-void LCD_Display(){
+
+
+void Y_Min_Limit_Setup(){
 
 
 
 
- sprintf(txt,"%d",STPS[0].accel_lim);
- I2C_LCD_Out(LCD_01_ADDRESS,1,1,txt);
-
- sprintf(txt,"%d",STPS[0].decel_start);
- I2C_LCD_Out(LCD_01_ADDRESS,1,11,txt);
 
 
+ IPC3 |= 14 << 8;
 
- sprintf(txt,"%d",STPS[0].step_delay);
- I2C_LCD_Out(LCD_01_ADDRESS,2,1,txt);
 
- sprintf(txt,"%d",STPS[0].min_delay);
- I2C_LCD_Out(LCD_01_ADDRESS,2,11,txt);
+ IEC0 |= 1 << 13;
+
+ IFS0 |= ~(1 << 13);
+}
 
 
 
- sprintf(txt,"%d",STPS[0].max_step_lim);
- I2C_LCD_Out(LCD_01_ADDRESS,3,1,txt);
 
- sprintf(txt,"%d",STPS[0].decel_val);
- I2C_LCD_Out(LCD_01_ADDRESS,3,11,txt);
+
+
+void X_Min_Limit() iv IVT_EXTERNAL_1 ilevel 3 ics ICS_AUTO {
+ INT1IF_bit = 0;
+ if(!Limits.X_Limit_Min)
+ Limits.X_Limit_Min = 1;
+}
+
+
+
+void Y_Min_Limit() iv IVT_EXTERNAL_2 ilevel 3 ics ICS_AUTO {
+ INT2IF_bit = 0;
+ if(!Limits.Y_Limit_Min)
+ Limits.Y_Limit_Min = 1;
+}
+
+
+
+
+
+
+
+
+char Test_X_Min(){
+ return (Limits.X_Limit_Min == 1)? 1:0;
+}
+
+
+
+char Test_Y_Min(){
+ return (Limits.Y_Limit_Min == 1)? 1:0;
+}
+
+
+
+
+
+
+
+
+void Reset_X_Min_Limit(){
+ Limits.X_Limit_Min = ~Limits.X_Limit_Min;
+}
+
+
+
+void Reset_Y_Min_Limit(){
+ Limits.Y_Limit_Min = ~Limits.Y_Limit_Min;
+}
+
+
+
+
+
+
+
+
+
+void Reset_X_Min_Debounce(){
+ Limits.X_Min_DeBnc = 0;
+ last_cntX_min = 0;
+}
+
+
+
+void Reset_Y_Min_Debounce(){
+ Limits.Y_Min_DeBnc = 0;
+ last_cntY_min = 0;
+}
+
+
+
+void Debounce_X_Limits(){
+ TX0 = TMR.clock >>  0 ;
+ TX1 = Test_X_Min();
+
+ if((!X_Min_Limit)&&(TX1)){
+ if(TX0 && !TX2){
+ TX2 = 1;
+ Limits.X_Min_DeBnc++;
+
+ dma_printf("LimitX:=%d \r\n",Limits.X_Min_DeBnc);
+
+ if(Limits.X_Min_DeBnc > last_cntX_min){
+ last_cntX_min = Limits.X_Min_DeBnc;
+ }
+ }else if(!TX0 && TX2)
+ TX2=0;
+
+ if(Limits.X_Min_DeBnc >  3 )
+ Reset_X_Min_Limit();
+
+ }else if(X_Min_Limit){
+ Reset_X_Min_Debounce();
+ }
+
+}
+
+
+
+ void Debounce_Y_Limits(){
+ TY0 = TMR.clock >>  0 ;
+ TY1 = Test_Y_Min();
+
+ if((!Y_Min_Limit)&&(TY1)){
+ if(TY0 && !TY2){
+ TY2 = 1;
+ Limits.Y_Min_DeBnc++;
+
+ dma_printf("LimitY:=%d \r\n",Limits.Y_Min_DeBnc);
+
+ if(Limits.Y_Min_DeBnc > last_cntY_min){
+ last_cntY_min = Limits.Y_Min_DeBnc;
+ }
+ }else if(!TY0 && TY2)
+ TY2=0;
+
+ if(Limits.Y_Min_DeBnc >  3 )
+ Reset_Y_Min_Limit();
+
+ }else if(Y_Min_Limit){
+ Reset_Y_Min_Debounce();
+ }
 }
