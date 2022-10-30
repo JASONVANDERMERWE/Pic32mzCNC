@@ -16,7 +16,8 @@ Value=Main.c
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-Value=Stepper.c
+<<<<<<< HEAD
+Value=Kinematics.c
 =======
 Value=Main.c
 >>>>>>> patch2
@@ -38,7 +39,13 @@ Value=Config.h
 =======
 Value=Globals.c
 >>>>>>> patch2
+<<<<<<< HEAD
 >>>>>>> abed49a44f9ab848d3b753f6cddd5c3c17e9c488
+=======
+=======
+Value=Serial_Dma.c
+>>>>>>> patch2
+>>>>>>> 7b2598884ebfd161af9e0de85c03d70a8fbd3986
 [USE_EEPROM]
 Value=0
 [USE_HEAP]
@@ -59,25 +66,54 @@ File7=Serial_Dma.c
 File8=Print.c
 File9=GCODE.c
 File10=Globals.c
-Count=11
+File11=Limits.c
+Count=12
 [BINARIES]
 Count=0
 [IMAGES]
-Count=0
+File0=Pic32mzClicker2_Pinout.png
+Count=1
 ActiveImageIndex=-1
 [OPENED_FILES]
 File0=Main.c
+<<<<<<< HEAD
 File1=Config.c
 Count=2
+=======
+File1=Stepper.c
+File2=Kinematics.c
+File3=Kinematics.h
+File4=Stepper.h
+File5=Limits.c
+File6=Pins.h
+File7=Limits.h
+File8=Config.c
+Count=9
+>>>>>>> 7b2598884ebfd161af9e0de85c03d70a8fbd3986
 [EEPROM]
 Count=0
 [ACTIVE_COMMENTS_FILES]
-Count=0
+File0=AVR_Stepper_Acc_Dec.xml
+File1=DMA_Pic32.xml
+File2=Clicker2_Pinouts.xml
+File3=Clicker2_Dwg.xml
+File4=pic32mz.xml
+File5=grbl.xml
+File6=OUTPUT_COMPARE.xml
+File7=Interrupts.xml
+Count=8
 [OTHER_FILES]
-Count=0
+File0=AVR_StepperAccDec.pdf
+File1=DMA_Pic32.pdf
+File2=Clicker2_Dwg.pdf
+File3=PIC32MZ2048EFH100.pdf
+File4=OUTPUT Compare.pdf
+File5=Interrupts pic32.pdf
+Count=6
 [SEARCH_PATH]
 Path0=..\..\Public\Documents\Mikroelektronika\mikroC PRO for PIC32\Packages\I2C_Lcd\Uses\
-Count=1
+Path1=E:\Downloads\CNC _Papers\
+Count=2
 [HEADER_PATH]
 Path0=..\..\Public\Documents\Mikroelektronika\mikroC PRO for PIC32\Packages\I2C_Lcd\Uses\
 Count=1
@@ -93,7 +129,8 @@ File7=Settings.h
 File8=Print.h
 File9=GCODE.h
 File10=Globals.h
-Count=11
+File11=Limits.h
+Count=12
 [PLDS]
 File0=DEFINES.pld
 Count=1
@@ -120,4 +157,11 @@ USE_SRS=7
 [EXPANDED_NODES]
 0=Pic32mzClicker2_StepperControl.mcp32
 1=Sources
+<<<<<<< HEAD
 Count=2
+=======
+14=Header Files
+28=Project Level Defines
+33=Active Comments Files
+Count=5
+>>>>>>> 7b2598884ebfd161af9e0de85c03d70a8fbd3986

@@ -13,15 +13,15 @@ void InitTimer1(){
   Clock = ClockPulse;
 //count 1sec pulses to a predefined value to reset steppers
   TMR.Reset = ResetSteppers;
-//TMR1 setup to 100ms clock
+//TMR1 setup to 10ms clock
   T1CON         = 0x8010;
-  T1IP0_bit     = 1;
-  T1IP1_bit     = 1;
-  T1IP2_bit     = 0;
-  T1IS0_bit     = 1;
-  T1IS1_bit     = 0;
-  T1IF_bit      = 0;
-  T1IE_bit      = 1;
+  //PRIORITY 6 SUB-PRIORTY 2
+  IPC1SET       = 0x1A;
+  //SET IE FLAG
+  IEC0       |= 1<<4;
+  //CLEAR IF FLAG
+  IFS0       |= ~(1<<4);
+
   PR1           = 62500;
   TMR1          = 0;
 }
@@ -29,14 +29,16 @@ void InitTimer1(){
 
 ///////////////////////////////////////////////////////////////////
 //TMR 8  initialized to interrupt at 1us was used for early
-//interpolation no longer used to interpolate axis
+//interpolation no longer used to interpolate
 void InitTimer8(){
   T8CON            = 0x8000;
-  T8IP0_bit        = 3;
+  T8IP0_bit        = 1;
   T8IP1_bit        = 1;
   T8IP2_bit        = 0;
   T8IS0_bit        = 0;
   T8IS1_bit        = 1;
+ // IEC0             = 1<<4;
+ // IFS0             =
   T8IF_bit         = 0;
   T8IE_bit         = 0;
   PR8              = 50;
@@ -45,8 +47,8 @@ void InitTimer8(){
 
 
 ///////////////////////////////////////////
-//TMR 1 as a dummy axis ???
-void Timer1Interrupt() iv IVT_TIMER_1 ilevel 3 ics ICS_SRS {
+//TMR 1 as a 10ms clock pulse ???
+void Timer1Interrupt() iv IVT_TIMER_1 ilevel 6 ics ICS_SRS {
   T1IF_bit  = 0;
   //Enter your code here
   Clock();

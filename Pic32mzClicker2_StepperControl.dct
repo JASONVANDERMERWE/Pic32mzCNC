@@ -63,6 +63,7 @@ _int1
 _int2
 _int3
 _int4
+_itoa
 _mod_64x64_s
 _mod_64x64_u
 _mul_64x64
@@ -159,6 +160,7 @@ _ss5_in
 _ss5_out
 _ss6_in
 _ss6_out
+_strrev
 _t2ck
 _t3ck
 _t4ck
@@ -199,6 +201,11 @@ _uart_high_speed
 _uart_low_speed
 _uart_one_stopbit
 _uart_two_stopbits
+a_limit_max
+a_limit_min
+a_min_debnc
+a_soft_limit_max
+a_soft_limit_min
 a10m
 a10m
 a10m
@@ -5150,7 +5157,6 @@ autoset_usbe4csr0_bit
 autoset_usbe5csr0_bit
 autoset_usbe6csr0_bit
 autoset_usbe7csr0_bit
-axis_dir
 axis_xyz
 axisno
 axisno
@@ -12460,6 +12466,7 @@ chen_dch4con_bit
 chen_dch5con_bit
 chen_dch6con_bit
 chen_dch7con_bit
+cherie
 cherie
 cherie
 cherie
@@ -23088,6 +23095,8 @@ ddrmode
 ddrmode
 ddrmode_bit
 ddrmode_sqi1con_bit
+debounce_x_limits
+debounce_y_limits
 debug
 debug
 debug
@@ -23627,7 +23636,11 @@ dma_buff
 dma_ch0_isr
 dma_ch1_isr
 dma_global
+dma_printf
 dma0
+dma0
+dma0_disable
+dma0_enable
 dma0ie
 dma0ie
 dma0ie
@@ -23660,6 +23673,9 @@ dma0is0_bit
 dma0is1
 dma0is1_bit
 dma1
+dma1
+dma1_disable
+dma1_enable
 dma1ie
 dma1ie
 dma1ie
@@ -33125,6 +33141,9 @@ hird3_bit
 hold
 hold
 hold_bit
+home_axis
+homing
+homing_cnt
 hostmode
 hostmode
 hostmode_bit
@@ -36994,6 +37013,7 @@ intstatsetbits
 inttohex
 inttostr
 inttostrwithzeros
+inv_home_axis
 inverse_feed_rate_mode
 ioancpen
 ioancpen
@@ -38548,6 +38568,8 @@ lengthck
 lengthck
 lengthck_bit
 lengthck_emacxcfg2_bit
+limit_initialize
+limits
 linkfail
 linkfail
 linkfail
@@ -38885,6 +38907,7 @@ manfc
 manfc
 manfc_bit
 max
+max_sizes
 mc_arc
 mcen
 mcen
@@ -39109,8 +39132,6 @@ min102_bit
 min103
 min103_alrmtime_bit
 min103_bit
-mm_home_position
-mm_position
 mm2in
 mode
 mode
@@ -40187,6 +40208,7 @@ nb2bipktgp25_emacxipgr_bit
 nb2bipktgp26
 nb2bipktgp26_bit
 nb2bipktgp26_emacxipgr_bit
+newline
 nmicnt
 nmicnt
 nmicnt
@@ -47109,6 +47131,10 @@ reset
 reset_
 reset_bit
 reset_usbcsr0_bit
+reset_x_min_debounce
+reset_x_min_limit
+reset_y_min_debounce
+reset_y_min_limit
 resetie
 resetie
 resetie_bit
@@ -56336,7 +56362,6 @@ seq2
 seq2bits
 seq3
 seq3bits
-serialprint
 serrie
 serrie
 serrie
@@ -56375,6 +56400,7 @@ setend_bit
 setendc
 setendc
 setendc_bit
+setinitialsizes
 setpinmode
 setup
 setup
@@ -60961,7 +60987,6 @@ step27
 step27_bit
 stepa
 stepperconstants
-steps_position
 stepx
 stepy
 stepz
@@ -62829,6 +62854,8 @@ terrcnt6_c2trec_bit
 terrcnt7
 terrcnt7_bit
 terrcnt7_c2trec_bit
+test_x_min
+test_y_min
 testbp
 testbp
 testbp
@@ -64602,6 +64629,10 @@ twr1
 twr1_bit
 twr1_ebismt1_bit
 twr1_ebismt2_bit
+tx0
+tx1
+tx2
+tx3
 txabat
 txabat
 txabat
@@ -71008,7 +71039,6 @@ txstate2
 txstate2_bit
 txstate3
 txstate3_bit
-txt
 txt_
 txt_a
 txta
@@ -71035,6 +71065,10 @@ txwarn
 txwarn
 txwarn_bit
 txwarn_c2trec_bit
+ty0
+ty1
+ty2
+ty3
 typeaddr
 typeaddr0
 typeaddr0_bit
@@ -81350,9 +81384,27 @@ wtid2
 wtid2_bit
 wtid3
 wtid3_bit
+x_limit_max
+x_limit_min
+x_min_debnc
+x_min_limit
+x_min_limit
+x_min_limit_dir
+x_min_limit_setup
+x_soft_limit_max
+x_soft_limit_min
 xtoi
 xy_interpolate
 xz_interpolate
+y_limit_max
+y_limit_min
+y_min_debnc
+y_min_limit
+y_min_limit
+y_min_limit_dir
+y_min_limit_setup
+y_soft_limit_max
+y_soft_limit_min
 year01
 year01
 year01
@@ -81378,3 +81430,8 @@ year102_bit
 year103
 year103_bit
 yz_interpolate
+z_limit_max
+z_limit_min
+z_min_debnc
+z_soft_limit_max
+z_soft_limit_min

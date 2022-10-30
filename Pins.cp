@@ -72,7 +72,17 @@ extern sfr sbit DIR_StepA;
 extern sfr sbit DIR_Step_PinDirA;
 extern sfr sbit FLT_StepA;
 extern sfr sbit FLT_Step_PinDirA;
+<<<<<<< HEAD
 #line 10 "C:/Users/User/Pic32mzCNC/Pins.c"
+=======
+
+
+extern sfr sbit X_Min_Limit;
+extern sfr sbit X_Min_Limit_Dir;
+extern sfr sbit Y_Min_Limit;
+extern sfr sbit Y_Min_Limit_Dir;
+#line 10 "C:/Users/Git/Pic32mzCNC/Pins.c"
+>>>>>>> 7b2598884ebfd161af9e0de85c03d70a8fbd3986
  sbit LED2 at LATA9_bit;
  sbit LED2_Dir at TRISA9_bit;
  sbit LED1 at LATE7_bit;
@@ -133,3 +143,10 @@ sbit DIR_Step_PinDirA at TRISE5_bit;
 
 sbit PLS_StepA at LATF1_bit;
 sbit PLS_Step_PinDirA at TRISF1_bit;
+
+
+
+sbit X_Min_Limit at RF3_bit;
+sbit X_Min_Limit_Dir at TRISF3_bit;
+sbit Y_Min_Limit at RB15_bit;
+sbit Y_Min_Limit_Dir at TRISB15_bit;

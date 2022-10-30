@@ -1,22 +1,34 @@
+<<<<<<< HEAD
 0	1	mikroCPIC32.exe -MSF -DBG -pP32MZ2048EFH100 -HEAP 8000 -RA -C -Y -DL -SSA -EBASE 0x9FC01000 -INTDEF MV_SRS7_IS32 -O11111115 -fo200 -N"C:\Users\User\Pic32mzCNC\Pic32mzClicker2_StepperControl.mcp32" -SP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC32\Defs\" -SP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC32\Uses\" -SP"C:\Users\User\Pic32mzCNC\" -SP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC32\Packages\I2C_Lcd\Uses\" -IP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC32\Uses\" -IP"C:\Users\User\Pic32mzCNC\" -IP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC32\Packages\I2C_Lcd\Uses\" "Main.c" "Config.c" "Stepper.c" "Steptodistance.c" "Timers.c" "Kinematics.c" "Pins.c" "Serial_Dma.c" "Print.c" "GCODE.c" "Globals.c" "__Lib_CP0.emcl" "__Lib_Math.emcl" "__Lib_MathDouble_MZ_EF.emcl" "__Lib_System_MZ_EF.emcl" "__Lib_SoftResetDma.emcl" "__Lib_Delays.emcl" "__Lib_CType.emcl" "__Lib_CString.emcl" "__Lib_CStdlib_EF.emcl" "__Lib_CMath_EF.emcl" "__Lib_Conversions_EF.emcl" "__Lib_Sprintf_EF.emcl" "__Lib_Sprinti.emcl" "__Lib_Sprintl.emcl" "__Lib_FLASH_MZ.emcl" "__Lib_UART_123456_MZ.emcl" "__Lib_PPS_P32MZ_100CAN.emcl" "__Lib_FFT.emcl" "__Lib_TwiddleFactors.emcl" "DEFINES.pld"	 
+=======
+0	1	mikroCPIC32.exe -MSF -DBG -pP32MZ2048EFH100 -HEAP 8000 -RA -C -Y -DL -SSA -EBASE 0x9FC01000 -INTDEF MV_SRS7_IS32 -O11111115 -fo200 -N"C:\Users\Git\Pic32mzCNC\Pic32mzClicker2_StepperControl.mcp32" -SP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC32\Defs\" -SP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC32\Uses\" -SP"C:\Users\Git\Pic32mzCNC\" -SP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC32\Packages\I2C_Lcd\Uses\" -SP"E:\Downloads\CNC _Papers\" -IP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC32\Uses\" -IP"C:\Users\Git\Pic32mzCNC\" -IP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC32\Packages\I2C_Lcd\Uses\" "Main.c" "Config.c" "Stepper.c" "Steptodistance.c" "Timers.c" "Kinematics.c" "Pins.c" "Serial_Dma.c" "Print.c" "GCODE.c" "Globals.c" "Limits.c" "__Lib_CP0.emcl" "__Lib_Math.emcl" "__Lib_MathDouble_MZ_EF.emcl" "__Lib_System_MZ_EF.emcl" "__Lib_SoftResetDma.emcl" "__Lib_Delays.emcl" "__Lib_CType.emcl" "__Lib_CString.emcl" "__Lib_CStdlib_EF.emcl" "__Lib_CMath_EF.emcl" "__Lib_Conversions_EF.emcl" "__Lib_Sprintf_EF.emcl" "__Lib_Sprinti.emcl" "__Lib_Sprintl.emcl" "__Lib_FLASH_MZ.emcl" "__Lib_UART_123456_MZ.emcl" "__Lib_PPS_P32MZ_100CAN.emcl" "__Lib_FFT.emcl" "__Lib_TwiddleFactors.emcl" "DEFINES.pld"	 
+>>>>>>> 7b2598884ebfd161af9e0de85c03d70a8fbd3986
 diagnostics: 0	122	Compilation Started	P32MZ2048EFH100.c
 diagnostics: 65825	123	Compiled Successfully	P32MZ2048EFH100.c
 diagnostics: 0	122	Compilation Started	__Lib_Delays.c
 diagnostics: 176	123	Compiled Successfully	__Lib_Delays.c
 diagnostics: 0	122	Compilation Started	i2c_lcd.h
+<<<<<<< HEAD
 hint: 34	1163	Variable 'j' has been declared, but not used	Main.c
 diagnostics: 210	123	Compiled Successfully	Main.c
 hint: 36	1164	Variable 'xyz_' has been eliminated by optimizer	Main.c
+=======
+hint: 55	1163	Variable 'txt_' has been declared, but not used	Main.c
+hint: 57	1163	Variable 'j' has been declared, but not used	Main.c
+hint: 59	1163	Variable 'i' has been declared, but not used	Main.c
+diagnostics: 262	123	Compiled Successfully	Main.c
+hint: 59	1164	Variable 'xyz_' has been eliminated by optimizer	Main.c
+>>>>>>> 7b2598884ebfd161af9e0de85c03d70a8fbd3986
 diagnostics: 0	122	Compilation Started	i2c_lcd.h
-diagnostics: 312	123	Compiled Successfully	Config.c
+diagnostics: 340	123	Compiled Successfully	Config.c
 diagnostics: 0	122	Compilation Started	pins.h
-hint: 112	1163	Variable 'ii' has been declared, but not used	Stepper.c
-hint: 113	1163	Variable 'txt_' has been declared, but not used	Stepper.c
+hint: 114	1163	Variable 'ii' has been declared, but not used	Stepper.c
+hint: 115	1163	Variable 'txt_' has been declared, but not used	Stepper.c
 hint: 0	1004	interrupt handler (StepX at 0x001B)	Stepper.c
 hint: 0	1004	interrupt handler (StepY at 0x000C)	Stepper.c
 hint: 0	1004	interrupt handler (StepZ at 0x0023)	Stepper.c
 hint: 0	1004	interrupt handler (StepA at 0x0011)	Stepper.c
-diagnostics: 746	123	Compiled Successfully	Stepper.c
+diagnostics: 727	123	Compiled Successfully	Stepper.c
 diagnostics: 0	122	Compilation Started	pins.h
 diagnostics: 69	123	Compiled Successfully	Steptodistance.c
 hint: 18	1164	Variable 'temp' has been eliminated by optimizer	Steptodistance.c
@@ -27,32 +39,39 @@ hint: 56	1164	Variable 'stepsToMove' has been eliminated by optimizer	Steptodist
 diagnostics: 0	122	Compilation Started	pins.h
 hint: 0	1004	interrupt handler (Timer1Interrupt at 0x0004)	Timers.c
 hint: 0	1004	interrupt handler (Timer8Interrupt at 0x0024)	Timers.c
+<<<<<<< HEAD
 diagnostics: 106	123	Compiled Successfully	Timers.c
 hint: 22	1354	 warning: "/*" within comment     /////////////////////////////////////////////////////////////////////////////*/	C:\Users\User\Pic32mzCNC\Kinematics.c
+=======
+diagnostics: 108	123	Compiled Successfully	Timers.c
+hint: 22	1354	 warning: "/*" within comment     /////////////////////////////////////////////////////////////////////////////*/  SIZE,C_MAX_SIZE};	C:\Users\Git\Pic32mzCNC\Kinematics.c
+>>>>>>> 7b2598884ebfd161af9e0de85c03d70a8fbd3986
 diagnostics: 0	122	Compilation Started	stdint.h
-hint: 23	1163	Variable 'txt_' has been declared, but not used	Kinematics.c
-diagnostics: 608	123	Compiled Successfully	Kinematics.c
-warning: 474	1512	variable 'n_arc_correction' might not have been initialized	Kinematics.c
-hint: 231	1164	Variable 'inverse_feed_rate' has been eliminated by optimizer	Kinematics.c
-hint: 407	1164	Variable 'sin_Ti' has been eliminated by optimizer	Kinematics.c
-hint: 409	1164	Variable 'r_axisi' has been eliminated by optimizer	Kinematics.c
-hint: 401	1164	Variable 'millimeters_of_travel' has been eliminated by optimizer	Kinematics.c
-hint: 532	1164	Variable 'str_len' has been eliminated by optimizer	Kinematics.c
+hint: 41	1354	argument may be out of range [axis_No]	Kinematics.c
+hint: 33	1163	Variable 'txt_' has been declared, but not used	Kinematics.c
+hint: 89	1163	Variable 'dirC' has been declared, but not used	Kinematics.c
+hint: 244	1163	Variable 'txt_' has been declared, but not used	Kinematics.c
+diagnostics: 551	123	Compiled Successfully	Kinematics.c
+warning: 465	1512	variable 'n_arc_correction' might not have been initialized	Kinematics.c
+warning: 317	1512	variable 'axis_plane_a' might not have been initialized	Kinematics.c
+warning: 319	1512	variable 'axis_plane_b' might not have been initialized	Kinematics.c
+hint: 236	1164	Variable 'inverse_feed_rate' has been eliminated by optimizer	Kinematics.c
+hint: 398	1164	Variable 'sin_Ti' has been eliminated by optimizer	Kinematics.c
+hint: 400	1164	Variable 'r_axisi' has been eliminated by optimizer	Kinematics.c
+hint: 392	1164	Variable 'millimeters_of_travel' has been eliminated by optimizer	Kinematics.c
 diagnostics: 0	122	Compilation Started	pins.h
-diagnostics: 69	123	Compiled Successfully	Pins.c
-diagnostics: 0	122	Compilation Started	i2c_lcd.h
+diagnostics: 76	123	Compiled Successfully	Pins.c
+diagnostics: 0	122	Compilation Started	stdlib.h
 hint: 0	1004	interrupt handler (DMA_CH0_ISR at 0x0086)	Serial_Dma.c
-hint: 94	1163	Variable 'A' has been declared, but not used	Serial_Dma.c
-hint: 95	1163	Variable 'ptr' has been declared, but not used	Serial_Dma.c
 hint: 0	1004	interrupt handler (DMA_CH1_ISR at 0x0087)	Serial_Dma.c
-hint: 125	1163	Variable 'ptrAdd' has been declared, but not used	Serial_Dma.c
-diagnostics: 140	123	Compiled Successfully	Serial_Dma.c
-hint: 124	1164	Variable 'ptr' has been eliminated by optimizer	Serial_Dma.c
+diagnostics: 351	123	Compiled Successfully	Serial_Dma.c
+hint: 108	1164	Variable 'i' has been eliminated by optimizer	Serial_Dma.c
 diagnostics: 0	122	Compilation Started	Print.c
 diagnostics: 0	123	Compiled Successfully	Print.c
 diagnostics: 1	122	Compilation Started	Print.c
 diagnostics: 87	123	Compiled Successfully	gcode.h
 diagnostics: 0	122	Compilation Started	stdint.h
+<<<<<<< HEAD
 diagnostics: 11	123	Compiled Successfully	Globals.c
 diagnostics: 0	127	All files Compiled in 1203 ms	 
 hint: 0	1144	Used RX: 21 (66%)   Free RX: 11 (34%)	Used RX: 21 (66%)   Free RX: 11 (34%)
@@ -64,3 +83,21 @@ diagnostics: 0	125	Project Linked Successfully	Pic32mzClicker2_StepperControl.mc
 diagnostics: 0	128	Linked in 485 ms	 
 diagnostics: 0	129	Project 'Pic32mzClicker2_StepperControl.mcp32' completed: 3000 ms	 
 diagnostics: 0	103	Finished successfully: 23 Oct 2022, 21:33:48	Pic32mzClicker2_StepperControl.mcp32
+=======
+diagnostics: 5	123	Compiled Successfully	Globals.c
+diagnostics: 0	122	Compilation Started	pins.h
+hint: 0	1004	interrupt handler (X_Min_Limit at 0x0008)	Limits.c
+hint: 0	1004	interrupt handler (Y_Min_Limit at 0x000D)	Limits.c
+diagnostics: 220	123	Compiled Successfully	Limits.c
+diagnostics: 0	127	All files Compiled in 1063 ms	 
+hint: 6	1004	Variable rxBuf has been declared, but not used	Serial_Dma.c
+hint: 0	1144	Used RX: 19 (59%)   Free RX: 13 (41%)	Used RX: 19 (59%)   Free RX: 13 (41%)
+hint: 0	1144	Static RAM (bytes): 1018   Dynamic RAM (bytes): 515257	Static RAM (bytes): 1018   Dynamic RAM (bytes): 515257
+hint: 0	1144	HEAP RAM (bytes): 8000	HEAP RAM (bytes): 8000
+hint: 0	1144	Used ROM (bytes): 32988 (2%)  Free ROM (bytes): 2064164 (98%)	Used ROM (bytes): 32988 (2%)  Free ROM (bytes): 2064164 (98%)
+hint: 0	1144	Used BOOTROM (bytes): 800 (1%)  Free BOOTROM (bytes): 146211 (99%)	Used BOOTROM (bytes): 800 (1%)  Free BOOTROM (bytes): 146211 (99%)
+diagnostics: 0	125	Project Linked Successfully	Pic32mzClicker2_StepperControl.mcp32
+diagnostics: 0	128	Linked in 625 ms	 
+diagnostics: 0	129	Project 'Pic32mzClicker2_StepperControl.mcp32' completed: 3141 ms	 
+diagnostics: 0	103	Finished successfully: 30 Oct 2022, 19:49:19	Pic32mzClicker2_StepperControl.mcp32
+>>>>>>> 7b2598884ebfd161af9e0de85c03d70a8fbd3986
